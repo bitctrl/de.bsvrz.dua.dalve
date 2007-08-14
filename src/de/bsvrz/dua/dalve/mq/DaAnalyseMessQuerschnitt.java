@@ -28,12 +28,15 @@ package de.bsvrz.dua.dalve.mq;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import stauma.dav.clientside.ClientDavInterface;
+import stauma.dav.clientside.ClientReceiverInterface;
 import stauma.dav.clientside.Data;
+import stauma.dav.clientside.DataDescription;
+import stauma.dav.clientside.ReceiveOptions;
+import stauma.dav.clientside.ReceiverRole;
 import stauma.dav.clientside.ResultData;
-import stauma.dav.configuration.interfaces.ConfigurationObject;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.dalve.DaMesswertUnskaliert;
@@ -41,28 +44,49 @@ import de.bsvrz.dua.dalve.mq.atg.AtgVerkehrsDatenKurzZeitAnalyseMq;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteException;
 import de.bsvrz.dua.guete.GueteVerfahren;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
+import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 
 /**
- * 
+ * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte
+ * eines Messquerschnitts notwendig sind gespeichert. Jedes mit dem MQ assoziierte 
+ * Fahrstreifendatum muss durch dieses Objekt (Methode <code>trigger(..)</code>) geleitet
+ * werden um ggf. auch eine neue Berechnung von Analysewerten auszulösen.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class DaAnalyseMessQuerschnitt {
+public class DaAnalyseMessQuerschnitt
+implements ClientReceiverInterface{
 	
 	/**
 	 * Debug-Logger
 	 */
-	private static final Debug LOGGER = Debug.getLogger();
+	protected static final Debug LOGGER = Debug.getLogger();
 		
 	/**
-	 * Verbindung zum Datenverteiler
+	 * Verbindung zum Analysemodul
 	 */
-	private static ClientDavInterface DAV = null;
+	protected static MqAnalyseModul MQ_ANALYSE = null;
+	
+	/**
+	 * der mit diesem Objekt assoziierte Messquerschnitt
+	 */
+	protected SystemObject messQuerschnitt = null;
+	
+	/**
+	 * letztes für diesen Messquerschnitt errechnetes Ergebnis
+	 */
+	protected ResultData letztesErgebnis = null;
+	
+	/**
+	 * Aktuelle Analyseparameter dieses MQs
+	 */
+	protected AtgVerkehrsDatenKurzZeitAnalyseMq parameter = null;
 	
 	/**
 	 * Mapt alle hier betrachteten Fahrstreifen auf das letzte
@@ -70,42 +94,47 @@ public class DaAnalyseMessQuerschnitt {
 	 */
 	private Map<SystemObject, ResultData> aktuelleFSAnalysen = new HashMap<SystemObject, ResultData>();
 	
-	/**
-	 * der mit diesem Objekt assoziierte Messquerschnitt
-	 */
-	private SystemObject messQuerschnitt = null;
 	
 	/**
-	 * letztes für diesen Messquerschnitt errechnetes Ergebnis
-	 */
-	private ResultData letztesErgebnis = null;
-	
-	/**
-	 * Aktuelle Analyseparameter dieses MQs
-	 */
-	private AtgVerkehrsDatenKurzZeitAnalyseMq parameter = null;
-	
-	
-	
-	/**
-	 * Standardkonstruktor
+	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurück.
+	 * Nach dieser Initialisierung ist das Objekt auf alle Daten (seiner assoziierten
+	 * Fahrstreifen) angemeldet und analysiert ggf. Daten 
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param mq der Messquerschnitt
-	 * @param fahrStreifenMenge eine Menge von Fahrstreifen, die mit diesem
-	 * Messquerschnitt assoziiert ist
+	 * @param analyseModul Verbindung zum Analysemodul
+	 * @param messQuerschnitt der Messquerschnitt
+	 * @return die initialisierte Instanz dieses Objekts
+	 * @throws DUAInitialisierungsException wenn die Konfigurationsdaten des MQs nicht vollständig
+	 * ausgelesen werden konnte 
 	 */
-	public DaAnalyseMessQuerschnitt(ClientDavInterface dav, 
-									SystemObject mq,
-									Collection<SystemObject> fahrStreifenMenge){
-		if(DAV == null){
-			DAV = dav;
+	public DaAnalyseMessQuerschnitt initialisiere(MqAnalyseModul analyseModul, 
+			  									  SystemObject messQuerschnitt)
+	throws DUAInitialisierungsException{
+		if(MQ_ANALYSE == null){
+			MQ_ANALYSE = analyseModul;
 		}
-		this.messQuerschnitt = mq;
-		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(dav, mq);
-		for(SystemObject fs:fahrStreifenMenge){
-			this.aktuelleFSAnalysen.put(fs, null);
+		this.messQuerschnitt = messQuerschnitt;
+		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
+		
+		if(MessQuerschnitt.getInstanz(messQuerschnitt) != null){
+			for(FahrStreifen fs:MessQuerschnitt.getInstanz(messQuerschnitt).getFahrStreifen()){
+				this.aktuelleFSAnalysen.put(fs.getSystemObject(), null);
+			}
+		}else{
+			throw new DUAInitialisierungsException("MQ-Konfiguration von " + messQuerschnitt +  //$NON-NLS-1$
+					" konnte nicht vollständig ausgelesen werden"); //$NON-NLS-1$
 		}
+		
+		MQ_ANALYSE.getDav().subscribeReceiver(
+				this,
+				this.aktuelleFSAnalysen.keySet(), 
+				new DataDescription(
+						MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
+						MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+						(short)0),
+				ReceiveOptions.normal(),
+				ReceiverRole.receiver());		
+	
+		return this;
 	}
 	
 	
@@ -130,29 +159,21 @@ public class DaAnalyseMessQuerschnitt {
 	
 	
 	/**
-	 * Wenn ist ein Datum berechenbar?
-	 * 1. Wenn für jeden assoziierten Fahrstreifen ein Datum mit Nutzdaten
-	 *    und gleichem Zeitstempel da ist
-	 * 2. Wenn für jeden 
+	 * Dieser Methode sollten alle aktuellen Daten für alle mit diesem Messquerschnitt
+	 * assoziierten Fahrstreifen übergeben werden. Ggf. wird dadurch dann eine Berechnung
+	 * der Analysewerte dieses Messquerschnittes ausgelöst.
 	 * 
-	 * Wenn das erste Datum mit keine Daten empfangen wird, kann hier ein
-	 * Datum keine Daten veröffentlicht werden
+	 * @param triggerDatum ein KZ-Datum eines assoziierten Fahrstreifens
+	 * @return ein Analysedatum für diesen Messquerschnitt, wenn das <code>triggerDatum</code>
+	 * eine Berechnung ausgelöst hat, oder <code>null</code> sonst
 	 */
-	/**
-	 * Trigger
-	 * 
-	 * TODO: NoData . Datensatz
-	 * 
-	 * @param triggerDatum
-	 * @return
-	 */
-	public final ResultData trigger(ResultData triggerDatum){
+	public ResultData trigger(ResultData triggerDatum){
 		ResultData ergebnis = null;
 		this.aktuelleFSAnalysen.put(triggerDatum.getObject(), triggerDatum);
 		
 		/**
 		 * Zeigt an, ob ein Datum berechnet wurde. Sonst wurden die Daten nur begutachtet
-		 * und für <b>noch</b> nicht vollständig eingestuft 
+		 * und für <b>noch</b> nicht vollständig erachtet 
 		 */
 		boolean datumBerechnet = false;
 		
@@ -190,9 +211,14 @@ public class DaAnalyseMessQuerschnitt {
 				}			
 			}
 			
+			/**
+			 * Führe also nur eine Berechnung durch, wenn
+			 * für alle Fahrstreifen ein Fahrstreifendatum mit Nutzdaten und
+			 * gleichem Zeitstempel im Puffer steht.
+			 */
 			if(analysiere){
 				datumBerechnet = true;
-				Data analyseDatum = DAV.createData(MqAnalyseModul.PUB_BESCHREIBUNG.getAttributeGroup());
+				Data analyseDatum = MQ_ANALYSE.getDav().createData(MqAnalyseModul.PUB_BESCHREIBUNG.getAttributeGroup());
 				
 				/**
 				 * Berechne Verkehrsstärken
@@ -208,6 +234,43 @@ public class DaAnalyseMessQuerschnitt {
 				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Lkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Pkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "Vg", "vg");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				
+				/**
+				 * Belegung B und BMax
+				 */
+				this.berechneBelegung(analyseDatum);
+				
+				/**
+				 * Standardabweichung
+				 */
+				this.berechneStandardabweichung(analyseDatum);
+				
+				/**
+				 * Berechne LKW-Anteil
+				 */
+				this.berechneLkwAnteil(analyseDatum);
+				
+				/**
+				 * Berechne Fahrzeugdichten
+				 */
+				this.berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
+				this.berechneDichte(analyseDatum, "Lkw"); //$NON-NLS-1$
+				this.berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
+				
+				/**
+				 * Bemessungsverkehrsstärke 
+				 */
+				this.berechneBemessungsVerkehrsstaerke(analyseDatum);
+					
+				/**
+				 * Bemessungsdichte
+				 */
+				this.berechneBemessungsdichte(analyseDatum);
+				
+				/**
+				 * Berechne die gewichtete Differenzgeschwindigkeit im Messquerschnitt
+				 */
+				this.berechneVDifferenz(analyseDatum);
 				
 				ergebnis = new ResultData(this.messQuerschnitt, MqAnalyseModul.PUB_BESCHREIBUNG,
 						datenZeit, analyseDatum);				
@@ -242,14 +305,7 @@ public class DaAnalyseMessQuerschnitt {
 			if(fsWert.getWertUnskaliert() >= 0){
 				summe += fsWert.getWertUnskaliert();
 				interpoliert |= fsWert.isInterpoliert();
-				try {
-					gueteWerte.add(new GWert(fsDaten.getData().getItem("q" + attName).getItem("Güte"))); //$NON-NLS-1$ //$NON-NLS-2$
-				} catch (GueteException e) {
-					gueteBerechenbar = false;
-					e.printStackTrace();
-					LOGGER.error("Guete-Index fuer Q" + attName + //$NON-NLS-1$ 
-							" nicht berechenbar", e); //$NON-NLS-1$
-				}
+				gueteWerte.add(new GWert(fsDaten.getData().getItem("q" + attName).getItem("Güte"))); //$NON-NLS-1$ //$NON-NLS-2$
 			}else{
 				nichtErmittelbarFehlerhaft = true;
 				break;
@@ -370,4 +426,593 @@ public class DaAnalyseMessQuerschnitt {
 		qAnalyse.kopiereInhaltNach(analyseDatum);
 	}
 
+	
+	/**
+	 * Berechnet <code>B</code> und <code>BMax</code> analog SE-02.00.00.00.00-AFo-4.0 S.118f
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 */
+	private final void berechneBelegung(Data analyseDatum){
+		MesswertUnskaliert BAnalyse = new MesswertUnskaliert("B"); //$NON-NLS-1$
+		MesswertUnskaliert BMaxAnalyse = new MesswertUnskaliert("BMax"); //$NON-NLS-1$
+		
+		boolean nichtErmittelbarFehlerhaft = false;
+		boolean interpoliert = false;
+		boolean gueteBerechenbar = true;
+
+		long BMax = -1;
+		GWert gueteBMax = null;
+		double bSumme = 0;
+		ArrayList<GWert> gueteWerte = new ArrayList<GWert>();
+		for(ResultData fsDatum:this.aktuelleFSAnalysen.values()){
+			DaMesswertUnskaliert bFs = new DaMesswertUnskaliert("b", fsDatum.getData()); //$NON-NLS-1$
+			
+			if(bFs.getWertUnskaliert() >= 0){
+				bSumme += bFs.getWertUnskaliert();
+								
+				if(bFs.isPlausibilisiert()){
+					interpoliert = true;
+				}
+				GWert guete = null;
+				guete = new GWert(fsDatum.getData(), "b"); //$NON-NLS-1$
+				gueteWerte.add(guete);
+
+				/**
+				 * BMax ermitteln
+				 */
+				if(bFs.getWertUnskaliert() > BMax){
+					BMax = bFs.getWertUnskaliert();
+					gueteBMax = guete;
+				}
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}				
+		}
+		
+		/**
+		 * B setzen
+		 */
+		long B = Math.round(bSumme / (double)this.aktuelleFSAnalysen.keySet().size());
+		if(!nichtErmittelbarFehlerhaft &&	
+		    DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("B"), B)){ //$NON-NLS-1$
+			BAnalyse.setWertUnskaliert(B);
+			if(interpoliert){
+				BAnalyse.setInterpoliert(true);
+			}
+			if(gueteBerechenbar){
+				try {
+					GWert gesamtGuete = GueteVerfahren.summe(gueteWerte.toArray(new GWert[0]));
+					BAnalyse.setGueteIndex(gesamtGuete.getIndex());
+					BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
+				} catch (GueteException e) {
+					e.printStackTrace();
+					LOGGER.error("Guete-Index fuer B nicht berechenbar", e); //$NON-NLS-1$
+				}
+			}				
+		}else{
+			BAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}
+		
+		/**
+		 * BMax setzen
+		 */
+		if(BMax >= 0 &&
+		   DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("BMax"), BMax)){ //$NON-NLS-1$
+			BMaxAnalyse.setWertUnskaliert(BMax);
+			if(interpoliert){
+				BMaxAnalyse.setInterpoliert(true);
+			}
+			if(gueteBMax != null){
+				BMaxAnalyse.setGueteIndex(gueteBMax.getIndex());
+				BMaxAnalyse.setVerfahren(gueteBMax.getVerfahren().getCode());
+			}
+		}else{
+			BMaxAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}
+		
+		BAnalyse.kopiereInhaltNach(analyseDatum);
+		BMaxAnalyse.kopiereInhaltNach(analyseDatum);
+	}
+	
+	
+	/**
+	 * Berechnet <code>SKfz</code> analog SE-02.00.00.00.00-AFo-4.0 S.119f
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 */
+	private final void berechneStandardabweichung(Data analyseDatum){
+		MesswertUnskaliert SKfzAnalyse = new MesswertUnskaliert("SKfz"); //$NON-NLS-1$
+		
+		MesswertUnskaliert QKfz = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
+		GWert QKfzGuete = new GWert(analyseDatum, "QKfz");  //$NON-NLS-1$
+		
+		boolean nichtErmittelbarFehlerhaft = false;
+		boolean interpoliert = false;
+		boolean gueteBerechenbar = true;
+
+		if(QKfz.getWertUnskaliert() > 1){
+			double sKfzWertOhneWurzel = 0;
+			
+			DaMesswertUnskaliert VKfz = new DaMesswertUnskaliert("VKfz", analyseDatum); //$NON-NLS-1$
+			GWert VKfzGuete = new GWert(analyseDatum, "VKfz"); //$NON-NLS-1$
+			interpoliert = VKfz.isInterpoliert() || QKfz.isInterpoliert(); 
+				
+			if(VKfz.getWertUnskaliert() >= 0){
+				double VKfzWert = VKfz.getWertUnskaliert();
+				List<GWert> summanden = new ArrayList<GWert>();
+				
+				for(ResultData fsDatum:this.aktuelleFSAnalysen.values()){
+					DaMesswertUnskaliert qKfz = new DaMesswertUnskaliert("qKfz", fsDatum.getData()); //$NON-NLS-1$
+					DaMesswertUnskaliert sKfz = new DaMesswertUnskaliert("sKfz", fsDatum.getData()); //$NON-NLS-1$
+					DaMesswertUnskaliert vKfz = new DaMesswertUnskaliert("vKfz", fsDatum.getData()); //$NON-NLS-1$
+
+					interpoliert |= qKfz.isPlausibilisiert() || 
+								    sKfz.isPlausibilisiert() ||
+								    vKfz.isPlausibilisiert();
+					
+					if(qKfz.getWertUnskaliert() >= 0 &&
+					   sKfz.getWertUnskaliert() >= 0 &&
+					   vKfz.getWertUnskaliert() >= 0){
+						double qKfzWert = qKfz.getWertUnskaliert();
+						double sKfzWert = sKfz.getWertUnskaliert();
+						double vKfzWert = vKfz.getWertUnskaliert();
+												
+						/**
+						 * Berechnung
+						 */
+						sKfzWertOhneWurzel += 
+							(qKfzWert * Math.pow(sKfzWert, 2.0) + qKfzWert * Math.pow(vKfzWert - VKfzWert, 2.0)) / 
+							((double)QKfz.getWertUnskaliert() - 1.0);
+						
+						/**
+						 * Guete
+						 */
+						GWert qKfzGuete = new GWert(fsDatum.getData(), "qKfz"); //$NON-NLS-1$
+						GWert sKfzGuete = new GWert(fsDatum.getData(), "sKfz"); //$NON-NLS-1$
+						GWert vKfzGuete = new GWert(fsDatum.getData(), "vKfz"); //$NON-NLS-1$
+						
+						try {
+							summanden.add(
+								GueteVerfahren.quotient(
+										GueteVerfahren.summe(
+												GueteVerfahren.produkt(
+														qKfzGuete,
+														GueteVerfahren.exp(sKfzGuete, 2.0)
+												),
+												GueteVerfahren.produkt(
+														qKfzGuete,
+														GueteVerfahren.exp(
+																GueteVerfahren.differenz(
+																		vKfzGuete,
+																		VKfzGuete
+																), 2.0)
+												)
+										),
+										QKfzGuete));
+						} catch (GueteException e) {
+							gueteBerechenbar = false;
+							e.printStackTrace();
+							LOGGER.error("Guete-Index fuer SKfz nicht berechenbar", e); //$NON-NLS-1$
+						}						
+						
+					}else{
+						nichtErmittelbarFehlerhaft = true;
+						break;
+					}
+				}
+				
+				if(!nichtErmittelbarFehlerhaft){
+					if(sKfzWertOhneWurzel >= 0){
+						long SKfz = Math.round(Math.sqrt(sKfzWertOhneWurzel));
+						
+					    if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("SKfz"), SKfz)){ //$NON-NLS-1$
+							SKfzAnalyse.setWertUnskaliert(SKfz);
+							if(interpoliert){
+								SKfzAnalyse.setInterpoliert(true);
+							}
+							if(gueteBerechenbar){
+								try {
+									GWert gesamtGuete = GueteVerfahren.exp(
+											GueteVerfahren.summe(summanden.toArray(new GWert[0])), 0.5);
+									
+									SKfzAnalyse.setGueteIndex(gesamtGuete.getIndex());
+									SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
+								} catch (GueteException e) {
+									e.printStackTrace();
+									LOGGER.error("Guete-Index fuer SKfz nicht berechenbar", e); //$NON-NLS-1$
+								}
+							}				
+					    }else{
+					    	nichtErmittelbarFehlerhaft = true;
+					    }
+					}else{
+						nichtErmittelbarFehlerhaft = true;
+					}
+				}
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}else
+		if(QKfz.getWertUnskaliert() >= 0){
+			SKfzAnalyse.setWertUnskaliert(0);
+			SKfzAnalyse.setInterpoliert(QKfz.isInterpoliert());
+		}else{
+			nichtErmittelbarFehlerhaft = true;
+		}
+		
+		if(nichtErmittelbarFehlerhaft){
+			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}
+
+		SKfzAnalyse.kopiereInhaltNach(analyseDatum);
+	}
+	
+	
+	/**
+	 * Berechnet (<code>ALkw</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 */
+	protected final void berechneLkwAnteil(Data analyseDatum){
+		MesswertUnskaliert ALkwAnalyse = new MesswertUnskaliert("ALkw"); //$NON-NLS-1$
+		MesswertUnskaliert QLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
+		MesswertUnskaliert QKfz = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
+		
+		boolean nichtErmittelbarFehlerhaft = false;
+				
+		long ALkwWert = -1;
+		GWert ALkwGuete = null;
+		if(QLkw.getWertUnskaliert() >= 0 && QKfz.getWertUnskaliert() > 0){
+			ALkwWert = Math.round((double)QLkw.getWertUnskaliert() / (double)QKfz.getWertUnskaliert()) * 100;
+			
+			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("ALkw").getItem("Wert"), ALkwWert)){ //$NON-NLS-1$ //$NON-NLS-2$
+				try {
+					ALkwGuete = GueteVerfahren.quotient(
+							new GWert(analyseDatum, "QLkw"), //$NON-NLS-1$
+							new GWert(analyseDatum, "QKfz") //$NON-NLS-1$
+						);
+				} catch (GueteException e) {
+					e.printStackTrace();
+					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar", e); //$NON-NLS-1$
+				}		
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}else{
+			nichtErmittelbarFehlerhaft = true;
+		}
+				
+		if(nichtErmittelbarFehlerhaft){
+			ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else{
+			ALkwAnalyse.setWertUnskaliert(ALkwWert);
+			ALkwAnalyse.setInterpoliert(QLkw.isInterpoliert() || QKfz.isInterpoliert());
+			if(ALkwGuete != null){
+				ALkwAnalyse.setGueteIndex(ALkwGuete.getIndex());
+				ALkwAnalyse.setVerfahren(ALkwGuete.getVerfahren().getCode());				
+			}
+		}
+		
+		ALkwAnalyse.kopiereInhaltNach(analyseDatum);
+	}
+
+	
+	/**
+	 * Berechnet die Verkehrsstärken (<code>Kxxx</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 * @param attName der Attributname des Verkehrswertes, der berechnet werden soll
+	 */
+	protected final void berechneDichte(Data analyseDatum, final String attName){
+		MesswertUnskaliert KAnalyse = new MesswertUnskaliert("K" + attName); //$NON-NLS-1$
+		MesswertUnskaliert Q = new MesswertUnskaliert("Q" + attName, analyseDatum); //$NON-NLS-1$
+		MesswertUnskaliert V = new MesswertUnskaliert("V" + attName, analyseDatum); //$NON-NLS-1$
+		
+		boolean nichtErmittelbarFehlerhaft = false;
+		boolean interpoliert = false;
+				
+		long KWert = -1;
+		GWert KGuete = null;
+		if(V.getWertUnskaliert() > 0){
+			if(Q.getWertUnskaliert() >= 0){
+				KWert = Math.round((double)Q.getWertUnskaliert() / (double)V.getWertUnskaliert());
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("K" + attName).getItem("Wert"), KWert)){  //$NON-NLS-1$//$NON-NLS-2$
+					interpoliert = Q.isInterpoliert() || V.isInterpoliert();
+					
+					try {
+						KGuete = GueteVerfahren.quotient(
+									new GWert(Q.getGueteIndex(), GueteVerfahren.getZustand(Q.getVerfahren())),
+									new GWert(V.getGueteIndex(), GueteVerfahren.getZustand(V.getVerfahren()))
+								 );
+					} catch (GueteException e) {
+						e.printStackTrace();
+						LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				}else{
+					nichtErmittelbarFehlerhaft = true;
+				}
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}else
+		if(V.getWertUnskaliert() <= 0 &&
+		   this.parameter.isInitialisiert() &&
+		   this.letztesErgebnis != null &&
+		   this.letztesErgebnis.getData() != null){
+			long grenz = -1;
+			long max = -1;
+			
+			if(attName.startsWith("K")){	// Kfz //$NON-NLS-1$
+				grenz = parameter.getKKfzGrenz();
+				max = parameter.getKKfzMax();
+			}else
+			if(attName.startsWith("L")){	// Lkw //$NON-NLS-1$
+				grenz = parameter.getKLkwGrenz();
+				max = parameter.getKLkwMax();				
+			}else{	// Pkw
+				grenz = parameter.getKPkwGrenz();
+				max = parameter.getKPkwMax();
+			}
+			
+			MesswertUnskaliert KTMinus1 = new MesswertUnskaliert("K" + attName, this.letztesErgebnis.getData());  //$NON-NLS-1$
+			if(KTMinus1.getWertUnskaliert() >= 0){
+				if(KTMinus1.getWertUnskaliert() < grenz){
+					KWert = 0;
+				}else{
+					KWert = max;
+				}
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}else{
+			nichtErmittelbarFehlerhaft = true;
+		}
+						
+		if(nichtErmittelbarFehlerhaft){
+			KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else{
+			KAnalyse.setWertUnskaliert(KWert);
+			KAnalyse.setInterpoliert(interpoliert);
+			if(KGuete != null){
+				KAnalyse.setGueteIndex(KGuete.getIndex());
+				KAnalyse.setVerfahren(KGuete.getVerfahren().getCode());				
+			}
+		}
+		
+		KAnalyse.kopiereInhaltNach(analyseDatum);
+	}
+
+	
+	/**
+	 * Berechnet die Bemessungsverkehrsstaerke (<code>QB</code>) analog SE-02.00.00.00.00-AFo-4.0 S.120f
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 */
+	protected final void berechneBemessungsVerkehrsstaerke(Data analyseDatum){
+		MesswertUnskaliert QBAnalyse = new MesswertUnskaliert("QB"); //$NON-NLS-1$
+		MesswertUnskaliert VPkw = new MesswertUnskaliert("VPkw", analyseDatum); //$NON-NLS-1$
+		MesswertUnskaliert VLkw = new MesswertUnskaliert("VLkw", analyseDatum); //$NON-NLS-1$	
+		MesswertUnskaliert QPkw = new MesswertUnskaliert("QPkw", analyseDatum); //$NON-NLS-1$
+		MesswertUnskaliert QLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
+		
+		boolean nichtErmittelbarFehlerhaft = false;
+		
+		long QBWert = -1;
+		GWert QBGuete = null;
+		if(VLkw.getWertUnskaliert() >= 0 && VPkw.getWertUnskaliert() >= 0 &&
+		   QLkw.getWertUnskaliert() >= 0 && QPkw.getWertUnskaliert() >= 0 &&
+		   this.parameter.isInitialisiert()){
+			double k1 = this.parameter.getFlk1();
+			double k2 = this.parameter.getFlk2();
+						
+			double fL;
+			if(VPkw.getWertUnskaliert() <= VLkw.getWertUnskaliert()){
+				fL = k1;
+			}else{
+				fL = k1 + k2 * (VPkw.getWertUnskaliert() - VLkw.getWertUnskaliert());
+			}
+			
+			QBWert = QPkw.getWertUnskaliert() + Math.round(fL * (double)QLkw.getWertUnskaliert());
+			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("QB").getItem("Wert"), QBWert)){  //$NON-NLS-1$//$NON-NLS-2$
+				double QPkwGuete = QPkw.getGueteIndex();
+				double QLkwGuete = QLkw.getGueteIndex();
+				
+				double QBGueteIndex = (QPkwGuete + fL * QLkwGuete) / (1.0 + fL);
+				if(QBGueteIndex < 0.0 || QBGueteIndex > 1.0){
+					QBGueteIndex = 1.0;
+				}
+				try {
+					QBGuete = new GWert(QBGueteIndex, GueteVerfahren.STANDARD);
+				} catch (GueteException e) {
+					e.printStackTrace();
+					LOGGER.error("Guete-Index fuer QB nicht berechenbar", e); //$NON-NLS-1$
+				}
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}else{
+			nichtErmittelbarFehlerhaft = true;
+		}
+						
+		if(nichtErmittelbarFehlerhaft){
+			QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else{
+			QBAnalyse.setWertUnskaliert(QBWert);
+			QBAnalyse.setInterpoliert(QPkw.isInterpoliert() || QLkw.isInterpoliert());
+			if(QBGuete != null){
+				QBAnalyse.setGueteIndex(QBGuete.getIndex());
+				QBAnalyse.setVerfahren(QBGuete.getVerfahren().getCode());				
+			}
+		}
+		
+		QBAnalyse.kopiereInhaltNach(analyseDatum);
+	}
+	
+	
+	/**
+	 * Berechnet die Bemessungsdichte (<code>KB</code>) analog SE-02.00.00.00.00-AFo-4.0 S.120f
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 */
+	protected final void berechneBemessungsdichte(Data analyseDatum){
+		MesswertUnskaliert KBAnalyse = new MesswertUnskaliert("KB"); //$NON-NLS-1$
+		MesswertUnskaliert QB = new MesswertUnskaliert("QB", analyseDatum); //$NON-NLS-1$
+		MesswertUnskaliert VKfz = new MesswertUnskaliert("VKfz", analyseDatum); //$NON-NLS-1$	
+		
+		boolean nichtErmittelbarFehlerhaft = false;
+		boolean interpoliert = false;
+				
+		long KBWert = -1;
+		GWert KBGuete = null;
+		if(VKfz.getWertUnskaliert() > 0){
+			if(QB.getWertUnskaliert() >= 0){
+				KBWert = Math.round((double)QB.getWertUnskaliert() / (double)VKfz.getWertUnskaliert());
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("KB").getItem("Wert"), KBWert)){  //$NON-NLS-1$//$NON-NLS-2$
+					interpoliert = QB.isInterpoliert() || VKfz.isInterpoliert();
+					try {
+						KBGuete = GueteVerfahren.quotient(
+										new GWert(analyseDatum, "QB"),  //$NON-NLS-1$
+										new GWert(analyseDatum, "VKfz")  //$NON-NLS-1$
+								  );
+					} catch (GueteException e) {
+						e.printStackTrace();
+						LOGGER.error("Guete-Index fuer KB nicht berechenbar", e); //$NON-NLS-1$
+					}
+				}else{
+					nichtErmittelbarFehlerhaft = true;
+				}				
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}else{
+			if(this.parameter.isInitialisiert() && this.letztesErgebnis != null && this.letztesErgebnis.getData() != null){
+				MesswertUnskaliert KBTMinus1 = new MesswertUnskaliert("KB", this.letztesErgebnis.getData()); //$NON-NLS-1$
+				if(KBTMinus1.getWertUnskaliert() >= 0){
+					if(KBTMinus1.getWertUnskaliert() >= this.parameter.getKBGrenz()){
+						KBWert = this.parameter.getKBMax();
+					}else{
+						KBWert = 0;
+					}
+				}else{
+					nichtErmittelbarFehlerhaft = true;
+				}				
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}			
+		
+		if(nichtErmittelbarFehlerhaft){
+			KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else{
+			KBAnalyse.setWertUnskaliert(KBWert);
+			KBAnalyse.setInterpoliert(interpoliert);
+			if(KBGuete != null){
+				KBAnalyse.setGueteIndex(KBGuete.getIndex());
+				KBAnalyse.setVerfahren(KBGuete.getVerfahren().getCode());				
+			}
+		}
+		
+		KBAnalyse.kopiereInhaltNach(analyseDatum);
+	}
+
+	
+	/**
+	 * Berechnet die gewichtete Differenzgeschwindigkeit (<code>VDelta</code>) im Messquerschnitt 
+	 * analog SE-02.00.00.00.00-AFo-4.0 S.120f
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 */
+	private final void berechneVDifferenz(Data analyseDatum){
+		MesswertUnskaliert VDeltaAnalyse = new MesswertUnskaliert("VDelta"); //$NON-NLS-1$
+		
+		boolean nichtErmittelbarFehlerhaft = false;
+		boolean interpoliert = false;
+		boolean gueteBerechnen = true;
+
+		long VDeltaWert = 0;
+		List<GWert> gueteSummanden = new ArrayList<GWert>();
+		if(this.parameter.isInitialisiert()){
+			MessQuerschnitt mq = MessQuerschnitt.getInstanz(this.messQuerschnitt);
+			if(mq != null){
+				for(int i = 0; i<mq.getFahrStreifen().size() - 1; i++){
+					int w;
+					if(this.parameter.getWichtung().length > i){
+						w = this.parameter.getWichtung()[i];
+					}else{
+						nichtErmittelbarFehlerhaft = true;
+						break;
+					}
+					ResultData fsResultI = this.aktuelleFSAnalysen.get(mq.getFahrStreifen().get(i).getSystemObject());
+					ResultData fsResultIPlus1 = this.aktuelleFSAnalysen.get(mq.getFahrStreifen().get(i+1).getSystemObject());
+					MesswertUnskaliert vKfzI = new MesswertUnskaliert("vKfz", fsResultI.getData()); //$NON-NLS-1$
+					MesswertUnskaliert vKfzIPlus1 = new MesswertUnskaliert("vKfz", fsResultIPlus1.getData()); //$NON-NLS-1$
+					
+					if(vKfzI.getWertUnskaliert() >= 0 && vKfzIPlus1.getWertUnskaliert() >= 0){
+						interpoliert = vKfzI.isInterpoliert() || vKfzIPlus1.isInterpoliert();
+						VDeltaWert += w * Math.abs(vKfzI.getWertUnskaliert() - vKfzIPlus1.getWertUnskaliert());
+						
+						try {
+							gueteSummanden.add(
+									GueteVerfahren.differenz(
+											new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
+											new GWert(fsResultIPlus1.getData(), "vKfz"))); //$NON-NLS-1$
+						} catch (GueteException e) {
+							gueteBerechnen = false;
+							e.printStackTrace();
+							LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+						}
+						
+					}else{
+						nichtErmittelbarFehlerhaft = true;
+					}
+				}	
+				
+				if(!DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)){  //$NON-NLS-1$//$NON-NLS-2$
+					nichtErmittelbarFehlerhaft = true;
+				}
+			}else{
+				nichtErmittelbarFehlerhaft = true;
+			}
+		}else{
+			nichtErmittelbarFehlerhaft = true;
+		}
+		
+		if(nichtErmittelbarFehlerhaft){
+			VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else{
+			VDeltaAnalyse.setWertUnskaliert(VDeltaWert);
+			VDeltaAnalyse.setInterpoliert(interpoliert);
+			if(gueteBerechnen){
+				GWert guete;
+				try {
+					guete = GueteVerfahren.summe(gueteSummanden.toArray(new GWert[0]));
+					VDeltaAnalyse.setGueteIndex(guete.getIndex());
+					VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());				
+				} catch (GueteException e) {
+					e.printStackTrace();
+					LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+				}
+			}
+		}
+		
+		VDeltaAnalyse.kopiereInhaltNach(analyseDatum);
+	}
+
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void update(ResultData[] resultate) {
+		if(resultate != null){
+			for(ResultData resultat:resultate){
+				if(resultat != null){
+					ResultData ergebnis = trigger(resultat);
+					if(ergebnis != null){
+						MQ_ANALYSE.sendeDaten(ergebnis);
+					}
+				}
+			}
+		}
+	}
+	
 }
