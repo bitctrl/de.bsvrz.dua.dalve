@@ -34,6 +34,7 @@ import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.dua.dalve.fs.FsAnalyseModul;
+import de.bsvrz.dua.dalve.mq.MqAnalyseModul;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
@@ -58,8 +59,12 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 	/**
 	 * Modul in dem die Fahrstreifen-Daten analysiert werden
 	 */
-	private FsAnalyseModul analyseModul = null;	
+	private FsAnalyseModul fsAnalyseModul = null;	
 	
+	/**
+	 * Modul in dem die MQ-Daten analysiert werden
+	 */
+	private MqAnalyseModul mqAnalyseModul = null;
 	
 	
 	/**
@@ -93,10 +98,15 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 		}
 		LOGGER.config("---\nBetrachtete Objekte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		this.analyseModul = new FsAnalyseModul();
-		this.analyseModul.setPublikation(true);
-		this.analyseModul.initialisiere(this);
+		this.fsAnalyseModul = new FsAnalyseModul();
+		this.fsAnalyseModul.setPublikation(true);
+		this.fsAnalyseModul.initialisiere(this);
 				
+		this.mqAnalyseModul = new MqAnalyseModul();
+		this.mqAnalyseModul.initialisiere(this);
+		
+		Runtime.getRuntime().gc();
+		
 		DataDescription anmeldungsBeschreibungKZD = new DataDescription(
 				this.verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 				this.verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
@@ -111,7 +121,7 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		this.analyseModul.aktualisiereDaten(resultate);
+		this.fsAnalyseModul.aktualisiereDaten(resultate);
 	}
 	
 	
@@ -125,9 +135,9 @@ extends AbstraktVerwaltungsAdapterMitGuete{
         				UncaughtExceptionHandler(){
             public void uncaughtException(@SuppressWarnings("unused")
 			Thread t, Throwable e) {
-            	e.printStackTrace();
                 LOGGER.error("Applikation wird wegen" +  //$NON-NLS-1$
                 		" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
+                e.printStackTrace();
                 Runtime.getRuntime().exit(0);
             }
         });

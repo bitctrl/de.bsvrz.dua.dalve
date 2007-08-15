@@ -37,7 +37,6 @@ import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
-import de.bsvrz.sys.funclib.bitctrl.dua.KontrollProzess;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVSendeAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
@@ -78,7 +77,7 @@ public class MqAnalyseModul{
 	
 	
 	/**
-	 * Standardkonstruktor<br>
+	 * Initialisiert dieses Modul.<br>
 	 * <b>Achtung:</b> Es wird hier davon ausgegangen, dass die statische
 	 * Klasse <code>DuaVerkehrsNetz</code> bereits initialisiert wurde
 	 * 
@@ -86,7 +85,7 @@ public class MqAnalyseModul{
 	 * @throws DUAInitialisierungsException wenn die Initialisierung wenigstens 
 	 * eines Messquerschnittes fehlschlägt
 	 */
-	public MqAnalyseModul(final IVerwaltung verwaltung)
+	public final void initialisiere(final IVerwaltung verwaltung)
 	throws DUAInitialisierungsException{
 		this.dav = verwaltung.getVerbindung();
 		

@@ -33,6 +33,7 @@ import java.util.TreeSet;
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.clientside.ResultData;
+import stauma.dav.clientside.SenderRole;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.dalve.DaMesswertUnskaliert;
@@ -46,6 +47,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktBearbeitungsKnotenAdapter;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
+import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVSendeAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
@@ -91,6 +93,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	@Override
 	public void initialisiere(IVerwaltung dieVerwaltung)
 	throws DUAInitialisierungsException {
+		super.initialisiere(dieVerwaltung);
 		
 		PUB_BESCHREIBUNG = new DataDescription(
 				dieVerwaltung.getVerbindung().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
@@ -227,8 +230,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 					aLkw.setGueteIndex(aLkwGuete.getIndex());
 					aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 				} catch (GueteException e) {
-					e.printStackTrace();
 					LOGGER.error("Guete-Index fuer aLkw nicht berechenbar", e); //$NON-NLS-1$
+					e.printStackTrace();
 				}
 				
 				if(qLkw.isPlausibilisiert() || qKfz.isPlausibilisiert()){
@@ -352,8 +355,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 						zielK.setGueteIndex(kGuete.getIndex());
 						zielK.setVerfahren(kGuete.getVerfahren().getCode());
 					} catch (GueteException e) {
-						e.printStackTrace();
 						LOGGER.error("Guete-Index fuer kB nicht berechenbar", e); //$NON-NLS-1$
+						e.printStackTrace();
 					}
 					
 					if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){
@@ -432,9 +435,9 @@ extends AbstraktBearbeitungsKnotenAdapter{
 						zielK.setGueteIndex(kGuete.getIndex());
 						zielK.setVerfahren(kGuete.getVerfahren().getCode());
 					} catch (GueteException e) {
-						e.printStackTrace();
-						LOGGER.error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$ 
+						LOGGER.error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
 								" nicht berechenbar", e); //$NON-NLS-1$
+						e.printStackTrace();
 					}
 					
 					if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){

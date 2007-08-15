@@ -113,7 +113,6 @@ implements ClientReceiverInterface{
 			MQ_ANALYSE = analyseModul;
 		}
 		this.messQuerschnitt = messQuerschnitt;
-		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
 		
 		if(MessQuerschnitt.getInstanz(messQuerschnitt) != null){
 			for(FahrStreifen fs:MessQuerschnitt.getInstanz(messQuerschnitt).getFahrStreifen()){
@@ -123,16 +122,21 @@ implements ClientReceiverInterface{
 			throw new DUAInitialisierungsException("MQ-Konfiguration von " + messQuerschnitt +  //$NON-NLS-1$
 					" konnte nicht vollständig ausgelesen werden"); //$NON-NLS-1$
 		}
-		
-		MQ_ANALYSE.getDav().subscribeReceiver(
-				this,
-				this.aktuelleFSAnalysen.keySet(), 
-				new DataDescription(
-						MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
-						MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
-						(short)0),
-				ReceiveOptions.normal(),
-				ReceiverRole.receiver());		
+
+		if(this.aktuelleFSAnalysen.keySet().isEmpty()){
+			LOGGER.warning("Der MQ " + this.messQuerschnitt + " hat keine Fahrstreifen");  //$NON-NLS-1$//$NON-NLS-2$
+		}else{
+			this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
+			MQ_ANALYSE.getDav().subscribeReceiver(
+					this,
+					this.aktuelleFSAnalysen.keySet(), 
+					new DataDescription(
+							MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
+							MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+							(short)0),
+					ReceiveOptions.normal(),
+					ReceiverRole.receiver());
+		}
 	
 		return this;
 	}
@@ -325,9 +329,9 @@ implements ClientReceiverInterface{
 					qAnalyse.setGueteIndex(gesamtGuete.getIndex());
 					qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 				} catch (GueteException e) {
-					e.printStackTrace();
 					LOGGER.error("Guete-Index fuer Q" + attName + //$NON-NLS-1$ 
 							" nicht berechenbar", e); //$NON-NLS-1$
+					e.printStackTrace();
 				}
 			}
 		}
@@ -383,9 +387,9 @@ implements ClientReceiverInterface{
 					);
 				} catch (GueteException e) {
 					gueteBerechenbar = false;
-					e.printStackTrace();
 					LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
 							" nicht berechenbar", e); //$NON-NLS-1$
+					e.printStackTrace();
 				}				
 			}
 						
@@ -413,9 +417,9 @@ implements ClientReceiverInterface{
 						qAnalyse.setGueteIndex(gesamtGuete.getIndex());
 						qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 					} catch (GueteException e) {
-						e.printStackTrace();
 						LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
 								" nicht berechenbar", e); //$NON-NLS-1$
+						e.printStackTrace();
 					}
 				}				
 			}else{
@@ -485,8 +489,8 @@ implements ClientReceiverInterface{
 					BAnalyse.setGueteIndex(gesamtGuete.getIndex());
 					BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 				} catch (GueteException e) {
-					e.printStackTrace();
 					LOGGER.error("Guete-Index fuer B nicht berechenbar", e); //$NON-NLS-1$
+					e.printStackTrace();
 				}
 			}				
 		}else{
@@ -591,8 +595,8 @@ implements ClientReceiverInterface{
 										QKfzGuete));
 						} catch (GueteException e) {
 							gueteBerechenbar = false;
-							e.printStackTrace();
 							LOGGER.error("Guete-Index fuer SKfz nicht berechenbar", e); //$NON-NLS-1$
+							e.printStackTrace();
 						}						
 						
 					}else{
@@ -618,8 +622,8 @@ implements ClientReceiverInterface{
 									SKfzAnalyse.setGueteIndex(gesamtGuete.getIndex());
 									SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 								} catch (GueteException e) {
-									e.printStackTrace();
 									LOGGER.error("Guete-Index fuer SKfz nicht berechenbar", e); //$NON-NLS-1$
+									e.printStackTrace();
 								}
 							}				
 					    }else{
@@ -672,8 +676,8 @@ implements ClientReceiverInterface{
 							new GWert(analyseDatum, "QKfz") //$NON-NLS-1$
 						);
 				} catch (GueteException e) {
-					e.printStackTrace();
 					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar", e); //$NON-NLS-1$
+					e.printStackTrace();
 				}		
 			}else{
 				nichtErmittelbarFehlerhaft = true;
@@ -725,8 +729,8 @@ implements ClientReceiverInterface{
 									new GWert(V.getGueteIndex(), GueteVerfahren.getZustand(V.getVerfahren()))
 								 );
 					} catch (GueteException e) {
-						e.printStackTrace();
 						LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
+						e.printStackTrace();
 					}
 				}else{
 					nichtErmittelbarFehlerhaft = true;
@@ -824,8 +828,8 @@ implements ClientReceiverInterface{
 				try {
 					QBGuete = new GWert(QBGueteIndex, GueteVerfahren.STANDARD);
 				} catch (GueteException e) {
-					e.printStackTrace();
 					LOGGER.error("Guete-Index fuer QB nicht berechenbar", e); //$NON-NLS-1$
+					e.printStackTrace();
 				}
 			}else{
 				nichtErmittelbarFehlerhaft = true;
@@ -875,8 +879,8 @@ implements ClientReceiverInterface{
 										new GWert(analyseDatum, "VKfz")  //$NON-NLS-1$
 								  );
 					} catch (GueteException e) {
-						e.printStackTrace();
 						LOGGER.error("Guete-Index fuer KB nicht berechenbar", e); //$NON-NLS-1$
+						e.printStackTrace();
 					}
 				}else{
 					nichtErmittelbarFehlerhaft = true;
@@ -958,8 +962,8 @@ implements ClientReceiverInterface{
 											new GWert(fsResultIPlus1.getData(), "vKfz"))); //$NON-NLS-1$
 						} catch (GueteException e) {
 							gueteBerechnen = false;
-							e.printStackTrace();
 							LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+							e.printStackTrace();
 						}
 						
 					}else{
@@ -989,8 +993,8 @@ implements ClientReceiverInterface{
 					VDeltaAnalyse.setGueteIndex(guete.getIndex());
 					VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());				
 				} catch (GueteException e) {
-					e.printStackTrace();
 					LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+					e.printStackTrace();
 				}
 			}
 		}
@@ -1014,5 +1018,15 @@ implements ClientReceiverInterface{
 			}
 		}
 	}
-	
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		LOGGER.warning("Der MQ " + this.messQuerschnitt +  //$NON-NLS-1$
+				" wird nicht mehr analysiert"); //$NON-NLS-1$
+	}
+
 }
