@@ -3,6 +3,7 @@ package de.bsvrz.dua.dalve.pruef;
 import de.bsvrz.dua.dalve.DatenaufbereitungLVETest;
 import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.ClientReceiverInterface;
 import stauma.dav.clientside.Data;
@@ -75,6 +76,12 @@ implements ClientReceiverInterface {
 	private VergleicheDaLVEAnalyse verglFS3 = new VergleicheDaLVEAnalyse(this,3);
 	
 	/**
+	 * Initial CSV-Index
+	 */
+	private int csvIndex = 1;
+	
+	
+	/**
 	 * Initialisiert Prüferobjekt
 	 * @param dav Datenverteilerverbindung
 	 * @param FS Systemobjekt des Fahrstreifens
@@ -101,6 +108,8 @@ implements ClientReceiverInterface {
 		 * Initialsiert Ergebnisimporter
 		 */
 		importAnaFS = new TestErgebnisAnalyseImporter(dav, csvQuelle);
+		
+		LOGGER.info("Prüferklasse initialisiert");
 	}
 	
 	/**
@@ -109,6 +118,7 @@ implements ClientReceiverInterface {
 	 */
 	public void naechsterDatensatz(long pruefZeit) {
 		this.pruefZeit = pruefZeit;
+		csvIndex++;
 		importAnaFS.importNaechsteZeile();
 		ergebnisFS1 = importAnaFS.getFSAnalyseDatensatz(1);
 		ergebnisFS2 = importAnaFS.getFSAnalyseDatensatz(2);
@@ -117,6 +127,8 @@ implements ClientReceiverInterface {
 		pruefungFS1fertig = false;
 		pruefungFS2fertig = false;
 		pruefungFS3fertig = false;
+		
+		LOGGER.info("Prüferklasse parametriert -> Zeit: "+pruefZeit);
 	}
 	
 	/**
@@ -126,6 +138,7 @@ implements ClientReceiverInterface {
 	 * @param FS Fahstreifenindex des Prüferthreads (1-3)
 	 */
 	public void doNotify(int FS) {
+		LOGGER.info("Vergleich der Daten (FS"+FS+":Z"+csvIndex+") abgeschlossen");
 		switch(FS) {
 			case 1: {
 				pruefungFS1fertig = true;
@@ -141,6 +154,7 @@ implements ClientReceiverInterface {
 			}
 		}
 		if(pruefungFS1fertig && pruefungFS2fertig && pruefungFS3fertig) {
+			LOGGER.info("Alle FS geprüft. Benachrichtige Hauptthread...");
 			caller.doNotify();
 		}
 	}
@@ -158,15 +172,16 @@ implements ClientReceiverInterface {
 				try {
 					//Ermittle FS und pruefe Daten
 					if(result.getObject().getName().endsWith(".1")) {
-						verglFS1.vergleiche(result.getData(),ergebnisFS1);
+						LOGGER.info("Zu prüfendes Datum (FS1) empfangen. Vergleiche...");
+						verglFS1.vergleiche(result.getData(),ergebnisFS1,csvIndex);
 					} else if(result.getObject().getName().endsWith(".2")) {
-						verglFS2.vergleiche(result.getData(),ergebnisFS2);
+						LOGGER.info("Zu prüfendes Datum (FS2) empfangen. Vergleiche...");
+						verglFS2.vergleiche(result.getData(),ergebnisFS2,csvIndex);
 					} else if(result.getObject().getName().endsWith(".3")) {
-						verglFS3.vergleiche(result.getData(),ergebnisFS3);
+						LOGGER.info("Zu prüfendes Datum (FS3) empfangen. Vergleiche...");
+						verglFS3.vergleiche(result.getData(),ergebnisFS3,csvIndex);
 					}
 				} catch(Exception e) {}
-
-				LOGGER.info("Zu prüfendes Datum empfangen. Prüfe...");
 			}
 		}		
 	}
@@ -196,6 +211,44 @@ class VergleicheDaLVEAnalyse extends Thread {
 	private Data istErgebnis;
 	
 	/**
+	 * Aktueller CSV-Index der SOLL- und IST-Daten
+	 */
+	private int csvIndex;
+	
+	/**
+	 * Attributpfade der ATG
+	 */
+	private String[] attributNamenPraefix = {"qKfz",
+											 "qPkw",
+											 "qLkw",
+											 "vKfz",
+											 "vPkw",
+											 "vLkw",
+											 "vgKfz",
+											 "b",
+											 "sKfz",
+											 "aLkw",
+											 "kKfz",
+											 "kLkw",
+											 "kPkw",
+											 "qB",											 
+											 "kB"};
+	
+	/**
+	 * Attributnamen
+	 */
+	private String[] attributNamen = {".Wert",
+									  ".Status.Erfassung.NichtErfasst",
+									  ".Status.PlFormal.WertMax",
+									  ".Status.PlFormal.WertMin",
+									  ".Status.PlLogisch.WertMaxLogisch",
+									  ".Status.PlLogisch.WertMinLogisch",
+									  ".Status.MessWertErsetzung.Implausibel",
+	  								  ".Status.MessWertErsetzung.Interpoliert",
+	  								  ".Güte.Index"};
+	
+	
+	/**
 	 * Initialisiert Prüferthread
 	 * @param caller Aufrufende Klasse
 	 * @param fsIndex Zu prüfender Fahrstreifen
@@ -203,6 +256,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 	public VergleicheDaLVEAnalyse(PruefeDaLVEAnalyse caller, int fsIndex) {
 		this.caller = caller;
 		this.fsIndex = fsIndex;
+		LOGGER.info("Prüfthread [PT] initialisiert (FS "+fsIndex+")");
 		//starte Thread
 		this.start();
 	}
@@ -212,9 +266,11 @@ class VergleicheDaLVEAnalyse extends Thread {
 	 * @param sollErgebnis SOLL-Datensatz
 	 * @param istErgebnis IST-Datensatz
 	 */
-	public void vergleiche(Data sollErgebnis, Data istErgebnis) {
+	public void vergleiche(Data sollErgebnis, Data istErgebnis, int csvIndex) {
 		this.sollErgebnis = sollErgebnis;
 		this.istErgebnis = istErgebnis;
+		this.csvIndex = csvIndex;
+		LOGGER.info("[PT"+fsIndex+"] Zu vergleichende Daten empfangen");
 		synchronized(this) {
 			//wecke Thread
 			this.notify();
@@ -228,8 +284,10 @@ class VergleicheDaLVEAnalyse extends Thread {
 		//Thread läuft bis Programmende
 		while(true) {
 			//warte nit prüfung bis geweckt
+			LOGGER.info("[PT"+fsIndex+"] Warte auf Trigger");
 			doWait();
 			//vergleiche
+			LOGGER.info("[PT"+fsIndex+"] Vergleiche Daten (Z "+csvIndex+")...");
 			doVergleich();
 		}
 	}
@@ -239,7 +297,26 @@ class VergleicheDaLVEAnalyse extends Thread {
 	 *
 	 */
 	private void doVergleich() {
-		//TODO:vergleiche
+		String loggerOut = "[PT"+fsIndex+"] Vergleichsergebnis der Zeile "+csvIndex+"\n\r";
+		String attributPfad = null;
+		int sollWert;
+		int istWert;
+		for(int i=0;i<attributNamenPraefix.length;i++) {
+			for(int j=0;j<attributNamen.length;j++) {
+				attributPfad = attributNamenPraefix[i] + attributNamen[j];
+				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().intValue();
+				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis).asUnscaledValue().intValue();
+				if(sollWert == istWert) {
+					loggerOut += "OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert+"\n\r";
+				} else {
+					LOGGER.error("ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert);
+					loggerOut += "ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert+"\n\r";
+				}
+			}
+		}
+		LOGGER.info(loggerOut);
+		LOGGER.info("[PT"+fsIndex+"] Prüfung Zeile "+csvIndex+" abgeschlossen. Benachrichtige Prüfklasse...");
+		//Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3) 
 		caller.doNotify(fsIndex);
 	}
 	

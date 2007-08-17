@@ -123,7 +123,7 @@ implements ClientSenderInterface {
 		//aktueller Prüfzeitstempel
 		long aktZeit = System.currentTimeMillis();
 		
-		int csvIndex = 0;
+		int csvIndex = 2;
 		
 		/*
 		 * Prüferklasse
@@ -144,12 +144,14 @@ implements ClientSenderInterface {
 			ResultData resultat2 = new ResultData(FS2, DD_KZD_SEND, aktZeit, zeileFS2);
 			ResultData resultat3 = new ResultData(FS3, DD_KZD_SEND, aktZeit, zeileFS3);
 			
+			LOGGER.info("Sende Daten: FS 1-3 -> Zeile: "+csvIndex+" - Zeit: "+aktZeit);
 			this.dav.sendData(resultat1);
 			this.dav.sendData(resultat2);
 			this.dav.sendData(resultat3);
 			
 			//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
 			//TODO
+			LOGGER.info("Warte auf Prüfung der FS 1-3...");
 			//doWait();
 			
 			csvIndex++;
