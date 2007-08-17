@@ -3,6 +3,7 @@ package de.bsvrz.dua.dalve;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.bsvrz.dua.dalve.para.ParaAnaProgImport;
 import de.bsvrz.dua.dalve.pruef.PruefeDaLVEAnalyse;
 import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
 import de.bsvrz.dua.dalve.util.TestFahrstreifenImporter;
@@ -73,6 +74,11 @@ implements ClientSenderInterface {
 	 */
 	public static DataDescription DD_KZD_SEND = null;
 	
+	/**
+	 * Parameter Importer
+	 */
+	private ParaAnaProgImport paraImport;
+	
 	
 	/**
 	 * {@inheritDoc}
@@ -96,6 +102,14 @@ implements ClientSenderInterface {
 				DD_KZD_SEND, SenderRole.source());
 		
 		/*
+		 * Importiere Parameter
+		 */
+		paraImport = new ParaAnaProgImport(dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Parameter");
+		paraImport.importiereParameter(1);
+		paraImport.importiereParameter(2);
+		paraImport.importiereParameter(3);
+		doWait();
+		/*
 		 * Initialisiert Testfahrstreifenimporter
 		 */
 		importFS = new TestFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Messwerters.PL-gepr");
@@ -113,8 +127,6 @@ implements ClientSenderInterface {
 		Debug.init("DatenaufbereitungLVEAnalyse", alLogger); //$NON-NLS-1$
 		LOGGER = Debug.getLogger();
 		LOGGER.info("Prüfe Datenaufbereitung LVE - Analysewerte...");
-		
-		//TODO: Parameter
 		
 		Data zeileFS1;
 		Data zeileFS2;
