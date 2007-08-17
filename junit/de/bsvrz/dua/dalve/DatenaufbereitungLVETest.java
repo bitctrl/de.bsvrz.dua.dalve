@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import de.bsvrz.dua.dalve.para.ParaAnaProgImport;
 import de.bsvrz.dua.dalve.pruef.PruefeDaLVEAnalyse;
-import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
 import de.bsvrz.dua.dalve.util.TestFahrstreifenImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
@@ -108,7 +107,7 @@ implements ClientSenderInterface {
 		paraImport.importiereParameter(1);
 		paraImport.importiereParameter(2);
 		paraImport.importiereParameter(3);
-		doWait();
+
 		/*
 		 * Initialisiert Testfahrstreifenimporter
 		 */

@@ -2,7 +2,6 @@ package de.bsvrz.dua.dalve.pruef;
 
 import de.bsvrz.dua.dalve.DatenaufbereitungLVETest;
 import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.ClientReceiverInterface;
@@ -12,7 +11,6 @@ import stauma.dav.clientside.ReceiveOptions;
 import stauma.dav.clientside.ReceiverRole;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.ArgumentList;
 import sys.funclib.debug.Debug;
 
 /**
