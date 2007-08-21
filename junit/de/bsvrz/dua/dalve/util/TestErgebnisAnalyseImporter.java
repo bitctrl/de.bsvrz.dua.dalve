@@ -99,6 +99,81 @@ extends CSVImporter{
 	}
 	
 	/**
+	 * Bildet einen Ausgabe-Datensatz der MQ-Analysewerte aus den Daten der aktuellen CSV-Zeile
+	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile
+	 * oder <code>null</code>, wenn der Dateizeiger am Ende ist
+	 */
+	public final Data getMQAnalyseDatensatz() {
+		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"));
+		
+		if(datensatz != null){
+			if(ZEILE != null){
+				try {
+					int QKfz = Integer.parseInt(ZEILE[84]);
+					String QKfzStatus = ZEILE[85];
+					int QLkw = Integer.parseInt(ZEILE[86]);
+					String QLkwStatus = ZEILE[87];
+					int QPkw = Integer.parseInt(ZEILE[88]);
+					String QPkwStatus = ZEILE[89];
+					int VKfz = Integer.parseInt(ZEILE[90]);
+					String VKfzStatus = ZEILE[91];
+					int VLkw = Integer.parseInt(ZEILE[92]);
+					String VLkwStatus = ZEILE[93];
+					int VPkw = Integer.parseInt(ZEILE[94]);
+					String VPkwStatus = ZEILE[95];
+					int VgKfz = Integer.parseInt(ZEILE[96]);
+					String VgKfzStatus = ZEILE[97];
+					int B = Integer.parseInt(ZEILE[98]);
+					String BStatus = ZEILE[99];
+					int BMax = Integer.parseInt(ZEILE[100]);
+					String BMaxStatus = ZEILE[101];
+					int SKfz = Integer.parseInt(ZEILE[100]);
+					String SKfzStatus = ZEILE[101];
+					int ALkw = Integer.parseInt(ZEILE[102]);
+					String ALkwStatus = ZEILE[103];
+					int KKfz = Integer.parseInt(ZEILE[104]);
+					String KKfzStatus = ZEILE[105];
+					int KLkw = Integer.parseInt(ZEILE[106]);
+					String KLkwStatus = ZEILE[107];
+					int KPkw = Integer.parseInt(ZEILE[108]);
+					String KPkwStatus = ZEILE[109];
+					int QB = Integer.parseInt(ZEILE[110]);
+					String QBStatus = ZEILE[111];
+					int KB = Integer.parseInt(ZEILE[112]);
+					String KBStatus = ZEILE[113];
+					int VDelta = Integer.parseInt(ZEILE[114]);
+					String VDeltaStatus = ZEILE[115];
+				
+					datensatz = setAttribut("QKfz", QKfz, QKfzStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("QLkw", QLkw, QLkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("QPkw", QPkw, QPkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("VKfz", VKfz, VKfzStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("VLkw", VLkw, VLkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("VPkw", VPkw, VPkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("VgKfz", VgKfz, VgKfzStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("B", B, BStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("BMax", BMax, BMaxStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("SKfz", SKfz, SKfzStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("ALkw", ALkw, ALkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("KKfz", KKfz, KKfzStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("KLkw", KLkw, KLkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("KPkw", KPkw, KPkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("QB", QB, QBStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("KB", KB, KBStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("VDelta", VDelta, VDeltaStatus, datensatz); //$NON-NLS-1$
+					
+				}catch(ArrayIndexOutOfBoundsException ex){
+					datensatz = null;
+				}
+			}else{
+				datensatz = null;
+			}
+		}
+	
+		return datensatz;
+	}
+	
+	/**
 	 * Bildet einen Ausgabe-Datensatz der FS-Analysewerte aus den Daten der aktuellen CSV-Zeile
 	 * 
 	 * @param FS Fahrstreifen (1-3)
@@ -184,11 +259,13 @@ extends CSVImporter{
 	private final Data setAttribut(final String attributName, long wert, String status, Data datensatz){
 		Data data = datensatz;
 	
-		if(attributName.startsWith("v") && wert >= 255) {
+		if((attributName.startsWith("v") || attributName.startsWith("V"))
+				&& wert >= 255) {
 			wert = -1;
 		}
 		
-		if(attributName.startsWith("k") && wert > 10000) {
+		if((attributName.startsWith("k") || attributName.startsWith("K"))
+				&& wert > 10000) {
 			wert = -1;
 		}
 		
