@@ -26,7 +26,6 @@
 package de.bsvrz.dua.dalve.mq;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,40 +124,24 @@ implements ClientReceiverInterface{
 
 		if(this.aktuelleFSAnalysen.keySet().isEmpty()){
 			LOGGER.warning("Der MQ " + this.messQuerschnitt + " hat keine Fahrstreifen");  //$NON-NLS-1$//$NON-NLS-2$
-		}else{
-			this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
-			MQ_ANALYSE.getDav().subscribeReceiver(
-					this,
-					this.aktuelleFSAnalysen.keySet(), 
-					new DataDescription(
-							MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
-							MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
-							(short)0),
-					ReceiveOptions.normal(),
-					ReceiverRole.receiver());
+			return null;
 		}
+
+		/**
+		 * Anmeldung auf Parameter und alle Daten der assoziierten Messquerschnitte
+		 */			
+		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
+		MQ_ANALYSE.getDav().subscribeReceiver(
+				this,
+				this.aktuelleFSAnalysen.keySet(), 
+				new DataDescription(
+						MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
+						MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+						(short)0),
+						ReceiveOptions.normal(),
+						ReceiverRole.receiver());
 	
 		return this;
-	}
-	
-	
-	/**
-	 * Erfragt die Menge der an diesem Messquerschnitt ausgewerteten Fahrstreifen
-	 * 
-	 * @return die Menge der an diesem Messquerschnitt ausgewerteten Fahrstreifen
-	 */
-	public Collection<SystemObject> getFahrstreifen(){
-		return this.aktuelleFSAnalysen.keySet();
-	}
-	
-	
-	/**
-	 * Erfragt den Messquerschnitt
-	 * 
-	 * @return der Messquerschnitt
-	 */
-	public SystemObject getObjekt(){
-		return messQuerschnitt;
 	}
 	
 	
@@ -171,7 +154,7 @@ implements ClientReceiverInterface{
 	 * @return ein Analysedatum für diesen Messquerschnitt, wenn das <code>triggerDatum</code>
 	 * eine Berechnung ausgelöst hat, oder <code>null</code> sonst
 	 */
-	public ResultData trigger(ResultData triggerDatum){
+	protected ResultData trigger(ResultData triggerDatum){
 		ResultData ergebnis = null;
 		this.aktuelleFSAnalysen.put(triggerDatum.getObject(), triggerDatum);
 		
@@ -290,6 +273,41 @@ implements ClientReceiverInterface{
  
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	public void update(ResultData[] resultate) {
+		if(resultate != null){
+			for(ResultData resultat:resultate){
+				if(resultat != null){
+					ResultData ergebnis = trigger(resultat);
+					if(ergebnis != null){
+						MQ_ANALYSE.sendeDaten(ergebnis);
+					}
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void finalize()
+	throws Throwable {
+		LOGGER.warning("Der MQ " + this.messQuerschnitt +  //$NON-NLS-1$
+				" wird nicht mehr analysiert"); //$NON-NLS-1$
+	}
+
+	
+	
+	/**********************************************************************************
+	 *                                                                                *
+	 *                           Berechnungs-Methoden                                 *
+	 *                                                                                *
+	 **********************************************************************************/
+	
+	/**
 	 * Berechnet die Verkehrsstärken analog SE-02.00.00.00.00-AFo-4.0 S.118f
 	 * 
 	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
@@ -326,7 +344,7 @@ implements ClientReceiverInterface{
 			if(gueteBerechenbar){
 				try {
 					GWert gesamtGuete = GueteVerfahren.summe(gueteWerte.toArray(new GWert[0]));
-					qAnalyse.setGueteIndex(gesamtGuete.getIndex());
+					qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 					qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 				} catch (GueteException e) {
 					LOGGER.error("Guete-Index fuer Q" + attName + //$NON-NLS-1$ 
@@ -402,7 +420,7 @@ implements ClientReceiverInterface{
 		}else{
 			long ergebnis = Math.round((double)summe / (double)Q.getWertUnskaliert());
 			
-			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem(praefixGross + attName), ergebnis)){
+			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem(praefixGross + attName).getItem("Wert"), ergebnis)){ //$NON-NLS-1$
 				qAnalyse.setWertUnskaliert(ergebnis);
 				if(interpoliert){
 					qAnalyse.setInterpoliert(true);
@@ -414,7 +432,7 @@ implements ClientReceiverInterface{
 								new GWert(analyseDatum.getItem("Q" + attName).getItem("Güte")) //$NON-NLS-1$ //$NON-NLS-2$
 							);
 						
-						qAnalyse.setGueteIndex(gesamtGuete.getIndex());
+						qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 						qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 					} catch (GueteException e) {
 						LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
@@ -478,7 +496,7 @@ implements ClientReceiverInterface{
 		 */
 		long B = Math.round(bSumme / (double)this.aktuelleFSAnalysen.keySet().size());
 		if(!nichtErmittelbarFehlerhaft &&	
-		    DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("B"), B)){ //$NON-NLS-1$
+		    DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("B").getItem("Wert"), B)){ //$NON-NLS-1$ //$NON-NLS-2$
 			BAnalyse.setWertUnskaliert(B);
 			if(interpoliert){
 				BAnalyse.setInterpoliert(true);
@@ -486,7 +504,7 @@ implements ClientReceiverInterface{
 			if(gueteBerechenbar){
 				try {
 					GWert gesamtGuete = GueteVerfahren.summe(gueteWerte.toArray(new GWert[0]));
-					BAnalyse.setGueteIndex(gesamtGuete.getIndex());
+					BAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 					BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 				} catch (GueteException e) {
 					LOGGER.error("Guete-Index fuer B nicht berechenbar", e); //$NON-NLS-1$
@@ -501,13 +519,13 @@ implements ClientReceiverInterface{
 		 * BMax setzen
 		 */
 		if(BMax >= 0 &&
-		   DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("BMax"), BMax)){ //$NON-NLS-1$
+		   DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("BMax").getItem("Wert"), BMax)){ //$NON-NLS-1$ //$NON-NLS-2$
 			BMaxAnalyse.setWertUnskaliert(BMax);
 			if(interpoliert){
 				BMaxAnalyse.setInterpoliert(true);
 			}
 			if(gueteBMax != null){
-				BMaxAnalyse.setGueteIndex(gueteBMax.getIndex());
+				BMaxAnalyse.getGueteIndex().setWert(gueteBMax.getIndexUnskaliert());
 				BMaxAnalyse.setVerfahren(gueteBMax.getVerfahren().getCode());
 			}
 		}else{
@@ -609,7 +627,7 @@ implements ClientReceiverInterface{
 					if(sKfzWertOhneWurzel >= 0){
 						long SKfz = Math.round(Math.sqrt(sKfzWertOhneWurzel));
 						
-					    if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("SKfz"), SKfz)){ //$NON-NLS-1$
+					    if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("SKfz").getItem("Wert"), SKfz)){ //$NON-NLS-1$ //$NON-NLS-2$
 							SKfzAnalyse.setWertUnskaliert(SKfz);
 							if(interpoliert){
 								SKfzAnalyse.setInterpoliert(true);
@@ -619,7 +637,7 @@ implements ClientReceiverInterface{
 									GWert gesamtGuete = GueteVerfahren.exp(
 											GueteVerfahren.summe(summanden.toArray(new GWert[0])), 0.5);
 									
-									SKfzAnalyse.setGueteIndex(gesamtGuete.getIndex());
+									SKfzAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 									SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 								} catch (GueteException e) {
 									LOGGER.error("Guete-Index fuer SKfz nicht berechenbar", e); //$NON-NLS-1$
@@ -692,7 +710,7 @@ implements ClientReceiverInterface{
 			ALkwAnalyse.setWertUnskaliert(ALkwWert);
 			ALkwAnalyse.setInterpoliert(QLkw.isInterpoliert() || QKfz.isInterpoliert());
 			if(ALkwGuete != null){
-				ALkwAnalyse.setGueteIndex(ALkwGuete.getIndex());
+				ALkwAnalyse.getGueteIndex().setWert(ALkwGuete.getIndexUnskaliert());
 				ALkwAnalyse.setVerfahren(ALkwGuete.getVerfahren().getCode());				
 			}
 		}
@@ -725,8 +743,8 @@ implements ClientReceiverInterface{
 					
 					try {
 						KGuete = GueteVerfahren.quotient(
-									new GWert(Q.getGueteIndex(), GueteVerfahren.getZustand(Q.getVerfahren())),
-									new GWert(V.getGueteIndex(), GueteVerfahren.getZustand(V.getVerfahren()))
+									new GWert(analyseDatum, "Q" + attName), //$NON-NLS-1$
+									new GWert(analyseDatum, "V" + attName) //$NON-NLS-1$
 								 );
 					} catch (GueteException e) {
 						LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
@@ -778,7 +796,7 @@ implements ClientReceiverInterface{
 			KAnalyse.setWertUnskaliert(KWert);
 			KAnalyse.setInterpoliert(interpoliert);
 			if(KGuete != null){
-				KAnalyse.setGueteIndex(KGuete.getIndex());
+				KAnalyse.getGueteIndex().setWert(KGuete.getIndexUnskaliert());
 				KAnalyse.setVerfahren(KGuete.getVerfahren().getCode());				
 			}
 		}
@@ -802,7 +820,8 @@ implements ClientReceiverInterface{
 		boolean nichtErmittelbarFehlerhaft = false;
 		
 		long QBWert = -1;
-		GWert QBGuete = null;
+		GWert QBGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
+		
 		if(VLkw.getWertUnskaliert() >= 0 && VPkw.getWertUnskaliert() >= 0 &&
 		   QLkw.getWertUnskaliert() >= 0 && QPkw.getWertUnskaliert() >= 0 &&
 		   this.parameter.isInitialisiert()){
@@ -818,19 +837,15 @@ implements ClientReceiverInterface{
 			
 			QBWert = QPkw.getWertUnskaliert() + Math.round(fL * (double)QLkw.getWertUnskaliert());
 			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("QB").getItem("Wert"), QBWert)){  //$NON-NLS-1$//$NON-NLS-2$
-				double QPkwGuete = QPkw.getGueteIndex();
-				double QLkwGuete = QLkw.getGueteIndex();
-				
-				double QBGueteIndex = (QPkwGuete + fL * QLkwGuete) / (1.0 + fL);
-				if(QBGueteIndex < 0.0 || QBGueteIndex > 1.0){
-					QBGueteIndex = 1.0;
-				}
+				GWert QPkwGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
+				GWert QLkwGuete = new GWert(analyseDatum, "QLkw"); //$NON-NLS-1$					
+								
 				try {
-					QBGuete = new GWert(QBGueteIndex, GueteVerfahren.STANDARD);
+					QBGuete = GueteVerfahren.summe(QPkwGuete, GueteVerfahren.gewichte(QLkwGuete, fL));
 				} catch (GueteException e) {
 					LOGGER.error("Guete-Index fuer QB nicht berechenbar", e); //$NON-NLS-1$
 					e.printStackTrace();
-				}
+				}					
 			}else{
 				nichtErmittelbarFehlerhaft = true;
 			}
@@ -844,7 +859,7 @@ implements ClientReceiverInterface{
 			QBAnalyse.setWertUnskaliert(QBWert);
 			QBAnalyse.setInterpoliert(QPkw.isInterpoliert() || QLkw.isInterpoliert());
 			if(QBGuete != null){
-				QBAnalyse.setGueteIndex(QBGuete.getIndex());
+				QBAnalyse.getGueteIndex().setWert(QBGuete.getIndexUnskaliert());
 				QBAnalyse.setVerfahren(QBGuete.getVerfahren().getCode());				
 			}
 		}
@@ -911,7 +926,7 @@ implements ClientReceiverInterface{
 			KBAnalyse.setWertUnskaliert(KBWert);
 			KBAnalyse.setInterpoliert(interpoliert);
 			if(KBGuete != null){
-				KBAnalyse.setGueteIndex(KBGuete.getIndex());
+				KBAnalyse.getGueteIndex().setWert(KBGuete.getIndexUnskaliert());
 				KBAnalyse.setVerfahren(KBGuete.getVerfahren().getCode());				
 			}
 		}
@@ -957,9 +972,10 @@ implements ClientReceiverInterface{
 						
 						try {
 							gueteSummanden.add(
+									GueteVerfahren.gewichte(
 									GueteVerfahren.differenz(
 											new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
-											new GWert(fsResultIPlus1.getData(), "vKfz"))); //$NON-NLS-1$
+											new GWert(fsResultIPlus1.getData(), "vKfz")), (double)w)); //$NON-NLS-1$
 						} catch (GueteException e) {
 							gueteBerechnen = false;
 							LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
@@ -968,6 +984,7 @@ implements ClientReceiverInterface{
 						
 					}else{
 						nichtErmittelbarFehlerhaft = true;
+						break;
 					}
 				}	
 				
@@ -987,10 +1004,9 @@ implements ClientReceiverInterface{
 			VDeltaAnalyse.setWertUnskaliert(VDeltaWert);
 			VDeltaAnalyse.setInterpoliert(interpoliert);
 			if(gueteBerechnen){
-				GWert guete;
 				try {
-					guete = GueteVerfahren.summe(gueteSummanden.toArray(new GWert[0]));
-					VDeltaAnalyse.setGueteIndex(guete.getIndex());
+					GWert guete = GueteVerfahren.summe(gueteSummanden.toArray(new GWert[0]));
+					VDeltaAnalyse.getGueteIndex().setWert(guete.getIndexUnskaliert());
 					VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());				
 				} catch (GueteException e) {
 					LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
@@ -1000,33 +1016,6 @@ implements ClientReceiverInterface{
 		}
 		
 		VDeltaAnalyse.kopiereInhaltNach(analyseDatum);
-	}
-
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void update(ResultData[] resultate) {
-		if(resultate != null){
-			for(ResultData resultat:resultate){
-				if(resultat != null){
-					ResultData ergebnis = trigger(resultat);
-					if(ergebnis != null){
-						MQ_ANALYSE.sendeDaten(ergebnis);
-					}
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		LOGGER.warning("Der MQ " + this.messQuerschnitt +  //$NON-NLS-1$
-				" wird nicht mehr analysiert"); //$NON-NLS-1$
 	}
 
 }

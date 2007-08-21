@@ -57,8 +57,8 @@ public class QWert {
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param resultat ein KZD-Resultat
-	 * @param attName der Name des Zielattributes (Q-Wert)
+	 * @param resultat ein KZD-Resultat (kann auch <code>null</code> sein)
+	 * @param attName der Name des Zielattributes (Q-Wert) innerhalb des KZD-Resultates 
 	 */
 	public QWert(ResultData resultat, String attName){
 		if(resultat != null && resultat.getData() != null){
@@ -79,7 +79,7 @@ public class QWert {
 	
 	/**
 	 * Erfragt, ob dieses Datum verrechenbar ist. Dies ist dann der Fall,
-	 * wenn das Datum Nutzdaten enthält, die <code> >= null</code> sind
+	 * wenn das Datum Nutzdaten enthält, die <code> >= 0</code> sind
 	 * 
 	 * @return ob dieses Datum verrechenbar ist
 	 */
@@ -147,11 +147,11 @@ public class QWert {
 					GWert gueteSummand2 = new GWert(summand2.getWert().getGueteIndex(), 
 													GueteVerfahren.getZustand(summand2.getWert().getVerfahren()));
 					GWert gueteGesamt = GueteVerfahren.summe(gueteSummand1, gueteSummand2);
-					ergebnis.getWert().setGueteIndex(gueteGesamt.getIndex());					
+					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());					
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (GueteException e) {
-					LOGGER.error("Guete-Summe konnte nicht ermittelt werden.\nSummand1: " + summand1.getWert() + //$NON-NLS-1$
-							"\nSummand2: " + summand2.getWert()); //$NON-NLS-1$
+					LOGGER.error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
+							"\n***Summand2***\n" + summand2.getWert()); //$NON-NLS-1$
 					e.printStackTrace();
 				}
 			}
@@ -191,11 +191,11 @@ public class QWert {
 					GWert gueteSubtrahend = new GWert(subtrahend.getWert().getGueteIndex(), 
 													GueteVerfahren.getZustand(subtrahend.getWert().getVerfahren()));
 					GWert gueteGesamt = GueteVerfahren.differenz(gueteMinuend, gueteSubtrahend);
-					ergebnis.getWert().setGueteIndex(gueteGesamt.getIndex());					
+					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());					
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (GueteException e) {
-					LOGGER.error("Guete-Differenz konnte nicht ermittelt werden.\nMinuend: " + minuend.getWert() + //$NON-NLS-1$
-							"\nSubrahend: " + subtrahend.getWert()); //$NON-NLS-1$
+					LOGGER.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
+							"\n***Subrahend***\n" + subtrahend.getWert()); //$NON-NLS-1$
 					e.printStackTrace();
 				}
 			}
@@ -203,4 +203,14 @@ public class QWert {
 		
 		return ergebnis;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return this.wert == null?"<<null>>":this.wert.toString(); //$NON-NLS-1$
+	}
+	
 }

@@ -33,7 +33,6 @@ import java.util.TreeSet;
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.clientside.ResultData;
-import stauma.dav.clientside.SenderRole;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.dalve.DaMesswertUnskaliert;
@@ -47,7 +46,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktBearbeitungsKnotenAdapter;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
-import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVSendeAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
@@ -219,7 +217,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 		boolean nichtErmittelbarFehlerhaft = true;
 		if(qLkw.getWertUnskaliert() >= 0 && qKfz.getWertUnskaliert() > 0){
 			long aLkwWert = Math.round((100.0 * ((double)qLkw.getWertUnskaliert()) / ((double)qKfz.getWertUnskaliert())));
-			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("aLkw"), aLkwWert)){ //$NON-NLS-1$
+			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("aLkw").getItem("Wert"), aLkwWert)){ //$NON-NLS-1$ //$NON-NLS-2$
 				aLkw.setWertUnskaliert(aLkwWert);
 				
 				GWert qLkwGuete;
@@ -227,7 +225,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 					qLkwGuete = new GWert(kurzZeitDatum.getData().getItem("qLkw").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
 					GWert qKfzGuete = new GWert(kurzZeitDatum.getData().getItem("qKfz").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
 					GWert aLkwGuete = GueteVerfahren.quotient(qLkwGuete, qKfzGuete);
-					aLkw.setGueteIndex(aLkwGuete.getIndex());
+					
+					aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
 					aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 				} catch (GueteException e) {
 					LOGGER.error("Guete-Index fuer aLkw nicht berechenbar", e); //$NON-NLS-1$
@@ -240,9 +239,11 @@ extends AbstraktBearbeitungsKnotenAdapter{
 				nichtErmittelbarFehlerhaft = false;
 			}
 		}
+		
 		if(nichtErmittelbarFehlerhaft){
 			aLkw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}
+		
 		aLkw.kopiereInhaltNach(analyseDatum);
 	}
 	
@@ -255,8 +256,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	 * @param kurzZeitDatum ein KZ-Datum, auf dem der zu ermittelnde Analysewert basieren soll
 	 */
 	private final void berechneBemessungsVerkehrsStaerke(Data analyseDatum, ResultData kurzZeitDatum){
-		AtgVerkehrsDatenKurzZeitAnalyseFs parameter = this.parameter.get(kurzZeitDatum);
-		MesswertUnskaliert qB = new MesswertUnskaliert("qB", analyseDatum); //$NON-NLS-1$
+		AtgVerkehrsDatenKurzZeitAnalyseFs parameter = this.parameter.get(kurzZeitDatum.getObject());
+		MesswertUnskaliert qB = new MesswertUnskaliert("qB"); //$NON-NLS-1$
 		boolean nichtErmittelbarFehlerhaft = true;
 		if(parameter.isInitialisiert()){
 			double k1 = parameter.getFlk1();
@@ -279,17 +280,21 @@ extends AbstraktBearbeitungsKnotenAdapter{
 				}
 				long qBWert = Math.round((double)qPkw.getWertUnskaliert() + fL * (double)qLkw.getWertUnskaliert());
 				
-				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("qB"), qBWert)){ //$NON-NLS-1$
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("qB").getItem("Wert"), qBWert)){ //$NON-NLS-1$ //$NON-NLS-2$
 					qB.setWertUnskaliert(qBWert);
-					double qPkwGuete = qPkw.getGueteIndex();
-					double qLkwGuete = qLkw.getGueteIndex();
-					
-					double qBGuete = (qPkwGuete + fL * qLkwGuete) / (1.0 + fL);
-					if(qBGuete < 0.0 || qBGuete > 1.0){
-						qBGuete = 1.0;
+
+					GWert gueteGesamt = GWert.getNichtErmittelbareGuete(GueteVerfahren.getZustand(qB.getVerfahren()));
+					try {
+						GWert qPkwGuete = new GWert(analyseDatum, "qPkw"); //$NON-NLS-1$
+						GWert qLkwGuete = new GWert(analyseDatum, "qLkw"); //$NON-NLS-1$
+						
+						gueteGesamt = GueteVerfahren.summe(qPkwGuete, GueteVerfahren.gewichte(qLkwGuete, fL));
+					} catch (GueteException e) {
+						LOGGER.error("Guete von qB konnte nicht ermittelt werden", e); //$NON-NLS-1$
+						e.printStackTrace();
 					}
-					qB.setGueteIndex(qBGuete);
-					
+						
+					qB.getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());
 					if(qPkw.isPlausibilisiert() || qLkw.isPlausibilisiert()){
 						qB.setInterpoliert(true);
 					}
@@ -347,12 +352,12 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			if(qT.getWertUnskaliert() >= 0 && vT.getWertUnskaliert() > 0){
 				zielK.setWertUnskaliert(Math.round((double)qT.getWertUnskaliert() / (double)vT.getWertUnskaliert()));
 				
-				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("kKfz"), zielK.getWertUnskaliert())){ //$NON-NLS-1$
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("kKfz").getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
 					try {
 						GWert qGuete = new GWert(analyseDatum.getItem("qB").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
 						GWert vGuete = new GWert(analyseDatum.getItem("vKfz").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
 						GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
-						zielK.setGueteIndex(kGuete.getIndex());
+						zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 						zielK.setVerfahren(kGuete.getVerfahren().getCode());
 					} catch (GueteException e) {
 						LOGGER.error("Guete-Index fuer kB nicht berechenbar", e); //$NON-NLS-1$
@@ -427,12 +432,12 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			if(qT.getWertUnskaliert() >= 0 && vT.getWertUnskaliert() > 0){
 				zielK.setWertUnskaliert(Math.round((double)qT.getWertUnskaliert() / (double)vT.getWertUnskaliert()));
 				
-				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("k" + fahrZeugKlasse), zielK.getWertUnskaliert())){ //$NON-NLS-1$
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("k" + fahrZeugKlasse).getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
 					try {
 						GWert qGuete = new GWert(analyseDatum.getItem("q" + fahrZeugKlasse).getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
 						GWert vGuete = new GWert(analyseDatum.getItem("v" + fahrZeugKlasse).getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
 						GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
-						zielK.setGueteIndex(kGuete.getIndex());
+						zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 						zielK.setVerfahren(kGuete.getVerfahren().getCode());
 					} catch (GueteException e) {
 						LOGGER.error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
@@ -470,7 +475,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 		boolean nichtErmittelbarFehlerhaft = true;
 		if(TinS > 0 && qMwe.getWertUnskaliert() >= 0){
 			long q = Math.round(((double)qMwe.getWertUnskaliert() * 3600.0 / (double)TinS));
-			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem(attName), q)){
+			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem(attName).getItem("Wert"), q)){ //$NON-NLS-1$
 				qAnalyse.setWertUnskaliert(q);
 				qAnalyse.setGueteIndex(qMwe.getGueteIndex());
 				qAnalyse.setVerfahren(qMwe.getVerfahren());

@@ -47,12 +47,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
 
 /**
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte
- * eines virtuellen Messquerschnitts notwendig sind gespeichert. 
- * 
- * 
- * TODO: Jedes mit dem MQ assoziierte 
- * Fahrstreifendatum muss durch dieses Objekt (Methode <code>trigger(..)</code>) geleitet
- * werden um ggf. auch eine neue Berechnung von Analysewerten auszulösen.
+ * eines virtuellen Messquerschnitts notwendig sind gespeichert. Wenn die Werte für ein
+ * bestimmtes Intervall bereit stehen (oder eine Timeout abgelaufen ist), wird eine
+ * Berechnung durchgeführt und der Wert publiziert
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -72,11 +69,6 @@ implements IObjektWeckerListener{
 	 * von ihnen empfangene Analysedatum
 	 */
 	private Map<SystemObject, ResultData> aktuelleMQAnalysen = new HashMap<SystemObject, ResultData>();
-	
-	/**
-	 * zeigt an, ob der Wecker zur Alarmierung bei Timeout eingeschaltet ist
-	 */
-	private boolean weckerGestellt = false;
 	
 	/**
 	 * Alle MQ, die auf der Hauptfahrbahn liegen
@@ -128,8 +120,7 @@ implements IObjektWeckerListener{
 	 * @param messQuerschnittVirtuell der virtuelle Messquerschnitt
 	 * @return die initialisierte Instanz dieses Objekts
 	 * @throws DUAInitialisierungsException wenn die Konfigurationsdaten des virtuellen 
-	 * MQs nicht vollständig ausgelesen werden konnte, oder die Analysedaten für den
-	 * virtuellen MQ nicht errechnet werden könnten (aufgrund fehlender MQ-Referenzen) 
+	 * MQs nicht vollständig ausgelesen werden konnte 
 	 */
 	public DaAnalyseMessQuerschnittVirtuell initialisiere(MqAnalyseModul analyseModul, 
 														  SystemObject messQuerschnittVirtuell)
@@ -186,19 +177,19 @@ implements IObjektWeckerListener{
 						" sind nicht Ein- UND Ausfahrt definiert (beide gleichzeitig)"); //$NON-NLS-1$
 				nichtBetrachtet = true;
 			}
+
+			if(nichtBetrachtet)return null;
 			
-			if(!nichtBetrachtet){
-				this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
-				MQ_ANALYSE.getDav().subscribeReceiver(
-						this,
-						this.aktuelleMQAnalysen.keySet(), 
-						new DataDescription(
-								MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-								MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
-								(short)0),
-								ReceiveOptions.normal(),
-								ReceiverRole.receiver());
-			}
+			this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
+			MQ_ANALYSE.getDav().subscribeReceiver(
+					this,
+					this.aktuelleMQAnalysen.keySet(), 
+					new DataDescription(
+							MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
+							MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+							(short)0),
+							ReceiveOptions.normal(),
+							ReceiverRole.receiver());
 		}else{
 			throw new DUAInitialisierungsException("MQV-Konfiguration von " + messQuerschnittVirtuell +  //$NON-NLS-1$
 				" konnte nicht vollständig ausgelesen werden"); //$NON-NLS-1$
@@ -233,11 +224,10 @@ implements IObjektWeckerListener{
 					/**
 					 * Ggf. Timeout einstellen
 					 */
-					if(!this.weckerGestellt){
+					if(!WECKER.isWeckerGestelltFuer(this)){
 						long T = triggerDatum.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
 						long timeoutZeitStempel = triggerDatum.getDataTime() + T + T/2;
 						WECKER.setWecker(this, timeoutZeitStempel);
-						this.weckerGestellt = true;
 					}
 				}
 			}
@@ -245,7 +235,7 @@ implements IObjektWeckerListener{
 				
 		return ergebnis;
 	}
-	
+
 	
 	/**
 	 * Ermittelt, ob dieser virtuelle Messquerschnitt zur Zeit auf <code>keine Daten</code>
@@ -281,7 +271,7 @@ implements IObjektWeckerListener{
 			}
 		}
 		
-		return datenZaehlerFuerHauptFahrbahn > 0;
+		return datenZaehlerFuerHauptFahrbahn == 0;
 	}
 	
 	
@@ -340,8 +330,10 @@ implements IObjektWeckerListener{
 	 *  
 	 * @return ein Analysedatum 
 	 */
-	private final ResultData getErgebnisAufBasisAktuellerDaten(){
+	private synchronized final ResultData getErgebnisAufBasisAktuellerDaten(){
 		ResultData ergebnis = null;
+		
+		WECKER.setWecker(this, ObjektWecker.AUS);
 		
 		Data analyseDatum = MQ_ANALYSE.getDav().createData(MqAnalyseModul.PUB_BESCHREIBUNG.getAttributeGroup());
 		
@@ -363,7 +355,8 @@ implements IObjektWeckerListener{
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				mw.kopiereInhaltNach(analyseDatum);
 			}
-		}			
+		}	
+		
 		/**
 		 * Ermittle Werte für <code>QKfz, QLkw</code> und <code>QPkw</code>
 		 */
@@ -397,6 +390,97 @@ implements IObjektWeckerListener{
 		
 		return ergebnis;
 	}
+			
+	
+	/**
+	 * Wird aufgerufen, wenn das Timeout für die Publikation eines
+	 * Analysedatums überschritten wurde
+	 */
+	public void alarm() {
+		ResultData resultat = this.getErgebnisAufBasisAktuellerDaten();
+		
+		assert(resultat != null);
+		
+		this.publiziere(resultat);	
+	}
+	
+	
+	/**
+	 * Publiziert eine Analysedatum (so nicht <code>null</code> übergeben wurde)
+	 * 
+	 * @param ergebnis ein neu berechntes Analysedatum (oder <code>null</code>)
+	 */
+	private final synchronized void publiziere(final ResultData ergebnis){
+		if(ergebnis != null){
+			/**
+			 * nur echt neue Daten versenden
+			 */
+			if(this.letztesErgebnis == null ||
+			   this.letztesErgebnis.getDataTime() < ergebnis.getDataTime()){
+				ResultData publikationsDatum = null;
+				
+				if(ergebnis.getData() == null){
+					/**
+					 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf
+					 * "keine Daten" steht. Dies ist der Fall,<br>
+					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder<br>
+					 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten hatte.
+					 */
+					boolean aktuellKeineDaten = this.letztesErgebnis == null || this.letztesErgebnis.getData() == null; 
+					
+					if(!aktuellKeineDaten){
+						publikationsDatum = ergebnis;
+					}				
+				}else{
+					publikationsDatum = ergebnis;
+					/**
+					 * Ein Datum wurde berechnet. Lösche alle gepufferten MQ-Daten
+					 */
+					for(SystemObject mq:this.aktuelleMQAnalysen.keySet())
+											this.aktuelleMQAnalysen.put(mq, null);
+				}
+				
+				if(publikationsDatum != null){
+					this.letztesErgebnis = ergebnis;
+					MQ_ANALYSE.sendeDaten(publikationsDatum);
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void update(ResultData[] resultate) {
+		if(resultate != null){
+			for(ResultData resultat:resultate){
+				if(resultat != null){
+					this.publiziere(this.trigger(resultat));
+				}
+			}
+		}
+	}
+
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void finalize()
+	throws Throwable {
+		LOGGER.warning("Der virtuelle MQ " + this.messQuerschnitt + //$NON-NLS-1$
+				" wird nicht mehr analysiert"); //$NON-NLS-1$
+	}
+	
+	
+	
+	/**********************************************************************************
+	 *                                                                                *
+	 *                           Berechnungs-Methoden                                 *
+	 *                                                                                *
+	 **********************************************************************************/
 	
 	
 	/**
@@ -481,7 +565,9 @@ implements IObjektWeckerListener{
 	
 	
 	/**
-	 * Erfragt das aktuelle Referenzdatum
+	 * Erfragt das aktuelle Referenzdatum. Das ist das Datum, dessen Zeitstempel
+	 * und Intervall mit dem des Analysedatums identisch ist, dass auf Basis der
+	 * aktuellen Daten produziert werden kann
 	 * 
 	 * @return das aktuelle Referenzdatum, oder <code>null</code>
 	 */
@@ -678,69 +764,4 @@ implements IObjektWeckerListener{
 
 		return ergebnis;		
 	}
-		
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void alarm() {
-		this.publiziere(this.getErgebnisAufBasisAktuellerDaten());
-	}
-	
-	
-	/**
-	 * Publiziert eine Analysedatum
-	 * 
-	 * @param ergebnis ein neu berechntes Analysedatum
-	 */
-	private final void publiziere(final ResultData ergebnis){
-		if(ergebnis != null){
-			if(ergebnis.getData() == null){
-				/**
-				 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf
-				 * "keine Daten" steht. Dies ist der Fall,<br>
-				 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder<br>
-				 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten hatte.
-				 */
-				boolean aktuellKeineDaten = this.letztesErgebnis == null || this.letztesErgebnis.getData() == null; 
-				
-				if(!aktuellKeineDaten){
-					MQ_ANALYSE.sendeDaten(ergebnis);
-				}				
-			}else{
-				MQ_ANALYSE.sendeDaten(ergebnis);
-			}
-			
-			WECKER.setWecker(this, ObjektWecker.AUS);
-			this.weckerGestellt = false;
-			this.letztesErgebnis = ergebnis;
-		}		
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void update(ResultData[] resultate) {
-		if(resultate != null){
-			for(ResultData resultat:resultate){
-				if(resultat != null){
-					this.publiziere(this.trigger(resultat));
-				}
-			}
-		}
-	}
-
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void finalize()
-	throws Throwable {
-		LOGGER.warning("Der virtuelle MQ " + this.messQuerschnitt + //$NON-NLS-1$
-				" wird nicht mehr analysiert"); //$NON-NLS-1$
-	}
-
 }

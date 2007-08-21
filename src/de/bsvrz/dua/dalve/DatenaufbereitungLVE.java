@@ -105,8 +105,6 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 		this.mqAnalyseModul = new MqAnalyseModul();
 		this.mqAnalyseModul.initialisiere(this);
 		
-		Runtime.getRuntime().gc();
-		
 		DataDescription anmeldungsBeschreibungKZD = new DataDescription(
 				this.verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 				this.verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),

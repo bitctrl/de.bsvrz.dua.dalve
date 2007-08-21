@@ -33,7 +33,6 @@ import stauma.dav.clientside.ReceiverRole;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.clientside.Data.Array;
 import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
@@ -102,11 +101,6 @@ implements ClientReceiverInterface{
 	 */
 	private int[] wichtung = null; 
 	
-	/**
-	 * ein Systemobjekt eines Messquerschnittes
-	 */
-	private SystemObject mq = null;
-
 	
 	/**
 	 * Standardkonstruktor
@@ -122,7 +116,6 @@ implements ClientReceiverInterface{
 		if(mq == null){
 			throw new NullPointerException("Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
 		}
-		this.mq = mq;
 		dav.subscribeReceiver(this, mq, new DataDescription(
 				dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
 				dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
@@ -302,18 +295,6 @@ implements ClientReceiverInterface{
 				}
 			}
 		}
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void finalize()
-	throws Throwable {
-		Debug.getLogger().warning("Fuer MQ " + mq +  //$NON-NLS-1$
-				" werden keine Analyse-Parameter mehr verwaltet"); //$NON-NLS-1$
-		super.finalize();
 	}
 
 }
