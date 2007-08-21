@@ -96,7 +96,7 @@ implements ClientReceiverInterface {
 		/*
 		 * Empfängeranmeldung aller 3 Fahrstreifen
 		 */
-		DD_KZDFS_EMPF = new DataDescription(this.dav.getDataModel().getAttributeGroup("	atg.verkehrsDatenKurzZeitFs"),
+		DD_KZDFS_EMPF = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"),
 				  this.dav.getDataModel().getAspect("asp.analyse"),
 				  (short)0);
 
