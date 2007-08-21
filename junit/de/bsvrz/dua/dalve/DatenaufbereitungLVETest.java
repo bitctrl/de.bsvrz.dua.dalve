@@ -3,9 +3,9 @@ package de.bsvrz.dua.dalve;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.bsvrz.dua.dalve.para.ParaAnaProgImport;
-import de.bsvrz.dua.dalve.pruef.PruefeDaLVEAnalyse;
 import de.bsvrz.dua.dalve.util.TestFahrstreifenImporter;
+import de.bsvrz.dua.dalve.util.para.ParaAnaProgImport;
+import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
