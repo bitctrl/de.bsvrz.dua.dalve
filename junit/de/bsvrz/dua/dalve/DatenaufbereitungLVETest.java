@@ -161,9 +161,8 @@ implements ClientSenderInterface {
 			this.dav.sendData(resultat3);
 			
 			//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
-			//TODO
 			LOGGER.info("Warte auf Prüfung der FS 1-3...");
-			//doWait();
+			doWait();
 			
 			csvIndex++;
 			
