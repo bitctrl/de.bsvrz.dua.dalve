@@ -264,7 +264,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 	 * @param sollErgebnis SOLL-Datensatz
 	 * @param istErgebnis IST-Datensatz
 	 */
-	public void vergleiche(Data sollErgebnis, Data istErgebnis, int csvIndex) {
+	public void vergleiche(Data istErgebnis, Data sollErgebnis, int csvIndex) {
 		this.sollErgebnis = sollErgebnis;
 		this.istErgebnis = istErgebnis;
 		this.csvIndex = csvIndex;
@@ -295,8 +295,9 @@ class VergleicheDaLVEAnalyse extends Thread {
 	 *
 	 */
 	private void doVergleich() {
-		String loggerOut = "[PT"+fsIndex+"] Vergleichsergebnis der Zeile "+csvIndex+"\n\r";
+		String loggerOut = "[PT"+fsIndex+"] Vergleichsergebnis des FS "+fsIndex+" Zeile "+csvIndex+"\n\r";
 		String attributPfad = null;
+		String csvDS = "[FS:"+fsIndex+"-Z:"+csvIndex+"]";
 		int sollWert;
 		int istWert;
 		for(int i=0;i<attributNamenPraefix.length;i++) {
@@ -305,15 +306,15 @@ class VergleicheDaLVEAnalyse extends Thread {
 				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().intValue();
 				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis).asUnscaledValue().intValue();
 				if(sollWert == istWert) {
-					loggerOut += "OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert+"\n\r";
+					loggerOut += csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert+"\n\r";
 				} else {
-					LOGGER.error("ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert);
-					loggerOut += "ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert+"\n\r";
+					LOGGER.error(csvDS +" ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert);
+					loggerOut += csvDS+ " ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert+"\n\r";
 				}
 			}
 		}
 		LOGGER.info(loggerOut);
-		LOGGER.info("[PT"+fsIndex+"] Prüfung Zeile "+csvIndex+" abgeschlossen. Benachrichtige Prüfklasse...");
+		LOGGER.info("[PT"+fsIndex+"] Prüfung FS "+fsIndex+" Zeile "+csvIndex+" abgeschlossen. Benachrichtige Prüfklasse...");
 		//Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3) 
 		caller.doNotify(fsIndex);
 	}
