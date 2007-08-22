@@ -367,7 +367,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 					if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){
 						zielK.setInterpoliert(true);
 					}
-				} else {
+				}else{
 					zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			}
@@ -474,7 +474,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	private final void berechneVerkehrsStaerke(Data analyseDatum, ResultData kurzZeitDatum, String attName){
 		long TinS = kurzZeitDatum.getData().getTimeValue("T").getMillis() / 1000; //$NON-NLS-1$
 		DaMesswertUnskaliert qMwe = new DaMesswertUnskaliert(attName, kurzZeitDatum.getData());
-		MesswertUnskaliert qAnalyse = new MesswertUnskaliert(attName);
+		MesswertUnskaliert qAnalyse = new MesswertUnskaliert(attName, kurzZeitDatum.getData());
 		
 		boolean nichtErmittelbarFehlerhaft = true;
 		if(TinS > 0 && qMwe.getWertUnskaliert() >= 0){
@@ -507,7 +507,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	 */
 	private final void uebernehmeWert(Data analyseDatum, ResultData kurzZeitDatum, String attName){
 		DaMesswertUnskaliert mweWert = new DaMesswertUnskaliert(attName, kurzZeitDatum.getData());
-		MesswertUnskaliert analyseWert = new MesswertUnskaliert(attName);
+		MesswertUnskaliert analyseWert = new MesswertUnskaliert(attName, kurzZeitDatum.getData());
 		
 		boolean nichtErmittelbarFehlerhaft = true;
 		if(mweWert.getWertUnskaliert() >= 0){
