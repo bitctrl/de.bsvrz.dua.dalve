@@ -448,6 +448,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 					if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){
 						zielK.setInterpoliert(true);
 					}
+				}else{
+					zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			}
 		}
