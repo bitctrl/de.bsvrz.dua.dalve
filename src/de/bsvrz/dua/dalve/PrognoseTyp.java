@@ -41,38 +41,87 @@ import stauma.dav.configuration.interfaces.AttributeGroup;
 public class PrognoseTyp {
 	
 	/**
-	 * 
+	 * Prognosewerte folgen den Messwerten sehr schnell, geringe Glättung
 	 */
-	public static final PrognoseTyp FLINK = null;
+	public static PrognoseTyp FLINK = null;
 	
 	/**
-	 * 
+	 * Prognosewerte folgen den Messwerten normal, normale Glättung
 	 */
-	public static final PrognoseTyp NORMAL = null;
+	public static PrognoseTyp NORMAL = null;
 	
 	/**
-	 * 
+	 * Prognosewerte folgen den Messwerten sehr langsam, starke Glättung
 	 */
-	public static final PrognoseTyp TRAEGE = null;
+	public static PrognoseTyp TRAEGE = null;
 
-	
+	/**
+	 * Der Aspekt
+	 */
 	private Aspect aspekt = null;
+
+	/**
+	 * Parameterattributgruppe fuer Fahrstreifen
+	 */
+	private AttributeGroup atgFahrStreifen = null;
+	
+	/**
+	 * Parameterattributgruppe fuer Messquerschnitte
+	 */
+	private AttributeGroup atgMessQuerschnitt = null;
 	
 	
+	/**
+	 * Standardkonstruktor
+	 * 
+	 * @param dav Verbindung zum Datenverteiler
+	 * @param name <code>Flink</code>, <code>Normal</code> oder <code>Träge</code>  
+	 */
+	private PrognoseTyp(final ClientDavInterface dav,
+						final String name){
+		this.aspekt = dav.getDataModel().getAspect("asp.prognose" + name); //$NON-NLS-1$
+		this.atgFahrStreifen = dav.getDataModel().getAttributeGroup(
+				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Fs");  //$NON-NLS-1$//$NON-NLS-2$
+		this.atgFahrStreifen = dav.getDataModel().getAttributeGroup(
+				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Mq");  //$NON-NLS-1$//$NON-NLS-2$
+	}
 	
 	
+	/**
+	 * Initialisiert alle statischen Objekte dieses Typs
+	 * 
+	 * @param dav Verbindung zum Datenverteiler
+	 */
 	public static final void initialisiere(final ClientDavInterface dav){
-		
+		if(FLINK == null){
+			FLINK = new PrognoseTyp(dav, "Flink"); //$NON-NLS-1$
+			NORMAL = new PrognoseTyp(dav, "Normal"); //$NON-NLS-1$
+			TRAEGE = new PrognoseTyp(dav, "Träge"); //$NON-NLS-1$
+		}
 	}
 
 	
-	
+	/**
+	 * Erfragt den Aspekt, unter dem Daten dieses Typs publiziert werden sollen
+	 * 
+	 * @return der Aspekt, unter dem Daten dieses Typs publiziert werden sollen
+	 */
 	public final Aspect getAspekt(){
-		return null;
+		return this.aspekt;
 	}
 	
-	public final String getParameterAtgPid(final boolean fuerFahrStreifen){
-		return null;
+	
+	/**
+	 * Erfragt die Parameterattributgruppe dieses Prognosetyps für einen
+	 * Fahrstreifen oder einen Messquerschnitt
+	 * 
+	 * @param fuerFahrStreifen ob die Parameterattributgruppe für einen Fahrstreifen
+	 * <code>true</code> oder einen Messquerschnitt <code>false</code> benötigt wird 
+	 * @return die Parameterattributgruppe dieses Prognosetyps für einen
+	 * Fahrstreifen oder einen Messquerschnitt
+	 */
+	public final AttributeGroup getParameterAtg(final boolean fuerFahrStreifen){
+		return fuerFahrStreifen?this.atgFahrStreifen:this.atgMessQuerschnitt;
 	}
 		
 }

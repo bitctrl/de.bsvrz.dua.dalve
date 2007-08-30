@@ -149,4 +149,12 @@ public class PrognoseSystemObjekt {
 		return this.pubAtgPrognose;
 	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return this.objekt.toString();
+	}
 }

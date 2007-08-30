@@ -31,6 +31,7 @@ import sys.funclib.debug.Debug;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteException;
 import de.bsvrz.dua.guete.GueteVerfahren;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
@@ -136,16 +137,23 @@ public class QWert {
 				ergebnis.getWert().setWertUnskaliert(summand1.getWert().getWertUnskaliert() + 
 													 summand2.getWert().getWertUnskaliert());
 				ergebnis.getWert().setInterpoliert(summand1.getWert().isInterpoliert() || 
-												   summand2.getWert().isInterpoliert());
-				
+												   summand2.getWert().isInterpoliert());				
+			}
+			
+			if( (summand1.isVerrechenbar() || 
+				 summand1.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) &&
+				(summand2.isVerrechenbar() ||
+				 summand2.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)){
 				/**
 				 * Gueteberechnung
 				 */
 				try {
 					GWert gueteSummand1 = new GWert(summand1.getWert().getGueteIndex(), 
-													GueteVerfahren.getZustand(summand1.getWert().getVerfahren()));
+													GueteVerfahren.getZustand(summand1.getWert().getVerfahren()),
+													summand1.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR);
 					GWert gueteSummand2 = new GWert(summand2.getWert().getGueteIndex(), 
-													GueteVerfahren.getZustand(summand2.getWert().getVerfahren()));
+													GueteVerfahren.getZustand(summand2.getWert().getVerfahren()),
+													summand2.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR);
 					GWert gueteGesamt = GueteVerfahren.summe(gueteSummand1, gueteSummand2);
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());					
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
@@ -180,16 +188,23 @@ public class QWert {
 				ergebnis.getWert().setWertUnskaliert(minuend.getWert().getWertUnskaliert() - 
 													 subtrahend.getWert().getWertUnskaliert());
 				ergebnis.getWert().setInterpoliert(minuend.getWert().isInterpoliert() || 
-												   subtrahend.getWert().isInterpoliert());
-				
+												   subtrahend.getWert().isInterpoliert());				
+			}
+			
+			if( (minuend.isVerrechenbar() || 
+				 minuend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) &&
+				(subtrahend.isVerrechenbar() ||
+				 subtrahend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)){
 				/**
 				 * Gueteberechnung
 				 */
 				try {
 					GWert gueteMinuend = new GWert(minuend.getWert().getGueteIndex(), 
-													GueteVerfahren.getZustand(minuend.getWert().getVerfahren()));
+												   GueteVerfahren.getZustand(minuend.getWert().getVerfahren()), 
+												   minuend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR);
 					GWert gueteSubtrahend = new GWert(subtrahend.getWert().getGueteIndex(), 
-													GueteVerfahren.getZustand(subtrahend.getWert().getVerfahren()));
+													  GueteVerfahren.getZustand(subtrahend.getWert().getVerfahren()),
+													  subtrahend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR);
 					GWert gueteGesamt = GueteVerfahren.differenz(gueteMinuend, gueteSubtrahend);
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());					
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
@@ -197,7 +212,7 @@ public class QWert {
 					LOGGER.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
 							"\n***Subrahend***\n" + subtrahend.getWert()); //$NON-NLS-1$
 					e.printStackTrace();
-				}
+				}				
 			}
 		}
 		

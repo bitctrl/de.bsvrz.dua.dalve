@@ -327,7 +327,7 @@ implements ClientReceiverInterface{
 			if(fsWert.getWertUnskaliert() >= 0){
 				summe += fsWert.getWertUnskaliert();
 				interpoliert |= fsWert.isInterpoliert();
-				gueteWerte.add(new GWert(fsDaten.getData().getItem("q" + attName).getItem("Güte"))); //$NON-NLS-1$ //$NON-NLS-2$
+				gueteWerte.add(new GWert(fsDaten.getData(), "q" + attName)); //$NON-NLS-1$
 			}else{
 				nichtErmittelbarFehlerhaft = true;
 				break;
@@ -399,8 +399,8 @@ implements ClientReceiverInterface{
 				try {
 					gueteProdukte.add(
 							GueteVerfahren.produkt(
-									new GWert(fsDaten.getData().getItem("q" + attName).getItem("Güte")), //$NON-NLS-1$ //$NON-NLS-2$
-									new GWert(fsDaten.getData().getItem(praefixKlein + attName).getItem("Güte")) //$NON-NLS-1$
+									new GWert(fsDaten.getData(), "q" + attName), //$NON-NLS-1$
+									new GWert(fsDaten.getData(), praefixKlein + attName)
 							)
 					);
 				} catch (GueteException e) {
@@ -429,7 +429,7 @@ implements ClientReceiverInterface{
 					try {
 						GWert gesamtGuete = GueteVerfahren.quotient(
 								GueteVerfahren.summe(gueteProdukte.toArray(new GWert[0])),
-								new GWert(analyseDatum.getItem("Q" + attName).getItem("Güte")) //$NON-NLS-1$ //$NON-NLS-2$
+								new GWert(analyseDatum, "Q" + attName) //$NON-NLS-1$
 							);
 						
 						qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());

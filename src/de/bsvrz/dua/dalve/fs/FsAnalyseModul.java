@@ -222,8 +222,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 				
 				GWert qLkwGuete;
 				try {
-					qLkwGuete = new GWert(kurzZeitDatum.getData().getItem("qLkw").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
-					GWert qKfzGuete = new GWert(kurzZeitDatum.getData().getItem("qKfz").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
+					qLkwGuete = new GWert(kurzZeitDatum.getData(), "qLkw"); //$NON-NLS-1$
+					GWert qKfzGuete = new GWert(kurzZeitDatum.getData(), "qKfz"); //$NON-NLS-1$
 					GWert aLkwGuete = GueteVerfahren.quotient(qLkwGuete, qKfzGuete);
 					
 					aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
@@ -354,8 +354,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 				
 				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("kKfz").getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
 					try {
-						GWert qGuete = new GWert(analyseDatum.getItem("qB").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
-						GWert vGuete = new GWert(analyseDatum.getItem("vKfz").getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
+						GWert qGuete = new GWert(analyseDatum, "qB"); //$NON-NLS-1$
+						GWert vGuete = new GWert(analyseDatum, "vKfz"); //$NON-NLS-1$
 						GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
 						zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 						zielK.setVerfahren(kGuete.getVerfahren().getCode());
@@ -436,8 +436,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 				
 				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("k" + fahrZeugKlasse).getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
 					try {
-						GWert qGuete = new GWert(analyseDatum.getItem("q" + fahrZeugKlasse).getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
-						GWert vGuete = new GWert(analyseDatum.getItem("v" + fahrZeugKlasse).getItem("Güte")); //$NON-NLS-1$ //$NON-NLS-2$
+						GWert qGuete = new GWert(analyseDatum, "q" + fahrZeugKlasse); //$NON-NLS-1$
+						GWert vGuete = new GWert(analyseDatum, "v" + fahrZeugKlasse); //$NON-NLS-1$
 						GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
 						zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 						zielK.setVerfahren(kGuete.getVerfahren().getCode());

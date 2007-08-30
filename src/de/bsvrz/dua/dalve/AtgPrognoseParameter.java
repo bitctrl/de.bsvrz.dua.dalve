@@ -87,7 +87,7 @@ implements ClientReceiverInterface{
 		dav.subscribeReceiver(this, 
 							  objekt.getObjekt(), 
 							  new DataDescription(
-									  dav.getDataModel().getAttributeGroup(typ.getParameterAtgPid(objekt.isFahrStreifen())),
+									  typ.getParameterAtg(objekt.isFahrStreifen()),
 									  dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
 									  (short)0),
 							  ReceiveOptions.normal(),
