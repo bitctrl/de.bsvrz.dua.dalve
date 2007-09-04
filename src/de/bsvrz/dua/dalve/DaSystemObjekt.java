@@ -26,75 +26,53 @@
 package de.bsvrz.dua.dalve;
 
 import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Objekt, das mit einem Systemobjekt assoziiert ist, welches innerhalb der 
- * Messwertprognose behandelt werden kann (also <code>typ.fahrStreifen</code>
+ * Datenaufbereitung behandelt werden kann (also <code>typ.fahrStreifen</code>
  * oder <code>typ.messQuerschnitt</code>)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class PrognoseSystemObjekt {
+public class DaSystemObjekt {
 
 	/**
 	 * zeigt an, ob dieses Objekt vom Typ <code>typ.fahrStreifen</code> ist
 	 */
-	private boolean objektIstFahrStreifen = false;
+	protected boolean objektIstFahrStreifen = false;
 	
 	/**
 	 * das Systemobjekt selbst
 	 */
-	private SystemObject objekt = null;
+	protected SystemObject objekt = null;
 	
-	/**
-	 * Attributgruppe unter der die geglaetteten Werte publiziert werden
-	 */
-	private AttributeGroup pubAtgGlatt = null;
-	
-	/**
-	 * Attributgruppe unter der die Prognosewerte publiziert werden
-	 */
-	private AttributeGroup pubAtgPrognose = null;
-	
-	/**
-	 * Attributgruppe aus der sich die Prognosedaten dieses Objektes speisen
-	 */
-	private AttributeGroup quellAtg = null;
-	
-	
+		
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Systemobjekt, welches innerhalb der Messwertprognose
+	 * @param objekt ein Systemobjekt, welches innerhalb der Datenaufbereitung
 	 * behandelt werden kann (also <code>typ.fahrStreifen</code> oder
 	 * <code>typ.messQuerschnitt</code>)
-	 * @throws DUAInitialisierungsException
+	 * @throws DUAInitialisierungsException wenn das Objekt nicht identifizierbar ist
 	 */
-	public PrognoseSystemObjekt(final ClientDavInterface dav,
-					 	  		final SystemObject objekt)
+	public DaSystemObjekt(final ClientDavInterface dav,
+					 	  final SystemObject objekt)
 	throws DUAInitialisierungsException{
 		if(objekt == null){
-			throw new NullPointerException("Uebergebenes Prognoseobjekt ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException("Uebergebenes Objekt ist <<null>>"); //$NON-NLS-1$
 		}
 		if(objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)){
 			this.objektIstFahrStreifen = true;
-			this.pubAtgPrognose = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_TRENT_FS);
-			this.pubAtgGlatt = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_FS);
-			this.quellAtg = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
 		}else
 		if(objekt.isOfType(DUAKonstanten.TYP_MQ)){
 			this.objektIstFahrStreifen = false;
-			this.pubAtgPrognose = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_TRENT_MQ);
-			this.pubAtgGlatt = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_MQ);
-			this.quellAtg = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
 		}else{
-			throw new DUAInitialisierungsException("Uebergebenes Prognoseobjekt ist" + //$NON-NLS-1$
+			throw new DUAInitialisierungsException("Uebergebenes Objekt ist" + //$NON-NLS-1$
 					" weder Fahrstreifen noch Messquerschnitt"); //$NON-NLS-1$
 		}
 	}
@@ -117,36 +95,6 @@ public class PrognoseSystemObjekt {
 	 */
 	public final boolean isFahrStreifen(){
 		return this.objektIstFahrStreifen;
-	}
-	
-	
-	/**
-	 * Erfragt die Attributgruppe aus der sich die Prognosedaten dieses Objektes speisen
-	 * 
-	 * @return Attributgruppe aus der sich die Prognosedaten dieses Objektes speisen
-	 */
-	public final AttributeGroup getQuellAtg(){
-		return this.quellAtg;
-	}
-	
-	
-	/**
-	 * Erfragt die Attributgruppe unter der die geglaetteten Werte publiziert werden
-	 * 
-	 * @return Attributgruppe unter der die geglaetteten Werte publiziert werden
-	 */
-	public final AttributeGroup getPubAtgGlatt(){
-		return this.pubAtgGlatt;
-	}
-
-	
-	/**
-	 * Erfragt die Attributgruppe unter der die Prognosewerte publiziert werden
-	 * 
-	 * @return Attributgruppe unter der die Prognosewerte publiziert werden
-	 */
-	public final AttributeGroup getPubAtgPrognose(){
-		return this.pubAtgPrognose;
 	}
 
 
