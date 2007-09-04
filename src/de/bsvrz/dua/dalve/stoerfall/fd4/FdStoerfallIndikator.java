@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
-package de.bsvrz.dua.dalve.stoerfall.fd;
+package de.bsvrz.dua.dalve.stoerfall.fd4;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.Data;
