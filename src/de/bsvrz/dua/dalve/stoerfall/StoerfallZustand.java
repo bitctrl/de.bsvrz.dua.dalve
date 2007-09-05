@@ -68,7 +68,7 @@ public class StoerfallZustand{
 	/**
 	 * Intervalldauer, mit dem die Werte erfasst wurden
 	 */
-	private long T = 0;
+	private long T = 1;
 	
 	
 	/**

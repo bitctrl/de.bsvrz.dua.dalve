@@ -154,6 +154,9 @@ extends AbstraktStoerfallIndikator{
 			}
 			
 			StoerfallZustand zustand = new StoerfallZustand(DAV);
+			if(this.objekt.isFahrStreifen()){
+				zustand.setT(resultat.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
+			}
 			zustand.setSituation(situation);
 			data = zustand.getData();
 		}

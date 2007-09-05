@@ -100,7 +100,6 @@ extends AbstraktStoerfallIndikator{
 	public void initialisiere(ClientDavInterface dav,
 							  PrognoseSystemObjekt objekt)
 	throws DUAInitialisierungsException {
-		// TODO Auto-generated method stub
 		super.initialisiere(dav, objekt);
 		dav.subscribeReceiver(this, this.objekt.getObjekt(),
 				new DataDescription(objekt.getAnalyseAtg(),
@@ -164,6 +163,7 @@ extends AbstraktStoerfallIndikator{
 							this.letzteStufe = stufe;
 							
 							StoerfallZustand zustand = new StoerfallZustand(DAV);
+							zustand.setT(resultat.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
 							zustand.setSituation(stufe);
 							data = zustand.getData();							
 						}						
