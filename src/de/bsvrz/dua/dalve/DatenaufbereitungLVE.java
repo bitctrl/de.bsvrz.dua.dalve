@@ -26,6 +26,7 @@
 package de.bsvrz.dua.dalve;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.clientside.ReceiveOptions;
@@ -35,6 +36,8 @@ import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.dua.dalve.analyse.FsAnalyseModul;
 import de.bsvrz.dua.dalve.analyse.MqAnalyseModul;
+import de.bsvrz.dua.dalve.prognose.PrognoseModul;
+import de.bsvrz.dua.dalve.stoerfall.StoerfallModul;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
@@ -61,11 +64,6 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 	 */
 	private FsAnalyseModul fsAnalyseModul = null;	
 	
-	/**
-	 * Modul in dem die MQ-Daten analysiert werden
-	 */
-	private MqAnalyseModul mqAnalyseModul = null;
-	
 	
 	/**
 	 * {@inheritDoc}
@@ -82,28 +80,48 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 	protected void initialisiere()
 	throws DUAInitialisierungsException {
 		
+		/**
+		 * Initialisiere das DUA-Verkehrsnetz
+		 */
 		DuaVerkehrsNetz.initialisiere(this.verbindung);
 		
 		/**
-		 * Ermittle nur die Fahrstreifen
+		 * Ermittle nur die Fahrstreifen und Messquerschnitte
 		 */
-		String infoStr = Konstante.LEERSTRING;
-		Collection<SystemObject> daLveObjekte = DUAUtensilien.getBasisInstanzen(
+		Collection<SystemObject> fahrStreifen = DUAUtensilien.getBasisInstanzen(
 				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_FAHRSTREIFEN),
-				this.verbindung, this.getKonfigurationsBereiche());
-		this.objekte = daLveObjekte.toArray(new SystemObject[0]);
+				this.verbindung,
+				this.getKonfigurationsBereiche());
+		Collection<SystemObject> messQuerschnitte = DUAUtensilien.getBasisInstanzen(
+				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ),
+				this.verbindung,
+				this.getKonfigurationsBereiche());
+		this.objekte = fahrStreifen.toArray(new SystemObject[0]);
+
+		Collection<SystemObject> alleObjekte = new HashSet<SystemObject>();
+		alleObjekte.addAll(fahrStreifen);
+		alleObjekte.addAll(messQuerschnitte);
 		
-		for(SystemObject obj:this.objekte){
+		String infoStr = Konstante.LEERSTRING;
+		for(SystemObject obj:objekte){
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
-		LOGGER.config("---\nBetrachtete Objekte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		
+		LOGGER.config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		infoStr = Konstante.LEERSTRING;
+		for(SystemObject obj:messQuerschnitte){
+			infoStr += obj + "\n"; //$NON-NLS-1$
+		}
+		LOGGER.config("---\nBetrachtete Messquerschnitte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+
 		this.fsAnalyseModul = new FsAnalyseModul();
 		this.fsAnalyseModul.setPublikation(true);
 		this.fsAnalyseModul.initialisiere(this);
 				
-		this.mqAnalyseModul = new MqAnalyseModul();
-		this.mqAnalyseModul.initialisiere(this);
+		new MqAnalyseModul().initialisiere(this);
+		
+		new PrognoseModul().initialisiere(this.verbindung, alleObjekte);
+		new StoerfallModul().initialisiere(this.verbindung, alleObjekte);
 		
 		DataDescription anmeldungsBeschreibungKZD = new DataDescription(
 				this.verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
