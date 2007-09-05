@@ -189,13 +189,11 @@ implements ClientReceiverInterface,
 						
 						if(resultat.getData() != null){
 							aktuellKeineDaten = false;
-							long T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
-							
+													
 							/**
 							 * Baue geglaetteten Ergebniswert zusammen:
 							 */
 							glaettungNutzdaten = DAV.createData(this.prognoseObjekt.getPubAtgGlatt());
-							glaettungNutzdaten.getTimeValue("T").setMillis(T); //$NON-NLS-1$
 							for(DavAttributPrognoseObjekt attribut:this.attributePuffer){
 								attribut.exportiereDatenGlatt(glaettungNutzdaten);
 							}
@@ -205,11 +203,17 @@ implements ClientReceiverInterface,
 							 * Baue Prognosewert zusammen:
 							 */
 							prognoseNutzdaten = DAV.createData(this.prognoseObjekt.getPubAtgPrognose());
-							prognoseNutzdaten.getTimeValue("T").setMillis(T); //$NON-NLS-1$
 							for(DavAttributPrognoseObjekt attribut:this.attributePuffer){
 								attribut.exportiereDatenPrognose(prognoseNutzdaten);
 							}
 							this.fuegeKBPHinzu(prognoseNutzdaten, true);
+							
+							if(this.prognoseObjekt.isFahrStreifen()){
+								long T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
+								glaettungNutzdaten.getTimeValue("T").setMillis(T); //$NON-NLS-1$
+								prognoseNutzdaten.getTimeValue("T").setMillis(T); //$NON-NLS-1$
+							}
+
 						}else{						
 							if(aktuellKeineDaten){
 								datenSenden = false;
@@ -244,6 +248,12 @@ implements ClientReceiverInterface,
 								LOGGER.fine("Geglaettete Daten fuer " + this.prognoseObjekt +  //$NON-NLS-1$
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
+						} catch (Exception e) {
+							LOGGER.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+							e.printStackTrace();
+						}
+						
+						try{
 							if(this.sendePrognoseDaten){
 								DAV.sendData(prognoseDatum);
 							}else{
@@ -251,7 +261,7 @@ implements ClientReceiverInterface,
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$								
 							}
 						} catch (Exception e) {
-							LOGGER.error("Prognosedaten konnten nicht gesendet werden", e); //$NON-NLS-1$
+							LOGGER.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 					}

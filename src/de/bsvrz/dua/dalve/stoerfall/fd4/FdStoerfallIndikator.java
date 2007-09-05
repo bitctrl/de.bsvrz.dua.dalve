@@ -34,8 +34,8 @@ import stauma.dav.clientside.ResultData;
 import stauma.dav.clientside.SenderRole;
 import stauma.dav.common.OneSubscriptionPerSendData;
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
+import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
-import de.bsvrz.dua.dalve.stoerfall.StoerfallSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -103,7 +103,7 @@ extends AbstraktStoerfallIndikator{
 	 */
 	@Override
 	public void initialisiere(ClientDavInterface dav, 
-							  StoerfallSystemObjekt objekt)
+							  PrognoseSystemObjekt objekt)
 	throws DUAInitialisierungsException {
 		if(DAV == null){
 			DAV = dav;
@@ -191,7 +191,6 @@ extends AbstraktStoerfallIndikator{
 					stufe = berechneStufe(StoerfallSituation.STAU, KKfzStoerfallG, stufe);
 										
 					StoerfallZustand zustand = new StoerfallZustand(DAV);
-					zustand.setInfrastrukturObjekt(this.objekt.getInfrastrukturObjekt());
 					zustand.setHorizont(resultat.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
 					zustand.setSituation(stufe);
 					data = zustand.getData();

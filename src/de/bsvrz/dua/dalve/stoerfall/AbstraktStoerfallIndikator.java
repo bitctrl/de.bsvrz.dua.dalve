@@ -37,6 +37,7 @@ import stauma.dav.common.OneSubscriptionPerSendData;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
+import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.prognose.PrognoseTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -64,7 +65,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	/**
 	 * Das Objekt, fuer dass der Stoerfallzustand berechnet werden soll
 	 */
-	protected StoerfallSystemObjekt objekt = null;
+	protected PrognoseSystemObjekt objekt = null;
 	
 	/**
 	 * Indiziert, ob ein Abnehmer für die Daten dieses Objektes da ist
@@ -102,7 +103,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	 * initialisiert werden konnte
 	 */
 	public void initialisiere(final ClientDavInterface dav,
-							  final StoerfallSystemObjekt objekt)
+							  final PrognoseSystemObjekt objekt)
 	throws DUAInitialisierungsException{
 		if(DAV == null){
 			DAV = dav;
@@ -201,7 +202,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	protected final void sendeErgebnis(final ResultData ergebnis){
 		if(ergebnis.getData() != null){
 			try {
-				if(sendenOk){
+				if(true/*sendenOk*/){
 					letztesErgebnis = ergebnis;
 					DAV.sendData(letztesErgebnis);
 					this.letztesErgebnis = null;

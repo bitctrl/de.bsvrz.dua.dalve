@@ -112,7 +112,7 @@ public class PrognoseAttribut {
 	/**
 	 * Attribut <code>kB</code> bzw. <code>BK</code>
 	 */
-	public static final PrognoseAttribut KB = new PrognoseAttribut("kB", "BK"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final PrognoseAttribut KB = new PrognoseAttribut("kB", "KB"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * der Name des geglaetteten Attributs (FS)

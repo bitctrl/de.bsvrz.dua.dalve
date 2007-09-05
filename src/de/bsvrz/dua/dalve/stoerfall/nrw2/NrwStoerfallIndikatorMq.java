@@ -37,7 +37,7 @@ import stauma.dav.clientside.ReceiverRole;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
-import de.bsvrz.dua.dalve.stoerfall.StoerfallSystemObjekt;
+import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -73,7 +73,7 @@ extends NrwStoerfallIndikatorFs{
 	 */
 	@Override
 	public void initialisiere(ClientDavInterface dav,
-							  StoerfallSystemObjekt objekt)
+							  PrognoseSystemObjekt objekt)
 	throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
 		
@@ -180,7 +180,6 @@ extends NrwStoerfallIndikatorFs{
 						this.letzteStufe = stufe;
 						
 						StoerfallZustand zustand = new StoerfallZustand(DAV);
-						zustand.setInfrastrukturObjekt(this.objekt.getInfrastrukturObjekt());
 						zustand.setSituation(stufe);
 						data = zustand.getData();
 					}		

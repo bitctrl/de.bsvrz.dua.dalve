@@ -27,7 +27,6 @@ package de.bsvrz.dua.dalve.stoerfall;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.Data;
-import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.StoerfallSituation;
@@ -45,11 +44,6 @@ public class StoerfallZustand{
 	 * Verbindung zum Datenverteiler
 	 */
 	private static ClientDavInterface DAV = null;
-	
-	/**
-	 * Infrastrukturobjekt, für den der Störfallidikator ermittelt wurde
-	 */
-	private SystemObject infrastrukturObjekt = null;
 	
 	/**
 	 * Verkehrssituation (Level Of Service)
@@ -70,6 +64,11 @@ public class StoerfallZustand{
 	 * Berechnungsverfahren, mit dem die Güte ermittelt wurde
 	 */
 	private GueteVerfahren verfahren = GueteVerfahren.STANDARD;
+
+	/**
+	 * Intervalldauer, mit dem die Werte erfasst wurden
+	 */
+	private long T = 0;
 	
 	
 	/**
@@ -94,23 +93,13 @@ public class StoerfallZustand{
 	public final Data getData(){
 		Data datenSatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.störfallZustand")); //$NON-NLS-1$
 		
-		datenSatz.getReferenceValue("InfrastrukturObjekt").setSystemObject(this.infrastrukturObjekt); //$NON-NLS-1$
+		datenSatz.getTimeValue("T").setMillis(this.T); //$NON-NLS-1$
 		datenSatz.getUnscaledValue("Situation").set(this.situation.getCode()); //$NON-NLS-1$
 		datenSatz.getTimeValue("Horizont").setMillis(this.horizont); //$NON-NLS-1$
 		datenSatz.getItem("Güte").getUnscaledValue("Index").set(this.guete.getWert()); //$NON-NLS-1$ //$NON-NLS-2$
 		datenSatz.getItem("Güte").getUnscaledValue("Verfahren").set(this.verfahren.getCode()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		return datenSatz;
-	}
-	
-
-	/**
-	 * Setzt das Infrastrukturobjekt, für den der Störfallidikator ermittelt wurde
-	 * 
-	 * @param infrastrukturObjekt Infrastrukturobjekt, für den der Störfallidikator ermittelt wurde
-	 */
-	public final void setInfrastrukturObjekt(SystemObject infrastrukturObjekt) {
-		this.infrastrukturObjekt = infrastrukturObjekt;
 	}
 
 
@@ -153,14 +142,24 @@ public class StoerfallZustand{
 		this.verfahren = verfahren;
 	}
 
-
+	
+	/**
+	 * Setzt die Intervalldauer, mit dem die Werte erfasst wurden
+	 * 
+	 * @param Intervalldauer, mit dem die Werte erfasst wurden
+	 */
+	public final void setT(long T) {
+		this.T = T;
+	}
+	
+	
 	/**
 	 * {@inheritDoc} 
 	 */
 	@Override
 	public String toString() {
-		return "Infrastrukturobjekt: " + this.infrastrukturObjekt + //$NON-NLS-1$
-			   "\nSituation: " + this.situation +  //$NON-NLS-1$
+		return "T: " + this.T + //$NON-NLS-1$
+			   "ms\nSituation: " + this.situation +  //$NON-NLS-1$
 			   "\nHorizont: " + this.horizont +  //$NON-NLS-1$
 			   "\nGuete: " + guete +  //$NON-NLS-1$
 			   "\nVerfahren: " + this.verfahren; //$NON-NLS-1$

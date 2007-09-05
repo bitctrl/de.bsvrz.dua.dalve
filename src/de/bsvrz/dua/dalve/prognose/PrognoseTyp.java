@@ -82,7 +82,7 @@ public class PrognoseTyp {
 		this.aspekt = dav.getDataModel().getAspect("asp.prognose" + name); //$NON-NLS-1$
 		this.atgFahrStreifen = dav.getDataModel().getAttributeGroup(
 				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Fs");  //$NON-NLS-1$//$NON-NLS-2$
-		this.atgFahrStreifen = dav.getDataModel().getAttributeGroup(
+		this.atgMessQuerschnitt = dav.getDataModel().getAttributeGroup(
 				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Mq");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 	

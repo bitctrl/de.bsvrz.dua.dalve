@@ -66,6 +66,7 @@ public class DaSystemObjekt {
 		if(objekt == null){
 			throw new NullPointerException("Uebergebenes Objekt ist <<null>>"); //$NON-NLS-1$
 		}
+		this.objekt = objekt;
 		if(objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)){
 			this.objektIstFahrStreifen = true;
 		}else

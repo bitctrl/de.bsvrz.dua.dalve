@@ -30,6 +30,7 @@ import java.util.HashSet;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.configuration.interfaces.SystemObject;
+import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.fd4.FdStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.marz1.MarzStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.nrw2.NrwStoerfallIndikatorFs;
@@ -59,15 +60,15 @@ public class StoerfallModul {
 									final Collection<SystemObject> objekte) 
 	throws DUAInitialisierungsException{
 
-		Collection<StoerfallSystemObjekt> stoerfallObjekte = new HashSet<StoerfallSystemObjekt>();
+		Collection<PrognoseSystemObjekt> stoerfallObjekte = new HashSet<PrognoseSystemObjekt>();
 		for(SystemObject obj:objekte){
-			stoerfallObjekte.add(new StoerfallSystemObjekt(dav, obj));
+			stoerfallObjekte.add(new PrognoseSystemObjekt(dav, obj));
 		}
 		
 		/**
 		 * (I) SFI nach Verfahren MARZ 
 		 */
-		for(StoerfallSystemObjekt obj:stoerfallObjekte){
+		for(PrognoseSystemObjekt obj:stoerfallObjekte){
 			new MarzStoerfallIndikator().initialisiere(dav, obj);
 		}
 		
@@ -75,7 +76,7 @@ public class StoerfallModul {
 		/**
 		 * (II) SFI nach Verfahren NRW  
 		 */
-		for(StoerfallSystemObjekt obj:stoerfallObjekte){
+		for(PrognoseSystemObjekt obj:stoerfallObjekte){
 			if(obj.isFahrStreifen()){
 				new NrwStoerfallIndikatorFs().initialisiere(dav, obj);
 			}else{
@@ -87,7 +88,7 @@ public class StoerfallModul {
 		/**
 		 * (III) SFI nach Verfahren RDS  
 		 */
-		for(StoerfallSystemObjekt obj:stoerfallObjekte){
+		for(PrognoseSystemObjekt obj:stoerfallObjekte){
 			if(!obj.isFahrStreifen()){
 				new RdsStoerfallIndikator().initialisiere(dav, obj);
 			}
@@ -97,7 +98,7 @@ public class StoerfallModul {
 		/**
 		 * (IV) SFI nach Verfahren Fundamentaldiagramm  
 		 */
-		for(StoerfallSystemObjekt obj:stoerfallObjekte){
+		for(PrognoseSystemObjekt obj:stoerfallObjekte){
 			if(!obj.isFahrStreifen()){
 				new FdStoerfallIndikator().initialisiere(dav, obj);				
 			}

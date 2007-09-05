@@ -63,10 +63,15 @@ implements IAtgPrognoseParameterListener{
 	private DaMesswertUnskaliert aktuellesDatum = null; 
 	
 	/**
-	 * der Name des Attributs, das hier betrachtet wird (Daten-Quelle)
+	 * der Name des Attributs, das hier betrachtet wird (Daten-Quelle) Prognose
 	 */
-	private String attributName = null; 
+	private String attributNameP = null; 
 
+	/**
+	 * der Name des Attributs, das hier betrachtet wird (Daten-Quelle) glatt
+	 */
+	private String attributNameG = null;
+	
 	/**
 	 * der Name des Attributs, das hier betrachtet wird (Daten-Ziel)
 	 */
@@ -87,7 +92,8 @@ implements IAtgPrognoseParameterListener{
 		this.vAttribut = attribut.equals(PrognoseAttribut.V_KFZ) ||
 						 attribut.equals(PrognoseAttribut.V_LKW) ||
 						 attribut.equals(PrognoseAttribut.V_PKW);
-		this.attributName = this.attribut.getAttributNamePrognose(this.prognoseObjekt.isFahrStreifen());
+		this.attributNameP = this.attribut.getAttributNamePrognose(this.prognoseObjekt.isFahrStreifen());
+		this.attributNameG = this.attribut.getAttributNameGlatt(this.prognoseObjekt.isFahrStreifen());
 		this.attributNameQuelle = this.attribut.getAttributName(prognoseObjekt.isFahrStreifen());
 	}
 	
@@ -129,8 +135,8 @@ implements IAtgPrognoseParameterListener{
 	 * <code>atg.verkehrsDatenKurzZeitGeglättetFs</code>
 	 */
 	public final void exportiereDatenGlatt(Data zielDatum){
-		MesswertUnskaliert exportWert = new MesswertUnskaliert(this.attributName);
-		
+		MesswertUnskaliert exportWert = new MesswertUnskaliert(this.attributNameG);			
+			
 		exportWert.setWertUnskaliert(ZG);
 		exportWert.setNichtErfasst(this.aktuellesDatum.isNichtErfasst());
 		exportWert.setInterpoliert(this.aktuellesDatum.isPlausibilisiert());
@@ -149,7 +155,7 @@ implements IAtgPrognoseParameterListener{
 	 * <code>atg.verkehrsDatenKurzZeitTrendExtraPolationFs</code>
 	 */
 	public final void exportiereDatenPrognose(Data zielDatum){		
-		MesswertUnskaliert exportWert = new MesswertUnskaliert(this.attributName);
+		MesswertUnskaliert exportWert = new MesswertUnskaliert(this.attributNameP);
 		
 		exportWert.setWertUnskaliert(ZP);
 		exportWert.setNichtErfasst(this.aktuellesDatum.isNichtErfasst());

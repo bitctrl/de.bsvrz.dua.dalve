@@ -85,13 +85,13 @@ implements ClientReceiverInterface{
 		this.objekt = objekt;
 		this.initialisiere();
 		dav.subscribeReceiver(this, 
-							  objekt.getObjekt(), 
-							  new DataDescription(
-									  typ.getParameterAtg(objekt.isFahrStreifen()),
-									  dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
-									  (short)0),
-							  ReceiveOptions.normal(),
-							  ReceiverRole.receiver());
+				objekt.getObjekt(), 
+				new DataDescription(
+						typ.getParameterAtg(objekt.isFahrStreifen()),
+						dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
+						(short)0),
+						ReceiveOptions.normal(),
+						ReceiverRole.receiver());
 	}
 	
 		

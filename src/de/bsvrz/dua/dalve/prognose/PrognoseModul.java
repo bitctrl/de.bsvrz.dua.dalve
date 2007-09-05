@@ -54,6 +54,8 @@ public class PrognoseModul {
 	public final void initialisiere(final ClientDavInterface dav,
 									final Collection<SystemObject> objekte) 
 	throws DUAInitialisierungsException{
+		
+		PrognoseTyp.initialisiere(dav);
 
 		Collection<PrognoseSystemObjekt> prognoseObjekte = new HashSet<PrognoseSystemObjekt>();
 		for(SystemObject obj:objekte){
@@ -66,7 +68,7 @@ public class PrognoseModul {
 		for(PrognoseSystemObjekt obj:prognoseObjekte){
 			new PrognoseObjektFlink().initialisiere(dav, obj);
 			new PrognoseObjektNormal().initialisiere(dav, obj);
-			new PrognoseObjektFlink().initialisiere(dav, obj);
+			new PrognoseObjektTraege().initialisiere(dav, obj);
 		}
 	}
 

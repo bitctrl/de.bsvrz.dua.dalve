@@ -83,7 +83,7 @@ extends AbstraktStoerfallIndikator{
 	/**
 	 * letzter errechneter Störfallzustand
 	 */
-	private StoerfallSituation letzterStoerfallZustand = null; 
+	private StoerfallSituation letzterStoerfallZustand = StoerfallSituation.KEINE_AUSSAGE; 
 
 
 	/**
@@ -135,7 +135,7 @@ extends AbstraktStoerfallIndikator{
 					situation = Z3;
 				}
 				if(v < v1 &&  k > k2){
-					
+					situation = Z4;
 				}else
 				if(v < v1 || k > k2){
 					if(letzterStoerfallZustand.equals(Z3) || 
@@ -154,7 +154,6 @@ extends AbstraktStoerfallIndikator{
 			}
 			
 			StoerfallZustand zustand = new StoerfallZustand(DAV);
-			zustand.setInfrastrukturObjekt(this.objekt.getInfrastrukturObjekt());
 			zustand.setSituation(situation);
 			data = zustand.getData();
 		}
