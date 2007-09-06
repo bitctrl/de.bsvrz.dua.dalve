@@ -25,12 +25,12 @@
  */
 package de.bsvrz.dua.dalve.stoerfall.nrw2;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.clientside.ReceiveOptions;
-import stauma.dav.clientside.ReceiverRole;
-import stauma.dav.clientside.ResultData;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
+import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;

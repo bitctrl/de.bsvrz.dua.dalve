@@ -28,8 +28,8 @@ package de.bsvrz.dua.dalve.stoerfall;
 import java.util.Collection;
 import java.util.HashSet;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.configuration.interfaces.SystemObject;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.fd4.FdStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.marz1.MarzStoerfallIndikator;

@@ -25,8 +25,8 @@
  */
 package de.bsvrz.dua.dalve.stoerfall.marz1;
 
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.ResultData;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.StoerfallSituation;

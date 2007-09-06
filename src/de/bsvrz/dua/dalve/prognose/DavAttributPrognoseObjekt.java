@@ -25,8 +25,8 @@
  */
 package de.bsvrz.dua.dalve.prognose;
 
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.ResultData;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dua.dalve.AbstraktAttributPrognoseObjekt;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 

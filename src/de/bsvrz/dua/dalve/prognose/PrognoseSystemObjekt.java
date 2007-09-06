@@ -25,9 +25,9 @@
  */
 package de.bsvrz.dua.dalve.prognose;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.configuration.interfaces.AttributeGroup;
-import stauma.dav.configuration.interfaces.SystemObject;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.config.AttributeGroup;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.DaSystemObjekt;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;

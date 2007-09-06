@@ -25,9 +25,9 @@
  */
 package de.bsvrz.dua.dalve.prognose;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.configuration.interfaces.Aspect;
-import stauma.dav.configuration.interfaces.AttributeGroup;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.config.Aspect;
+import de.bsvrz.dav.daf.main.config.AttributeGroup;
 
 /**
  * Prognosetyp:<br>

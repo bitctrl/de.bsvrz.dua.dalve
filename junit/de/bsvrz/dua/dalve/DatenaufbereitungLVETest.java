@@ -3,22 +3,21 @@ package de.bsvrz.dua.dalve;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientSenderInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SenderRole;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.util.TestFahrstreifenImporter;
 import de.bsvrz.dua.dalve.util.para.ParaAnaProgImport;
 import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
-
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.clientside.ClientSenderInterface;
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.clientside.ResultData;
-import stauma.dav.clientside.SenderRole;
-import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.ArgumentList;
-import sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Automatisierter Test nach Prüfspezifikation für SWE Datenaufbereitung LVE

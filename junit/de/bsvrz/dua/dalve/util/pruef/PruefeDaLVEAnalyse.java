@@ -1,17 +1,17 @@
 package de.bsvrz.dua.dalve.util.pruef;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientReceiverInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.DatenaufbereitungLVETest;
 import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.clientside.ClientReceiverInterface;
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.clientside.ReceiveOptions;
-import stauma.dav.clientside.ReceiverRole;
-import stauma.dav.clientside.ResultData;
-import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Prüft (Vergleicht) Analyse-Datensätze der Fahrstreifen

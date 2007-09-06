@@ -28,18 +28,17 @@ package de.bsvrz.dua.dalve.prognose;
 import java.util.HashSet;
 import java.util.Set;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.clientside.ClientReceiverInterface;
-import stauma.dav.clientside.ClientSenderInterface;
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.clientside.ReceiveOptions;
-import stauma.dav.clientside.ReceiverRole;
-import stauma.dav.clientside.ResultData;
-import stauma.dav.clientside.SenderRole;
-import stauma.dav.common.OneSubscriptionPerSendData;
-import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientReceiverInterface;
+import de.bsvrz.dav.daf.main.ClientSenderInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.OneSubscriptionPerSendData;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SenderRole;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteException;
 import de.bsvrz.dua.guete.GueteVerfahren;
@@ -48,6 +47,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Ueber dieses Objekt werden die Prognosedaten fuer <b>einen</b>

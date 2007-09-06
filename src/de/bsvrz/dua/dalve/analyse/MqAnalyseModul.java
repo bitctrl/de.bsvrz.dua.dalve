@@ -29,12 +29,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.clientside.ResultData;
-import stauma.dav.clientside.SenderRole;
-import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SenderRole;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
@@ -43,6 +42,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Modul in dem die Analyse der einzelnen Messquerschnitte (auch virtuell) angeschoben 

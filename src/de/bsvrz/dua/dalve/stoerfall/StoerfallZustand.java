@@ -25,8 +25,8 @@
  */
 package de.bsvrz.dua.dalve.stoerfall;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.clientside.Data;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.StoerfallSituation;

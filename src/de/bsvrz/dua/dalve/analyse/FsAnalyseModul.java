@@ -30,11 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.clientside.ResultData;
-import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.prognose.DaMesswertUnskaliert;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteException;
@@ -49,6 +48,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Bekommt die messwertersetzten KZD der Fahrstreifen übergeben und produziert

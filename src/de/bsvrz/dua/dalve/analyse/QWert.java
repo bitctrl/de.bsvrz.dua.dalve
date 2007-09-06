@@ -25,15 +25,15 @@
  */
 package de.bsvrz.dua.dalve.analyse;
 
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.ResultData;
-import sys.funclib.debug.Debug;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteException;
 import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Instanzen dieser Klasse repräsentieren Q-Werte die entsprechend SE-02.00.00.00.00-AFo-4.0
