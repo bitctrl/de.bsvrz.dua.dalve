@@ -93,7 +93,7 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 				this.verbindung,
 				this.getKonfigurationsBereiche());
 		Collection<SystemObject> messQuerschnitte = DUAUtensilien.getBasisInstanzen(
-				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ),
+				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ_ALLGEMEIN),
 				this.verbindung,
 				this.getKonfigurationsBereiche());
 		this.objekte = fahrStreifen.toArray(new SystemObject[0]);
