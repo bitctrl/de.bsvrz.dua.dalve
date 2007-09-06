@@ -77,7 +77,7 @@ implements ClientReceiverInterface{
 	throws PrognoseParameterException{
 		this.berechneGlaettungsParameterUndStart(Math.round(KKfzStoerfall), false);
 		
-		return this.ZG;
+		return this.getZG();
 	}
 
 	

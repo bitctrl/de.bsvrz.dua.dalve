@@ -123,13 +123,14 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 		new PrognoseModul().initialisiere(this.verbindung, alleObjekte);
 		new StoerfallModul().initialisiere(this.verbindung, alleObjekte);
 		
-		DataDescription anmeldungsBeschreibungKZD = new DataDescription(
-				this.verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
-				this.verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
-				(short)0);
-			
-		this.verbindung.subscribeReceiver(this, this.objekte, anmeldungsBeschreibungKZD,
-					ReceiveOptions.normal(), ReceiverRole.receiver());
+		this.verbindung.subscribeReceiver(this,
+				this.objekte,
+				new DataDescription(
+						this.verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+						this.verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
+						(short)0),
+				ReceiveOptions.normal(),
+				ReceiverRole.receiver());
 	}
 	
 	

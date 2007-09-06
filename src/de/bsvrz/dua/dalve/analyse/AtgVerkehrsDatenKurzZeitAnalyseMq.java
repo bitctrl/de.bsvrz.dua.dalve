@@ -268,20 +268,20 @@ implements ClientReceiverInterface{
 			for(ResultData resultat:resultate){
 				if(resultat != null && resultat.getData() != null){
 					synchronized (this) {
-						this.flk1 = resultat.getData().getScaledValue("fl.k1").doubleValue(); //$NON-NLS-1$
-						this.flk2 = resultat.getData().getScaledValue("fl.k2").doubleValue(); //$NON-NLS-1$
+						this.flk1 = resultat.getData().getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.flk2 = resultat.getData().getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						
-						this.kBGrenz = resultat.getData().getUnscaledValue("KB.Grenz").longValue(); //$NON-NLS-1$
-						this.kBMax = resultat.getData().getUnscaledValue("KB.Max").longValue(); //$NON-NLS-1$
+						this.kBGrenz = resultat.getData().getItem("KB").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kBMax = resultat.getData().getItem("KB").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						
-						this.kKfzGrenz = resultat.getData().getUnscaledValue("KKfz.Grenz").longValue(); //$NON-NLS-1$
-						this.kKfzMax = resultat.getData().getUnscaledValue("KKfz.Max").longValue(); //$NON-NLS-1$
+						this.kKfzGrenz = resultat.getData().getItem("KKfz").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kKfzMax = resultat.getData().getItem("KKfz").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						
-						this.kLkwGrenz = resultat.getData().getUnscaledValue("KLkw.Grenz").longValue(); //$NON-NLS-1$
-						this.kLkwMax = resultat.getData().getUnscaledValue("KLkw.Max").longValue(); //$NON-NLS-1$
+						this.kLkwGrenz = resultat.getData().getItem("KLkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kLkwMax = resultat.getData().getItem("KLkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						
-						this.kPkwGrenz = resultat.getData().getUnscaledValue("KPkw.Grenz").longValue(); //$NON-NLS-1$
-						this.kPkwMax = resultat.getData().getUnscaledValue("KPkw.Max").longValue(); //$NON-NLS-1$
+						this.kPkwGrenz = resultat.getData().getItem("KPkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kPkwMax = resultat.getData().getItem("KPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						
 						Array array = resultat.getData().getArray("wichtung"); //$NON-NLS-1$
 						if(array.getLength() > 0){

@@ -137,7 +137,7 @@ implements IAtgPrognoseParameterListener{
 	public final void exportiereDatenGlatt(Data zielDatum){
 		MesswertUnskaliert exportWert = new MesswertUnskaliert(this.attributNameG);			
 			
-		exportWert.setWertUnskaliert(ZG);
+		exportWert.setWertUnskaliert(this.getZG());
 		exportWert.setNichtErfasst(this.aktuellesDatum.isNichtErfasst());
 		exportWert.setInterpoliert(this.aktuellesDatum.isPlausibilisiert());
 		exportWert.getGueteIndex().setWert(this.aktuellesDatum.getGueteIndex().getWert());
@@ -157,7 +157,7 @@ implements IAtgPrognoseParameterListener{
 	public final void exportiereDatenPrognose(Data zielDatum){		
 		MesswertUnskaliert exportWert = new MesswertUnskaliert(this.attributNameP);
 		
-		exportWert.setWertUnskaliert(ZP);
+		exportWert.setWertUnskaliert(this.getZP());
 		exportWert.setNichtErfasst(this.aktuellesDatum.isNichtErfasst());
 		exportWert.setInterpoliert(this.aktuellesDatum.isPlausibilisiert());
 		exportWert.getGueteIndex().setWert(this.aktuellesDatum.getGueteIndex().getWert());

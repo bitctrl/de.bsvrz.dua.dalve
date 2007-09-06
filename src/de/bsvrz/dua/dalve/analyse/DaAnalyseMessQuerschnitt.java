@@ -60,7 +60,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class DaAnalyseMessQuerschnitt
 implements ClientReceiverInterface{
-	
+		
 	/**
 	 * Debug-Logger
 	 */
@@ -77,7 +77,7 @@ implements ClientReceiverInterface{
 	protected SystemObject messQuerschnitt = null;
 	
 	/**
-	 * letztes für diesen Messquerschnitt errechnetes Ergebnis
+	 * letztes für diesen Messquerschnitt errechnetes (veröffentlichtes) Ergebnis
 	 */
 	protected ResultData letztesErgebnis = null;
 	
@@ -91,6 +91,12 @@ implements ClientReceiverInterface{
 	 * von ihnen empfangene Analysedatum
 	 */
 	private Map<SystemObject, ResultData> aktuelleFSAnalysen = new HashMap<SystemObject, ResultData>();
+
+	/**
+	 * Alle aktuellen Fahrstreifenanalysen mit Nutzdaten
+	 */
+	private Map<SystemObject, ResultData> aktuelleFSAnalysenNutz = new HashMap<SystemObject, ResultData>();
+	
 	
 	
 	/**
@@ -118,7 +124,7 @@ implements ClientReceiverInterface{
 			}
 		}else{
 			throw new DUAInitialisierungsException("MQ-Konfiguration von " + messQuerschnitt +  //$NON-NLS-1$
-					" konnte nicht vollständig ausgelesen werden"); //$NON-NLS-1$
+					" konnte nicht vollstaendig ausgelesen werden"); //$NON-NLS-1$
 		}
 
 		if(this.aktuelleFSAnalysen.keySet().isEmpty()){
@@ -134,8 +140,8 @@ implements ClientReceiverInterface{
 				this,
 				this.aktuelleFSAnalysen.keySet(), 
 				new DataDescription(
-						MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
-						MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+						MQ_ANALYSE.getDav().getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+						MQ_ANALYSE.getDav().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
 						(short)0),
 						ReceiveOptions.normal(),
 						ReceiverRole.receiver());
@@ -158,113 +164,108 @@ implements ClientReceiverInterface{
 		this.aktuelleFSAnalysen.put(triggerDatum.getObject(), triggerDatum);
 		
 		/**
-		 * Zeigt an, ob ein Datum berechnet wurde. Sonst wurden die Daten nur begutachtet
-		 * und für <b>noch</b> nicht vollständig erachtet 
+		 * Ein Analysedatum fuer den Fahrstreifen soll dann berechnet werden,
+		 * wenn fuer alle Fahrstreifen, welche Nutzdaten haben (aber mindestenes einer)
+		 * ein Datum mit dem gleichen Zeitstempel gekommen ist.
 		 */
-		boolean datumBerechnet = false;
-		
-		/**
-		 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf
-		 * "keine Daten" steht. Dies ist der Fall,<br>
-		 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder<br>
-		 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten hatte.
-		 */
-		boolean aktuellKeineDaten = this.letztesErgebnis == null || this.letztesErgebnis.getData() == null; 
-		
-		/**
-		 * Es wurde für einen Fahrstreifen dieses MQ ein Datum ohne Nutzdaten empfangen.
-		 * D.h., setzte diesen MQ auf keine Daten, wenn er nicht schon in diesem Zustand ist
-		 */
-		if(triggerDatum.getData() == null && !aktuellKeineDaten){
-			datumBerechnet = true;
-			ergebnis = new ResultData(this.messQuerschnitt, MqAnalyseModul.PUB_BESCHREIBUNG,
-							triggerDatum.getDataTime(), null);
-		}
-		
-		/**
-		 * Es wurde für einen Fahrstreifen dieses MQ ein Datum mit Nutzdaten empfangen.
-		 * Überprüfe, ob für alle anderen Fahrstreifen auch bereits Daten mit diesem
-		 * Zeitstempel da sind und berechne ggf. die Analysedaten
-		 */
-		if(triggerDatum.getData() != null){
-			final long datenZeit = triggerDatum.getDataTime();
-			boolean analysiere = true;
-			for(SystemObject fsObj:this.aktuelleFSAnalysen.keySet()){
-				ResultData fsKzd = this.aktuelleFSAnalysen.get(fsObj);
-				if(fsKzd == null || fsKzd.getData() == null || fsKzd.getDataTime() != datenZeit){
-					analysiere = false;
-					break;
-				}			
+		this.aktuelleFSAnalysenNutz.clear();
+		boolean berechne = false;
+		long zeitStempel = -1;
+		for(SystemObject fs:this.aktuelleFSAnalysen.keySet()){
+			ResultData fsDatum = this.aktuelleFSAnalysen.get(fs);
+			if(fsDatum != null){
+				if(fsDatum.getData() != null){
+					if(zeitStempel == -1){
+						zeitStempel = fsDatum.getDataTime();
+						this.aktuelleFSAnalysenNutz.put(fsDatum.getObject(), fsDatum);
+						berechne = true;
+					}else{
+						if(fsDatum.getDataTime() != zeitStempel){
+							berechne = false;
+							break;
+						}
+					}
+				}
+			}else{
+				berechne = false;
+				break;
 			}
+		}
+
+
+		if(berechne){
+			final long datenZeit = zeitStempel;
+
+			Data analyseDatum = MQ_ANALYSE.getDav().createData(MqAnalyseModul.PUB_BESCHREIBUNG.getAttributeGroup());
+
+			/**
+			 * Berechne Verkehrsstärken
+			 */
+			this.berechneVerkehrsStaerke(analyseDatum, "Kfz"); //$NON-NLS-1$
+			this.berechneVerkehrsStaerke(analyseDatum, "Lkw"); //$NON-NLS-1$
+			this.berechneVerkehrsStaerke(analyseDatum, "Pkw"); //$NON-NLS-1$
+
+			/**
+			 * Berechne mittlere Geschwindigkeiten
+			 */
+			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Lkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Pkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "Vg", "vg");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+
+			/**
+			 * Belegung B und BMax
+			 */
+			this.berechneBelegung(analyseDatum);
+
+			/**
+			 * Standardabweichung
+			 */
+			this.berechneStandardabweichung(analyseDatum);
+
+			/**
+			 * Berechne LKW-Anteil
+			 */
+			this.berechneLkwAnteil(analyseDatum);
+
+			/**
+			 * Berechne Fahrzeugdichten
+			 */
+			this.berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
+			this.berechneDichte(analyseDatum, "Lkw"); //$NON-NLS-1$
+			this.berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
+
+			/**
+			 * Bemessungsverkehrsstärke 
+			 */
+			this.berechneBemessungsVerkehrsstaerke(analyseDatum);
+
+			/**
+			 * Bemessungsdichte
+			 */
+			this.berechneBemessungsdichte(analyseDatum);
+
+			/**
+			 * Berechne die gewichtete Differenzgeschwindigkeit im Messquerschnitt
+			 */
+			this.berechneVDifferenz(analyseDatum);
+
+			ergebnis = new ResultData(this.messQuerschnitt, MqAnalyseModul.PUB_BESCHREIBUNG,
+					datenZeit, analyseDatum);
 			
 			/**
-			 * Führe also nur eine Berechnung durch, wenn
-			 * für alle Fahrstreifen ein Fahrstreifendatum mit Nutzdaten und
-			 * gleichem Zeitstempel im Puffer steht.
+			 * Puffer wieder zurücksetzen
 			 */
-			if(analysiere){
-				datumBerechnet = true;
-				Data analyseDatum = MQ_ANALYSE.getDav().createData(MqAnalyseModul.PUB_BESCHREIBUNG.getAttributeGroup());
-				
-				/**
-				 * Berechne Verkehrsstärken
-				 */
-				this.berechneVerkehrsStaerke(analyseDatum, "Kfz"); //$NON-NLS-1$
-				this.berechneVerkehrsStaerke(analyseDatum, "Lkw"); //$NON-NLS-1$
-				this.berechneVerkehrsStaerke(analyseDatum, "Pkw"); //$NON-NLS-1$
-
-				/**
-				 * Berechne mittlere Geschwindigkeiten
-				 */
-				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Lkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Pkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "Vg", "vg");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				
-				/**
-				 * Belegung B und BMax
-				 */
-				this.berechneBelegung(analyseDatum);
-				
-				/**
-				 * Standardabweichung
-				 */
-				this.berechneStandardabweichung(analyseDatum);
-				
-				/**
-				 * Berechne LKW-Anteil
-				 */
-				this.berechneLkwAnteil(analyseDatum);
-				
-				/**
-				 * Berechne Fahrzeugdichten
-				 */
-				this.berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
-				this.berechneDichte(analyseDatum, "Lkw"); //$NON-NLS-1$
-				this.berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
-				
-				/**
-				 * Bemessungsverkehrsstärke 
-				 */
-				this.berechneBemessungsVerkehrsstaerke(analyseDatum);
-					
-				/**
-				 * Bemessungsdichte
-				 */
-				this.berechneBemessungsdichte(analyseDatum);
-				
-				/**
-				 * Berechne die gewichtete Differenzgeschwindigkeit im Messquerschnitt
-				 */
-				this.berechneVDifferenz(analyseDatum);
-				
-				ergebnis = new ResultData(this.messQuerschnitt, MqAnalyseModul.PUB_BESCHREIBUNG,
-						datenZeit, analyseDatum);				
+			for(SystemObject obj:this.aktuelleFSAnalysenNutz.keySet()){
+				this.aktuelleFSAnalysen.put(obj, null);	
 			}
-		}
-
-		if(datumBerechnet){
-			this.letztesErgebnis = ergebnis;
+			this.aktuelleFSAnalysenNutz.keySet().clear();
+		}else{
+			ergebnis = new ResultData(
+					this.messQuerschnitt,
+					MqAnalyseModul.PUB_BESCHREIBUNG,
+					triggerDatum.getDataTime(),
+					null);
 		}
 		
 		return ergebnis;
@@ -279,8 +280,17 @@ implements ClientReceiverInterface{
 			for(ResultData resultat:resultate){
 				if(resultat != null){
 					ResultData ergebnis = trigger(resultat);
+					
 					if(ergebnis != null){
-						MQ_ANALYSE.sendeDaten(ergebnis);
+						if(ergebnis.getData() != null){
+							MQ_ANALYSE.sendeDaten(ergebnis);
+							this.letztesErgebnis = ergebnis;
+						}else{
+							if(this.letztesErgebnis != null && this.letztesErgebnis.getData() != null){
+								MQ_ANALYSE.sendeDaten(ergebnis);
+								this.letztesErgebnis = ergebnis;
+							}
+						}			
 					}
 				}
 			}
@@ -320,7 +330,7 @@ implements ClientReceiverInterface{
 		
 		long summe = 0;
 		ArrayList<GWert> gueteWerte = new ArrayList<GWert>();
-		for(ResultData fsDaten:this.aktuelleFSAnalysen.values()){
+		for(ResultData fsDaten:this.aktuelleFSAnalysenNutz.values()){
 			MesswertUnskaliert fsWert = new MesswertUnskaliert("q" + attName, fsDaten.getData()); //$NON-NLS-1$
 			
 			if(fsWert.getWertUnskaliert() >= 0){
@@ -372,7 +382,7 @@ implements ClientReceiverInterface{
 														 String praefixKlein){
 		MesswertUnskaliert qAnalyse = new MesswertUnskaliert(praefixGross + attName);
 				
-		MesswertUnskaliert Q = new MesswertUnskaliert("Q" + attName); //$NON-NLS-1$
+		MesswertUnskaliert Q = new MesswertUnskaliert("Q" + attName, analyseDatum); //$NON-NLS-1$
 		
 		boolean nichtErmittelbarFehlerhaft = false;
 		boolean interpoliert = false;
@@ -383,7 +393,7 @@ implements ClientReceiverInterface{
 
 		if(Q.getWertUnskaliert() > 0){
 			
-			for(ResultData fsDaten:this.aktuelleFSAnalysen.values()){
+			for(ResultData fsDaten:this.aktuelleFSAnalysenNutz.values()){
 				MesswertUnskaliert q = new MesswertUnskaliert("q" + attName, fsDaten.getData()); //$NON-NLS-1$
 				MesswertUnskaliert v = new MesswertUnskaliert(praefixKlein + attName, fsDaten.getData());
 				
@@ -465,7 +475,7 @@ implements ClientReceiverInterface{
 		GWert gueteBMax = null;
 		double bSumme = 0;
 		ArrayList<GWert> gueteWerte = new ArrayList<GWert>();
-		for(ResultData fsDatum:this.aktuelleFSAnalysen.values()){
+		for(ResultData fsDatum:this.aktuelleFSAnalysenNutz.values()){
 			DaMesswertUnskaliert bFs = new DaMesswertUnskaliert("b", fsDatum.getData()); //$NON-NLS-1$
 			
 			if(bFs.getWertUnskaliert() >= 0){
@@ -493,7 +503,7 @@ implements ClientReceiverInterface{
 		/**
 		 * B setzen
 		 */
-		long B = Math.round(bSumme / (double)this.aktuelleFSAnalysen.keySet().size());
+		long B = Math.round(bSumme / (double)this.aktuelleFSAnalysenNutz.keySet().size());
 		if(!nichtErmittelbarFehlerhaft &&	
 		    DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("B").getItem("Wert"), B)){ //$NON-NLS-1$ //$NON-NLS-2$
 			BAnalyse.setWertUnskaliert(B);
@@ -562,7 +572,7 @@ implements ClientReceiverInterface{
 				double VKfzWert = VKfz.getWertUnskaliert();
 				List<GWert> summanden = new ArrayList<GWert>();
 				
-				for(ResultData fsDatum:this.aktuelleFSAnalysen.values()){
+				for(ResultData fsDatum:this.aktuelleFSAnalysenNutz.values()){
 					DaMesswertUnskaliert qKfz = new DaMesswertUnskaliert("qKfz", fsDatum.getData()); //$NON-NLS-1$
 					DaMesswertUnskaliert sKfz = new DaMesswertUnskaliert("sKfz", fsDatum.getData()); //$NON-NLS-1$
 					DaMesswertUnskaliert vKfz = new DaMesswertUnskaliert("vKfz", fsDatum.getData()); //$NON-NLS-1$
@@ -942,52 +952,57 @@ implements ClientReceiverInterface{
 	 */
 	private final void berechneVDifferenz(Data analyseDatum){
 		MesswertUnskaliert VDeltaAnalyse = new MesswertUnskaliert("VDelta"); //$NON-NLS-1$
-		
+
 		boolean nichtErmittelbarFehlerhaft = false;
 		boolean interpoliert = false;
 		boolean gueteBerechnen = true;
 
 		long VDeltaWert = 0;
 		List<GWert> gueteSummanden = new ArrayList<GWert>();
-		if(this.parameter.isInitialisiert()){
-			MessQuerschnitt mq = MessQuerschnitt.getInstanz(this.messQuerschnitt);
-			if(mq != null){
-				for(int i = 0; i<mq.getFahrStreifen().size() - 1; i++){
-					int w;
-					if(this.parameter.getWichtung().length > i){
-						w = this.parameter.getWichtung()[i];
-					}else{
-						nichtErmittelbarFehlerhaft = true;
-						break;
-					}
-					ResultData fsResultI = this.aktuelleFSAnalysen.get(mq.getFahrStreifen().get(i).getSystemObject());
-					ResultData fsResultIPlus1 = this.aktuelleFSAnalysen.get(mq.getFahrStreifen().get(i+1).getSystemObject());
-					MesswertUnskaliert vKfzI = new MesswertUnskaliert("vKfz", fsResultI.getData()); //$NON-NLS-1$
-					MesswertUnskaliert vKfzIPlus1 = new MesswertUnskaliert("vKfz", fsResultIPlus1.getData()); //$NON-NLS-1$
-					
-					if(vKfzI.getWertUnskaliert() >= 0 && vKfzIPlus1.getWertUnskaliert() >= 0){
-						interpoliert = vKfzI.isInterpoliert() || vKfzIPlus1.isInterpoliert();
-						VDeltaWert += w * Math.abs(vKfzI.getWertUnskaliert() - vKfzIPlus1.getWertUnskaliert());
-						
-						try {
-							gueteSummanden.add(
-									GueteVerfahren.gewichte(
-									GueteVerfahren.differenz(
-											new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
-											new GWert(fsResultIPlus1.getData(), "vKfz")), (double)w)); //$NON-NLS-1$
-						} catch (GueteException e) {
-							gueteBerechnen = false;
-							LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
-							e.printStackTrace();
+
+		if(this.aktuelleFSAnalysen.keySet().size() == this.aktuelleFSAnalysenNutz.keySet().size()){
+			if(this.parameter.isInitialisiert()){
+				MessQuerschnitt mq = MessQuerschnitt.getInstanz(this.messQuerschnitt);
+				if(mq != null){
+					for(int i = 0; i<mq.getFahrStreifen().size() - 1; i++){
+						int w;
+						if(this.parameter.getWichtung().length > i){
+							w = this.parameter.getWichtung()[i];
+						}else{
+							nichtErmittelbarFehlerhaft = true;
+							break;
 						}
-						
-					}else{
+						ResultData fsResultI = this.aktuelleFSAnalysen.get(mq.getFahrStreifen().get(i).getSystemObject());
+						ResultData fsResultIPlus1 = this.aktuelleFSAnalysen.get(mq.getFahrStreifen().get(i+1).getSystemObject());
+						MesswertUnskaliert vKfzI = new MesswertUnskaliert("vKfz", fsResultI.getData()); //$NON-NLS-1$
+						MesswertUnskaliert vKfzIPlus1 = new MesswertUnskaliert("vKfz", fsResultIPlus1.getData()); //$NON-NLS-1$
+
+						if(vKfzI.getWertUnskaliert() >= 0 && vKfzIPlus1.getWertUnskaliert() >= 0){
+							interpoliert = vKfzI.isInterpoliert() || vKfzIPlus1.isInterpoliert();
+							VDeltaWert += w * Math.abs(vKfzI.getWertUnskaliert() - vKfzIPlus1.getWertUnskaliert());
+
+							try {
+								gueteSummanden.add(
+										GueteVerfahren.gewichte(
+												GueteVerfahren.differenz(
+														new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
+														new GWert(fsResultIPlus1.getData(), "vKfz")), (double)w)); //$NON-NLS-1$
+							} catch (GueteException e) {
+								gueteBerechnen = false;
+								LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+								e.printStackTrace();
+							}
+
+						}else{
+							nichtErmittelbarFehlerhaft = true;
+							break;
+						}
+					}	
+
+					if(!DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)){  //$NON-NLS-1$//$NON-NLS-2$
 						nichtErmittelbarFehlerhaft = true;
-						break;
 					}
-				}	
-				
-				if(!DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)){  //$NON-NLS-1$//$NON-NLS-2$
+				}else{
 					nichtErmittelbarFehlerhaft = true;
 				}
 			}else{

@@ -35,6 +35,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVSendeAnmeldungsVerwaltung;
@@ -121,16 +122,15 @@ public class MqAnalyseModul{
 		}
 		LOGGER.config(configLog + "\n---"); //$NON-NLS-1$
 		
-		this.sender = new DAVSendeAnmeldungsVerwaltung(
-									verwaltung.getVerbindung(),
-									SenderRole.source());	
-		
 		/**
 		 * Publikationsbeschreibung für Analysewerte von allgemeinen MQs
 		 */
+		this.sender = new DAVSendeAnmeldungsVerwaltung(
+									verwaltung.getVerbindung(),
+									SenderRole.source());	
 		PUB_BESCHREIBUNG = new DataDescription(
-				verwaltung.getVerbindung().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-				verwaltung.getVerbindung().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+				verwaltung.getVerbindung().getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				verwaltung.getVerbindung().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
 				(short)0);
 		
 		Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();

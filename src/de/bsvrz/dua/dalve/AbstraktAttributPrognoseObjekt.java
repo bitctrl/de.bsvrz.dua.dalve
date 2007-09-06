@@ -29,7 +29,11 @@ import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
 
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer ein
- * Attribut durch (analog SE-02.00.00.00.00-AFo-4.0, S. 135)
+ * Messwertattribut durch (analog SE-02.00.00.00.00-AFo-4.0, S. 135).<br>
+ * <b>Achtung:</b> Diese Implementierung geht davon aus, dass nur Attribute verarbeitet
+ * werden, die die Zustaende <code>fehlerhaft</code>, <code>nicht ermittelbar</code>
+ * und <code>fehlerhaft/nicht ermittelbar</code> in den Werten -1, -2 und -3 
+ * besitzen. Werte mit einem dieser Zustände werden igniriert.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -40,13 +44,13 @@ public class AbstraktAttributPrognoseObjekt{
 	 * DAV-Parameter <code>alpha</code>  des letzten 
 	 * Glaettungsintervalls mit Trend deltaZNeu = 0
 	 */
-	protected double alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
+	private double alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
 	
 	/**
 	 * DAV-Parameter <code>beta</code>  des letzten 
 	 * Glaettungsintervalls mit Trend deltaZNeu = 0
 	 */
-	protected double betaAltBeiDeltaZNeuGleich0 = Double.NaN;	
+	private double betaAltBeiDeltaZNeuGleich0 = Double.NaN;	
 	
 	/**
 	 * DAV-Parameter <code>alpha1</code> dieses Attributs
@@ -81,12 +85,12 @@ public class AbstraktAttributPrognoseObjekt{
 	/**
 	 * Prognosewert
 	 */
-	protected long ZP = -4;
+	private long ZP = -4;
 	
 	/**
 	 * geglaetteter Wert ohne Prognoseanteil
 	 */
-	protected long ZG = -4;
+	private long ZG = -4;
 	
 	
 	/**
@@ -95,15 +99,20 @@ public class AbstraktAttributPrognoseObjekt{
 	 * 
 	 * @param ZAktuell aktueller Wert fuer den der geglaettete und der Prognoseteil
 	 * berechnet werden soll
-	 * @param istVAttributUndKeineVerkehrsStaerke Indiziert, ob es sich
+	 * @param istVAttributUndKeineVerkehrsStaerke indiziert, ob es sich
 	 * hier um ein Geschwindigkeitsattribut handelt <b>und</b> dies ein 
 	 * Messintervall ohne Fahrzeugdetektion ist
 	 * @throws PrognoseParameterException wenn die Parameter noch nicht gesetzt wurden
 	 */
-	protected final void berechneGlaettungsParameterUndStart(long ZAktuell, boolean istVAttributUndKeineVerkehrsStaerke)
+	protected final void berechneGlaettungsParameterUndStart(
+								final long ZAktuell,
+								final boolean istVAttributUndKeineVerkehrsStaerke)
 	throws PrognoseParameterException{
-		this.ueberpruefeParameter();		
+		this.ueberpruefeParameter();
 		
+		/**
+		 * Fehlerhafte Werte werden vom Verfahren ignoriert
+		 */
 		if(ZAktuell >= 0){
 			double alpha = this.alpha1;
 			double beta = this.beta1;
@@ -118,17 +127,40 @@ public class AbstraktAttributPrognoseObjekt{
 	
 	
 	/**
+	 * Erfragt den aktuellen Prognosewert <code>ZP</code>
+	 * 
+	 * @return der aktuelle Prognosewert <code>ZP</code>
+	 */
+	public final long getZP() {
+		return ZP;
+	}
+
+
+	/**
+	 * Erfragt den aktuellen geglaetteten Wert <code>ZG</code>
+	 * 
+	 * @return der aktuelle geglaettete Wert <code>ZG</code>
+	 */
+	public final long getZG() {
+		return ZG;
+	}
+
+
+	/**
 	 * Führt eine Berechnung fuer den aktuellen Z-Wert nach den Vorgaben
 	 * der AFo SE-02.00.00.00.00-AFo-4.0 (S.134f) durch 
 	 * 
 	 * @param wert der Z-Wert
-	 * @param alpha Alpha
-	 * @param beta Beta
-	 * @param istVAttributUndKeineVerkehrsStaerke Indiziert, ob es sich
+	 * @param alpha Glaettungsparameter alpha
+	 * @param beta Glaettungsparameter beta
+	 * @param istVAttributUndKeineVerkehrsStaerke indiziert, ob es sich
 	 * hier um ein Geschwindigkeitsattribut handelt <b>und</b> dies ein 
 	 * Messintervall ohne Fahrzeugdetektion ist
 	 */
-	private final void berechne(long ZAktuell, boolean istVAttributUndKeineVerkehrsStaerke, double alpha, double beta){
+	private final void berechne(final long ZAktuell,
+								final boolean istVAttributUndKeineVerkehrsStaerke,
+								final double alpha,
+								final double beta){
 
 		double ZNeu = alpha * ZAktuell + (1.0 - alpha) * ZAlt;
 		double deltaZNeu = beta * (ZAktuell - ZAlt) + (1 - beta) * deltaZAlt;
@@ -155,7 +187,9 @@ public class AbstraktAttributPrognoseObjekt{
 			/**
 			 * 4. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
 			 * Nach Messintervallen ohne Fahrzeugdetektion müssen alle geglätteten Geschwindigkeitswerte
-			 * vom Vorgängerintervall übernommen werden.
+			 * vom Vorgängerintervall übernommen werden.<br>
+			 * D.h. hier, dass ZG nur dann neu bestimmt wird, wenn dies kein Geschwindigkeitsattribut ist
+			 * oder wenn es eines ist und Fahrzeuge detektiert wurden
 			 */
 			this.ZG = Math.round(ZNeu);
 		}
@@ -213,7 +247,7 @@ public class AbstraktAttributPrognoseObjekt{
 	/**
 	 * Ueberprueft, ob die Parameter schon gesetzt wurden
 	 * 
-	 * @throws PrognoseParameterException wenn die Parameter noch nicht gesetzte wurden
+	 * @throws PrognoseParameterException wenn die Parameter noch nicht gesetzt wurden
 	 */
 	private final void ueberpruefeParameter()
 	throws PrognoseParameterException{
@@ -239,5 +273,4 @@ public class AbstraktAttributPrognoseObjekt{
 					subjekt + " wurde noch nicht initialisiert"); //$NON-NLS-1$
 		}
 	}
-
 }

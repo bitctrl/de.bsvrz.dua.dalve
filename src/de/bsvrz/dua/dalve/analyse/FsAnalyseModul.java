@@ -93,12 +93,12 @@ extends AbstraktBearbeitungsKnotenAdapter{
 		super.initialisiere(dieVerwaltung);
 		
 		PUB_BESCHREIBUNG = new DataDescription(
-				dieVerwaltung.getVerbindung().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
-				dieVerwaltung.getVerbindung().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+				dieVerwaltung.getVerbindung().getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dieVerwaltung.getVerbindung().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
 				(short)0);
 		
 		/**
-		 * Publikations- und Parameteranmeldungen durchführen
+		 * Publikations- und Parameteranmeldungen durchfuehren
 		 */
 		Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
 		for(SystemObject fsObj:dieVerwaltung.getSystemObjekte()){
@@ -134,11 +134,13 @@ extends AbstraktBearbeitungsKnotenAdapter{
 
 	
 	/**
-	 * Berechnet ein Analysedatum eines Fahrstreifens in Bezug auf den übergebenen KZ-Datensatz
+	 * Berechnet ein Analysedatum eines Fahrstreifens in Bezug auf den
+	 * übergebenen KZ-Datensatz
 	 * 
 	 * @param kurzZeitDatum ein aktueller KZ-Datensatz
-	 * @return ein Analysedatum eines Fahrstreifens in Bezug auf den übergebenen KZ-Datensatz oder
-	 * <code>null</code>, wenn dieses nicht ermittelt werden konnte
+	 * @return ein Analysedatum eines Fahrstreifens in Bezug auf den
+	 * uebergebenen KZ-Datensatz oder <code>null</code>, wenn dieses
+	 * nicht ermittelt werden konnte
 	 */
 	private final ResultData getAnalyseDatum(final ResultData kurzZeitDatum){
 		ResultData ergebnis = null;
@@ -146,7 +148,8 @@ extends AbstraktBearbeitungsKnotenAdapter{
 		if(kurzZeitDatum.getData() != null){
 			Data analyseDatum = this.verwaltung.getVerbindung().createData(PUB_BESCHREIBUNG.getAttributeGroup());			
 			
-			analyseDatum.getTimeValue("T").setMillis(kurzZeitDatum.getData().getTimeValue("T").getMillis());  //$NON-NLS-1$//$NON-NLS-2$
+			analyseDatum.getTimeValue("T").setMillis(//$NON-NLS-1$
+					kurzZeitDatum.getData().getTimeValue("T").getMillis());  //$NON-NLS-1$
 			
 			/**
 			 * Berechne Verkehrsstärken
@@ -188,13 +191,22 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			 */
 			this.berechneBemessungsDichte(analyseDatum, kurzZeitDatum);
 			
-			ergebnis = new ResultData(kurzZeitDatum.getObject(), PUB_BESCHREIBUNG, 
-					kurzZeitDatum.getDataTime(), analyseDatum);
+			/**
+			 * Ergebnisdatensatz
+			 */
+			ergebnis = new ResultData(
+					kurzZeitDatum.getObject(),
+					PUB_BESCHREIBUNG, 
+					kurzZeitDatum.getDataTime(),
+					analyseDatum);
 		}else{
 			ResultData letzterPublizierterWert = this.fsAufDatenPuffer.get(kurzZeitDatum.getObject());
 			if( letzterPublizierterWert == null || letzterPublizierterWert.getData() != null ){
-				ergebnis = new ResultData(kurzZeitDatum.getObject(), PUB_BESCHREIBUNG,
-					kurzZeitDatum.getDataTime(), null);
+				ergebnis = new ResultData(
+						kurzZeitDatum.getObject(),
+						PUB_BESCHREIBUNG,
+						kurzZeitDatum.getDataTime(),
+						null);
 			}
 		}
 		
