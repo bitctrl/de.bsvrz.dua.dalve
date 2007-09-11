@@ -83,6 +83,11 @@ public class AbstraktAttributPrognoseObjekt{
 	protected double deltaZAlt = 0.0;
 	
 	/**
+	 * Alter Prognosewert
+	 */
+	protected long ZPAlt = -4;
+	
+	/**
 	 * Prognosewert
 	 */
 	private long ZP = -4;
@@ -112,16 +117,72 @@ public class AbstraktAttributPrognoseObjekt{
 		
 		/**
 		 * Fehlerhafte Werte werden vom Verfahren ignoriert
-		 */
+		 */		
 		if(ZAktuell >= 0){
 			double alpha = this.alpha1;
 			double beta = this.beta1;
-			if(ZAktuell > ZAlt){
-				alpha = this.alpha2;
-				beta = this.beta2;
+
+			if(deltaZAlt == 0){
+				/**
+				 * 5. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
+				 * Ist der Trend DZNeu = 0, dann gelten die Glättungsfaktoren des letzten Glättungsintervalls
+				 * mit Trend DZNeu = 0.
+				 * Email H.C.Kniss (11.09.07):
+				 * War der Trend im letzten Intervall 0, so werden die Glättungsparamter für den aktuellen
+				 * Zyklus nicht geändert (man tut so, als ob sich der Trend der davor liegenden Zyklen fortsetzt).
+				 */
+				alpha = this.alphaAltBeiDeltaZNeuGleich0;
+				beta = this.betaAltBeiDeltaZNeuGleich0;
+			}else{
+				if(ZAktuell > ZAlt){
+					alpha = this.alpha2;
+					beta = this.beta2;
+				}
 			}
 			
-			this.berechne(ZAktuell, istVAttributUndKeineVerkehrsStaerke, alpha, beta);
+			double ZNeu = alpha * ZAktuell + (1.0 - alpha) * ZAlt;
+			double deltaZNeu;
+			if(this.ZPAlt == 0){
+				/**
+				 * 2. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
+				 * Tritt bei der Kurzzeitprognose ein Wert ZP = 0 auf, so muss der nächste Messwert direkt als
+				 * Ergebnis der Prognoserechnung übernommen und der alte Trend auf 0 gesetzt werden
+				 * Email H.C.Kniss (11.09.07):
+				 * War ZP = 0 so ist im aktuellen Zyklus der Messwert als Prognosewert zu verwenden. 
+				 * Der Trend wird dabei zu 0 gesetzt, weil in diesem Fall kein Trend ermittelbar ist.
+				 */
+				deltaZNeu = 0;
+				this.ZP = ZAktuell;
+			}else{				
+				deltaZNeu = beta * (ZAktuell - ZAlt) + (1 - beta) * deltaZAlt;
+				this.ZP = Math.round(ZNeu + deltaZNeu);
+			}
+
+			if(this.ZP < 0){
+				/**
+				 * 1. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
+				 * Tritt bei der Kurzzeitprognose ein Wert ZP < 0 auf, so ist ZP = 0 zu setzen
+				 */
+				this.ZP = 0;
+			}
+
+			if(!(istVAttributUndKeineVerkehrsStaerke)){
+				/**
+				 * 4. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
+				 * Nach Messintervallen ohne Fahrzeugdetektion müssen alle geglätteten Geschwindigkeitswerte
+				 * vom Vorgängerintervall übernommen werden.<br>
+				 * D.h. hier, dass ZG nur dann neu bestimmt wird, wenn dies kein Geschwindigkeitsattribut ist
+				 * oder wenn es eines ist und Fahrzeuge detektiert wurden
+				 */
+				this.ZG = Math.round(ZNeu);
+			}
+
+			this.alphaAltBeiDeltaZNeuGleich0 = alpha;
+			this.betaAltBeiDeltaZNeuGleich0 = beta;
+			
+			this.ZAlt = ZNeu;
+			this.deltaZAlt = deltaZNeu;
+			this.ZPAlt = ZP;
 		}		
 	}
 	
@@ -143,104 +204,6 @@ public class AbstraktAttributPrognoseObjekt{
 	 */
 	public final long getZG() {
 		return ZG;
-	}
-
-
-	/**
-	 * Führt eine Berechnung fuer den aktuellen Z-Wert nach den Vorgaben
-	 * der AFo SE-02.00.00.00.00-AFo-4.0 (S.134f) durch 
-	 * 
-	 * @param wert der Z-Wert
-	 * @param alpha Glaettungsparameter alpha
-	 * @param beta Glaettungsparameter beta
-	 * @param istVAttributUndKeineVerkehrsStaerke indiziert, ob es sich
-	 * hier um ein Geschwindigkeitsattribut handelt <b>und</b> dies ein 
-	 * Messintervall ohne Fahrzeugdetektion ist
-	 */
-	private final void berechne(final long ZAktuell,
-								final boolean istVAttributUndKeineVerkehrsStaerke,
-								final double alpha,
-								final double beta){
-
-		double ZNeu = alpha * ZAktuell + (1.0 - alpha) * ZAlt;
-		double deltaZNeu = beta * (ZAktuell - ZAlt) + (1 - beta) * deltaZAlt;
-		this.ZP = Math.round(ZNeu + deltaZNeu);
-
-		if(this.ZP < 0){
-			/**
-			 * 1. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
-			 * Tritt bei der Kurzzeitprognose ein Wert ZP < 0 auf, so ist ZP = 0 zu setzen
-			 */
-			this.ZP = 0;
-		}
-		else if(this.ZP == 0){
-			/**
-			 * 2. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
-			 * Tritt bei der Kurzzeitprognose ein Wert ZP = 0 auf, so muss der nächste Messwert direkt als
-			 * Ergebnis der Prognoserechnung übernommen und der alte Trend auf 0 gesetzt werden
-			 */
-			this.ZP = ZAktuell;
-			deltaZNeu = 0;
-		}
-
-		if(!(istVAttributUndKeineVerkehrsStaerke)){
-			/**
-			 * 4. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
-			 * Nach Messintervallen ohne Fahrzeugdetektion müssen alle geglätteten Geschwindigkeitswerte
-			 * vom Vorgängerintervall übernommen werden.<br>
-			 * D.h. hier, dass ZG nur dann neu bestimmt wird, wenn dies kein Geschwindigkeitsattribut ist
-			 * oder wenn es eines ist und Fahrzeuge detektiert wurden
-			 */
-			this.ZG = Math.round(ZNeu);
-		}
-
-		if(deltaZNeu == 0){
-			if(this.alphaAltBeiDeltaZNeuGleich0 != Double.NaN){
-				/**
-				 * 5. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
-				 * Ist der Trend deltaZNeu = 0, dann gelten die Glättungsfaktoren des
-				 * letzten Glättungsintervalls mit Trend deltaZNeu = 0
-				 */
-				double alphaAlt = this.alphaAltBeiDeltaZNeuGleich0;
-				double betaAlt = this.betaAltBeiDeltaZNeuGleich0;
-	
-				ZNeu = alphaAlt * ZAktuell + (1.0 - alphaAlt) * ZAlt;
-				deltaZNeu = betaAlt * (ZAktuell - ZAlt) + (1 - betaAlt) * deltaZAlt;
-				this.ZP = Math.round(ZNeu + deltaZNeu);
-
-				if(this.ZP < 0){
-					/**
-					 * 1. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
-					 * Tritt bei der Kurzzeitprognose ein Wert ZP < 0 auf, so ist ZP = 0 zu setzen
-					 */
-					this.ZP = 0;
-				}
-				else if(this.ZP == 0){
-					/**
-					 * 2. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
-					 * Tritt bei der Kurzzeitprognose ein Wert ZP = 0 auf, so muss der nächste Messwert direkt als
-					 * Ergebnis der Prognoserechnung übernommen und der alte Trend auf 0 gesetzt werden
-					 */
-					this.ZP = ZAktuell;
-					deltaZNeu = 0;
-				}
-
-				if(!(istVAttributUndKeineVerkehrsStaerke)){
-					/**
-					 * 4. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
-					 * Nach Messintervallen ohne Fahrzeugdetektion müssen alle geglätteten Geschwindigkeitswerte
-					 * vom Vorgängerintervall übernommen werden.
-					 */
-					this.ZG = Math.round(ZNeu);
-				}
-			}
-		
-			this.alphaAltBeiDeltaZNeuGleich0 = alpha;
-			this.betaAltBeiDeltaZNeuGleich0 = beta;
-		}
-		
-		this.ZAlt = ZNeu;
-		this.deltaZAlt = deltaZNeu;
 	}
 
 	

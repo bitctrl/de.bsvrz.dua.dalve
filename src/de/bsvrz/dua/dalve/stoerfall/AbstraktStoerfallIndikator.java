@@ -90,7 +90,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	/**
 	 * letzter versendeter Störfallzustand
 	 */
-	protected ResultData letztesErgebnis = null; 
+//	protected ResultData letztesErgebnis = null; 
 
 
 		
@@ -202,10 +202,8 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	protected final void sendeErgebnis(final ResultData ergebnis){
 		if(ergebnis.getData() != null){
 			try {
-				if(true/*sendenOk*/){
-					letztesErgebnis = ergebnis;
-					DAV.sendData(letztesErgebnis);
-					this.letztesErgebnis = null;
+				if(sendenOk){
+					DAV.sendData(ergebnis);
 					this.aktuellKeineDaten = false;
 				}else{
 					LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
@@ -218,9 +216,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 			if(!this.aktuellKeineDaten){
 				try {
 					if(sendenOk){
-						letztesErgebnis = ergebnis;
-						DAV.sendData(letztesErgebnis);
-						this.letztesErgebnis = null;
+						DAV.sendData(ergebnis);
 						this.aktuellKeineDaten = true;
 					}else{
 						LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
@@ -239,17 +235,6 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
-		if(!this.sendenOk && 
-			state == ClientSenderInterface.START_SENDING && 
-			this.letztesErgebnis != null){
-			try {
-				DAV.sendData(letztesErgebnis);
-				this.letztesErgebnis = null;
-			} catch (Exception e) {
-				LOGGER.error(Konstante.LEERSTRING, e);
-				e.printStackTrace();
-			}
-		}
 		this.sendenOk = state == ClientSenderInterface.START_SENDING;
 	}
 

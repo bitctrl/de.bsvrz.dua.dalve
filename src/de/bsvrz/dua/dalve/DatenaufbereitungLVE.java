@@ -79,6 +79,7 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 	@Override
 	protected void initialisiere()
 	throws DUAInitialisierungsException {
+		super.initialisiere();
 		
 		/**
 		 * Initialisiere das DUA-Verkehrsnetz
