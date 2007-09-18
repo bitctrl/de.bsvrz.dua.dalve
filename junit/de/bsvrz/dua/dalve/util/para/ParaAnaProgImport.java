@@ -101,7 +101,7 @@ implements ClientSenderInterface {
 	/**
 	 * Führt den Parameterimport aus
 	 * 
-	 * @param int index
+	 * @param index der index
 	 * @throws Exception wenn die Parameter nicht vollständig
 	 * importiert werden konnten
 	 */

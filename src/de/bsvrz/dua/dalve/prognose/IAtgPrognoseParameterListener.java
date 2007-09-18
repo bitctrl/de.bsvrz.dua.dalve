@@ -26,6 +26,7 @@
 package de.bsvrz.dua.dalve.prognose;
 
 /**
+ * Hört auf Veraenderungen der Prognoseparameter
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -33,8 +34,9 @@ package de.bsvrz.dua.dalve.prognose;
 public interface IAtgPrognoseParameterListener {
 
 	/**
+	 * Aktualisiert die Parameter 
 	 * 
-	 * @param parameterSatzKopie
+	 * @param parameterSatzFuerAttribut parameterSatz
 	 */
 	public void aktualisiereParameter(final PrognoseAttributParameter parameterSatzFuerAttribut);
 	

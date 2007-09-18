@@ -146,7 +146,7 @@ public class StoerfallZustand{
 	/**
 	 * Setzt die Intervalldauer, mit dem die Werte erfasst wurden
 	 * 
-	 * @param Intervalldauer, mit dem die Werte erfasst wurden
+	 * @param T Intervalldauer, mit dem die Werte erfasst wurden
 	 */
 	public final void setT(long T) {
 		this.T = T;

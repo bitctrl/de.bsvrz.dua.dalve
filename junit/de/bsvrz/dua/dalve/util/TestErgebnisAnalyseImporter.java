@@ -64,7 +64,6 @@ extends CSVImporter{
 	 * 
 	 * @param dav Datenverteier-Verbindung
 	 * @param csvQuelle Quelle der Daten (CSV-Datei)
-	 * @param atg Attributgruppen-ID
 	 * @throws Exception falls dieses Objekt nicht vollständig initialisiert werden konnte
 	 */
 	public TestErgebnisAnalyseImporter(final ClientDavInterface dav, 

@@ -83,8 +83,7 @@ implements ClientReceiverInterface {
 	 * Initialisiert Prüferobjekt
 	 * @param dav Datenverteilerverbindung
 	 * @param FS Systemobjekt des Fahrstreifens
-	 * @param fsIndex Fahrstreifenindex (1-3)
-	 * @param TEST_DATEN_VERZ Testdatenverzeichnis
+	 * @param csvQuelle Testdatenverzeichnis
 	 * @throws Exception
 	 */
 	public PruefeDaLVEAnalyse(DatenaufbereitungLVETest caller, ClientDavInterface dav,

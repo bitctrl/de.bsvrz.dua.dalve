@@ -79,7 +79,7 @@ implements ClientSenderInterface {
 	
 	
 	/**
-	 * {@inheritDoc}
+	 * Vorbereitungen
 	 */
 	@Before
 	public void setUp() throws Exception {
