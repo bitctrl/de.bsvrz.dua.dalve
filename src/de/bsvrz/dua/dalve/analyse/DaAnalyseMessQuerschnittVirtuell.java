@@ -130,69 +130,64 @@ implements IObjektWeckerListener{
 		this.messQuerschnitt = messQuerschnittVirtuell;
 		this.mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
 		
-		if(mqv != null){
-			MessQuerschnitt mqVor = mqv.getMQVor();
-			if(mqVor != null){
-				this.mqVorErfasst = true;
-				this.aktuelleMQAnalysen.put(mqVor.getSystemObject(), null);
-				this.mqAufHauptfahrbahn.add(mqVor.getSystemObject());
-			}
-			
-			MessQuerschnitt mqMitte = mqv.getMQMitte();
-			if(mqMitte != null){
-				this.mqMitteErfasst = true;
-				this.aktuelleMQAnalysen.put(mqMitte.getSystemObject(), null);
-				this.mqAufHauptfahrbahn.add(mqMitte.getSystemObject());
-			}
-
-			MessQuerschnitt mqNach = mqv.getMQNach();
-			if(mqNach != null){
-				this.mqNachErfasst = true;
-				this.aktuelleMQAnalysen.put(mqNach.getSystemObject(), null);
-				this.mqAufHauptfahrbahn.add(mqNach.getSystemObject());
-			}
-			
-			MessQuerschnitt mqEin = mqv.getMQEinfahrt();
-			if(mqEin != null){
-				this.mqEinfahrtErfasst = true;
-				this.aktuelleMQAnalysen.put(mqEin.getSystemObject(), null);
-			}
-			
-			MessQuerschnitt mqAus = mqv.getMQAusfahrt();
-			if(mqAus != null){
-				this.mqAusfahrtErfasst = true;
-				this.aktuelleMQAnalysen.put(mqAus.getSystemObject(), null);
-			}
-
-			
-			boolean nichtBetrachtet = false; 
-			if(this.mqAufHauptfahrbahn.size() == 0){
-				LOGGER.warning("Auf der Hauptfahrbahn des " + //$NON-NLS-1$
-						"virtuellen MQ " + messQuerschnittVirtuell + " sind keine MQ referenziert"); //$NON-NLS-1$ //$NON-NLS-2$
-				nichtBetrachtet = true;
-			}
-			if(!mqAusfahrtErfasst || !mqEinfahrtErfasst){
-				LOGGER.warning("Beim virtuellen MQ " + messQuerschnittVirtuell +  //$NON-NLS-1$
-						" sind nicht Ein- UND Ausfahrt definiert (beide gleichzeitig)"); //$NON-NLS-1$
-				nichtBetrachtet = true;
-			}
-
-			if(nichtBetrachtet)return null;
-			
-			this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
-			MQ_ANALYSE.getDav().subscribeReceiver(
-					this,
-					this.aktuelleMQAnalysen.keySet(), 
-					new DataDescription(
-							MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-							MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
-							(short)0),
-							ReceiveOptions.normal(),
-							ReceiverRole.receiver());
-		}else{
-			throw new DUAInitialisierungsException("MQV-Konfiguration von " + messQuerschnittVirtuell +  //$NON-NLS-1$
-				" konnte nicht vollständig ausgelesen werden"); //$NON-NLS-1$
+		MessQuerschnitt mqVor = mqv.getMQVor();
+		if(mqVor != null){
+			this.mqVorErfasst = true;
+			this.aktuelleMQAnalysen.put(mqVor.getSystemObject(), null);
+			this.mqAufHauptfahrbahn.add(mqVor.getSystemObject());
 		}
+
+		MessQuerschnitt mqMitte = mqv.getMQMitte();
+		if(mqMitte != null){
+			this.mqMitteErfasst = true;
+			this.aktuelleMQAnalysen.put(mqMitte.getSystemObject(), null);
+			this.mqAufHauptfahrbahn.add(mqMitte.getSystemObject());
+		}
+
+		MessQuerschnitt mqNach = mqv.getMQNach();
+		if(mqNach != null){
+			this.mqNachErfasst = true;
+			this.aktuelleMQAnalysen.put(mqNach.getSystemObject(), null);
+			this.mqAufHauptfahrbahn.add(mqNach.getSystemObject());
+		}
+
+		MessQuerschnitt mqEin = mqv.getMQEinfahrt();
+		if(mqEin != null){
+			this.mqEinfahrtErfasst = true;
+			this.aktuelleMQAnalysen.put(mqEin.getSystemObject(), null);
+		}
+
+		MessQuerschnitt mqAus = mqv.getMQAusfahrt();
+		if(mqAus != null){
+			this.mqAusfahrtErfasst = true;
+			this.aktuelleMQAnalysen.put(mqAus.getSystemObject(), null);
+		}
+
+
+		boolean nichtBetrachtet = false; 
+		if(this.mqAufHauptfahrbahn.size() == 0){
+			LOGGER.warning("Auf der Hauptfahrbahn des " + //$NON-NLS-1$
+					"virtuellen MQ " + messQuerschnittVirtuell + " sind keine MQ referenziert"); //$NON-NLS-1$ //$NON-NLS-2$
+			nichtBetrachtet = true;
+		}
+		if(!mqAusfahrtErfasst || !mqEinfahrtErfasst){
+			LOGGER.warning("Beim virtuellen MQ " + messQuerschnittVirtuell +  //$NON-NLS-1$
+			" sind nicht Ein- UND Ausfahrt definiert (beide gleichzeitig)"); //$NON-NLS-1$
+			nichtBetrachtet = true;
+		}
+
+		if(nichtBetrachtet)return null;
+
+		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(MQ_ANALYSE.getDav(), messQuerschnitt);
+		MQ_ANALYSE.getDav().subscribeReceiver(
+				this,
+				this.aktuelleMQAnalysen.keySet(), 
+				new DataDescription(
+						MQ_ANALYSE.getDav().getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
+						MQ_ANALYSE.getDav().getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
+						(short)0),
+						ReceiveOptions.normal(),
+						ReceiverRole.receiver());
 			
 		return this;
 	}

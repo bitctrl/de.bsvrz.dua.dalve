@@ -101,6 +101,7 @@ extends AbstraktStoerfallIndikator{
 							  PrognoseSystemObjekt objekt)
 	throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
+				
 		dav.subscribeReceiver(this, this.objekt.getObjekt(),
 				new DataDescription(objekt.getAnalyseAtg(),
 									dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),

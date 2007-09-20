@@ -86,12 +86,6 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	 * Indiziert, ob dieses Objekt im Moment auf <code>keine Daten</code> steht
 	 */
 	protected boolean aktuellKeineDaten = true;
-	
-	/**
-	 * letzter versendeter Störfallzustand
-	 */
-//	protected ResultData letztesErgebnis = null; 
-
 
 		
 	/**
