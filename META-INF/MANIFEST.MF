@@ -7,4 +7,14 @@ Require-Bundle: de.bitctrl.dav.daf,
  de.bitctrl.sys.funclib,
  de.bsvrz.dua.guete
 Bundle-Vendor: BitCtrl Systems GmbH
-Export-Package: de.bsvrz.dua.dalve
+Export-Package: de.bsvrz.dua.dalve,
+ de.bsvrz.dua.dalve.analyse,
+ de.bsvrz.dua.dalve.prognose,
+ de.bsvrz.dua.dalve.stoerfall,
+ de.bsvrz.dua.dalve.stoerfall.fd4,
+ de.bsvrz.dua.dalve.stoerfall.marz1,
+ de.bsvrz.dua.dalve.stoerfall.nrw2,
+ de.bsvrz.dua.dalve.stoerfall.rds3,
+ de.bsvrz.dua.dalve.util,
+ de.bsvrz.dua.dalve.util.para,
+ de.bsvrz.dua.dalve.util.pruef
