@@ -59,7 +59,7 @@ extends MesswertUnskaliert{
 		super(attName);
 	}
 	
-	
+		
 	/**
 	 * Erfragt, ob bei diesem Wert<br>
 	 * Interpoliert UND/ODER<br>

@@ -26,6 +26,7 @@
 package de.bsvrz.dua.dalve;
 
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer ein
@@ -71,11 +72,11 @@ public class AbstraktAttributPrognoseObjekt{
 	 * DAV-Parameter <code>beta2</code> dieses Attributs
 	 */
 	protected double beta2 = Double.NaN;
-	
+		
 	/**
-	 * Alter Wert fuer Z
+	 * initialialer Wert fuer ZAlt
 	 */
-	protected double ZAlt = Double.NaN;
+	protected double ZAltInit = Double.NaN;
 	
 	/**
 	 * Alter Wert fuer deltaZ
@@ -90,12 +91,18 @@ public class AbstraktAttributPrognoseObjekt{
 	/**
 	 * Prognosewert
 	 */
-	private long ZP = -4;
+	private long ZP = DUAKonstanten.NICHT_ERMITTELBAR;
 	
 	/**
 	 * geglaetteter Wert ohne Prognoseanteil
 	 */
-	private long ZG = -4;
+	private long ZG = DUAKonstanten.NICHT_ERMITTELBAR;
+	
+	/**
+	 * Alter Wert fuer Z
+	 */
+	private double ZAlt = Double.NaN;
+
 	
 	
 	/**
@@ -104,6 +111,7 @@ public class AbstraktAttributPrognoseObjekt{
 	 * 
 	 * @param ZAktuell aktueller Wert fuer den der geglaettete und der Prognoseteil
 	 * berechnet werden soll
+	 * @param implausibel zeigt an, ob das Attribut als implausibel markiert ist
 	 * @param istVAttributUndKeineVerkehrsStaerke indiziert, ob es sich
 	 * hier um ein Geschwindigkeitsattribut handelt <b>und</b> dies ein 
 	 * Messintervall ohne Fahrzeugdetektion ist
@@ -111,18 +119,23 @@ public class AbstraktAttributPrognoseObjekt{
 	 */
 	protected final void berechneGlaettungsParameterUndStart(
 								final long ZAktuell,
+								final boolean implausibel,
 								final boolean istVAttributUndKeineVerkehrsStaerke)
 	throws PrognoseParameterException{
 		this.ueberpruefeParameter();
 		
+		if(this.ZAlt == Double.NaN){
+			this.ZAlt = this.ZAltInit;
+		}
+		
 		/**
 		 * Fehlerhafte Werte werden vom Verfahren ignoriert
 		 */		
-		if(ZAktuell >= 0){
+		if(ZAktuell >= 0 && !implausibel){
 			double alpha = this.alpha1;
 			double beta = this.beta1;
 
-			if(deltaZAlt == 0){
+			if(this.deltaZAlt == 0){
 				/**
 				 * 5. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
 				 * Ist der Trend DZNeu = 0, dann gelten die Glättungsfaktoren des letzten Glättungsintervalls
@@ -183,7 +196,16 @@ public class AbstraktAttributPrognoseObjekt{
 			this.ZAlt = ZNeu;
 			this.deltaZAlt = deltaZNeu;
 			this.ZPAlt = ZP;
-		}		
+		}else{
+			/**
+			 * Ausgangzustand wieder herstellen
+			 */
+			this.deltaZAlt = 0.0;
+			this.ZPAlt = -4;
+			this.ZAlt = Double.NaN;
+			this.ZP = DUAKonstanten.NICHT_ERMITTELBAR;
+			this.ZG = DUAKonstanten.NICHT_ERMITTELBAR;
+		}
 	}
 	
 	
@@ -215,7 +237,7 @@ public class AbstraktAttributPrognoseObjekt{
 	private final void ueberpruefeParameter()
 	throws PrognoseParameterException{
 		String subjekt = null;
-		if(this.ZAlt == Double.NaN){
+		if(this.ZAltInit == Double.NaN){
 			subjekt = "ZAlt";  //$NON-NLS-1$
 		}else
 		if(this.alpha1 == Double.NaN){

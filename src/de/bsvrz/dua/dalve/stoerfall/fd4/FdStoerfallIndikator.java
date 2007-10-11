@@ -176,10 +176,10 @@ extends AbstraktStoerfallIndikator{
 			if(this.alleParameterValide()){
 				data = DAV.createData(this.pubBeschreibung.getAttributeGroup());
 				
-				double KKfzStoerfall = this.getAnalyseDichte(resultat);
+				AnalyseDichte KKfzStoerfall = this.getAnalyseDichte(resultat);
 				double KKfzStoerfallG = Double.NaN;
 				try {
-					KKfzStoerfallG = this.prognoseDichteObj.getKKfzStoerfallGAktuell(KKfzStoerfall);
+					KKfzStoerfallG = this.prognoseDichteObj.getKKfzStoerfallGAktuell(KKfzStoerfall.getWert(), KKfzStoerfall.isImplausibel());
 				} catch (PrognoseParameterException e) {
 					LOGGER.error(Konstante.LEERSTRING, e);
 					e.printStackTrace();
@@ -326,6 +326,42 @@ extends AbstraktStoerfallIndikator{
 	
 	
 	
+//	/**
+//	 * Erfragt die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>.
+//	 * Die Berechnung erfolgt analog SE-02.00.00.00.00-AFo-4.0 (siehe 6.6.4.3.2.1.2)
+//	 * 
+//	 * @param resultat ein Analysedatum des MQs (muss <code> != null</code> sein und
+//	 * Nutzdaten enthalten)
+//	 * @return die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>
+//	 */
+//	private final double getAnalyseDichte(ResultData resultat){
+//		double KKfzStoerfall;
+//		
+//		double QKfz = resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+//		double VKfz = resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+//		double KKfz = resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+//		
+//		if(QKfz == 0){
+//			KKfzStoerfall = 0;
+//		}else{
+//			if(VKfz == 0 || VKfz == DUAKonstanten.NICHT_ERMITTELBAR){
+//				KKfzStoerfall = this.K0;
+//			}else
+//			if(VKfz >= this.fa * this.V0){
+//				KKfzStoerfall = KKfz;
+//			}else{
+//				if(QKfz > 0){
+//					KKfzStoerfall = Math.min(K0 * Q0 / QKfz, 2.0 * K0);	
+//				}else{
+//					KKfzStoerfall = 2.0 * K0;
+//				}			
+//			}			
+//		}
+//		
+//		return KKfzStoerfall;
+//	}
+	
+	
 	/**
 	 * Erfragt die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>.
 	 * Die Berechnung erfolgt analog SE-02.00.00.00.00-AFo-4.0 (siehe 6.6.4.3.2.1.2)
@@ -334,12 +370,17 @@ extends AbstraktStoerfallIndikator{
 	 * Nutzdaten enthalten)
 	 * @return die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>
 	 */
-	private final double getAnalyseDichte(ResultData resultat){
+	private final AnalyseDichte getAnalyseDichte(ResultData resultat){
 		double KKfzStoerfall;
+		boolean implausibel = false;
 		
 		double QKfz = resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		boolean QKfzImpl = resultat.getData().getItem("QKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
+					getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
 		double VKfz = resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 		double KKfz = resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		boolean KKfzImpl = resultat.getData().getItem("KKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
+						getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if(QKfz == 0){
 			KKfzStoerfall = 0;
@@ -349,16 +390,65 @@ extends AbstraktStoerfallIndikator{
 			}else
 			if(VKfz >= this.fa * this.V0){
 				KKfzStoerfall = KKfz;
+				implausibel = KKfzImpl;
 			}else{
 				if(QKfz > 0){
-					KKfzStoerfall = Math.min(K0 * Q0 / QKfz, 2.0 * K0);	
+					KKfzStoerfall = Math.min(K0 * Q0 / QKfz, 2.0 * K0);
+					implausibel = QKfzImpl;
 				}else{
 					KKfzStoerfall = 2.0 * K0;
 				}			
 			}			
 		}
 		
-		return KKfzStoerfall;
+		return new AnalyseDichte(KKfzStoerfall, implausibel);
+	}
+	
+	
+	/**
+	 * Klasse zur Speicherung der Analysedichte mit dem Flag <code>implausibel</code>
+	 */
+	protected class AnalyseDichte{
+		
+		/**
+		 * der Wert
+		 */
+		private double wert = Double.NaN;
+		
+		/**
+		 * Zeigt an, ob der Wert als <code>implausibel</code> gekennzeichnet ist
+		 */
+		private boolean implausibel = false;
+		
+		
+		/**
+		 * Standardkonstruktor
+		 * 
+		 * @param wert der Wert
+		 * @param implausibel ob der Wert als <code>implausibel</code> gekennzeichnet ist
+		 */
+		protected AnalyseDichte(double wert, boolean implausibel){
+			this.wert = wert;
+			this.implausibel = implausibel;
+		}
+		
+		/**
+		 * Erfragt den Wert
+		 * 
+		 * @return der Wert
+		 */
+		public final double getWert(){
+			return this.wert; 
+		}
+		
+		/**
+		 * Erfragt, ob der Wert als <code>implausibel</code> gekennzeichnet ist
+		 * 
+		 * @return ob der Wert als <code>implausibel</code> gekennzeichnet ist
+		 */
+		public final boolean isImplausibel(){
+			return this.implausibel;
+		}		
 	}
 	
 	

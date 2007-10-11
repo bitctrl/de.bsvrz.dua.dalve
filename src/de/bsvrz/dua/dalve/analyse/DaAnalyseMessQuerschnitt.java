@@ -330,35 +330,54 @@ implements ClientReceiverInterface{
 		
 		long summe = 0;
 		ArrayList<GWert> gueteWerte = new ArrayList<GWert>();
+		/**
+		 * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar gekennzeichnet, so
+		 * geht sie nicht in die jeweilige Berechnung des Zielwerts ein. Sind alle der bei der Berechnung
+		 * beteiligten Größen als nicht ermittelbar gekennzeichnet, so wird der
+		 * Zielwert mit den Statusflags nicht ermittelbar gekennzeichnet.
+		 */
+		int istNichtVorhanden = 0;
 		for(ResultData fsDaten:this.aktuelleFSAnalysenNutz.values()){
 			MesswertUnskaliert fsWert = new MesswertUnskaliert("q" + attName, fsDaten.getData()); //$NON-NLS-1$
 			
-			if(fsWert.getWertUnskaliert() >= 0){
-				summe += fsWert.getWertUnskaliert();
-				interpoliert |= fsWert.isInterpoliert();
-				gueteWerte.add(new GWert(fsDaten.getData(), "q" + attName)); //$NON-NLS-1$
-			}else{
+			if(fsWert.isFehlerhaftBzwImplausibel()){
 				nichtErmittelbarFehlerhaft = true;
 				break;
+			}else{
+				if(fsWert.getWertUnskaliert() >= 0){
+					summe += fsWert.getWertUnskaliert();
+					interpoliert |= fsWert.isInterpoliert();
+					gueteWerte.add(new GWert(fsDaten.getData(), "q" + attName)); //$NON-NLS-1$
+				}else{
+					istNichtVorhanden++;
+				}
 			}
 		}
-					
+							
 		if(nichtErmittelbarFehlerhaft){
 			qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}else{
-			qAnalyse.setWertUnskaliert(summe);
-			if(interpoliert){
-				qAnalyse.setInterpoliert(true);
-			}
-			if(gueteBerechenbar){
-				try {
-					GWert gesamtGuete = GueteVerfahren.summe(gueteWerte.toArray(new GWert[0]));
-					qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
-					qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
-				} catch (GueteException e) {
-					LOGGER.error("Guete-Index fuer Q" + attName + //$NON-NLS-1$ 
-							" nicht berechenbar", e); //$NON-NLS-1$
-					e.printStackTrace();
+			if(aktuelleFSAnalysenNutz.size() == istNichtVorhanden){
+				qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+			}else{
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("Q" + attName).getItem("Wert"), summe)){  //$NON-NLS-1$//$NON-NLS-2$
+					qAnalyse.setWertUnskaliert(summe);
+					if(interpoliert){
+						qAnalyse.setInterpoliert(true);
+					}
+					if(gueteBerechenbar){
+						try {
+							GWert gesamtGuete = GueteVerfahren.summe(gueteWerte.toArray(new GWert[0]));
+							qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
+							qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
+						} catch (GueteException e) {
+							LOGGER.error("Guete-Index fuer Q" + attName + //$NON-NLS-1$ 
+									" nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							e.printStackTrace();
+						}
+					}					
+				}else{
+					qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			}
 		}
@@ -384,73 +403,82 @@ implements ClientReceiverInterface{
 				
 		MesswertUnskaliert Q = new MesswertUnskaliert("Q" + attName, analyseDatum); //$NON-NLS-1$
 		
-		boolean nichtErmittelbarFehlerhaft = false;
-		boolean interpoliert = false;
-		boolean gueteBerechenbar = true;
+		if(Q.isFehlerhaftBzwImplausibel()){
+			qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else
+		if(Q.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+			qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+		}else{
+			boolean nichtErmittelbarFehlerhaft = false;
+			boolean interpoliert = false;
+			boolean gueteBerechenbar = true;
+			long summe = 0;
+			ArrayList<GWert> gueteProdukte = new ArrayList<GWert>();
 
-		long summe = 0;
-		ArrayList<GWert> gueteProdukte = new ArrayList<GWert>();
-
-		if(Q.getWertUnskaliert() > 0){
-			
+			int istNichtVorhanden = 0;
 			for(ResultData fsDaten:this.aktuelleFSAnalysenNutz.values()){
 				MesswertUnskaliert q = new MesswertUnskaliert("q" + attName, fsDaten.getData()); //$NON-NLS-1$
 				MesswertUnskaliert v = new MesswertUnskaliert(praefixKlein + attName, fsDaten.getData());
-				
-				if(q.getWertUnskaliert() >= 0 && v.getWertUnskaliert() >= 0){
-					interpoliert |= q.isInterpoliert() || v.isInterpoliert();
-					summe += q.getWertUnskaliert() * v.getWertUnskaliert();					
-				}else{
+
+				if(q.isFehlerhaftBzwImplausibel() ||
+					v.isFehlerhaftBzwImplausibel()){
 					nichtErmittelbarFehlerhaft = true;
 					break;
-				}
-				
-				try {
-					gueteProdukte.add(
-							GueteVerfahren.produkt(
-									new GWert(fsDaten.getData(), "q" + attName), //$NON-NLS-1$
-									new GWert(fsDaten.getData(), praefixKlein + attName)
-							)
-					);
-				} catch (GueteException e) {
-					gueteBerechenbar = false;
-					LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
-							" nicht berechenbar", e); //$NON-NLS-1$
-					e.printStackTrace();
-				}				
-			}
-						
-		}else{
-			nichtErmittelbarFehlerhaft = true;
-		}
-								
-		if(nichtErmittelbarFehlerhaft){
-			qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-		}else{
-			long ergebnis = Math.round((double)summe / (double)Q.getWertUnskaliert());
-			
-			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem(praefixGross + attName).getItem("Wert"), ergebnis)){ //$NON-NLS-1$
-				qAnalyse.setWertUnskaliert(ergebnis);
-				if(interpoliert){
-					qAnalyse.setInterpoliert(true);
-				}
-				if(gueteBerechenbar){
+				}else
+				if(q.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
+					v.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+					istNichtVorhanden++;
+				}else{				
+					interpoliert |= q.isInterpoliert() || v.isInterpoliert();
+					summe += q.getWertUnskaliert() * v.getWertUnskaliert();
 					try {
-						GWert gesamtGuete = GueteVerfahren.quotient(
-								GueteVerfahren.summe(gueteProdukte.toArray(new GWert[0])),
-								new GWert(analyseDatum, "Q" + attName) //$NON-NLS-1$
-							);
-						
-						qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
-						qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
+						gueteProdukte.add(
+								GueteVerfahren.produkt(
+										new GWert(fsDaten.getData(), "q" + attName), //$NON-NLS-1$
+										new GWert(fsDaten.getData(), praefixKlein + attName)
+								)
+						);
 					} catch (GueteException e) {
+						gueteBerechenbar = false;
 						LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
-								" nicht berechenbar", e); //$NON-NLS-1$
+								" nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 						e.printStackTrace();
 					}
-				}				
-			}else{
+				}
+			}
+			
+			if(nichtErmittelbarFehlerhaft){
 				qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}else{
+				if(this.aktuelleFSAnalysenNutz.size() == istNichtVorhanden){
+					qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+				}else{
+					long ergebnis = Math.round((double)summe / (double)Q.getWertUnskaliert());
+					
+					if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem(praefixGross + attName).getItem("Wert"), ergebnis)){ //$NON-NLS-1$
+						qAnalyse.setWertUnskaliert(ergebnis);
+						if(interpoliert){
+							qAnalyse.setInterpoliert(true);
+						}
+						if(gueteBerechenbar){
+							try {
+								GWert gesamtGuete = GueteVerfahren.quotient(
+										GueteVerfahren.summe(gueteProdukte.toArray(new GWert[0])),
+										new GWert(analyseDatum, "Q" + attName) //$NON-NLS-1$
+									);
+								
+								qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
+								qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
+							} catch (GueteException e) {
+								LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
+										" nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+								e.printStackTrace();
+							}
+						}				
+					}else{
+						qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					}
+				}
 			}
 		}
 		
@@ -471,16 +499,24 @@ implements ClientReceiverInterface{
 		boolean interpoliert = false;
 		boolean gueteBerechenbar = true;
 
-		long BMax = -1;
+		long BMax = DUAKonstanten.NICHT_ERMITTELBAR;
 		GWert gueteBMax = null;
 		double bSumme = 0;
 		ArrayList<GWert> gueteWerte = new ArrayList<GWert>();
+		
+		int istNichtVorhanden = 0;
 		for(ResultData fsDatum:this.aktuelleFSAnalysenNutz.values()){
 			DaMesswertUnskaliert bFs = new DaMesswertUnskaliert("b", fsDatum.getData()); //$NON-NLS-1$
 			
-			if(bFs.getWertUnskaliert() >= 0){
+			if(bFs.isFehlerhaftBzwImplausibel()){
+				nichtErmittelbarFehlerhaft = true;
+				break;
+			}else
+			if(bFs.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+				istNichtVorhanden++;
+			}else{
 				bSumme += bFs.getWertUnskaliert();
-								
+
 				if(bFs.isPlausibilisiert()){
 					interpoliert = true;
 				}
@@ -495,50 +531,56 @@ implements ClientReceiverInterface{
 					BMax = bFs.getWertUnskaliert();
 					gueteBMax = guete;
 				}
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}				
+			}			
 		}
 		
-		/**
-		 * B setzen
-		 */
-		long B = Math.round(bSumme / (double)this.aktuelleFSAnalysenNutz.keySet().size());
-		if(!nichtErmittelbarFehlerhaft &&	
-		    DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("B").getItem("Wert"), B)){ //$NON-NLS-1$ //$NON-NLS-2$
-			BAnalyse.setWertUnskaliert(B);
-			if(interpoliert){
-				BAnalyse.setInterpoliert(true);
-			}
-			if(gueteBerechenbar){
-				try {
-					GWert gesamtGuete = GueteVerfahren.summe(gueteWerte.toArray(new GWert[0]));
-					BAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
-					BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
-				} catch (GueteException e) {
-					LOGGER.error("Guete-Index fuer B nicht berechenbar", e); //$NON-NLS-1$
-					e.printStackTrace();
-				}
-			}				
-		}else{
+		if(nichtErmittelbarFehlerhaft){
 			BAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-		}
-		
-		/**
-		 * BMax setzen
-		 */
-		if(BMax >= 0 &&
-		   DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("BMax").getItem("Wert"), BMax)){ //$NON-NLS-1$ //$NON-NLS-2$
-			BMaxAnalyse.setWertUnskaliert(BMax);
-			if(interpoliert){
-				BMaxAnalyse.setInterpoliert(true);
-			}
-			if(gueteBMax != null){
-				BMaxAnalyse.getGueteIndex().setWert(gueteBMax.getIndexUnskaliert());
-				BMaxAnalyse.setVerfahren(gueteBMax.getVerfahren().getCode());
-			}
-		}else{
 			BMaxAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else{
+			if(this.aktuelleFSAnalysenNutz.size() == istNichtVorhanden){
+				BAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+				BMaxAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);				
+			}else{
+				/**
+				 * B setzen
+				 */
+				long B = Math.round(bSumme / (double)this.aktuelleFSAnalysenNutz.keySet().size());
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("B").getItem("Wert"), B)){ //$NON-NLS-1$ //$NON-NLS-2$
+					BAnalyse.setWertUnskaliert(B);
+					if(interpoliert){
+						BAnalyse.setInterpoliert(true);
+					}
+					if(gueteBerechenbar){
+						try {
+							GWert gesamtGuete = GueteVerfahren.summe(gueteWerte.toArray(new GWert[0]));
+							BAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
+							BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
+						} catch (GueteException e) {
+							LOGGER.error("Guete-Index fuer B nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							e.printStackTrace();
+						}
+					}				
+				}else{
+					BAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				}
+				
+				/**
+				 * BMax setzen
+				 */
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("BMax").getItem("Wert"), BMax)){ //$NON-NLS-1$ //$NON-NLS-2$
+					BMaxAnalyse.setWertUnskaliert(BMax);
+					if(interpoliert){
+						BMaxAnalyse.setInterpoliert(true);
+					}
+					if(gueteBMax != null){
+						BMaxAnalyse.getGueteIndex().setWert(gueteBMax.getIndexUnskaliert());
+						BMaxAnalyse.setVerfahren(gueteBMax.getVerfahren().getCode());
+					}
+				}else{
+					BMaxAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				}				
+			}
 		}
 		
 		BAnalyse.kopiereInhaltNach(analyseDatum);
@@ -556,122 +598,137 @@ implements ClientReceiverInterface{
 		
 		MesswertUnskaliert QKfz = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
 		GWert QKfzGuete = new GWert(analyseDatum, "QKfz");  //$NON-NLS-1$
-		
-		boolean nichtErmittelbarFehlerhaft = false;
+
 		boolean interpoliert = false;
 		boolean gueteBerechenbar = true;
-
-		if(QKfz.getWertUnskaliert() > 1){
-			double sKfzWertOhneWurzel = 0;
-			
-			DaMesswertUnskaliert VKfz = new DaMesswertUnskaliert("VKfz", analyseDatum); //$NON-NLS-1$
-			GWert VKfzGuete = new GWert(analyseDatum, "VKfz"); //$NON-NLS-1$
-			interpoliert = VKfz.isInterpoliert() || QKfz.isInterpoliert(); 
-				
-			if(VKfz.getWertUnskaliert() >= 0){
-				double VKfzWert = VKfz.getWertUnskaliert();
-				List<GWert> summanden = new ArrayList<GWert>();
-				
-				for(ResultData fsDatum:this.aktuelleFSAnalysenNutz.values()){
-					DaMesswertUnskaliert qKfz = new DaMesswertUnskaliert("qKfz", fsDatum.getData()); //$NON-NLS-1$
-					DaMesswertUnskaliert sKfz = new DaMesswertUnskaliert("sKfz", fsDatum.getData()); //$NON-NLS-1$
-					DaMesswertUnskaliert vKfz = new DaMesswertUnskaliert("vKfz", fsDatum.getData()); //$NON-NLS-1$
-
-					interpoliert |= qKfz.isPlausibilisiert() || 
-								    sKfz.isPlausibilisiert() ||
-								    vKfz.isPlausibilisiert();
-					
-					if(qKfz.getWertUnskaliert() >= 0 &&
-					   sKfz.getWertUnskaliert() >= 0 &&
-					   vKfz.getWertUnskaliert() >= 0){
-						double qKfzWert = qKfz.getWertUnskaliert();
-						double sKfzWert = sKfz.getWertUnskaliert();
-						double vKfzWert = vKfz.getWertUnskaliert();
-												
-						/**
-						 * Berechnung
-						 */
-						sKfzWertOhneWurzel += 
-							(qKfzWert * Math.pow(sKfzWert, 2.0) + qKfzWert * Math.pow(vKfzWert - VKfzWert, 2.0)) / 
-							((double)QKfz.getWertUnskaliert() - 1.0);
-						
-						/**
-						 * Guete
-						 */
-						GWert qKfzGuete = new GWert(fsDatum.getData(), "qKfz"); //$NON-NLS-1$
-						GWert sKfzGuete = new GWert(fsDatum.getData(), "sKfz"); //$NON-NLS-1$
-						GWert vKfzGuete = new GWert(fsDatum.getData(), "vKfz"); //$NON-NLS-1$
-						
-						try {
-							summanden.add(
-								GueteVerfahren.quotient(
-										GueteVerfahren.summe(
-												GueteVerfahren.produkt(
-														qKfzGuete,
-														GueteVerfahren.exp(sKfzGuete, 2.0)
-												),
-												GueteVerfahren.produkt(
-														qKfzGuete,
-														GueteVerfahren.exp(
-																GueteVerfahren.differenz(
-																		vKfzGuete,
-																		VKfzGuete
-																), 2.0)
-												)
-										),
-										QKfzGuete));
-						} catch (GueteException e) {
-							gueteBerechenbar = false;
-							LOGGER.error("Guete-Index fuer SKfz nicht berechenbar", e); //$NON-NLS-1$
-							e.printStackTrace();
-						}						
-						
-					}else{
-						nichtErmittelbarFehlerhaft = true;
-						break;
-					}
-				}
-				
-				if(!nichtErmittelbarFehlerhaft){
-					if(sKfzWertOhneWurzel >= 0){
-						long SKfz = Math.round(Math.sqrt(sKfzWertOhneWurzel));
-						
-					    if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("SKfz").getItem("Wert"), SKfz)){ //$NON-NLS-1$ //$NON-NLS-2$
-							SKfzAnalyse.setWertUnskaliert(SKfz);
-							if(interpoliert){
-								SKfzAnalyse.setInterpoliert(true);
-							}
-							if(gueteBerechenbar){
-								try {
-									GWert gesamtGuete = GueteVerfahren.exp(
-											GueteVerfahren.summe(summanden.toArray(new GWert[0])), 0.5);
-									
-									SKfzAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
-									SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
-								} catch (GueteException e) {
-									LOGGER.error("Guete-Index fuer SKfz nicht berechenbar", e); //$NON-NLS-1$
-									e.printStackTrace();
-								}
-							}				
-					    }else{
-					    	nichtErmittelbarFehlerhaft = true;
-					    }
-					}else{
-						nichtErmittelbarFehlerhaft = true;
-					}
-				}
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}else
-		if(QKfz.getWertUnskaliert() >= 0){
-			SKfzAnalyse.setWertUnskaliert(0);
-			SKfzAnalyse.setInterpoliert(QKfz.isInterpoliert());
-		}else{
-			nichtErmittelbarFehlerhaft = true;
-		}
 		
-		if(nichtErmittelbarFehlerhaft){
+		if(QKfz.isFehlerhaftBzwImplausibel()){
+			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else
+		if(QKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+		}else{
+			if(QKfz.getWertUnskaliert() > 1){
+				double sKfzWertOhneWurzel = 0;
+				
+				DaMesswertUnskaliert VKfz = new DaMesswertUnskaliert("VKfz", analyseDatum); //$NON-NLS-1$
+				if(VKfz.isFehlerhaftBzwImplausibel()){
+					SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				}else
+				if(VKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+					SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+				}else{
+					GWert VKfzGuete = new GWert(analyseDatum, "VKfz"); //$NON-NLS-1$
+					
+					interpoliert = VKfz.isInterpoliert() || QKfz.isInterpoliert(); 
+						
+					double VKfzWert = VKfz.getWertUnskaliert();
+					List<GWert> summanden = new ArrayList<GWert>();
+
+					int istNichtVorhanden = 0;
+					for(ResultData fsDatum:this.aktuelleFSAnalysenNutz.values()){
+						DaMesswertUnskaliert qKfz = new DaMesswertUnskaliert("qKfz", fsDatum.getData()); //$NON-NLS-1$
+						DaMesswertUnskaliert sKfz = new DaMesswertUnskaliert("sKfz", fsDatum.getData()); //$NON-NLS-1$
+						DaMesswertUnskaliert vKfz = new DaMesswertUnskaliert("vKfz", fsDatum.getData()); //$NON-NLS-1$
+						
+						if(qKfz.isFehlerhaftBzwImplausibel() || 
+						   vKfz.isFehlerhaftBzwImplausibel() ||
+						   sKfz.isFehlerhaftBzwImplausibel()){
+							SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							break;
+						}else
+						if(qKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR || 
+							vKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR || 
+							sKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+							istNichtVorhanden++;
+						}else{
+							interpoliert |= qKfz.isPlausibilisiert() || 
+											sKfz.isPlausibilisiert() ||
+											vKfz.isPlausibilisiert();
+
+							double qKfzWert = qKfz.getWertUnskaliert();
+							double sKfzWert = sKfz.getWertUnskaliert();
+							double vKfzWert = vKfz.getWertUnskaliert();
+
+							/**
+							 * Berechnung
+							 */
+							sKfzWertOhneWurzel += 
+								(qKfzWert * Math.pow(sKfzWert, 2.0) + qKfzWert * Math.pow(vKfzWert - VKfzWert, 2.0)) / 
+								((double)QKfz.getWertUnskaliert() - 1.0);
+
+							/**
+							 * Guete
+							 */
+							GWert qKfzGuete = new GWert(fsDatum.getData(), "qKfz"); //$NON-NLS-1$
+							GWert sKfzGuete = new GWert(fsDatum.getData(), "sKfz"); //$NON-NLS-1$
+							GWert vKfzGuete = new GWert(fsDatum.getData(), "vKfz"); //$NON-NLS-1$
+
+							try {
+								summanden.add(
+										GueteVerfahren.quotient(
+												GueteVerfahren.summe(
+														GueteVerfahren.produkt(
+																qKfzGuete,
+																GueteVerfahren.exp(sKfzGuete, 2.0)
+														),
+														GueteVerfahren.produkt(
+																qKfzGuete,
+																GueteVerfahren.exp(
+																		GueteVerfahren.differenz(
+																				vKfzGuete,
+																				VKfzGuete
+																		), 2.0)
+														)
+												),
+												QKfzGuete));
+							} catch (GueteException e) {
+								gueteBerechenbar = false;
+								LOGGER.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+								e.printStackTrace();
+							}
+						}
+					}
+
+					if(this.aktuelleFSAnalysenNutz.size() == istNichtVorhanden){
+						SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+					}else
+					if(SKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT){
+						if(sKfzWertOhneWurzel >= 0){
+							long SKfz = Math.round(Math.sqrt(sKfzWertOhneWurzel));
+
+							if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("SKfz").getItem("Wert"), SKfz)){ //$NON-NLS-1$ //$NON-NLS-2$
+								SKfzAnalyse.setWertUnskaliert(SKfz);
+								if(interpoliert){
+									SKfzAnalyse.setInterpoliert(true);
+								}
+								if(gueteBerechenbar){
+									try {
+										GWert gesamtGuete = GueteVerfahren.exp(
+												GueteVerfahren.summe(summanden.toArray(new GWert[0])), 0.5);
+
+										SKfzAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
+										SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
+									} catch (GueteException e) {
+										LOGGER.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+										e.printStackTrace();
+									}
+								}				
+							}else{
+								SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							}
+						}else{
+							SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						}
+					}
+				}				
+			}else{
+				SKfzAnalyse.setWertUnskaliert(0);
+				SKfzAnalyse.setInterpoliert(QKfz.isInterpoliert());
+			}	
+		}		
+
+		if(SKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT){
 			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}
 
@@ -688,41 +745,39 @@ implements ClientReceiverInterface{
 		MesswertUnskaliert ALkwAnalyse = new MesswertUnskaliert("ALkw"); //$NON-NLS-1$
 		MesswertUnskaliert QLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
 		MesswertUnskaliert QKfz = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
-		
-		boolean nichtErmittelbarFehlerhaft = false;
 				
-		long ALkwWert = -1;
-		GWert ALkwGuete = null;
-		if(QLkw.getWertUnskaliert() >= 0 && QKfz.getWertUnskaliert() > 0){
-			ALkwWert = Math.round((double)QLkw.getWertUnskaliert() / (double)QKfz.getWertUnskaliert()) * 100;
-			
+		if(QLkw.isFehlerhaftBzwImplausibel() || 
+		   QKfz.isFehlerhaftBzwImplausibel()){
+			ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else
+		if(QLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
+		   QKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+			ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+		}else{
+			GWert ALkwGuete = null;
+			long ALkwWert = Math.round((double)QLkw.getWertUnskaliert() / (double)QKfz.getWertUnskaliert()) * 100;
+				
 			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("ALkw").getItem("Wert"), ALkwWert)){ //$NON-NLS-1$ //$NON-NLS-2$
 				try {
 					ALkwGuete = GueteVerfahren.quotient(
 							new GWert(analyseDatum, "QLkw"), //$NON-NLS-1$
 							new GWert(analyseDatum, "QKfz") //$NON-NLS-1$
-						);
+					);
 				} catch (GueteException e) {
-					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar", e); //$NON-NLS-1$
+					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 					e.printStackTrace();
-				}		
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}else{
-			nichtErmittelbarFehlerhaft = true;
-		}
+				}
 				
-		if(nichtErmittelbarFehlerhaft){
-			ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-		}else{
-			ALkwAnalyse.setWertUnskaliert(ALkwWert);
-			ALkwAnalyse.setInterpoliert(QLkw.isInterpoliert() || QKfz.isInterpoliert());
-			if(ALkwGuete != null){
-				ALkwAnalyse.getGueteIndex().setWert(ALkwGuete.getIndexUnskaliert());
-				ALkwAnalyse.setVerfahren(ALkwGuete.getVerfahren().getCode());				
+				ALkwAnalyse.setWertUnskaliert(ALkwWert);
+				ALkwAnalyse.setInterpoliert(QLkw.isInterpoliert() || QKfz.isInterpoliert());
+				if(ALkwGuete != null){
+					ALkwAnalyse.getGueteIndex().setWert(ALkwGuete.getIndexUnskaliert());
+					ALkwAnalyse.setVerfahren(ALkwGuete.getVerfahren().getCode());				
+				}
+			}else{
+				ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
-		}
+		}				
 		
 		ALkwAnalyse.kopiereInhaltNach(analyseDatum);
 	}
@@ -739,77 +794,79 @@ implements ClientReceiverInterface{
 		MesswertUnskaliert Q = new MesswertUnskaliert("Q" + attName, analyseDatum); //$NON-NLS-1$
 		MesswertUnskaliert V = new MesswertUnskaliert("V" + attName, analyseDatum); //$NON-NLS-1$
 		
-		boolean nichtErmittelbarFehlerhaft = false;
-		boolean interpoliert = false;
-				
-		long KWert = -1;
-		GWert KGuete = null;
-		if(V.getWertUnskaliert() > 0){
-			if(Q.getWertUnskaliert() >= 0){
-				KWert = Math.round((double)Q.getWertUnskaliert() / (double)V.getWertUnskaliert());
-				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("K" + attName).getItem("Wert"), KWert)){  //$NON-NLS-1$//$NON-NLS-2$
-					interpoliert = Q.isInterpoliert() || V.isInterpoliert();
-					
-					try {
-						KGuete = GueteVerfahren.quotient(
-									new GWert(analyseDatum, "Q" + attName), //$NON-NLS-1$
-									new GWert(analyseDatum, "V" + attName) //$NON-NLS-1$
-								 );
-					} catch (GueteException e) {
-						LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
-						e.printStackTrace();
-					}
-				}else{
-					nichtErmittelbarFehlerhaft = true;
-				}
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}else
-		if(V.getWertUnskaliert() <= 0 &&
-		   this.parameter.isInitialisiert() &&
-		   this.letztesErgebnis != null &&
-		   this.letztesErgebnis.getData() != null){
-			long grenz = -1;
-			long max = -1;
-			
-			if(attName.startsWith("K")){	// Kfz //$NON-NLS-1$
-				grenz = parameter.getKKfzGrenz();
-				max = parameter.getKKfzMax();
-			}else
-			if(attName.startsWith("L")){	// Lkw //$NON-NLS-1$
-				grenz = parameter.getKLkwGrenz();
-				max = parameter.getKLkwMax();				
-			}else{	// Pkw
-				grenz = parameter.getKPkwGrenz();
-				max = parameter.getKPkwMax();
-			}
-			
-			MesswertUnskaliert KTMinus1 = new MesswertUnskaliert("K" + attName, this.letztesErgebnis.getData());  //$NON-NLS-1$
-			if(KTMinus1.getWertUnskaliert() >= 0){
-				if(KTMinus1.getWertUnskaliert() < grenz){
-					KWert = 0;
-				}else{
-					KWert = max;
-				}
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}else{
-			nichtErmittelbarFehlerhaft = true;
-		}
-						
-		if(nichtErmittelbarFehlerhaft){
+		if(Q.isFehlerhaftBzwImplausibel() ||
+		   V.isFehlerhaftBzwImplausibel()){
 			KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}else{
-			KAnalyse.setWertUnskaliert(KWert);
-			KAnalyse.setInterpoliert(interpoliert);
-			if(KGuete != null){
-				KAnalyse.getGueteIndex().setWert(KGuete.getIndexUnskaliert());
-				KAnalyse.setVerfahren(KGuete.getVerfahren().getCode());				
+			if(V.getWertUnskaliert() == 0 ||
+				V.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ){
+				if(this.parameter.isInitialisiert() &&
+				   this.letztesErgebnis != null &&
+				   this.letztesErgebnis.getData() != null){
+					long grenz = -1;
+					long max = -1;
+							
+					if(attName.startsWith("K")){	// Kfz //$NON-NLS-1$
+						grenz = parameter.getKKfzGrenz();
+						max = parameter.getKKfzMax();
+					}else
+					if(attName.startsWith("L")){	// Lkw //$NON-NLS-1$
+						grenz = parameter.getKLkwGrenz();
+						max = parameter.getKLkwMax();				
+					}else{	// Pkw
+						grenz = parameter.getKPkwGrenz();
+						max = parameter.getKPkwMax();
+					}
+							
+					MesswertUnskaliert KTMinus1 = new MesswertUnskaliert("K" + attName, this.letztesErgebnis.getData());  //$NON-NLS-1$
+					if(KTMinus1.isFehlerhaftBzwImplausibel()){
+						KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					}else
+					if(KTMinus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+						KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+					}else{
+						if(KTMinus1.getWertUnskaliert() < grenz){
+							KAnalyse.setWertUnskaliert(0);
+						}else{
+							KAnalyse.setWertUnskaliert(max);
+						}
+					}
+				}else{
+					KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				}
+
+			}else{
+				if(Q.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+					KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+				}else{
+					long KWert = Math.round((double)Q.getWertUnskaliert() / (double)V.getWertUnskaliert());
+					if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("K" + attName).getItem("Wert"), KWert)){  //$NON-NLS-1$//$NON-NLS-2$
+						boolean interpoliert = Q.isInterpoliert() || V.isInterpoliert();
+						GWert KGuete = null;
+						
+						try {
+							KGuete = GueteVerfahren.quotient(
+										new GWert(analyseDatum, "Q" + attName), //$NON-NLS-1$
+										new GWert(analyseDatum, "V" + attName) //$NON-NLS-1$
+									 );
+						} catch (GueteException e) {
+							LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
+							e.printStackTrace();
+						}
+						
+						KAnalyse.setWertUnskaliert(KWert);
+						KAnalyse.setInterpoliert(interpoliert);
+						if(KGuete != null){
+							KAnalyse.getGueteIndex().setWert(KGuete.getIndexUnskaliert());
+							KAnalyse.setVerfahren(KGuete.getVerfahren().getCode());	
+						}
+					}else{
+						KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					}
+				}
 			}
 		}
-		
+
 		KAnalyse.kopiereInhaltNach(analyseDatum);
 	}
 
@@ -826,51 +883,57 @@ implements ClientReceiverInterface{
 		MesswertUnskaliert QPkw = new MesswertUnskaliert("QPkw", analyseDatum); //$NON-NLS-1$
 		MesswertUnskaliert QLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
 		
-		boolean nichtErmittelbarFehlerhaft = false;
-		
-		long QBWert = -1;
-		GWert QBGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
-		
-		if(VLkw.getWertUnskaliert() >= 0 && VPkw.getWertUnskaliert() >= 0 &&
-		   QLkw.getWertUnskaliert() >= 0 && QPkw.getWertUnskaliert() >= 0 &&
-		   this.parameter.isInitialisiert()){
-			double k1 = this.parameter.getFlk1();
-			double k2 = this.parameter.getFlk2();
-						
-			double fL;
-			if(VPkw.getWertUnskaliert() <= VLkw.getWertUnskaliert()){
-				fL = k1;
-			}else{
-				fL = k1 + k2 * (VPkw.getWertUnskaliert() - VLkw.getWertUnskaliert());
-			}
-			
-			QBWert = QPkw.getWertUnskaliert() + Math.round(fL * (double)QLkw.getWertUnskaliert());
-			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("QB").getItem("Wert"), QBWert)){  //$NON-NLS-1$//$NON-NLS-2$
-				GWert QPkwGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
-				GWert QLkwGuete = new GWert(analyseDatum, "QLkw"); //$NON-NLS-1$					
-								
-				try {
-					QBGuete = GueteVerfahren.summe(QPkwGuete, GueteVerfahren.gewichte(QLkwGuete, fL));
-				} catch (GueteException e) {
-					LOGGER.error("Guete-Index fuer QB nicht berechenbar", e); //$NON-NLS-1$
-					e.printStackTrace();
-				}					
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}else{
-			nichtErmittelbarFehlerhaft = true;
-		}
-						
-		if(nichtErmittelbarFehlerhaft){
+		if(VPkw.isFehlerhaftBzwImplausibel() ||
+			VLkw.isFehlerhaftBzwImplausibel() ||
+			QPkw.isFehlerhaftBzwImplausibel() ||
+			QLkw.isFehlerhaftBzwImplausibel()){
 			QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		}else
+		if(VPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
+				VLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
+				QPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
+				QLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+			QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		}else{
-			QBAnalyse.setWertUnskaliert(QBWert);
-			QBAnalyse.setInterpoliert(QPkw.isInterpoliert() || QLkw.isInterpoliert());
-			if(QBGuete != null){
-				QBAnalyse.getGueteIndex().setWert(QBGuete.getIndexUnskaliert());
-				QBAnalyse.setVerfahren(QBGuete.getVerfahren().getCode());				
-			}
+			if(this.parameter.isInitialisiert()){
+				double k1 = this.parameter.getFlk1();
+				double k2 = this.parameter.getFlk2();
+							
+				double fL;
+				if(VPkw.getWertUnskaliert() <= VLkw.getWertUnskaliert()){
+					fL = k1;
+				}else{
+					fL = k1 + k2 * (VPkw.getWertUnskaliert() - VLkw.getWertUnskaliert());
+				}
+
+				long QBWert = DUAKonstanten.NICHT_ERMITTELBAR;
+				GWert QBGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
+				
+				QBWert = QPkw.getWertUnskaliert() + Math.round(fL * (double)QLkw.getWertUnskaliert());
+				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("QB").getItem("Wert"), QBWert)){  //$NON-NLS-1$//$NON-NLS-2$
+					GWert QPkwGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
+					GWert QLkwGuete = new GWert(analyseDatum, "QLkw"); //$NON-NLS-1$					
+									
+					try {
+						QBGuete = GueteVerfahren.summe(QPkwGuete, GueteVerfahren.gewichte(QLkwGuete, fL));
+					} catch (GueteException e) {
+						LOGGER.error("Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+						e.printStackTrace();
+					}
+					
+					QBAnalyse.setWertUnskaliert(QBWert);
+					QBAnalyse.setInterpoliert(QPkw.isInterpoliert() || QLkw.isInterpoliert());
+					if(QBGuete != null){
+						QBAnalyse.getGueteIndex().setWert(QBGuete.getIndexUnskaliert());
+						QBAnalyse.setVerfahren(QBGuete.getVerfahren().getCode());				
+					}
+				}else{
+					QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				}
+
+			}else{
+				QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}							
 		}
 		
 		QBAnalyse.kopiereInhaltNach(analyseDatum);
@@ -887,56 +950,61 @@ implements ClientReceiverInterface{
 		MesswertUnskaliert QB = new MesswertUnskaliert("QB", analyseDatum); //$NON-NLS-1$
 		MesswertUnskaliert VKfz = new MesswertUnskaliert("VKfz", analyseDatum); //$NON-NLS-1$	
 		
-		boolean nichtErmittelbarFehlerhaft = false;
-		boolean interpoliert = false;
-				
-		long KBWert = -1;
-		GWert KBGuete = null;
-		if(VKfz.getWertUnskaliert() > 0){
-			if(QB.getWertUnskaliert() >= 0){
-				KBWert = Math.round((double)QB.getWertUnskaliert() / (double)VKfz.getWertUnskaliert());
-				if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("KB").getItem("Wert"), KBWert)){  //$NON-NLS-1$//$NON-NLS-2$
-					interpoliert = QB.isInterpoliert() || VKfz.isInterpoliert();
-					try {
-						KBGuete = GueteVerfahren.quotient(
-										new GWert(analyseDatum, "QB"),  //$NON-NLS-1$
-										new GWert(analyseDatum, "VKfz")  //$NON-NLS-1$
-								  );
-					} catch (GueteException e) {
-						LOGGER.error("Guete-Index fuer KB nicht berechenbar", e); //$NON-NLS-1$
-						e.printStackTrace();
-					}
-				}else{
-					nichtErmittelbarFehlerhaft = true;
-				}				
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}else{
-			if(this.parameter.isInitialisiert() && this.letztesErgebnis != null && this.letztesErgebnis.getData() != null){
-				MesswertUnskaliert KBTMinus1 = new MesswertUnskaliert("KB", this.letztesErgebnis.getData()); //$NON-NLS-1$
-				if(KBTMinus1.getWertUnskaliert() >= 0){
-					if(KBTMinus1.getWertUnskaliert() >= this.parameter.getKBGrenz()){
-						KBWert = this.parameter.getKBMax();
-					}else{
-						KBWert = 0;
-					}
-				}else{
-					nichtErmittelbarFehlerhaft = true;
-				}				
-			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}			
-		
-		if(nichtErmittelbarFehlerhaft){
+		if(QB.isFehlerhaftBzwImplausibel() || 
+				VKfz.isFehlerhaftBzwImplausibel()){
 			KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}else{
-			KBAnalyse.setWertUnskaliert(KBWert);
-			KBAnalyse.setInterpoliert(interpoliert);
-			if(KBGuete != null){
-				KBAnalyse.getGueteIndex().setWert(KBGuete.getIndexUnskaliert());
-				KBAnalyse.setVerfahren(KBGuete.getVerfahren().getCode());				
+			if(VKfz.getWertUnskaliert() == 0 || 
+			   VKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+				
+				if(this.parameter.isInitialisiert() &&
+					this.letztesErgebnis != null && 
+					this.letztesErgebnis.getData() != null){
+					
+					MesswertUnskaliert KBTMinus1 = new MesswertUnskaliert("KB", this.letztesErgebnis.getData()); //$NON-NLS-1$
+					if(KBTMinus1.getWertUnskaliert() >= 0){
+						if(KBTMinus1.getWertUnskaliert() >= this.parameter.getKBGrenz()){
+							KBAnalyse.setWertUnskaliert(this.parameter.getKBMax());
+						}else{
+							KBAnalyse.setWertUnskaliert(0);
+						}
+					}else{
+						KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					}					
+				}else{
+					KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				}
+				
+			}else{
+				// normal berechnen
+				if(QB.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+					KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+				}else{
+					long KBWert = Math.round((double)QB.getWertUnskaliert() / (double)VKfz.getWertUnskaliert());
+					
+					if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("KB").getItem("Wert"), KBWert)){  //$NON-NLS-1$//$NON-NLS-2$
+						boolean interpoliert = QB.isInterpoliert() || VKfz.isInterpoliert();
+						GWert KBGuete = null;
+						try {
+							KBGuete = GueteVerfahren.quotient(
+											new GWert(analyseDatum, "QB"),  //$NON-NLS-1$
+											new GWert(analyseDatum, "VKfz")  //$NON-NLS-1$
+									  );
+						} catch (GueteException e) {
+							LOGGER.error("Guete-Index fuer KB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							e.printStackTrace();
+						}
+						
+						KBAnalyse.setWertUnskaliert(KBWert);
+						KBAnalyse.setInterpoliert(interpoliert);
+						if(KBGuete != null){
+							KBAnalyse.getGueteIndex().setWert(KBGuete.getIndexUnskaliert());
+							KBAnalyse.setVerfahren(KBGuete.getVerfahren().getCode());				
+						}
+					}else{
+						KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					}					
+				}
 			}
 		}
 		
@@ -953,23 +1021,46 @@ implements ClientReceiverInterface{
 	private final void berechneVDifferenz(Data analyseDatum){
 		MesswertUnskaliert VDeltaAnalyse = new MesswertUnskaliert("VDelta"); //$NON-NLS-1$
 
-		boolean nichtErmittelbarFehlerhaft = false;
-		boolean interpoliert = false;
-		boolean gueteBerechnen = true;
+		if(this.aktuelleFSAnalysen.size() <= 1){
+			DaMesswertUnskaliert VKfz = new DaMesswertUnskaliert("VKfz"); //$NON-NLS-1$
+			if(VKfz.isFehlerhaftBzwImplausibel()){
+				VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}else
+			if(VKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+				VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+			}else{
+				/**
+				 * kopiere Wert
+				 */
+				VDeltaAnalyse.setWertUnskaliert(VKfz.getWertUnskaliert());
+				VDeltaAnalyse.setFormalMax(VKfz.isFormalMax());
+				VDeltaAnalyse.setFormalMin(VKfz.isFormalMin());
+				VDeltaAnalyse.setGueteIndex(VKfz.getGueteIndex());
+				VDeltaAnalyse.setVerfahren(VKfz.getVerfahren());
+				VDeltaAnalyse.setLogischMax(VKfz.isLogischMax());				
+				VDeltaAnalyse.setLogischMin(VKfz.isLogischMin());
+				VDeltaAnalyse.setInterpoliert(VKfz.isInterpoliert());				
+				VDeltaAnalyse.setNichtErfasst(VKfz.isNichtErfasst());
+			}
+		}else{
+			boolean interpoliert = false;
+			boolean gueteBerechnen = true;
 
-		long VDeltaWert = 0;
-		List<GWert> gueteSummanden = new ArrayList<GWert>();
+			long VDeltaWert = 0;
+			List<GWert> gueteSummanden = new ArrayList<GWert>();
 
-		if(this.aktuelleFSAnalysen.keySet().size() == this.aktuelleFSAnalysenNutz.keySet().size()){
-			if(this.parameter.isInitialisiert()){
+			if(this.aktuelleFSAnalysen.keySet().size() == this.aktuelleFSAnalysenNutz.keySet().size() 
+					&& this.parameter.isInitialisiert()){				
 				MessQuerschnitt mq = MessQuerschnitt.getInstanz(this.messQuerschnitt);
 				if(mq != null){
+
+					int istNichtVorhanden = 0;
 					for(int i = 0; i<mq.getFahrStreifen().size() - 1; i++){
 						int w;
 						if(this.parameter.getWichtung().length > i){
 							w = this.parameter.getWichtung()[i];
 						}else{
-							nichtErmittelbarFehlerhaft = true;
+							VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						}
 						ResultData fsResultI = this.aktuelleFSAnalysen.get(mq.getFahrStreifen().get(i).getSystemObject());
@@ -977,57 +1068,60 @@ implements ClientReceiverInterface{
 						MesswertUnskaliert vKfzI = new MesswertUnskaliert("vKfz", fsResultI.getData()); //$NON-NLS-1$
 						MesswertUnskaliert vKfzIPlus1 = new MesswertUnskaliert("vKfz", fsResultIPlus1.getData()); //$NON-NLS-1$
 
-						if(vKfzI.getWertUnskaliert() >= 0 && vKfzIPlus1.getWertUnskaliert() >= 0){
-							interpoliert = vKfzI.isInterpoliert() || vKfzIPlus1.isInterpoliert();
-							VDeltaWert += w * Math.abs(vKfzI.getWertUnskaliert() - vKfzIPlus1.getWertUnskaliert());
+						if(vKfzI.isFehlerhaftBzwImplausibel() || 
+							vKfzIPlus1.isFehlerhaftBzwImplausibel()){
+							VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							break;								
+						}else
+							if(vKfzI.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR || 
+									vKfzIPlus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+								istNichtVorhanden++;
+							}else{
+								interpoliert = vKfzI.isInterpoliert() || vKfzIPlus1.isInterpoliert();
+								VDeltaWert += w * Math.abs(vKfzI.getWertUnskaliert() - vKfzIPlus1.getWertUnskaliert());
 
-							try {
-								gueteSummanden.add(
-										GueteVerfahren.gewichte(
-												GueteVerfahren.differenz(
-														new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
-														new GWert(fsResultIPlus1.getData(), "vKfz")), (double)w)); //$NON-NLS-1$
-							} catch (GueteException e) {
-								gueteBerechnen = false;
-								LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
-								e.printStackTrace();
+								try {
+									gueteSummanden.add(
+											GueteVerfahren.gewichte(
+													GueteVerfahren.differenz(
+															new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
+															new GWert(fsResultIPlus1.getData(), "vKfz")), (double)w)); //$NON-NLS-1$
+								} catch (GueteException e) {
+									gueteBerechnen = false;
+									LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+									e.printStackTrace();
+								}
 							}
-
-						}else{
-							nichtErmittelbarFehlerhaft = true;
-							break;
-						}
 					}	
 
-					if(!DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)){  //$NON-NLS-1$//$NON-NLS-2$
-						nichtErmittelbarFehlerhaft = true;
-					}
+					if(VDeltaAnalyse.getWertUnskaliert() != DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT){
+						if(mq.getFahrStreifen().size() == istNichtVorhanden){
+							VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+						}else
+							if(!DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)){  //$NON-NLS-1$//$NON-NLS-2$
+								VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							}else{
+								VDeltaAnalyse.setWertUnskaliert(VDeltaWert);
+								VDeltaAnalyse.setInterpoliert(interpoliert);
+								if(gueteBerechnen){
+									try {
+										GWert guete = GueteVerfahren.summe(gueteSummanden.toArray(new GWert[0]));
+										VDeltaAnalyse.getGueteIndex().setWert(guete.getIndexUnskaliert());
+										VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());				
+									} catch (GueteException e) {
+										LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+										e.printStackTrace();
+									}
+								}								
+							}
+					}						
 				}else{
-					nichtErmittelbarFehlerhaft = true;
-				}
+					VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				}					
 			}else{
-				nichtErmittelbarFehlerhaft = true;
-			}
-		}else{
-			nichtErmittelbarFehlerhaft = true;
-		}
-		
-		if(nichtErmittelbarFehlerhaft){
-			VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-		}else{
-			VDeltaAnalyse.setWertUnskaliert(VDeltaWert);
-			VDeltaAnalyse.setInterpoliert(interpoliert);
-			if(gueteBerechnen){
-				try {
-					GWert guete = GueteVerfahren.summe(gueteSummanden.toArray(new GWert[0]));
-					VDeltaAnalyse.getGueteIndex().setWert(guete.getIndexUnskaliert());
-					VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());				
-				} catch (GueteException e) {
-					LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
-					e.printStackTrace();
-				}
-			}
-		}
+				VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}						
+		}		
 		
 		VDeltaAnalyse.kopiereInhaltNach(analyseDatum);
 	}

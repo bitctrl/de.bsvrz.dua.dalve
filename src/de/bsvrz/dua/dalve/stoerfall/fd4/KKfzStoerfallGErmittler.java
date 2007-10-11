@@ -70,12 +70,14 @@ implements ClientReceiverInterface{
 	 * Erfragt das geglaettete Attribut <code>KKfzStoerfallG</code>
 	 *
 	 * @param KKfzStoerfall zu glaettendes Attribut <code>KKfzStoerfall</code>
+	 * @param implausibel ob das zu glaettende Attribut <code>KKfzStoerfall</code> als implausibel
+	 * gekennzeichnet wird
 	 * @return das geglaettete Attribut <code>KKfzStoerfallG</code>
 	 * @throws PrognoseParameterException wenn die Parameter noch nicht gesetzt wurden
 	 */
-	public final double getKKfzStoerfallGAktuell(double KKfzStoerfall)
+	public final double getKKfzStoerfallGAktuell(double KKfzStoerfall, boolean implausibel)
 	throws PrognoseParameterException{
-		this.berechneGlaettungsParameterUndStart(Math.round(KKfzStoerfall), false);
+		this.berechneGlaettungsParameterUndStart(Math.round(KKfzStoerfall), implausibel, false);
 		
 		return this.getZG();
 	}
@@ -89,7 +91,7 @@ implements ClientReceiverInterface{
 			for(ResultData parameter:parameterSaetze){
 				if(parameter != null){
 					if(parameter.getData() != null){			
-						this.ZAlt =  parameter.getData().getUnscaledValue("KKfzStart").longValue(); //$NON-NLS-1$
+						this.ZAltInit =  parameter.getData().getUnscaledValue("KKfzStart").longValue(); //$NON-NLS-1$
 						this.alpha1 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
 										getScaledValue("alpha1").doubleValue(); //$NON-NLS-1$
 						this.alpha2 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
@@ -99,7 +101,7 @@ implements ClientReceiverInterface{
 						this.beta2 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
 										getScaledValue("beta2").doubleValue(); //$NON-NLS-1$
 					}else{
-						this.ZAlt = -4;
+						this.ZAltInit = -4;
 						this.alpha1 = -1;
 						this.alpha2 = -1;
 						this.beta1 = -1;

@@ -33,8 +33,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 /**
  * Objekt, das mit einem Systemobjekt assoziiert ist, welches innerhalb der 
  * Datenaufbereitung behandelt werden kann (also <code>typ.fahrStreifen</code>
- * oder <code>typ.messQuerschnitt</code>)
- * 
+ * oder <code>typ.messQuerschnitt</code>).
+ *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
