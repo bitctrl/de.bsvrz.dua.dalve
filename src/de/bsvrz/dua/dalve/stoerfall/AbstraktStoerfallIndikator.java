@@ -38,6 +38,7 @@ import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.prognose.PrognoseTyp;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
@@ -106,7 +107,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 		
 		this.paraAtg = dav.getDataModel().getAttributeGroup(this.getParameterAtgPid());
 		dav.subscribeReceiver(this, objekt.getObjekt(),
-				new DataDescription(this.paraAtg, dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL), (short)0),
+				new DataDescription(this.paraAtg, dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL), (short)0),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 		
 		

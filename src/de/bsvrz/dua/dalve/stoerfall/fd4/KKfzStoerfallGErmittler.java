@@ -34,7 +34,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.AbstraktAttributPrognoseObjekt;
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer die
@@ -60,7 +60,7 @@ implements ClientReceiverInterface{
 		dav.subscribeReceiver(this, obj,
 				new DataDescription(
 						dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
 						(short)0),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}

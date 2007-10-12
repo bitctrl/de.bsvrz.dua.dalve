@@ -36,7 +36,7 @@ import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Haelt für ein bestimmtes Objekt (Fahrstreifen oder Messquerschnitt)
@@ -88,7 +88,7 @@ implements ClientReceiverInterface{
 				objekt.getObjekt(), 
 				new DataDescription(
 						typ.getParameterAtg(objekt.isFahrStreifen()),
-						dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
 						(short)0),
 						ReceiveOptions.normal(),
 						ReceiverRole.receiver());

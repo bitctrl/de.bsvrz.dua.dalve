@@ -34,6 +34,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
@@ -91,7 +92,7 @@ implements ClientSenderInterface {
 		
 		DD_FSAnalyse = new DataDescription(
 				ATG_FSAnalyse, 
-				DAV.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_VORGABE),
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
 				(short)0);
 		
 		this.objekt = objekt;
@@ -144,7 +145,7 @@ implements ClientSenderInterface {
 		
 		ResultData resultat = new ResultData(fsObjekt, new DataDescription(
 				ATG_FSAnalyse, 
-				DAV.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_VORGABE),
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
 				(short)0), System.currentTimeMillis(), parameter);
 		DAV.sendData(resultat);
 		

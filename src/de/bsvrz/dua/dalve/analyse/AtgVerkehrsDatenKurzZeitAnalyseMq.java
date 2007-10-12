@@ -33,8 +33,8 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.Data.Array;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Korrespondiert mit der Attributgruppe <code>atg.verkehrsDatenKurzZeitAnalyseMq</code>
@@ -118,7 +118,7 @@ implements ClientReceiverInterface{
 		}
 		dav.subscribeReceiver(this, mq, new DataDescription(
 				dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
 				(short)0), ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 

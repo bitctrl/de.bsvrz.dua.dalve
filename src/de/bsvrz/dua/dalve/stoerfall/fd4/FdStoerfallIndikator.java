@@ -37,6 +37,7 @@ import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
 import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
@@ -114,7 +115,7 @@ extends AbstraktStoerfallIndikator{
 		dav.subscribeReceiver(this, objekt.getObjekt(),
 				new DataDescription(
 						this.paraAtg,
-						dav.getDataModel().getAspect(Konstante.DAV_ASP_PARAMETER_SOLL),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
 						(short)0),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 		
