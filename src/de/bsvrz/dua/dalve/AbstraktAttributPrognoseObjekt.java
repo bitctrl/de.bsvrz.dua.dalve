@@ -124,7 +124,7 @@ public class AbstraktAttributPrognoseObjekt{
 	throws PrognoseParameterException{
 		this.ueberpruefeParameter();
 		
-		if(this.ZAlt == Double.NaN){
+		if(Double.isNaN(this.ZAlt)){
 			this.ZAlt = this.ZAltInit;
 		}
 		
@@ -237,19 +237,19 @@ public class AbstraktAttributPrognoseObjekt{
 	private final void ueberpruefeParameter()
 	throws PrognoseParameterException{
 		String subjekt = null;
-		if(this.ZAltInit == Double.NaN){
+		if(Double.isNaN(this.ZAltInit)){
 			subjekt = "ZAlt";  //$NON-NLS-1$
 		}else
-		if(this.alpha1 == Double.NaN){
+		if(Double.isNaN(this.alpha1)){
 			subjekt = "alpha1";  //$NON-NLS-1$
 		}else
-		if(this.alpha2 == Double.NaN){
+		if(Double.isNaN(this.alpha2)){
 			subjekt = "alpha2";  //$NON-NLS-1$
 		}else
-		if(this.beta1 == Double.NaN){
+		if(Double.isNaN(this.beta1)){
 			subjekt = "beta1";  //$NON-NLS-1$
 		}else
-		if(this.beta2 == Double.NaN){
+		if(Double.isNaN(this.beta2)){
 			subjekt = "beta2";  //$NON-NLS-1$
 		}
 

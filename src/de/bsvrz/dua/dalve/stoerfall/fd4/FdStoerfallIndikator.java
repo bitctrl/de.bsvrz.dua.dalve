@@ -186,7 +186,7 @@ extends AbstraktStoerfallIndikator{
 					e.printStackTrace();
 				}
 				
-				if(KKfzStoerfallG == Double.NaN){
+				if(Double.isNaN(KKfzStoerfallG)){
 					stufe = StoerfallSituation.FREIER_VERKEHR;
 					stufe = berechneStufe(StoerfallSituation.ZAEHER_VERKEHR, KKfzStoerfallG, stufe);
 					stufe = berechneStufe(StoerfallSituation.STAU, KKfzStoerfallG, stufe);
