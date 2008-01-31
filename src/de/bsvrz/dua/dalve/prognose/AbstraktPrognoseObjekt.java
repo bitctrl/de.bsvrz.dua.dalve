@@ -223,8 +223,6 @@ implements ClientReceiverInterface,
 					}catch(PrognoseParameterException e){
 						LOGGER.error("Prognosedaten koennen fuer " + this.prognoseObjekt.getObjekt() //$NON-NLS-1$ 
 								+ " nicht berechnet werden", e); //$NON-NLS-1$
-						e.printStackTrace();
-						
 						if(aktuellKeineDaten){
 							datenSenden = false;
 						}						
