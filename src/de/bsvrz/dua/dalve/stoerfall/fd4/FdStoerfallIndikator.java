@@ -183,7 +183,6 @@ extends AbstraktStoerfallIndikator{
 					KKfzStoerfallG = this.prognoseDichteObj.getKKfzStoerfallGAktuell(KKfzStoerfall.getWert(), KKfzStoerfall.isImplausibel());
 				} catch (PrognoseParameterException e) {
 					LOGGER.error(Konstante.LEERSTRING, e);
-					e.printStackTrace();
 				}
 				
 				if(Double.isNaN(KKfzStoerfallG)){
