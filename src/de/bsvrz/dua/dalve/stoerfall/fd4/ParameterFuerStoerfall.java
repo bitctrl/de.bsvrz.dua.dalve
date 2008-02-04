@@ -27,7 +27,7 @@ package de.bsvrz.dua.dalve.stoerfall.fd4;
 
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
-import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.StoerfallSituation;
+import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
  * Hier sind alle Vergleichswerte (mit Hysterese) gespeichert, die zur Ermittlung

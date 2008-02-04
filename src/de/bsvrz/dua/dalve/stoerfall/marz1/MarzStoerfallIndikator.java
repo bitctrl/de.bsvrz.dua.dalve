@@ -29,7 +29,7 @@ import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
-import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.StoerfallSituation;
+import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
  * Repräsentiert einen Stoerfallindikator nach MARZ

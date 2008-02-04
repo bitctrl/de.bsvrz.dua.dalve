@@ -43,7 +43,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
-import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.StoerfallSituation;
+import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
  * Repräsentiert einen Stoerfallindikator nach Verfahren NRW (nur fuer Messquerschnitte)

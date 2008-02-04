@@ -34,7 +34,7 @@ import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.nrw2.NrwStoerfallIndikatorMq;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.StoerfallSituation;
+import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
  * Repräsentiert einen Stoerfallindikator nach Verfahren RDS (nur fuer Messquerschnitte)
