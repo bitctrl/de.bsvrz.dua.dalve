@@ -28,6 +28,8 @@ package de.bsvrz.dua.dalve;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
@@ -44,7 +46,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktVerwaltungsAdapterMitGuete;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Verwaltungsmodul der SWE Datenaufbereitung LVE. Hier werden nur die 
@@ -103,13 +104,13 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 		alleObjekte.addAll(fahrStreifen);
 		alleObjekte.addAll(messQuerschnitte);
 		
-		String infoStr = Konstante.LEERSTRING;
+		String infoStr = Constants.EMPTY_STRING;
 		for(SystemObject obj:objekte){
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
 		LOGGER.config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		infoStr = Konstante.LEERSTRING;
+		infoStr = Constants.EMPTY_STRING;
 		for(SystemObject obj:messQuerschnitte){
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}

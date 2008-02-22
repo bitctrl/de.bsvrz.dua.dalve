@@ -28,6 +28,8 @@ package de.bsvrz.dua.dalve.prognose;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
@@ -46,7 +48,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -157,7 +158,7 @@ implements ClientReceiverInterface,
 			DAV.subscribeSender(this, prognoseObjekt.getObjekt(), this.pubBeschreibungPrognose, SenderRole.source());
 			DAV.subscribeSender(this, prognoseObjekt.getObjekt(), this.pubBeschreibungGlatt, SenderRole.source());
 		} catch (OneSubscriptionPerSendData e) {
-			throw new DUAInitialisierungsException(Konstante.LEERSTRING, e);
+			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 		}
 		
 		/**

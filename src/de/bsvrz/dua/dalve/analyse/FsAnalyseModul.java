@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
@@ -47,7 +49,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -107,7 +108,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(fsObj, PUB_BESCHREIBUNG));
 			} catch (Exception e) {
-				throw new DUAInitialisierungsException(Konstante.LEERSTRING, e); 
+				throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e); 
 			}
 		}
 	

@@ -25,6 +25,8 @@
  */
 package de.bsvrz.dua.dalve.stoerfall.fd4;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
@@ -40,7 +42,6 @@ import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
@@ -129,7 +130,7 @@ extends AbstraktStoerfallIndikator{
 		try {
 			dav.subscribeSender(this, objekt.getObjekt(), this.pubBeschreibung, SenderRole.source());
 		} catch (OneSubscriptionPerSendData e) {
-			throw new DUAInitialisierungsException(Konstante.LEERSTRING, e);
+			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 		}
 		
 		
@@ -182,7 +183,7 @@ extends AbstraktStoerfallIndikator{
 				try {
 					KKfzStoerfallG = this.prognoseDichteObj.getKKfzStoerfallGAktuell(KKfzStoerfall.getWert(), KKfzStoerfall.isImplausibel());
 				} catch (PrognoseParameterException e) {
-					LOGGER.error(Konstante.LEERSTRING, e);
+					LOGGER.error(Constants.EMPTY_STRING, e);
 				}
 				
 				if(Double.isNaN(KKfzStoerfallG)){

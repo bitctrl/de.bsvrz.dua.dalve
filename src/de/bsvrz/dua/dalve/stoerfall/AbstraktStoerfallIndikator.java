@@ -25,6 +25,8 @@
  */
 package de.bsvrz.dua.dalve.stoerfall;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
@@ -41,7 +43,6 @@ import de.bsvrz.dua.dalve.prognose.PrognoseTyp;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -118,7 +119,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 		try {
 			dav.subscribeSender(this, objekt.getObjekt(), this.pubBeschreibung, SenderRole.source());
 		} catch (OneSubscriptionPerSendData e) {
-			throw new DUAInitialisierungsException(Konstante.LEERSTRING, e);
+			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 		}
 		
 		/**
@@ -204,7 +205,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 					LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 				}
 			} catch (Exception e) {
-				LOGGER.error(Konstante.LEERSTRING, e);
+				LOGGER.error(Constants.EMPTY_STRING, e);
 				e.printStackTrace();
 			}
 		}else{
@@ -217,7 +218,7 @@ implements ClientReceiverInterface, ClientSenderInterface{
 						LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 					}
 				} catch (Exception e) {
-					LOGGER.error(Konstante.LEERSTRING, e);
+					LOGGER.error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
 				}
 			}							

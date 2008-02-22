@@ -26,12 +26,13 @@
 
 package de.bsvrz.dua.dalve.util;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 
 /**
@@ -56,7 +57,7 @@ extends CSVImporter{
 	/**
 	 * T
 	 */
-	protected static long INTERVALL = Konstante.MINUTE_IN_MS;
+	protected static long INTERVALL = Constants.MILLIS_PER_MINUTE;
 	
 
 	/**
@@ -104,7 +105,7 @@ extends CSVImporter{
 	 * oder <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getMQAnalyseDatensatz() {
-		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"));
+		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq")); //$NON-NLS-1$
 		
 		if(datensatz != null){
 			if(ZEILE != null){
@@ -181,7 +182,7 @@ extends CSVImporter{
 	 * oder <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */	
 	public final Data getFSAnalyseDatensatz(final int FS){	
-		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"));
+		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs")); //$NON-NLS-1$
 
 		int fsMulti = FS-1;
 		
@@ -259,12 +260,12 @@ extends CSVImporter{
 	private final Data setAttribut(final String attributName, long wert, String status, Data datensatz){
 		Data data = datensatz;
 	
-		if((attributName.startsWith("v") || attributName.startsWith("V"))
+		if((attributName.startsWith("v") || attributName.startsWith("V")) //$NON-NLS-1$ //$NON-NLS-2$
 				&& wert >= 255) {
 			wert = -1;
 		}
 		
-		if((attributName.startsWith("k") || attributName.startsWith("K"))
+		if((attributName.startsWith("k") || attributName.startsWith("K")) //$NON-NLS-1$ //$NON-NLS-2$
 				&& wert > 10000) {
 			wert = -1;
 		}
@@ -281,39 +282,39 @@ extends CSVImporter{
 		int errCode = 0;
 		
 		if(status != null) {
-			String[] splitStatus = status.trim().split(" ");
+			String[] splitStatus = status.trim().split(" "); //$NON-NLS-1$
 			
 			for(int i = 0; i<splitStatus.length;i++) {
-				if(splitStatus[i].equalsIgnoreCase("Fehl"))
+				if(splitStatus[i].equalsIgnoreCase("Fehl")) //$NON-NLS-1$
 					errCode = errCode-2;
 				
-				if(splitStatus[i].equalsIgnoreCase("nErm"))
+				if(splitStatus[i].equalsIgnoreCase("nErm")) //$NON-NLS-1$
 					errCode = errCode-1;
 				
-				if(splitStatus[i].equalsIgnoreCase("Impl"))
+				if(splitStatus[i].equalsIgnoreCase("Impl")) //$NON-NLS-1$
 					 impl = DUAKonstanten.JA;
 				
-				if(splitStatus[i].equalsIgnoreCase("Intp"))
+				if(splitStatus[i].equalsIgnoreCase("Intp")) //$NON-NLS-1$
 					intp = DUAKonstanten.JA;				
 
-				if(splitStatus[i].equalsIgnoreCase("nErf"))
+				if(splitStatus[i].equalsIgnoreCase("nErf")) //$NON-NLS-1$
 					nErf = DUAKonstanten.JA;
 
-				if(splitStatus[i].equalsIgnoreCase("wMaL"))
+				if(splitStatus[i].equalsIgnoreCase("wMaL")) //$NON-NLS-1$
 					wMaL = DUAKonstanten.JA;
 				
-				if(splitStatus[i].equalsIgnoreCase("wMax"))
+				if(splitStatus[i].equalsIgnoreCase("wMax")) //$NON-NLS-1$
 					wMax = DUAKonstanten.JA;
 
-				if(splitStatus[i].equalsIgnoreCase("wMiL"))
+				if(splitStatus[i].equalsIgnoreCase("wMiL")) //$NON-NLS-1$
 					wMiL = DUAKonstanten.JA;
 
-				if(splitStatus[i].equalsIgnoreCase("wMin"))
+				if(splitStatus[i].equalsIgnoreCase("wMin")) //$NON-NLS-1$
 					wMin = DUAKonstanten.JA;
 				
 				try {
 //					guete = Float.parseFloat(splitStatus[i].replace(",", "."))*10000;
-					guete = Float.parseFloat(splitStatus[i].replace(",", "."));
+					guete = Float.parseFloat(splitStatus[i].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (Exception e) {
 					//kein float Wert
 				}

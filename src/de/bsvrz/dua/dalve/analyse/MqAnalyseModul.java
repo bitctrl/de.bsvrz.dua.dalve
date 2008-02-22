@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.TreeSet;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
@@ -42,7 +44,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVSendeAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -138,7 +139,7 @@ public class MqAnalyseModul{
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(mq, PUB_BESCHREIBUNG));
 			} catch (Exception e) {
-				throw new DUAInitialisierungsException(Konstante.LEERSTRING, e);
+				throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 			}
 		}
 		this.sender.modifiziereObjektAnmeldung(anmeldungen);
@@ -151,7 +152,7 @@ public class MqAnalyseModul{
 				try {
 					anmeldungen.remove(new DAVObjektAnmeldung(mq, PUB_BESCHREIBUNG));
 				} catch (Exception e) {
-					throw new DUAInitialisierungsException(Konstante.LEERSTRING, e);
+					throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 				}
 			}
 		}
@@ -164,7 +165,7 @@ public class MqAnalyseModul{
 				try {
 					anmeldungen.remove(new DAVObjektAnmeldung(mqv, PUB_BESCHREIBUNG));
 				} catch (Exception e) {
-					throw new DUAInitialisierungsException(Konstante.LEERSTRING, e);
+					throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 				}				
 			}
 		}

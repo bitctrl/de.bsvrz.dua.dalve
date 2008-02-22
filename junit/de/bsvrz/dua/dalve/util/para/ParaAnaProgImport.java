@@ -37,8 +37,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
-
 
 /**
  * Abstrakte Klasse zum Einlesen von Parametern aus der CSV-Datei 
@@ -88,7 +86,7 @@ implements ClientSenderInterface {
 			DAV = dav;
 		}
 		
-		ATG_FSAnalyse = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseFs");
+		ATG_FSAnalyse = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseFs"); //$NON-NLS-1$
 		
 		DD_FSAnalyse = new DataDescription(
 				ATG_FSAnalyse, 
@@ -114,7 +112,7 @@ implements ClientSenderInterface {
 		
 		SystemObject fsObjekt = null;
 		for(SystemObject sysObjekt : objekt) {
-			if(sysObjekt.getName().endsWith("."+index)) {
+			if(sysObjekt.getName().endsWith("."+index)) { //$NON-NLS-1$
 				fsObjekt = sysObjekt;
 			}
 		}
@@ -128,7 +126,7 @@ implements ClientSenderInterface {
 		while( (zeile = this.getNaechsteZeile()) != null ){
 			String attributInCSVDatei = zeile[0];
 			String wert = zeile[1];
-			wert = wert.replaceAll(",", ".");
+			wert = wert.replaceAll(",", "."); //$NON-NLS-1$ //$NON-NLS-2$
 			String attPfad = getAttributPfadVon(attributInCSVDatei, index);
 			if(attPfad != null){
 				try{

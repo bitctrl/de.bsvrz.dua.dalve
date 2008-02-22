@@ -3,6 +3,8 @@ package de.bsvrz.dua.dalve;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -15,7 +17,6 @@ import de.bsvrz.dua.dalve.util.para.ParaAnaProgImport;
 import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 
@@ -46,7 +47,7 @@ implements ClientSenderInterface {
 	 * 
 	 * Pfadangabe mit Argument: -debugFilePath=[Pfad]
 	 */
-	private String[] argumente = new String[] {"-debugLevelFileText=ALL"};
+	private String[] argumente = new String[] {"-debugLevelFileText=ALL"}; //$NON-NLS-1$
 	private ArgumentList alLogger = new ArgumentList(argumente);
 	protected Debug LOGGER;
 	
@@ -102,7 +103,7 @@ implements ClientSenderInterface {
 		/*
 		 * Importiere Parameter
 		 */
-		paraImport = new ParaAnaProgImport(dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Parameter");
+		paraImport = new ParaAnaProgImport(dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImport.importiereParameter(1);
 		paraImport.importiereParameter(2);
 		paraImport.importiereParameter(3);
@@ -110,7 +111,7 @@ implements ClientSenderInterface {
 		/*
 		 * Initialisiert Testfahrstreifenimporter
 		 */
-		importFS = new TestFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Messwerters.PL-gepr");
+		importFS = new TestFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Messwerters.PL-gepr"); //$NON-NLS-1$
 	}
 	
 	/**
@@ -124,7 +125,7 @@ implements ClientSenderInterface {
 		 */
 		Debug.init("DatenaufbereitungLVEAnalyse", alLogger); //$NON-NLS-1$
 		LOGGER = Debug.getLogger();
-		LOGGER.info("Prüfe Datenaufbereitung LVE - Analysewerte...");
+		LOGGER.info("Prüfe Datenaufbereitung LVE - Analysewerte..."); //$NON-NLS-1$
 		
 		Data zeileFS1;
 		Data zeileFS2;
@@ -139,7 +140,7 @@ implements ClientSenderInterface {
 		 * Prüferklasse
 		 * Empfängt Daten und vergleicht mit SOLL-Wert 
 		 */
-		PruefeDaLVEAnalyse prDaLVEAnalyse = new PruefeDaLVEAnalyse(this, dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Analysewerte");
+		PruefeDaLVEAnalyse prDaLVEAnalyse = new PruefeDaLVEAnalyse(this, dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Analysewerte"); //$NON-NLS-1$
 
 		//Lese bei Importer und Prüfer den nächsten Datensatz ein
 		importFS.importNaechsteZeile();
@@ -154,19 +155,19 @@ implements ClientSenderInterface {
 			ResultData resultat2 = new ResultData(FS2, DD_KZD_SEND, aktZeit, zeileFS2);
 			ResultData resultat3 = new ResultData(FS3, DD_KZD_SEND, aktZeit, zeileFS3);
 			
-			LOGGER.info("Sende Daten: FS 1-3 -> Zeile: "+csvIndex+" - Zeit: "+aktZeit);
+			LOGGER.info("Sende Daten: FS 1-3 -> Zeile: "+csvIndex+" - Zeit: "+aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dav.sendData(resultat1);
 			this.dav.sendData(resultat2);
 			this.dav.sendData(resultat3);
 			
 			//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
-			LOGGER.info("Warte auf Prüfung der FS 1-3...");
+			LOGGER.info("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
 			doWait();
 			
 			csvIndex++;
 			
 			//setze neue Prüfzeit
-			aktZeit = aktZeit + Konstante.MINUTE_IN_MS;
+			aktZeit = aktZeit + Constants.MILLIS_PER_MINUTE;
 			
 			//Lese bei Importer und Prüfer den nächsten Datensatz ein
 			importFS.importNaechsteZeile();
