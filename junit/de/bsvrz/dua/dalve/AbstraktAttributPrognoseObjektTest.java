@@ -25,8 +25,6 @@
  */
 package de.bsvrz.dua.dalve;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;

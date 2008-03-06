@@ -70,11 +70,11 @@ public class DaSystemObjekt {
 		if(objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)){
 			this.objektIstFahrStreifen = true;
 		}else
-		if(objekt.isOfType(DUAKonstanten.TYP_MQ)){
+		if(objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)){
 			this.objektIstFahrStreifen = false;
 		}else{
 			throw new DUAInitialisierungsException("Uebergebenes Objekt ist" + //$NON-NLS-1$
-					" weder Fahrstreifen noch Messquerschnitt"); //$NON-NLS-1$
+					" weder Fahrstreifen noch Messquerschnitt: " + objekt.getType()); //$NON-NLS-1$
 		}
 	}
 	

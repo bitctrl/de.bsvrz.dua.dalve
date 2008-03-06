@@ -40,7 +40,7 @@ implements ClientSenderInterface {
 	/**
 	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden
 	 */
-	protected static final String TEST_DATEN_VERZ = ".\\testDaten\\"; //$NON-NLS-1$
+	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\"; //$NON-NLS-1$
 	
 	/**
 	 * Logger und Loggerargument
@@ -111,7 +111,8 @@ implements ClientSenderInterface {
 		/*
 		 * Initialisiert Testfahrstreifenimporter
 		 */
-		importFS = new TestFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Messwerters.PL-gepr"); //$NON-NLS-1$
+//		importFS = new TestFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Messwerters.PL-gepr"); //$NON-NLS-1$
+		importFS = new TestFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Messwerters_LVE"); //$NON-NLS-1$
 	}
 	
 	/**
@@ -125,7 +126,7 @@ implements ClientSenderInterface {
 		 */
 		Debug.init("DatenaufbereitungLVEAnalyse", alLogger); //$NON-NLS-1$
 		LOGGER = Debug.getLogger();
-		LOGGER.info("Prüfe Datenaufbereitung LVE - Analysewerte..."); //$NON-NLS-1$
+		System.out.println("Prüfe Datenaufbereitung LVE - Analysewerte..."); //$NON-NLS-1$
 		
 		Data zeileFS1;
 		Data zeileFS2;
@@ -155,13 +156,13 @@ implements ClientSenderInterface {
 			ResultData resultat2 = new ResultData(FS2, DD_KZD_SEND, aktZeit, zeileFS2);
 			ResultData resultat3 = new ResultData(FS3, DD_KZD_SEND, aktZeit, zeileFS3);
 			
-			LOGGER.info("Sende Daten: FS 1-3 -> Zeile: "+csvIndex+" - Zeit: "+aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("Sende Daten: FS 1-3 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dav.sendData(resultat1);
 			this.dav.sendData(resultat2);
 			this.dav.sendData(resultat3);
 			
 			//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
-			LOGGER.info("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
+			System.out.println("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
 			doWait();
 			
 			csvIndex++;

@@ -42,7 +42,7 @@ import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
+import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittAllgemein;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
@@ -81,7 +81,7 @@ extends NrwStoerfallIndikatorFs{
 		 * Anmeldung auf Analysedaten aller Fahrstreifen dieses 
 		 * Messquerschnittes
 		 */
-		MessQuerschnitt mq = MessQuerschnitt.getInstanz(objekt.getObjekt());
+		MessQuerschnittAllgemein mq = MessQuerschnittAllgemein.getInstanz(objekt.getObjekt());
 		if(mq != null){
 			for(FahrStreifen fs:mq.getFahrStreifen()){
 				this.fsDaten.put(fs.getSystemObject(), null);
