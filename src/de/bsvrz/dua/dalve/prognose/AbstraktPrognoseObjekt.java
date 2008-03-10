@@ -35,10 +35,12 @@ import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.DataNotSubscribedException;
 import de.bsvrz.dav.daf.main.OneSubscriptionPerSendData;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SendSubscriptionNotConfirmed;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.guete.GWert;
@@ -247,9 +249,12 @@ implements ClientReceiverInterface,
 								LOGGER.fine("Geglaettete Daten fuer " + this.prognoseObjekt +  //$NON-NLS-1$
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
-						} catch (Exception e) {
+						} catch (DataNotSubscribedException  e) {
 							LOGGER.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
+						} catch(SendSubscriptionNotConfirmed  e){
+							LOGGER.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+							e.printStackTrace();				
 						}
 						
 						try{
@@ -257,11 +262,14 @@ implements ClientReceiverInterface,
 								DAV.sendData(prognoseDatum);
 							}else{
 								LOGGER.fine("Prognosedaten fuer " + this.prognoseObjekt +  //$NON-NLS-1$
-										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$								
+								" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$								
 							}
-						} catch (Exception e) {
+						} catch (DataNotSubscribedException  e) {
 							LOGGER.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
+						} catch(SendSubscriptionNotConfirmed  e){
+							LOGGER.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
+							e.printStackTrace();				
 						}
 					}
 				}

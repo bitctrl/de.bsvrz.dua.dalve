@@ -31,10 +31,12 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.DataNotSubscribedException;
 import de.bsvrz.dav.daf.main.OneSubscriptionPerSendData;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SendSubscriptionNotConfirmed;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -204,9 +206,12 @@ implements ClientReceiverInterface, ClientSenderInterface{
 				}else{
 					LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 				}
-			} catch (Exception e) {
+			} catch (DataNotSubscribedException  e) {
 				LOGGER.error(Constants.EMPTY_STRING, e);
 				e.printStackTrace();
+			} catch(SendSubscriptionNotConfirmed  e){
+				LOGGER.error(Constants.EMPTY_STRING, e);
+				e.printStackTrace();				
 			}
 		}else{
 			if(!this.aktuellKeineDaten){
@@ -217,9 +222,12 @@ implements ClientReceiverInterface, ClientSenderInterface{
 					}else{
 						LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 					}
-				} catch (Exception e) {
+				} catch (DataNotSubscribedException  e) {
 					LOGGER.error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
+				} catch(SendSubscriptionNotConfirmed  e){
+					LOGGER.error(Constants.EMPTY_STRING, e);
+					e.printStackTrace();				
 				}
 			}							
 		}		

@@ -138,7 +138,7 @@ public class MqAnalyseModul{
 		for(SystemObject mq:messQuerschnitteGesamt){
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(mq, PUB_BESCHREIBUNG));
-			} catch (Exception e) {
+			} catch (IllegalArgumentException e) {
 				throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 			}
 		}
@@ -151,7 +151,7 @@ public class MqAnalyseModul{
 			if(new DaAnalyseMessQuerschnitt().initialisiere(this, mq) == null){
 				try {
 					anmeldungen.remove(new DAVObjektAnmeldung(mq, PUB_BESCHREIBUNG));
-				} catch (Exception e) {
+				} catch (IllegalArgumentException e) {
 					throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 				}
 			}
@@ -164,7 +164,7 @@ public class MqAnalyseModul{
 			if(new DaAnalyseMessQuerschnittVirtuell().initialisiere(this, mqv) == null){
 				try {
 					anmeldungen.remove(new DAVObjektAnmeldung(mqv, PUB_BESCHREIBUNG));
-				} catch (Exception e) {
+				} catch (IllegalArgumentException e) {
 					throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 				}				
 			}

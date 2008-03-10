@@ -107,7 +107,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 					new AtgVerkehrsDatenKurzZeitAnalyseFs(dieVerwaltung.getVerbindung(), fsObj));
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(fsObj, PUB_BESCHREIBUNG));
-			} catch (Exception e) {
+			} catch (IllegalArgumentException e) {
 				throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e); 
 			}
 		}
