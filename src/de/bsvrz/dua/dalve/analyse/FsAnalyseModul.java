@@ -93,10 +93,12 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
 		
-		PUB_BESCHREIBUNG = new DataDescription(
-				dieVerwaltung.getVerbindung().getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				dieVerwaltung.getVerbindung().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
-				(short)0);
+		if(PUB_BESCHREIBUNG == null){
+			PUB_BESCHREIBUNG = new DataDescription(
+					dieVerwaltung.getVerbindung().getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+					dieVerwaltung.getVerbindung().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
+					(short)0);
+		}
 		
 		/**
 		 * Publikations- und Parameteranmeldungen durchfuehren

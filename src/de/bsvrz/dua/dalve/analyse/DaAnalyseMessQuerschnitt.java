@@ -1,5 +1,4 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -65,6 +64,28 @@ implements ClientReceiverInterface{
 	 * Debug-Logger
 	 */
 	protected static final Debug LOGGER = Debug.getLogger();
+	
+	/**
+	 * alle Attributnamen der Atg <code>atg.verkehrsDatenKurzZeitMq</code>
+	 */
+	private static final String[] ATTS = new String[]{
+			"QKfz", //$NON-NLS-1$
+			"VKfz", //$NON-NLS-1$
+			"QLkw", //$NON-NLS-1$
+			"VLkw", //$NON-NLS-1$
+			"QPkw", //$NON-NLS-1$
+			"VPkw", //$NON-NLS-1$
+			"B", //$NON-NLS-1$
+			"BMax", //$NON-NLS-1$
+			"SKfz", //$NON-NLS-1$
+			"VgKfz", //$NON-NLS-1$
+			"ALkw", //$NON-NLS-1$
+			"KKfz", //$NON-NLS-1$
+			"KLkw", //$NON-NLS-1$
+			"KPkw", //$NON-NLS-1$
+			"QB", //$NON-NLS-1$
+			"KB", //$NON-NLS-1$
+			"VDelta"}; //$NON-NLS-1$
 		
 	/**
 	 * Verbindung zum Analysemodul
@@ -152,12 +173,12 @@ implements ClientReceiverInterface{
 	
 	/**
 	 * Dieser Methode sollten alle aktuellen Daten für alle mit diesem Messquerschnitt
-	 * assoziierten Fahrstreifen übergeben werden. Ggf. wird dadurch dann eine Berechnung
-	 * der Analysewerte dieses Messquerschnittes ausgelöst.
+	 * assoziierten Fahrstreifen uebergeben werden. Ggf. wird dadurch dann eine Berechnung
+	 * der Analysewerte dieses Messquerschnittes ausgeluest.
 	 * 
 	 * @param triggerDatum ein KZ-Datum eines assoziierten Fahrstreifens
-	 * @return ein Analysedatum für diesen Messquerschnitt, wenn das <code>triggerDatum</code>
-	 * eine Berechnung ausgelöst hat, oder <code>null</code> sonst
+	 * @return ein Analysedatum fuer diesen Messquerschnitt, wenn das <code>triggerDatum</code>
+	 * eine Berechnung ausgeloest hat, oder <code>null</code> sonst
 	 */
 	protected ResultData trigger(ResultData triggerDatum){
 		ResultData ergebnis = null;
@@ -173,20 +194,49 @@ implements ClientReceiverInterface{
 		long zeitStempel = -1;
 		for(SystemObject fs:this.aktuelleFSAnalysen.keySet()){
 			ResultData fsDatum = this.aktuelleFSAnalysen.get(fs);
+			
 			if(fsDatum != null){
 				if(fsDatum.getData() != null){
+					this.aktuelleFSAnalysenNutz.put(fsDatum.getObject(), fsDatum);
 					if(zeitStempel == -1){
+						/**
+						 * erstes Datum
+						 */
 						zeitStempel = fsDatum.getDataTime();
-						this.aktuelleFSAnalysenNutz.put(fsDatum.getObject(), fsDatum);
 						berechne = true;
 					}else{
+						/**
+						 * Fuer den Fall, dass die Zeitstempel der Daten nicht uebereinstimmen,
+						 * wird keine Daten veroeffentlicht
+						 */
 						if(fsDatum.getDataTime() != zeitStempel){
+							ergebnis = new ResultData(
+									this.messQuerschnitt,
+									MqAnalyseModul.PUB_BESCHREIBUNG,
+									System.currentTimeMillis(),
+									null);
 							berechne = false;
 							break;
 						}
 					}
+				}else{
+					/**
+					 * Wenn fuer mindestens einen Fahrstreifen keine Nutzdaten vorliegen,
+					 * dann veroeffentliche <code>keine Daten</code> fuer den Messquerschnitt 
+					 */
+					ergebnis = new ResultData(
+							this.messQuerschnitt,
+							MqAnalyseModul.PUB_BESCHREIBUNG,
+							System.currentTimeMillis(),
+							null);
+					berechne = false;
+					break;					
 				}
 			}else{
+				/**
+				 * Wenn nicht fuer ALLE Fahrstreifen des Messquerschnittes 
+				 * ein Datensatz vorliegt, dann mache nichts
+				 */
 				berechne = false;
 				break;
 			}
@@ -195,82 +245,78 @@ implements ClientReceiverInterface{
 
 		if(berechne){
 			final long datenZeit = zeitStempel;
-
 			Data analyseDatum = MQ_ANALYSE.getDav().createData(MqAnalyseModul.PUB_BESCHREIBUNG.getAttributeGroup());
+			
+			if(this.isErfassungsZyklenGleich(analyseDatum)){
 
-			/**
-			 * Berechne Verkehrsstärken
-			 */
-			this.berechneVerkehrsStaerke(analyseDatum, "Kfz"); //$NON-NLS-1$
-			this.berechneVerkehrsStaerke(analyseDatum, "Lkw"); //$NON-NLS-1$
-			this.berechneVerkehrsStaerke(analyseDatum, "Pkw"); //$NON-NLS-1$
-
-			/**
-			 * Berechne mittlere Geschwindigkeiten
-			 */
-			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Lkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Pkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-			this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "Vg", "vg");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-
-			/**
-			 * Belegung B und BMax
-			 */
-			this.berechneBelegung(analyseDatum);
-
-			/**
-			 * Standardabweichung
-			 */
-			this.berechneStandardabweichung(analyseDatum);
-
-			/**
-			 * Berechne LKW-Anteil
-			 */
-			this.berechneLkwAnteil(analyseDatum);
-
-			/**
-			 * Berechne Fahrzeugdichten
-			 */
-			this.berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
-			this.berechneDichte(analyseDatum, "Lkw"); //$NON-NLS-1$
-			this.berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
-
-			/**
-			 * Bemessungsverkehrsstärke 
-			 */
-			this.berechneBemessungsVerkehrsstaerke(analyseDatum);
-
-			/**
-			 * Bemessungsdichte
-			 */
-			this.berechneBemessungsdichte(analyseDatum);
-
-			/**
-			 * Berechne die gewichtete Differenzgeschwindigkeit im Messquerschnitt
-			 */
-			this.berechneVDifferenz(analyseDatum);
+				/**
+				 * Berechne Verkehrsstärken
+				 */
+				this.berechneVerkehrsStaerke(analyseDatum, "Kfz"); //$NON-NLS-1$
+				this.berechneVerkehrsStaerke(analyseDatum, "Lkw"); //$NON-NLS-1$
+				this.berechneVerkehrsStaerke(analyseDatum, "Pkw"); //$NON-NLS-1$
+	
+				/**
+				 * Berechne mittlere Geschwindigkeiten
+				 */
+				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Lkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Pkw", "V", "v");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				this.berechneMittlereGeschwindigkeiten(analyseDatum, "Kfz", "Vg", "vg");  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+	
+				/**
+				 * Belegung B und BMax
+				 */
+				this.berechneBelegung(analyseDatum);
+	
+				/**
+				 * Standardabweichung
+				 */
+				this.berechneStandardabweichung(analyseDatum);
+	
+				/**
+				 * Berechne LKW-Anteil
+				 */
+				this.berechneLkwAnteil(analyseDatum);
+	
+				/**
+				 * Berechne Fahrzeugdichten
+				 */
+				this.berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
+				this.berechneDichte(analyseDatum, "Lkw"); //$NON-NLS-1$
+				this.berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
+	
+				/**
+				 * Bemessungsverkehrsstärke 
+				 */
+				this.berechneBemessungsVerkehrsstaerke(analyseDatum);
+	
+				/**
+				 * Bemessungsdichte
+				 */
+				this.berechneBemessungsdichte(analyseDatum);
+	
+				/**
+				 * Berechne die gewichtete Differenzgeschwindigkeit im Messquerschnitt
+				 */
+				this.berechneVDifferenz(analyseDatum);
+			}
 
 			ergebnis = new ResultData(this.messQuerschnitt, MqAnalyseModul.PUB_BESCHREIBUNG,
 					datenZeit, analyseDatum);
 			
 			/**
-			 * Puffer wieder zurücksetzen
+			 * Puffer wieder zuruecksetzen
 			 */
 			for(SystemObject obj:this.aktuelleFSAnalysenNutz.keySet()){
 				this.aktuelleFSAnalysen.put(obj, null);	
 			}
 			this.aktuelleFSAnalysenNutz.keySet().clear();
-		}else{
-			ergebnis = new ResultData(
-					this.messQuerschnitt,
-					MqAnalyseModul.PUB_BESCHREIBUNG,
-					triggerDatum.getDataTime(),
-					null);
 		}
 		
 		return ergebnis;
 	}
- 
+	
 	
 	/**
 	 * {@inheritDoc}
@@ -280,7 +326,7 @@ implements ClientReceiverInterface{
 			for(ResultData resultat:resultate){
 				if(resultat != null){
 					ResultData ergebnis = trigger(resultat);
-					
+
 					if(ergebnis != null){
 						if(ergebnis.getData() != null){
 							MQ_ANALYSE.sendeDaten(ergebnis);
@@ -317,6 +363,52 @@ implements ClientReceiverInterface{
 	 **********************************************************************************/
 	
 	/**
+	 * Erfragt, ob alle zur Verrechnung vorgesehenen Fahrstreifendatensaetze die gleiche
+	 * Erfassungsintervalldauer haben
+	 * 
+	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
+	 * @return ob alle zur Verrechnung vorgesehenen Fahrstreifendatensaetze die gleiche
+	 * Erfassungsintervalldauer haben
+	 */
+	private final boolean isErfassungsZyklenGleich(Data analyseDatum){
+		boolean gleich = false;
+		String referenz = null;
+		
+		long T = -1;
+		for(ResultData fsDaten:this.aktuelleFSAnalysenNutz.values()){
+			if(T == -1){
+				T = fsDaten.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
+				gleich = true;
+				referenz = fsDaten.toString(); 
+			}else{
+				if(T != fsDaten.getData().getTimeValue("T").getMillis()){ //$NON-NLS-1$
+					gleich = false;
+					LOGGER.warning("Erfassungsintervalldauer nicht gleich:\n" +  //$NON-NLS-1$
+							referenz + "\n" + fsDaten); //$NON-NLS-1$
+					break;
+				}
+			}
+		}
+		
+		/**
+		 * Setzte alle Werte auf nicht ermittelbar bzw. fehlerhaft
+		 */
+		if(!gleich){
+			for(String attribut:ATTS){
+				MesswertUnskaliert mw = new MesswertUnskaliert(attribut);
+				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				if(attribut.equals("VKfz") || attribut.equals("QPkw")){  //$NON-NLS-1$//$NON-NLS-2$
+					mw.setNichtErfasst(true);
+				}
+				mw.kopiereInhaltNach(analyseDatum);
+			}
+		}
+		
+		return gleich;
+	}
+	
+	
+	/**
 	 * Berechnet die Verkehrsstärken analog SE-02.00.00.00.00-AFo-4.0 S.118f
 	 * 
 	 * @param analyseDatum das Datum in das die Daten eingetragen werden sollen
@@ -339,7 +431,10 @@ implements ClientReceiverInterface{
 		int istNichtVorhanden = 0;
 		for(ResultData fsDaten:this.aktuelleFSAnalysenNutz.values()){
 			MesswertUnskaliert fsWert = new MesswertUnskaliert("q" + attName, fsDaten.getData()); //$NON-NLS-1$
-			
+
+			if(fsWert.isNichtErfasst()){
+				qAnalyse.setNichtErfasst(true);
+			}
 			if(fsWert.isFehlerhaftBzwImplausibel()){
 				nichtErmittelbarFehlerhaft = true;
 				break;
@@ -481,7 +576,15 @@ implements ClientReceiverInterface{
 				}
 			}
 		}
-		
+
+		for(ResultData fsDaten:this.aktuelleFSAnalysenNutz.values()){
+			MesswertUnskaliert v = new MesswertUnskaliert(praefixKlein + attName, fsDaten.getData());
+			if(v.isNichtErfasst()){
+				qAnalyse.setNichtErfasst(true);
+				break;
+			}
+		}
+
 		qAnalyse.kopiereInhaltNach(analyseDatum);
 	}
 

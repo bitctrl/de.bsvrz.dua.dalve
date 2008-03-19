@@ -224,8 +224,8 @@ implements ClientReceiverInterface,
 							aktuellKeineDaten = true;
 						}
 					}catch(PrognoseParameterException e){
-						LOGGER.error("Prognosedaten koennen fuer " + this.prognoseObjekt.getObjekt() //$NON-NLS-1$ 
-								+ " nicht berechnet werden", e); //$NON-NLS-1$
+						LOGGER.warning("Prognosedaten koennen fuer " + this.prognoseObjekt.getObjekt() //$NON-NLS-1$ 
+								+ " nicht berechnet werden:\n" + e.getMessage()); //$NON-NLS-1$
 						if(aktuellKeineDaten){
 							datenSenden = false;
 						}						

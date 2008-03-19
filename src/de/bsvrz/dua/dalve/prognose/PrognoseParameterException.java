@@ -26,8 +26,8 @@
 package de.bsvrz.dua.dalve.prognose;
 
 /**
- * Indiziert, dass die Berechnung eines Prognosewertes nicht möglich ist,
- * da die Parameter nicht vollständig oder nicht sinnvoll sind
+ * Indiziert, dass die Berechnung eines Prognosewertes nicht moeglich ist,
+ * da die Parameter nicht vollstaendig oder nicht sinnvoll sind
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
