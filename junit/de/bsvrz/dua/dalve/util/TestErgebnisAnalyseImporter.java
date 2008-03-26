@@ -267,7 +267,7 @@ extends CSVImporter{
 		
 		if((attributName.startsWith("k") || attributName.startsWith("K")) //$NON-NLS-1$ //$NON-NLS-2$
 				&& wert > 10000) {
-			wert = -1;
+			wert = -3;
 		}
 		
 		int nErf = DUAKonstanten.NEIN;

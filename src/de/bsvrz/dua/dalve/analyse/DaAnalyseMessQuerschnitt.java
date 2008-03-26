@@ -400,7 +400,7 @@ implements ClientReceiverInterface{
 				if(attribut.equals("VKfz") || attribut.equals("QPkw")){  //$NON-NLS-1$//$NON-NLS-2$
 					mw.setNichtErfasst(true);
 				}
-				mw.kopiereInhaltNach(analyseDatum);
+				mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			}
 		}
 		
@@ -477,7 +477,7 @@ implements ClientReceiverInterface{
 			}
 		}
 		
-		qAnalyse.kopiereInhaltNach(analyseDatum);
+		qAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -585,7 +585,7 @@ implements ClientReceiverInterface{
 			}
 		}
 
-		qAnalyse.kopiereInhaltNach(analyseDatum);
+		qAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	
@@ -686,8 +686,8 @@ implements ClientReceiverInterface{
 			}
 		}
 		
-		BAnalyse.kopiereInhaltNach(analyseDatum);
-		BMaxAnalyse.kopiereInhaltNach(analyseDatum);
+		BAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
+		BMaxAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -835,7 +835,7 @@ implements ClientReceiverInterface{
 			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}
 
-		SKfzAnalyse.kopiereInhaltNach(analyseDatum);
+		SKfzAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -882,7 +882,7 @@ implements ClientReceiverInterface{
 			}
 		}				
 		
-		ALkwAnalyse.kopiereInhaltNach(analyseDatum);
+		ALkwAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	
@@ -970,7 +970,7 @@ implements ClientReceiverInterface{
 			}
 		}
 
-		KAnalyse.kopiereInhaltNach(analyseDatum);
+		KAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	
@@ -1039,7 +1039,7 @@ implements ClientReceiverInterface{
 			}							
 		}
 		
-		QBAnalyse.kopiereInhaltNach(analyseDatum);
+		QBAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -1111,7 +1111,7 @@ implements ClientReceiverInterface{
 			}
 		}
 		
-		KBAnalyse.kopiereInhaltNach(analyseDatum);
+		KBAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	
@@ -1226,7 +1226,7 @@ implements ClientReceiverInterface{
 			}						
 		}		
 		
-		VDeltaAnalyse.kopiereInhaltNach(analyseDatum);
+		VDeltaAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 }

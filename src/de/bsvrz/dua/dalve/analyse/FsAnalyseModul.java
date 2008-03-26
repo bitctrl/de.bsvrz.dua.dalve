@@ -281,7 +281,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			}
 		}
 		
-		aLkw.kopiereInhaltNach(analyseDatum);
+		aLkw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -366,7 +366,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			qB.getGueteIndex().setWert(0);
 		}
 		
-		qB.kopiereInhaltNach(analyseDatum);
+		qB.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -456,7 +456,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			}
 		}		
 		
-		zielK.kopiereInhaltNach(analyseDatum);
+		zielK.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -473,8 +473,9 @@ extends AbstraktBearbeitungsKnotenAdapter{
 		DaMesswertUnskaliert qT = new DaMesswertUnskaliert("q" + fahrZeugKlasse, analyseDatum); //$NON-NLS-1$
 		
 		MesswertUnskaliert zielK = new MesswertUnskaliert("k" + fahrZeugKlasse); //$NON-NLS-1$
-		
-		if(vT.getWertUnskaliert() <= 0){
+				
+		if(vT.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR || 
+		   vT.getWertUnskaliert() == 0){
 
 			ResultData analyseTminus1 = this.fsAufDatenPuffer.get(kurzZeitDatum.getObject());
 			if(analyseTminus1 != null &&
@@ -483,7 +484,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 						analyseTminus1.getData());
 
 				long kTminus1Wert = kTminus1.getWertUnskaliert();
-
+				
 				if(!kTminus1.isFehlerhaftBzwImplausibel()){
 					AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = this.parameter.get(kurzZeitDatum.getObject());
 					if(fsParameter.isInitialisiert()){
@@ -559,7 +560,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			zielK.getGueteIndex().setWert(0);
 		}
 
-		zielK.kopiereInhaltNach(analyseDatum);
+		zielK.kopiereInhaltNachModifiziereIndex(analyseDatum);
 
 		
 //		if(vT.isFehlerhaftBzwImplausibel() ||
@@ -699,7 +700,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			}			
 		}
 		
-		qAnalyse.kopiereInhaltNach(analyseDatum);
+		qAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	
@@ -738,7 +739,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 			}			
 		}
 		
-		analyseWert.kopiereInhaltNach(analyseDatum);
+		analyseWert.kopiereInhaltNachModifiziereIndex(analyseDatum);				
 	}
 	
 	

@@ -146,7 +146,7 @@ implements IAtgPrognoseParameterListener{
 		exportWert.getGueteIndex().setWert(this.aktuellesDatum.getGueteIndex().getWert());
 		exportWert.setVerfahren(this.aktuellesDatum.getVerfahren());
 		
-		exportWert.kopiereInhaltNach(zielDatum);
+		exportWert.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
 	
 	
@@ -166,7 +166,7 @@ implements IAtgPrognoseParameterListener{
 		exportWert.getGueteIndex().setWert(this.aktuellesDatum.getGueteIndex().getWert());
 		exportWert.setVerfahren(this.aktuellesDatum.getVerfahren());
 		
-		exportWert.kopiereInhaltNach(zielDatum);
+		exportWert.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
 	
 

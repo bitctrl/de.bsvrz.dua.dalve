@@ -330,7 +330,7 @@ implements ClientReceiverInterface,
 		
 		kb.getGueteIndex().setWert(guete.getIndexUnskaliert());
 		
-		kb.kopiereInhaltNach(zielDatum);		
+		kb.kopiereInhaltNachModifiziereIndex(zielDatum);		
 	}
 	
 	

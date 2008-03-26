@@ -341,13 +341,13 @@ implements IObjektWeckerListener{
 			ResultData ersetzung = this.getErsatzDatum(attName);
 						
 			if(ersetzung != null){
-				new MesswertUnskaliert(attName, ersetzung.getData()).kopiereInhaltNach(analyseDatum);
+				new MesswertUnskaliert(attName, ersetzung.getData()).kopiereInhaltNachModifiziereIndex(analyseDatum);
 			}else{
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + this.messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$					
 				MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-				mw.kopiereInhaltNach(analyseDatum);
+				mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			}
 		}	
 		
@@ -716,7 +716,7 @@ implements IObjektWeckerListener{
 		}else{
 			mw = Q.getWert();
 		}
-		mw.kopiereInhaltNach(analyseDatum);
+		mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
 	

@@ -95,8 +95,8 @@ implements ClientReceiverInterface {
 		/*
 		 * Empfängeranmeldung aller 3 Fahrstreifen
 		 */
-		DD_KZDFS_EMPF = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"),
-				  this.dav.getDataModel().getAspect("asp.analyse"),
+		DD_KZDFS_EMPF = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
+				  this.dav.getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
 				  (short)0);
 
 		dav.subscribeReceiver(this, FS, DD_KZDFS_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
@@ -106,7 +106,7 @@ implements ClientReceiverInterface {
 		 */
 		importAnaFS = new TestErgebnisAnalyseImporter(dav, csvQuelle);
 		
-		System.out.println("Prüferklasse initialisiert");
+		System.out.println("Prüferklasse initialisiert"); //$NON-NLS-1$
 	}
 	
 	/**
@@ -125,7 +125,7 @@ implements ClientReceiverInterface {
 		pruefungFS2fertig = false;
 		pruefungFS3fertig = false;
 		
-		System.out.println("Prüferklasse parametriert -> Zeit: "+pruefZeit);
+		System.out.println("Prüferklasse parametriert -> Zeit: "+pruefZeit); //$NON-NLS-1$
 	}
 	
 	/**
@@ -135,7 +135,7 @@ implements ClientReceiverInterface {
 	 * @param FS Fahstreifenindex des Prüferthreads (1-3)
 	 */
 	public void doNotify(int FS) {
-		System.out.println("Vergleich der Daten (FS"+FS+":Z"+csvIndex+") abgeschlossen");
+		System.out.println("Vergleich der Daten (FS"+FS+":Z"+csvIndex+") abgeschlossen");  //$NON-NLS-1$//$NON-NLS-2$
 		switch(FS) {
 			case 1: {
 				pruefungFS1fertig = true;
@@ -151,7 +151,7 @@ implements ClientReceiverInterface {
 			}
 		}
 		if(pruefungFS1fertig && pruefungFS2fertig && pruefungFS3fertig) {
-			System.out.println("Alle FS geprüft. Benachrichtige Hauptthread...");
+			System.out.println("Alle FS geprüft. Benachrichtige Hauptthread..."); //$NON-NLS-1$
 			caller.doNotify();
 		}
 	}
@@ -168,14 +168,14 @@ implements ClientReceiverInterface {
 
 				try {
 					//Ermittle FS und pruefe Daten
-					if(result.getObject().getName().endsWith(".1")) {
-						System.out.println("Zu prüfendes Datum (FS1) empfangen. Vergleiche...");
+					if(result.getObject().getName().endsWith(".1")) { //$NON-NLS-1$
+						System.out.println("Zu prüfendes Datum (FS1) empfangen. Vergleiche..."); //$NON-NLS-1$
 						verglFS1.vergleiche(result.getData(),ergebnisFS1,csvIndex);
-					} else if(result.getObject().getName().endsWith(".2")) {
-						System.out.println("Zu prüfendes Datum (FS2) empfangen. Vergleiche...");
+					} else if(result.getObject().getName().endsWith(".2")) { //$NON-NLS-1$
+						System.out.println("Zu prüfendes Datum (FS2) empfangen. Vergleiche..."); //$NON-NLS-1$
 						verglFS2.vergleiche(result.getData(),ergebnisFS2,csvIndex);
-					} else if(result.getObject().getName().endsWith(".3")) {
-						System.out.println("Zu prüfendes Datum (FS3) empfangen. Vergleiche...");
+					} else if(result.getObject().getName().endsWith(".3")) { //$NON-NLS-1$
+						System.out.println("Zu prüfendes Datum (FS3) empfangen. Vergleiche..."); //$NON-NLS-1$
 						verglFS3.vergleiche(result.getData(),ergebnisFS3,csvIndex);
 					}
 				} catch(Exception e) {}
@@ -297,30 +297,30 @@ class VergleicheDaLVEAnalyse extends Thread {
 		String loggerOut = "[PT"+fsIndex+"] Vergleichsergebnis des FS "+fsIndex+" Zeile "+csvIndex+"\n\r"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		String attributPfad = null;
 		String csvDS = "[FS:"+fsIndex+"-Zeile:"+csvIndex+"]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		int sollWert;
-		int istWert;
+		long sollWert;
+		long istWert;
 		for(int i=0;i<attributNamenPraefix.length;i++) {
 			for(int j=0;j<attributNamen.length;j++) {
 				attributPfad = attributNamenPraefix[i] + attributNamen[j];
-				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().intValue();
-				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis).asUnscaledValue().intValue();
+				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().longValue();
+				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis).asUnscaledValue().longValue();
 				if(sollWert == istWert) {
 //					//System.out.println(csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert);
 //					loggerOut += csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				} else {
-					System.out.println(csvDS +" ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					loggerOut += csvDS+ " ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//					System.out.println(csvDS +" ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					loggerOut += csvDS+ " ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				}
 			}
 		}
 		System.out.println(loggerOut);
-		System.out.println("[PT"+fsIndex+"] Prüfung FS "+fsIndex+" Zeile "+csvIndex+" abgeschlossen. Benachrichtige Prüfklasse..."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		System.out.println("[PT"+fsIndex+"] Prüfung FS "+fsIndex+" Zeile "+csvIndex+" abgeschlossen. Benachrichtige Prüfklasse..."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		//Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3) 
 		caller.doNotify(fsIndex);
 	}
 	
 	/**
-	 * Lässt Prüfthread warten
+	 * Laesst Prüfthread warten
 	 *
 	 */
 	private void doWait() {
@@ -328,7 +328,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 			try {
 				this.wait();
 			} catch (Exception e) {
-				System.out.println("Error: Prüfer-Thread "+fsIndex+" (wait)");
+				System.out.println("Error: Pruefer-Thread " + fsIndex + " (wait)"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

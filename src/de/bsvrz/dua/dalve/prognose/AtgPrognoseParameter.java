@@ -104,12 +104,13 @@ implements ClientReceiverInterface{
 	 */
 	public final void addListener(final IAtgPrognoseParameterListener listener,
 								  final PrognoseAttribut attribut){
-		Set<IAtgPrognoseParameterListener> beobachterMenge = this.attributListener.get(attribut);
-		if(beobachterMenge == null){
-			beobachterMenge = new HashSet<IAtgPrognoseParameterListener>();
-			this.attributListener.put(attribut, beobachterMenge);
-		}
 		synchronized (this) {
+			Set<IAtgPrognoseParameterListener> beobachterMenge = this.attributListener.get(attribut);
+			if(beobachterMenge == null){
+				beobachterMenge = new HashSet<IAtgPrognoseParameterListener>();
+				this.attributListener.put(attribut, beobachterMenge);
+			}
+			
 			beobachterMenge.add(listener);
 			listener.aktualisiereParameter(this.einzelWerte.get(attribut));			
 		}
@@ -120,11 +121,13 @@ implements ClientReceiverInterface{
 	 * Informiert alle Beobachter über Veraenderungen 
 	 */
 	private final void informiereAlleBeobachter(){
-		for(PrognoseAttribut attribut:this.attributListener.keySet()){
-			PrognoseAttributParameter einzelWert = this.einzelWerte.get(attribut);
-			for(IAtgPrognoseParameterListener listener:this.attributListener.get(attribut)){
-				listener.aktualisiereParameter(einzelWert);
-			}
+		synchronized (this) {
+			for(PrognoseAttribut attribut:this.attributListener.keySet()){
+				PrognoseAttributParameter einzelWert = this.einzelWerte.get(attribut);
+				for(IAtgPrognoseParameterListener listener:this.attributListener.get(attribut)){
+					listener.aktualisiereParameter(einzelWert);
+				}
+			}			
 		}
 	}
 	

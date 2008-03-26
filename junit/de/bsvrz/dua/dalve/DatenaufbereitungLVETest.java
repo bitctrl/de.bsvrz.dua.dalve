@@ -40,7 +40,8 @@ implements ClientSenderInterface {
 	/**
 	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden
 	 */
-	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\"; //$NON-NLS-1$
+//	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.2 (12.03.08)\\"; //$NON-NLS-1$
+	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.3 (20.03.08)\\"; //$NON-NLS-1$
 	
 	/**
 	 * Logger und Loggerargument
@@ -209,4 +210,5 @@ implements ClientSenderInterface {
 	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		return false;
 	}
+	
 }
