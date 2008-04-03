@@ -304,7 +304,29 @@ class VergleicheDaLVEAnalyse extends Thread {
 				attributPfad = attributNamenPraefix[i] + attributNamen[j];
 				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().longValue();
 				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis).asUnscaledValue().longValue();
-				if(sollWert == istWert) {
+				
+				boolean sollIstGleich = false;
+				
+				/**
+				 * Toleranz gegenueber Rundungsfehlern in den Testdaten:
+				 */
+				if(attributNamen[j].endsWith("Index")){ //$NON-NLS-1$
+					if(sollWert < 0){
+						sollIstGleich = sollWert == istWert;	
+					}else{
+						sollIstGleich = Math.abs(sollWert - istWert) < 2;
+					}
+				}else if(attributNamenPraefix[i].startsWith("k") && attributNamen[j].endsWith("Wert")){  //$NON-NLS-1$//$NON-NLS-2$
+					if(sollWert < 0){
+						sollIstGleich = sollWert == istWert;	
+					}else{
+						sollIstGleich = Math.abs(sollWert - istWert) <= 1;
+					}					
+				}else{
+					sollIstGleich = sollWert == istWert;
+				}
+				
+				if(sollIstGleich) {
 //					//System.out.println(csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert);
 //					loggerOut += csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				} else {

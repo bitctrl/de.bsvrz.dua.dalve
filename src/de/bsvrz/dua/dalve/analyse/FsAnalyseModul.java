@@ -452,46 +452,39 @@ extends AbstraktBearbeitungsKnotenAdapter{
 					 */
 					AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = this.parameter.get(kurzZeitDatum.getObject());
 					
+					boolean setMax = false;
 					if(fsParameter.isInitialisiert()){
-						long kGrenz = DUAKonstanten.MESSWERT_UNBEKANNT;
-						long kMax = DUAKonstanten.MESSWERT_UNBEKANNT;
+						final long kMax = fsParameter.getKBMax();
 	
-						kGrenz = fsParameter.getKBGrenz();
-						kMax = fsParameter.getKBMax();
-	
-						if(kGrenz != DUAKonstanten.FEHLERHAFT &&
-						   kGrenz != DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT &&
-						   kMax != DUAKonstanten.FEHLERHAFT &&
-						   kMax != DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT){
-							if(kGrenz == DUAKonstanten.NICHT_ERMITTELBAR){
-								zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
-							}else{
-								if(zielK.getWertUnskaliert() > kMax){
-									zielK.setWertUnskaliert(kMax);
-								}
+						if(kMax >= 0){
+							if(zielK.getWertUnskaliert() > kMax){
+								zielK.setWertUnskaliert(kMax);
+								zielK.setInterpoliert(true);
+								setMax = true;
 							}
 						}
 					}
 
-					
-					if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("kKfz").getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
-						try {
-							GWert qGuete = new GWert(analyseDatum, "qB"); //$NON-NLS-1$
-							GWert vGuete = new GWert(analyseDatum, "vKfz"); //$NON-NLS-1$
-							GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
-							zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
-							zielK.setVerfahren(kGuete.getVerfahren().getCode());
-						} catch (GueteException e) {
-							LOGGER.error("Guete-Index fuer kB nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
-							e.printStackTrace();
+					if(!setMax){
+						if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("kKfz").getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
+							try {
+								GWert qGuete = new GWert(analyseDatum, "qB"); //$NON-NLS-1$
+								GWert vGuete = new GWert(analyseDatum, "vKfz"); //$NON-NLS-1$
+								GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
+								zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
+								zielK.setVerfahren(kGuete.getVerfahren().getCode());
+							} catch (GueteException e) {
+								LOGGER.error("Guete-Index fuer kB nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+								e.printStackTrace();
+							}
+							
+							if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){
+								zielK.setInterpoliert(true);
+							}
+						}else{
+							zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							zielK.getGueteIndex().setWert(0);
 						}
-						
-						if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){
-							zielK.setInterpoliert(true);
-						}
-					}else{
-						zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-						zielK.getGueteIndex().setWert(0);
 					}
 				}
 			}
@@ -825,7 +818,30 @@ extends AbstraktBearbeitungsKnotenAdapter{
 				}
 			}			
 		}
-		
+
+//		/**
+//		 * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar gekennzeichnet, wird
+//		 * der Zielwert mit den Statusflags nicht ermittelbar gekennzeichnet.
+//		 */
+//		if(mweWert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
+//			mweWert.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+//		}else{
+//			analyseWert.setWertUnskaliert(mweWert.getWertUnskaliert());
+//			analyseWert.setGueteIndex(mweWert.getGueteIndex());
+//			analyseWert.setVerfahren(mweWert.getVerfahren());
+//			if(mweWert.isPlausibilisiert()){
+//				analyseWert.setInterpoliert(true);
+//				analyseWert.setFormalMax(false);
+//				analyseWert.setFormalMin(false);
+//				analyseWert.setLogischMax(false);
+//				analyseWert.setLogischMin(false);
+//			}
+//		}			
+//		
+		if(mweWert.isFehlerhaftBzwImplausibel()){
+			analyseWert.getGueteIndex().setWert(0);
+		}
+
 		analyseWert.kopiereInhaltNachModifiziereIndex(analyseDatum);				
 	}
 	

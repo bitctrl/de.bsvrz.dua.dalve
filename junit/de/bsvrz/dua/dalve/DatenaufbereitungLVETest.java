@@ -42,7 +42,10 @@ implements ClientSenderInterface {
 	 */
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.2 (12.03.08)\\"; //$NON-NLS-1$
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.3 (20.03.08)\\"; //$NON-NLS-1$
-	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.4 (27.03.08)\\"; //$NON-NLS-1$
+//	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.4 (27.03.08)\\"; //$NON-NLS-1$
+//	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.5 (28.03.08)\\"; //$NON-NLS-1$
+//	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.6 (01.04.08)\\"; //$NON-NLS-1$
+	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.7.7 (02.04.08)\\"; //$NON-NLS-1$
 	
 	/**
 	 * Logger und Loggerargument
