@@ -452,39 +452,34 @@ extends AbstraktBearbeitungsKnotenAdapter{
 					 */
 					AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = this.parameter.get(kurzZeitDatum.getObject());
 					
-					boolean setMax = false;
 					if(fsParameter.isInitialisiert()){
 						final long kMax = fsParameter.getKBMax();
 	
 						if(kMax >= 0){
 							if(zielK.getWertUnskaliert() > kMax){
 								zielK.setWertUnskaliert(kMax);
-								zielK.setInterpoliert(true);
-								setMax = true;
 							}
 						}
 					}
 
-					if(!setMax){
-						if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("kKfz").getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
-							try {
-								GWert qGuete = new GWert(analyseDatum, "qB"); //$NON-NLS-1$
-								GWert vGuete = new GWert(analyseDatum, "vKfz"); //$NON-NLS-1$
-								GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
-								zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
-								zielK.setVerfahren(kGuete.getVerfahren().getCode());
-							} catch (GueteException e) {
-								LOGGER.error("Guete-Index fuer kB nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
-								e.printStackTrace();
-							}
-							
-							if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){
-								zielK.setInterpoliert(true);
-							}
-						}else{
-							zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-							zielK.getGueteIndex().setWert(0);
+					if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("kKfz").getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
+						try {
+							GWert qGuete = new GWert(analyseDatum, "qB"); //$NON-NLS-1$
+							GWert vGuete = new GWert(analyseDatum, "vKfz"); //$NON-NLS-1$
+							GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
+							zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
+							zielK.setVerfahren(kGuete.getVerfahren().getCode());
+						} catch (GueteException e) {
+							LOGGER.error("Guete-Index fuer kB nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+							e.printStackTrace();
 						}
+
+						if(qT.isPlausibilisiert() || vT.isPlausibilisiert()){
+							zielK.setInterpoliert(true);
+						}
+					}else{
+						zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						zielK.getGueteIndex().setWert(0);
 					}
 				}
 			}

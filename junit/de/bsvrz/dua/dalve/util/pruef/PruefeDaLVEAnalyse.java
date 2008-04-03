@@ -135,7 +135,7 @@ implements ClientReceiverInterface {
 	 * @param FS Fahstreifenindex des Prüferthreads (1-3)
 	 */
 	public void doNotify(int FS) {
-		System.out.println("Vergleich der Daten (FS"+FS+":Z"+csvIndex+") abgeschlossen");  //$NON-NLS-1$//$NON-NLS-2$
+		System.out.println("Vergleich der Daten (FS"+FS+":Z"+csvIndex+") abgeschlossen");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		switch(FS) {
 			case 1: {
 				pruefungFS1fertig = true;
