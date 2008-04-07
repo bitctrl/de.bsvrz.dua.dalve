@@ -522,7 +522,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	
 					long kTminus1Wert = kTminus1.getWertUnskaliert();
 					
-					if(!kTminus1.isFehlerhaftBzwImplausibel()){
+					if(!kTminus1.isImplausibel() && kTminus1.getWertUnskaliert() >= 0){
 						AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = this.parameter.get(kurzZeitDatum.getObject());
 						if(fsParameter.isInitialisiert()){
 							long kGrenz = DUAKonstanten.MESSWERT_UNBEKANNT;
@@ -559,7 +559,9 @@ extends AbstraktBearbeitungsKnotenAdapter{
 						/**
 						 * offensichtlich laut Prüfdaten:
 						 */
-						zielK.setWertUnskaliert(0);
+						//zielK.setWertUnskaliert(0);
+						zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+						zielK.getGueteIndex().setWert(0);
 					}
 				}
 			}else{
