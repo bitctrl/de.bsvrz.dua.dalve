@@ -123,5 +123,14 @@ public class PrognoseTyp {
 	public final AttributeGroup getParameterAtg(final boolean fuerFahrStreifen){
 		return fuerFahrStreifen?this.atgFahrStreifen:this.atgMessQuerschnitt;
 	}
-		
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return this.aspekt.getPid().substring("asp.prognose".length());
+	}
+	
 }

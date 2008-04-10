@@ -112,4 +112,5 @@ extends DaSystemObjekt{
 	public final AttributeGroup getPubAtgPrognose(){
 		return this.pubAtgPrognose;
 	}
+
 }

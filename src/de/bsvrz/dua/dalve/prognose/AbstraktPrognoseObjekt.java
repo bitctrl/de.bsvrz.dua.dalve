@@ -142,7 +142,7 @@ implements ClientReceiverInterface,
 		 * Alle Prognoseattribute initialisieren
 		 */
 		for(PrognoseAttribut attribut:PrognoseAttribut.getInstanzen()){
-			DavAttributPrognoseObjekt attributPrognose = new DavAttributPrognoseObjekt(prognoseObjekt, attribut);
+			DavAttributPrognoseObjekt attributPrognose = new DavAttributPrognoseObjekt(prognoseObjekt, attribut, this.getPrognoseTyp());
 			this.parameter.addListener(attributPrognose, attribut);
 			this.attributePuffer.add(attributPrognose);
 		}

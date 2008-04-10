@@ -268,5 +268,14 @@ public class PrognoseAttribut {
 	public static final Set<PrognoseAttribut> getInstanzen(){
 		return WERTE_BEREICH;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return this.nameFS + ", " + this.nameMQ;
+	}
 	
 }

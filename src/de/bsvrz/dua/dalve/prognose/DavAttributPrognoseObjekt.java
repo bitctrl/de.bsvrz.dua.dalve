@@ -43,6 +43,11 @@ extends AbstraktAttributPrognoseObjekt
 implements IAtgPrognoseParameterListener{
 	
 	/**
+	 * der Prognosetyp
+	 */
+	private PrognoseTyp typ = null;
+	
+	/**
 	 * Das Objekt, dessen Attribut hier betrachtet wird
 	 */
 	private PrognoseSystemObjekt prognoseObjekt = null;
@@ -85,11 +90,14 @@ implements IAtgPrognoseParameterListener{
 	 * 
 	 * @param prognoseObjekt das Objekt, das hier betrachtet wird
 	 * @param attribut das Attribut, das hier betrachtet wird
+	 * @param typ der Prognosetyp
 	 */
 	public DavAttributPrognoseObjekt(final PrognoseSystemObjekt prognoseObjekt,
-									 final PrognoseAttribut attribut){
+									 final PrognoseAttribut attribut,
+									 final PrognoseTyp typ){
 		this.prognoseObjekt = prognoseObjekt;
 		this.attribut = attribut;
+		this.typ = typ;
 		this.vAttribut = attribut.equals(PrognoseAttribut.V_KFZ) ||
 						 attribut.equals(PrognoseAttribut.V_LKW) ||
 						 attribut.equals(PrognoseAttribut.V_PKW);
@@ -179,6 +187,15 @@ implements IAtgPrognoseParameterListener{
 		this.alpha2 = parameterSatzFuerAttribut.getAlpha2();
 		this.beta1 = parameterSatzFuerAttribut.getBeta1();
 		this.beta2 = parameterSatzFuerAttribut.getBeta2();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return this.prognoseObjekt.getObjekt().getPid() + ", " + this.attribut + ", " + this.typ;
 	}
 
 }
