@@ -62,12 +62,42 @@ implements ClientSenderInterface {
 	/**
 	 * Attributgruppe der FS-Analyse-Parameter
 	 */
-	AttributeGroup ATG_FSAnalyse;
+	private AttributeGroup ATG_FSAnalyse;
+
+	/**
+	 * Attributgruppe der FS-Prognose-Parameter (Flink)
+	 */
+	private AttributeGroup ATG_FSPrognoseFlink;
 	
 	/**
-	 * Datenbeschreibung Logisch
+	 * Attributgruppe der FS-Prognose-Parameter (Normal)
+	 */
+	private AttributeGroup ATG_FSPrognoseNormal;
+	
+	/**
+	 * Attributgruppe der FS-Prognose-Parameter (Träge)
+	 */
+	private AttributeGroup ATG_FSPrognoseTraege;
+	
+	/**
+	 * Datenbeschreibung FS-Analyse
 	 */
 	private DataDescription DD_FSAnalyse;
+
+	/**
+	 * Datenbeschreibung FS-Prognose (Flink)
+	 */
+	private DataDescription DD_FSPrognoseFlink;
+	
+	/**
+	 * Datenbeschreibung FS-Prognose (Normal)
+	 */
+	private DataDescription DD_FSPrognoseNormal;
+	
+	/**
+	 * Datenbeschreibung FS-Prognose (Träge)
+	 */
+	private DataDescription DD_FSPrognoseTraege;
 	
 	/**
 	 * Standardkonstruktor
@@ -87,9 +117,28 @@ implements ClientSenderInterface {
 		}
 		
 		ATG_FSAnalyse = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseFs"); //$NON-NLS-1$
+		ATG_FSPrognoseFlink = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkFs"); //$NON-NLS-1$
+		ATG_FSPrognoseNormal = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalFs"); //$NON-NLS-1$
+		ATG_FSPrognoseTraege = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeFs"); //$NON-NLS-1$
 		
 		DD_FSAnalyse = new DataDescription(
 				ATG_FSAnalyse, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0);
+		
+		DD_FSPrognoseFlink = new DataDescription(
+				ATG_FSPrognoseFlink, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0);
+		
+		
+		DD_FSPrognoseNormal = new DataDescription(
+				ATG_FSPrognoseNormal, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0);
+		
+		DD_FSPrognoseTraege = new DataDescription(
+				ATG_FSPrognoseTraege, 
 				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
 				(short)0);
 		
@@ -104,7 +153,7 @@ implements ClientSenderInterface {
 	 * @throws Exception wenn die Parameter nicht vollständig
 	 * importiert werden konnten
 	 */
-	public final void importiereParameter(int index)
+	public final void importiereParameterAnalyse(int index)
 	throws Exception{
 		
 		this.reset();
@@ -127,16 +176,17 @@ implements ClientSenderInterface {
 			String attributInCSVDatei = zeile[0];
 			String wert = zeile[1];
 			wert = wert.replaceAll(",", "."); //$NON-NLS-1$ //$NON-NLS-2$
-			String attPfad = getAttributPfadVon(attributInCSVDatei, index);
-			if(attPfad != null){
+			
+			String attPfadAnalyse = getAnalyseAttributPfadVon(attributInCSVDatei, index);
+			if(attPfadAnalyse != null){
 				try{
 					long l = Long.parseLong(wert);
 					//DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(l);
-					DUAUtensilien.getAttributDatum(attPfad, parameter).asScaledValue().set(l);
+					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue().set(l);
 				}catch(NumberFormatException ex){
 					double d = Double.parseDouble(wert);
 					//DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(d);
-					DUAUtensilien.getAttributDatum(attPfad, parameter).asScaledValue().set(d);
+					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue().set(d);
 				}
 			}
 		}
@@ -151,14 +201,107 @@ implements ClientSenderInterface {
 	}
 
 	/**
-	 * Erfragt den Attributpfad zu einem Attribut, das in der CSV-Datei 
+	 * Führt den Parameterimport aus
+	 * 
+	 * @param index der index
+	 * @throws Exception wenn die Parameter nicht vollständig
+	 * importiert werden konnten
+	 */
+	public final void importiereParameterPrognose()
+	throws Exception{
+		
+		this.reset();
+		this.getNaechsteZeile();
+		
+		SystemObject fsObjekt = null;
+		for(SystemObject sysObjekt : objekt) {
+			fsObjekt = sysObjekt;
+		}
+		
+		DAV.subscribeSender(this, fsObjekt,DD_FSPrognoseFlink, SenderRole.sender());
+		DAV.subscribeSender(this, fsObjekt,DD_FSPrognoseNormal, SenderRole.sender());
+		DAV.subscribeSender(this, fsObjekt,DD_FSPrognoseTraege, SenderRole.sender());
+		
+		String[] zeile = null;
+		
+		Data parameterProgFlink = DAV.createData(ATG_FSPrognoseFlink);
+		Data parameterProgNorm = DAV.createData(ATG_FSPrognoseNormal);
+		Data parameterProgTraege = DAV.createData(ATG_FSPrognoseTraege);
+		
+		String qStartwert = null;
+		String vStartwert = null;
+		
+		while( (zeile = this.getNaechsteZeile()) != null ){
+			String attributInCSVDatei = zeile[0];
+			String wert = zeile[1];
+			wert = wert.replaceAll(",", "."); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			//Prognose Flink
+			String attPfadPFlink = getPrognoseAttributPfadVon(attributInCSVDatei, "flink");
+			if(attPfadPFlink != null){
+				setParameterResult(parameterProgFlink, attPfadPFlink, wert);
+			}
+			
+			//Prognose Normal
+			String attPfadPNormal = getPrognoseAttributPfadVon(attributInCSVDatei, "normal");
+			if(attPfadPNormal != null){
+				setParameterResult(parameterProgNorm, attPfadPNormal, wert);
+			}
+			
+			//Prognose Träge
+			String attPfadPTraege = getPrognoseAttributPfadVon(attributInCSVDatei, "träge");
+			if(attPfadPTraege != null){
+				setParameterResult(parameterProgTraege, attPfadPTraege, wert);
+			}
+			
+			if(attributInCSVDatei.startsWith("ZAltStartQ")) {
+				qStartwert = wert;
+			}
+			
+			if(attributInCSVDatei.startsWith("ZAltStartV")) {
+				vStartwert = wert;
+			}
+			
+			if(qStartwert != null && vStartwert != null) {
+				setPrognoseStartwerte(parameterProgFlink, qStartwert, vStartwert);
+				setPrognoseStartwerte(parameterProgNorm, qStartwert, vStartwert);
+				setPrognoseStartwerte(parameterProgTraege, qStartwert, vStartwert);
+			}
+		}
+		
+		ResultData resultatFlink = new ResultData(fsObjekt, new DataDescription(
+				ATG_FSPrognoseFlink, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0), System.currentTimeMillis(), parameterProgFlink);
+		
+		ResultData resultatNormal = new ResultData(fsObjekt, new DataDescription(
+				ATG_FSPrognoseNormal, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0), System.currentTimeMillis(), parameterProgNorm);
+		
+		ResultData resultatTraege = new ResultData(fsObjekt, new DataDescription(
+				ATG_FSPrognoseTraege, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0), System.currentTimeMillis(), parameterProgTraege);
+		
+		DAV.sendData(resultatFlink);
+		DAV.sendData(resultatNormal);
+		DAV.sendData(resultatTraege);
+		
+		DAV.unsubscribeSender(this, fsObjekt, DD_FSPrognoseFlink);
+		DAV.unsubscribeSender(this, fsObjekt, DD_FSPrognoseNormal);
+		DAV.unsubscribeSender(this, fsObjekt, DD_FSPrognoseTraege);
+	}
+	
+	/**
+	 * Erfragt den Attributpfad zu einem Analyse-Attribut, das in der CSV-Datei 
 	 * den übergebenen Namen hat
 	 *  
 	 * @param attributInCSVDatei Attributname innerhalb der CSV-Datei
 	 * @param index index innerhalb von CVS-Datei
 	 * @return den kompletten Attributpfad zum assoziierten DAV-Attribut
 	 */
-	protected String getAttributPfadVon(final String attributInCSVDatei,
+	protected String getAnalyseAttributPfadVon(final String attributInCSVDatei,
 												 final int index) {
 
 		if(attributInCSVDatei.endsWith(")")){ //$NON-NLS-1$
@@ -206,6 +349,91 @@ implements ClientSenderInterface {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Erfragt den Attributpfad zu einem Prognose-Attribut, das in der CSV-Datei 
+	 * den übergebenen Namen hat
+	 *  
+	 * @param attributInCSVDatei Attributname innerhalb der CSV-Datei
+	 * @param index index innerhalb von CVS-Datei
+	 * @return den kompletten Attributpfad zum assoziierten DAV-Attribut
+	 */
+	protected String getPrognoseAttributPfadVon(final String attributInCSVDatei, final String prognoseTyp) {
+
+		if(attributInCSVDatei.startsWith("alpha1"+prognoseTyp)){ //$NON-NLS-1$
+			return ".alpha1"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("alpha2"+prognoseTyp)){ //$NON-NLS-1$
+			return ".alpha2"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("beta1"+prognoseTyp)){ //$NON-NLS-1$
+			return ".beta1"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("beta2"+prognoseTyp)){ //$NON-NLS-1$
+			return ".beta2"; //$NON-NLS-1$
+		}
+		
+		return null;
+	}
+	
+	protected void setParameterResult(final Data parameter, final String attPfad, final String wert) {
+		String[] atts = {"qKfz", "vKfz", "qLkw", "vLkw", "qPkw", "vPkw", "aLkw", "kKfz", "kLkw", "kPkw", "qB", "kB"};
+		
+		for(String att : atts) {
+			String attPfadPrognose = att+attPfad;
+			try{
+				long l = Long.parseLong(wert);
+				//DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(l);
+				DUAUtensilien.getAttributDatum(attPfadPrognose, parameter).asScaledValue().set(l);
+			}catch(NumberFormatException ex){
+				double d = Double.parseDouble(wert);
+				//DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(d);
+				DUAUtensilien.getAttributDatum(attPfadPrognose, parameter).asScaledValue().set(d);
+			}
+			
+		}
+	}
+	
+	protected void setPrognoseStartwerte(final Data parameter, final String wertQ, final String wertV) {
+		String[] atts = {"KfzStart", "LkwStart", "PkwStart"};
+		
+		for(String att : atts) {
+			String attPfadQ = "q"+att;
+			String attPfadV = "v"+att;
+			String attPfadK = "k"+att;
+			
+			try{
+				long l = Long.parseLong(wertQ);
+				DUAUtensilien.getAttributDatum(attPfadQ, parameter).asScaledValue().set(l);
+			}catch(NumberFormatException ex){
+				double d = Double.parseDouble(wertQ);
+				DUAUtensilien.getAttributDatum(attPfadQ, parameter).asScaledValue().set(d);
+			}
+			
+			try{
+				long l = Long.parseLong(wertV);
+				DUAUtensilien.getAttributDatum(attPfadV, parameter).asScaledValue().set(l);
+			}catch(NumberFormatException ex){
+				double d = Double.parseDouble(wertV);
+				DUAUtensilien.getAttributDatum(attPfadV, parameter).asScaledValue().set(d);
+			}
+			
+			DUAUtensilien.getAttributDatum(attPfadK, parameter).asUnscaledValue().set(0);	
+			
+		}
+		
+		DUAUtensilien.getAttributDatum("aLkwStart", parameter).asUnscaledValue().set(0);
+		
+		try{
+			long l = Long.parseLong(wertQ);
+			DUAUtensilien.getAttributDatum("qBStart", parameter).asScaledValue().set(l);
+		}catch(NumberFormatException ex){
+			double d = Double.parseDouble(wertQ);
+			DUAUtensilien.getAttributDatum("qBStart", parameter).asScaledValue().set(d);
+		}
+		
+		DUAUtensilien.getAttributDatum("kBStart", parameter).asUnscaledValue().set(0);
 	}
 	
 	/**
