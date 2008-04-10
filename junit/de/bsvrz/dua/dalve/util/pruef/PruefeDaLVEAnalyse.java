@@ -8,7 +8,7 @@ import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.dalve.DatenaufbereitungLVETest;
+import de.bsvrz.dua.dalve.DaLVETestAnalyse;
 import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.debug.Debug;
@@ -64,7 +64,7 @@ implements ClientReceiverInterface {
 	/**
 	 * Aufrufende Klasse
 	 */
-	private DatenaufbereitungLVETest caller;
+	private DaLVETestAnalyse caller;
 	
 	/**
 	 * Prüferthreads für FS 1-3
@@ -86,7 +86,7 @@ implements ClientReceiverInterface {
 	 * @param csvQuelle Testdatenverzeichnis
 	 * @throws Exception
 	 */
-	public PruefeDaLVEAnalyse(DatenaufbereitungLVETest caller, ClientDavInterface dav,
+	public PruefeDaLVEAnalyse(DaLVETestAnalyse caller, ClientDavInterface dav,
 							  SystemObject[] FS,  String csvQuelle)
 	throws Exception {
 		this.dav = dav;
