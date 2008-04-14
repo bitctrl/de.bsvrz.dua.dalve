@@ -326,15 +326,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	/**
 	 * Attributnamen
 	 */
-	private String[] attributNamen = {".Wert", //$NON-NLS-1$
-									  ".Status.Erfassung.NichtErfasst", //$NON-NLS-1$
-									  ".Status.PlFormal.WertMax", //$NON-NLS-1$
-									  ".Status.PlFormal.WertMin", //$NON-NLS-1$
-									  ".Status.PlLogisch.WertMaxLogisch", //$NON-NLS-1$
-									  ".Status.PlLogisch.WertMinLogisch", //$NON-NLS-1$**/
-									  ".Status.MessWertErsetzung.Implausibel", //$NON-NLS-1$
-	  								  ".Status.MessWertErsetzung.Interpoliert", //$NON-NLS-1$
-	  								  ".Güte.Index" }; //$NON-NLS-1$
+	private String[] attributNamen = {".Wert" }; //$NON-NLS-1$
 	
 	private String attPraefix; 
 	
