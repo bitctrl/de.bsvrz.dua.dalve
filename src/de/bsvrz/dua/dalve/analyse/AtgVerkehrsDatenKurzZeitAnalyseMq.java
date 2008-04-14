@@ -246,7 +246,7 @@ implements ClientReceiverInterface{
 	 * @return die Gewichtungsfaktoren
 	 */
 	public final int[] getWichtung(){
-		return wichtung;
+		return wichtung == null?new int[0]:wichtung;
 	}
 
 

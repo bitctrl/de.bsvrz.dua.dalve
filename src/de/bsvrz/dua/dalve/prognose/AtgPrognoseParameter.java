@@ -121,17 +121,17 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	 */
 	private final void informiereAlleBeobachter() {
 		synchronized (this) {
-			System.out.println();
+			//System.out.println();
 			for (PrognoseAttribut attribut : this.attributListener.keySet()) {
 				PrognoseAttributParameter einzelWert = this.einzelWerte
 						.get(attribut);
 				for (IAtgPrognoseParameterListener listener : this.attributListener
 						.get(attribut)) {
-					System.out.println("Informiere: " + listener.toString() + ", ueber: " + einzelWert) ;
+//					System.out.println("Informiere: " + listener.toString() + ", ueber: " + einzelWert) ;
 					listener.aktualisiereParameter(einzelWert);
 				}
 			}
-			System.out.println();
+			//System.out.println();
 		}
 	}
 
