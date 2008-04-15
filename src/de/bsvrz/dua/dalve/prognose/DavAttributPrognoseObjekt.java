@@ -127,6 +127,14 @@ implements IAtgPrognoseParameterListener{
 			 */
 			boolean keineVerkehrsStaerke = false;
 			if(this.vAttribut){
+				
+				/**
+				 * Aenderung nach Email vom 14.4.2008:
+				 * 
+				 * hier ist wirklich der Fall gemeint, dass im aktuellen Intervall kein Fahrzeug gefahren 
+				 * ist (qKfz = 0) dann sollen die geglätteten Geschwindigkeitswerte des Vorgängerintervalls
+				 * übernommen werden.
+				 */
 				keineVerkehrsStaerke = resultat.getData().getItem("qKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
 
 //				keineVerkehrsStaerke = resultat.getData().getItem(this.attribut.getQAttributAnalogon(
