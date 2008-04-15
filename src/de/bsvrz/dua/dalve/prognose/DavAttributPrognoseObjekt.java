@@ -128,7 +128,7 @@ implements IAtgPrognoseParameterListener{
 			boolean keineVerkehrsStaerke = false;
 			if(this.vAttribut){
 				keineVerkehrsStaerke = resultat.getData().getItem(this.attribut.getQAttributAnalogon(
-								   this.prognoseObjekt.isFahrStreifen())).getUnscaledValue("Wert").longValue() <= 0; //$NON-NLS-1$
+								   this.prognoseObjekt.isFahrStreifen())).getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
 			}
 
 			this.berechneGlaettungsParameterUndStart(ZAktuell, implausibel, keineVerkehrsStaerke);
