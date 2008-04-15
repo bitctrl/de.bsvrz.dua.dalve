@@ -135,7 +135,7 @@ public class AbstraktAttributPrognoseObjekt{
 			double alpha = this.alpha1;
 			double beta = this.beta1;
 
-			if(this.deltaZAlt == 0){
+			if(!Double.isNaN(this.alphaAltBeiDeltaZNeuGleich0) && this.deltaZAlt == 0){
 				/**
 				 * 5. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
 				 * Ist der Trend DZNeu = 0, dann gelten die Glättungsfaktoren des letzten Glättungsintervalls
@@ -205,6 +205,9 @@ public class AbstraktAttributPrognoseObjekt{
 			this.ZAlt = Double.NaN;
 			this.ZP = DUAKonstanten.NICHT_ERMITTELBAR;
 			this.ZG = DUAKonstanten.NICHT_ERMITTELBAR;
+			
+			this.alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
+			this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;
 		}
 	}
 	
