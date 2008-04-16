@@ -45,11 +45,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class QWert {
 	
 	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-	
-	/**
 	 * Der Wert
 	 */
 	private MesswertUnskaliert wert = null; 
@@ -161,7 +156,7 @@ public class QWert {
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());					
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (GueteException e) {
-					LOGGER.error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
+					Debug.getLogger().error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
 							"\n***Summand2***\n" + summand2.getWert()); //$NON-NLS-1$
 					e.printStackTrace();
 				}
@@ -216,7 +211,7 @@ public class QWert {
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());					
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (GueteException e) {
-					LOGGER.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
+					Debug.getLogger().error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
 							"\n***Subrahend***\n" + subtrahend.getWert()); //$NON-NLS-1$
 					e.printStackTrace();
 				}			

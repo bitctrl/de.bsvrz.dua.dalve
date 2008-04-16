@@ -55,11 +55,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public abstract class AbstraktStoerfallIndikator
 implements ClientReceiverInterface, ClientSenderInterface{
-	
-	/**
-	 * Debug-Logger
-	 */
-	protected static final Debug LOGGER = Debug.getLogger();
 		
 	/**
 	 * Verbindung zum Datenverteiler
@@ -204,13 +199,13 @@ implements ClientReceiverInterface, ClientSenderInterface{
 					DAV.sendData(ergebnis);
 					this.aktuellKeineDaten = false;
 				}else{
-					LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
+					Debug.getLogger().info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 				}
 			} catch (DataNotSubscribedException  e) {
-				LOGGER.error(Constants.EMPTY_STRING, e);
+				Debug.getLogger().error(Constants.EMPTY_STRING, e);
 				e.printStackTrace();
 			} catch(SendSubscriptionNotConfirmed  e){
-				LOGGER.error(Constants.EMPTY_STRING, e);
+				Debug.getLogger().error(Constants.EMPTY_STRING, e);
 				e.printStackTrace();				
 			}
 		}else{
@@ -220,13 +215,13 @@ implements ClientReceiverInterface, ClientSenderInterface{
 						DAV.sendData(ergebnis);
 						this.aktuellKeineDaten = true;
 					}else{
-						LOGGER.info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
+						Debug.getLogger().info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 					}
 				} catch (DataNotSubscribedException  e) {
-					LOGGER.error(Constants.EMPTY_STRING, e);
+					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
 				} catch(SendSubscriptionNotConfirmed  e){
-					LOGGER.error(Constants.EMPTY_STRING, e);
+					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();				
 				}
 			}							

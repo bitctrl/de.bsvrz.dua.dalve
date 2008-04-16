@@ -46,6 +46,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktVerwaltungsAdapterMitGuete;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Verwaltungsmodul der SWE Datenaufbereitung LVE. Hier werden nur die 
@@ -108,13 +109,13 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 		for(SystemObject obj:objekte){
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
-		LOGGER.config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		Debug.getLogger().config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		infoStr = Constants.EMPTY_STRING;
 		for(SystemObject obj:messQuerschnitte){
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
-		LOGGER.config("---\nBetrachtete Messquerschnitte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		Debug.getLogger().config("---\nBetrachtete Messquerschnitte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.fsAnalyseModul = new FsAnalyseModul();
 		this.fsAnalyseModul.setPublikation(true);
@@ -154,7 +155,7 @@ extends AbstraktVerwaltungsAdapterMitGuete{
         				UncaughtExceptionHandler(){
             public void uncaughtException(@SuppressWarnings("unused")
 			Thread t, Throwable e) {
-                LOGGER.error("Applikation wird wegen" +  //$NON-NLS-1$
+            	Debug.getLogger().error("Applikation wird wegen" +  //$NON-NLS-1$
                 		" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
                 e.printStackTrace();
                 Runtime.getRuntime().exit(0);

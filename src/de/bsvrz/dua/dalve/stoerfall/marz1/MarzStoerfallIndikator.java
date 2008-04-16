@@ -30,6 +30,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Repräsentiert einen Stoerfallindikator nach MARZ
@@ -181,11 +182,11 @@ extends AbstraktStoerfallIndikator{
 			 * Konsitenz-Check
 			 */
 			if( !(v1 > 0 && v1 < v2) ){
-				LOGGER.warning("Fehlerhafte Parameter (0<v1<v2) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0<v1<v2) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": v1 = " + v1 + ", v2 = " + v2);  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if( !(k1 > 0 && k1 < k2) ){
-				LOGGER.warning("Fehlerhafte Parameter (0<k1<k2) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0<k1<k2) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": k1 = " + k1 + ", k2 = " + k2);  //$NON-NLS-1$//$NON-NLS-2$
 			}							
 		}else{

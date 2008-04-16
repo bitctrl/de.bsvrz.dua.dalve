@@ -61,12 +61,7 @@ public class MqAnalyseModul{
 	 * Datenbeschreibung zum Publizieren von MQ-Analyse-Daten
 	 */
 	protected static DataDescription PUB_BESCHREIBUNG = null;
-	
-	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-			
+
 	/**
 	 * Datensender
 	 */
@@ -121,7 +116,7 @@ public class MqAnalyseModul{
 		for(SystemObject mq:messQuerschnitteGesamt){
 			configLog += "\n" + mq; //$NON-NLS-1$
 		}
-		LOGGER.config(configLog + "\n---"); //$NON-NLS-1$
+		Debug.getLogger().config(configLog + "\n---"); //$NON-NLS-1$
 		
 		/**
 		 * Publikationsbeschreibung für Analysewerte von allgemeinen MQs

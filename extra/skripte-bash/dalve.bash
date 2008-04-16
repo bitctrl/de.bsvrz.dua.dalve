@@ -1,12 +1,16 @@
 #!/bin/bash
 
+# In das Verzeichnis des Skripts wechseln, damit relative Pfade funktionieren
+cd `dirname $0`
+
+# Allgemeine Einstellungen
 source ../../../skripte-bash/einstellungen.sh
 
 ################################################################################
 # SWE-Spezifische Parameter	(überprüfen und anpassen)                          #
 ################################################################################
 
-kb="-KonfigurationsBereichsPid=kb.duaTestObjekte"
+kb="kb.MQ_Konfig_A5,kb.MQ_Konfig_A6,kb.MQ_Konfig_A656,kb.MQ_Konfig_A7,kb.MQ_Konfig_A8,kb.MQ_Konfig_A81,kb.MQ_Konfig_A831,kb.MQ_Konfig_A864,kb.MQ_Konfig_A96,kb.MQ_Konfig_A98,kb.MQ_Konfig_B10,kb.MQ_Konfig_B27,kb.MQ_Konfig_DZ"
 
 ################################################################################
 # Folgende Parameter müssen überprüft und evtl. angepasst werden               #
@@ -25,9 +29,10 @@ kb="-KonfigurationsBereichsPid=kb.duaTestObjekte"
 # Applikation starten
 java $jvmArgs -jar ../de.bsvrz.dua.dalve-runtime.jar \
 	$dav1 \
-	$kb \
-	-debugLevelFileText=all \
-	-debugLevelStdErrText=:error \
-	-debugSetLoggerAndLevel=:none \
-	-debugSetLoggerAndLevel=de.bsvrz.iav:config \
+	-KonfigurationsBereichsPid=$kb \
+	-debugLevelStdErrText=ERROR \
+	-debugLevelFileText=INFO \
+	-debugLevelFileXML=OFF \
+	-debugLevelFileExcel=OFF \
+	-debugLevelFileHTML=OFF \
 	&

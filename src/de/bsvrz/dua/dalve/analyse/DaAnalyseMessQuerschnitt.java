@@ -59,11 +59,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class DaAnalyseMessQuerschnitt
 implements ClientReceiverInterface{
-		
-	/**
-	 * Debug-Logger
-	 */
-	protected static final Debug LOGGER = Debug.getLogger();
 	
 	/**
 	 * alle Attributnamen der Atg <code>atg.verkehrsDatenKurzZeitMq</code>
@@ -149,7 +144,7 @@ implements ClientReceiverInterface{
 		}
 
 		if(this.aktuelleFSAnalysen.keySet().isEmpty()){
-			LOGGER.warning("Der MQ " + this.messQuerschnitt + " hat keine Fahrstreifen");  //$NON-NLS-1$//$NON-NLS-2$
+			Debug.getLogger().warning("Der MQ " + this.messQuerschnitt + " hat keine Fahrstreifen");  //$NON-NLS-1$//$NON-NLS-2$
 			return null;
 		}
 
@@ -350,7 +345,7 @@ implements ClientReceiverInterface{
 	@Override
 	protected void finalize()
 	throws Throwable {
-		LOGGER.warning("Der MQ " + this.messQuerschnitt +  //$NON-NLS-1$
+		Debug.getLogger().warning("Der MQ " + this.messQuerschnitt +  //$NON-NLS-1$
 				" wird nicht mehr analysiert"); //$NON-NLS-1$
 	}
 
@@ -383,7 +378,7 @@ implements ClientReceiverInterface{
 			}else{
 				if(T != fsDaten.getData().getTimeValue("T").getMillis()){ //$NON-NLS-1$
 					gleich = false;
-					LOGGER.warning("Erfassungsintervalldauer nicht gleich:\n" +  //$NON-NLS-1$
+					Debug.getLogger().warning("Erfassungsintervalldauer nicht gleich:\n" +  //$NON-NLS-1$
 							referenz + "\n" + fsDaten); //$NON-NLS-1$
 					break;
 				}
@@ -466,7 +461,7 @@ implements ClientReceiverInterface{
 							qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 							qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 						} catch (GueteException e) {
-							LOGGER.error("Guete-Index fuer Q" + attName + //$NON-NLS-1$ 
+							Debug.getLogger().error("Guete-Index fuer Q" + attName + //$NON-NLS-1$ 
 									" nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
@@ -535,7 +530,7 @@ implements ClientReceiverInterface{
 						);
 					} catch (GueteException e) {
 						gueteBerechenbar = false;
-						LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
+						Debug.getLogger().error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
 								" nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 						e.printStackTrace();
 					}
@@ -565,7 +560,7 @@ implements ClientReceiverInterface{
 								qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 								qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 							} catch (GueteException e) {
-								LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
+								Debug.getLogger().error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$ 
 										" nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
@@ -660,7 +655,7 @@ implements ClientReceiverInterface{
 							BAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 							BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 						} catch (GueteException e) {
-							LOGGER.error("Guete-Index fuer B nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							Debug.getLogger().error("Guete-Index fuer B nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 					}				
@@ -787,7 +782,7 @@ implements ClientReceiverInterface{
 												QKfzGuete));
 							} catch (GueteException e) {
 								gueteBerechenbar = false;
-								LOGGER.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+								Debug.getLogger().error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 						}
@@ -813,7 +808,7 @@ implements ClientReceiverInterface{
 										SKfzAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 										SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 									} catch (GueteException e) {
-										LOGGER.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+										Debug.getLogger().error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 										e.printStackTrace();
 									}
 								}				
@@ -867,7 +862,7 @@ implements ClientReceiverInterface{
 							new GWert(analyseDatum, "QKfz") //$NON-NLS-1$
 					);
 				} catch (GueteException e) {
-					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+					Debug.getLogger().error("Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 					e.printStackTrace();
 				}
 				
@@ -953,7 +948,7 @@ implements ClientReceiverInterface{
 										new GWert(analyseDatum, "V" + attName) //$NON-NLS-1$
 									 );
 						} catch (GueteException e) {
-							LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
+							Debug.getLogger().error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
 							e.printStackTrace();
 						}
 						
@@ -1020,7 +1015,7 @@ implements ClientReceiverInterface{
 					try {
 						QBGuete = GueteVerfahren.summe(QPkwGuete, GueteVerfahren.gewichte(QLkwGuete, fL));
 					} catch (GueteException e) {
-						LOGGER.error("Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+						Debug.getLogger().error("Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 						e.printStackTrace();
 					}
 					
@@ -1094,7 +1089,7 @@ implements ClientReceiverInterface{
 											new GWert(analyseDatum, "VKfz")  //$NON-NLS-1$
 									  );
 						} catch (GueteException e) {
-							LOGGER.error("Guete-Index fuer KB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							Debug.getLogger().error("Guete-Index fuer KB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 						
@@ -1191,7 +1186,7 @@ implements ClientReceiverInterface{
 															new GWert(fsResultIPlus1.getData(), "vKfz")), (double)w)); //$NON-NLS-1$
 								} catch (GueteException e) {
 									gueteBerechnen = false;
-									LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+									Debug.getLogger().error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
 									e.printStackTrace();
 								}
 							}
@@ -1212,7 +1207,7 @@ implements ClientReceiverInterface{
 										VDeltaAnalyse.getGueteIndex().setWert(guete.getIndexUnskaliert());
 										VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());				
 									} catch (GueteException e) {
-										LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+										Debug.getLogger().error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
 										e.printStackTrace();
 									}
 								}								
@@ -1224,7 +1219,7 @@ implements ClientReceiverInterface{
 			}else{
 				VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}						
-		}		
+		}
 		
 		VDeltaAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}

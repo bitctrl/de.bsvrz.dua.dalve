@@ -43,6 +43,7 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Repräsentiert einen Stoerfallindikator nach Verfahren Fundamentaldiagramm
@@ -183,7 +184,7 @@ extends AbstraktStoerfallIndikator{
 				try {
 					KKfzStoerfallG = this.prognoseDichteObj.getKKfzStoerfallGAktuell(KKfzStoerfall.getWert(), KKfzStoerfall.isImplausibel());
 				} catch (PrognoseParameterException e) {
-					LOGGER.warning(e.getMessage());
+					Debug.getLogger().warning(e.getMessage());
 				}
 				
 				if(Double.isNaN(KKfzStoerfallG)){
@@ -197,7 +198,7 @@ extends AbstraktStoerfallIndikator{
 					data = zustand.getData();
 				}
 			}else{
-				LOGGER.warning("Keine gueltigen Parameter fuer Stoerfallprognose: " + this.objekt); //$NON-NLS-1$
+				Debug.getLogger().warning("Keine gueltigen Parameter fuer Stoerfallprognose: " + this.objekt); //$NON-NLS-1$
 			}
 			
 			this.alterZustand = stufe;

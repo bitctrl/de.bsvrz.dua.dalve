@@ -63,11 +63,6 @@ public class FsAnalyseModul
 extends AbstraktBearbeitungsKnotenAdapter{
 	
 	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * Datenbeschreibung zur Publikation der Fahrstreifen-Analysedaten
 	 */
 	protected static DataDescription PUB_BESCHREIBUNG = null; 
@@ -259,7 +254,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 						aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
 						aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 					} catch (GueteException e) {
-						LOGGER.error("Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+						Debug.getLogger().error("Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 						e.printStackTrace();
 					}
 				}else{
@@ -277,7 +272,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 								aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
 								aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 							} catch (GueteException e) {
-								LOGGER.error("Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+								Debug.getLogger().error("Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 							
@@ -345,7 +340,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 						try {
 							guetefL = GueteVerfahren.differenz(vPkwGuete, vLkwGuete);
 						} catch (GueteException e) {
-							LOGGER.error("Guete von fL (qB) konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
+							Debug.getLogger().error("Guete von fL (qB) konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 					}else{
@@ -364,7 +359,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 							//gueteGesamt = GueteVerfahren.summe(qPkwGuete, GueteVerfahren.gewichte(qLkwGuete, fL));
 							gueteGesamt = GueteVerfahren.summe(qPkwGuete, GueteVerfahren.produkt(qLkwGuete, guetefL));
 						} catch (GueteException e) {
-							LOGGER.error("Guete von qB konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
+							Debug.getLogger().error("Guete von qB konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 
@@ -470,7 +465,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 							zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 							zielK.setVerfahren(kGuete.getVerfahren().getCode());
 						} catch (GueteException e) {
-							LOGGER.error("Guete-Index fuer kB nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+							Debug.getLogger().error("Guete-Index fuer kB nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 
@@ -615,7 +610,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 								zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 								zielK.setVerfahren(kGuete.getVerfahren().getCode());
 							} catch (GueteException e) {
-								LOGGER.error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
+								Debug.getLogger().error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
 										" nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}

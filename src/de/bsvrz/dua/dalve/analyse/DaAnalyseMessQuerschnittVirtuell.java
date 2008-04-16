@@ -43,6 +43,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte
@@ -166,12 +167,12 @@ implements IObjektWeckerListener{
 
 		boolean nichtBetrachtet = false; 
 		if(this.mqAufHauptfahrbahn.size() == 0){
-			LOGGER.warning("Auf der Hauptfahrbahn des " + //$NON-NLS-1$
+			Debug.getLogger().warning("Auf der Hauptfahrbahn des " + //$NON-NLS-1$
 					"virtuellen MQ " + messQuerschnittVirtuell + " sind keine MQ referenziert"); //$NON-NLS-1$ //$NON-NLS-2$
 			nichtBetrachtet = true;
 		}
 		if(!mqAusfahrtErfasst || !mqEinfahrtErfasst){
-			LOGGER.warning("Beim virtuellen MQ " + messQuerschnittVirtuell +  //$NON-NLS-1$
+			Debug.getLogger().warning("Beim virtuellen MQ " + messQuerschnittVirtuell +  //$NON-NLS-1$
 			" sind nicht Ein- UND Ausfahrt definiert (beide gleichzeitig)"); //$NON-NLS-1$
 			nichtBetrachtet = true;
 		}
@@ -343,7 +344,7 @@ implements IObjektWeckerListener{
 			if(ersetzung != null){
 				new MesswertUnskaliert(attName, ersetzung.getData()).kopiereInhaltNachModifiziereIndex(analyseDatum);
 			}else{
-				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + this.messQuerschnitt + //$NON-NLS-1$
+				Debug.getLogger().error("Es konnte kein Ersetzungsdatum fuer " + this.messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$					
 				MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
@@ -464,7 +465,7 @@ implements IObjektWeckerListener{
 	@Override
 	protected void finalize()
 	throws Throwable {
-		LOGGER.warning("Der virtuelle MQ " + this.messQuerschnitt + //$NON-NLS-1$
+		Debug.getLogger().warning("Der virtuelle MQ " + this.messQuerschnitt + //$NON-NLS-1$
 				" wird nicht mehr analysiert"); //$NON-NLS-1$
 	}
 	

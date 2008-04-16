@@ -37,6 +37,7 @@ import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Repräsentiert einen Stoerfallindikator nach Verfahren NRW (nur fuer Fahrstreifen)
@@ -262,15 +263,15 @@ extends AbstraktStoerfallIndikator{
 			 * Konsitenz-Check
 			 */
 			if( !(v1 > 0 && v1 < v2) ){
-				LOGGER.warning("Fehlerhafte Parameter (0<v1<v2) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0<v1<v2) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": v1 = " + v1 + ", v2 = " + v2);  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if( !(k1 > 0 && k1 < k2 && k2 < k3) ){
-				LOGGER.warning("Fehlerhafte Parameter (0<k1<k2<k3) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0<k1<k2<k3) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": k1 = " + k1 + ", k2 = " + k2 + ", k3 = " + k3);  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 			}
 			if( !(kT > 0 && kT < k3) ){
-				LOGGER.warning("Fehlerhafte Parameter (0<kT<k3) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0<kT<k3) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": kT = " + kT + ", k3 = " + k3);  //$NON-NLS-1$//$NON-NLS-2$
 			}							
 		}else{
