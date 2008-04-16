@@ -151,16 +151,6 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 	 * @param argumente Argumente der Kommandozeile
 	 */
 	public static void main(String argumente[]){
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.
-        				UncaughtExceptionHandler(){
-            public void uncaughtException(@SuppressWarnings("unused")
-			Thread t, Throwable e) {
-            	Debug.getLogger().error("Applikation wird wegen" +  //$NON-NLS-1$
-                		" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
-                e.printStackTrace();
-                Runtime.getRuntime().exit(0);
-            }
-        });
 		StandardApplicationRunner.run(
 					new DatenaufbereitungLVE(), argumente);
 	}
