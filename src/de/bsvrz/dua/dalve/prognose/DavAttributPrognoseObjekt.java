@@ -131,11 +131,20 @@ implements IAtgPrognoseParameterListener{
 				/**
 				 * Aenderung nach Email vom 14.4.2008:
 				 * 
-				 * hier ist wirklich der Fall gemeint, dass im aktuellen Intervall kein Fahrzeug gefahren 
-				 * ist (qKfz = 0) dann sollen die geglätteten Geschwindigkeitswerte des Vorgängerintervalls
+				 * hier ist wirklich der Fall gemeint, dass im aktuellen
+				 * Intervall kein Fahrzeug gefahren ist (qKfz = 0) dann sollen
+				 * die geglätteten Geschwindigkeitswerte des Vorgängerintervalls
 				 * übernommen werden.
 				 */
-				keineVerkehrsStaerke = resultat.getData().getItem("qKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
+				if (this.prognoseObjekt.isFahrStreifen()) {
+					keineVerkehrsStaerke = resultat
+							.getData()
+							.getItem("qKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
+				} else {
+					keineVerkehrsStaerke = resultat
+							.getData()
+							.getItem("QKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
+				}
 
 //				keineVerkehrsStaerke = resultat.getData().getItem(this.attribut.getQAttributAnalogon(
 //								   this.prognoseObjekt.isFahrStreifen())).getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
