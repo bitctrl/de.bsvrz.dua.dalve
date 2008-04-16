@@ -320,7 +320,6 @@ implements ClientReceiverInterface{
 		if(resultate != null){
 			for(ResultData resultat:resultate){
 				if(resultat != null){
-					if(true)throw new NullPointerException("Hallo");
 					ResultData ergebnis = trigger(resultat);
 
 					if(ergebnis != null){
