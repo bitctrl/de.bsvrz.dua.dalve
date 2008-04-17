@@ -164,14 +164,14 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 
 						stufe = this.getVerkehrsStufe(kvst, vvst);
 						this.letzteStufe = stufe;
-
-						StoerfallZustand zustand = new StoerfallZustand(DAV);
-						zustand.setT(resultat.getData()
-								.getTimeValue("T").getMillis()); //$NON-NLS-1$
-						zustand.setSituation(stufe);
-						data = zustand.getData();
 					}
 				}
+				
+				StoerfallZustand zustand = new StoerfallZustand(DAV);
+				zustand.setT(resultat.getData()
+						.getTimeValue("T").getMillis()); //$NON-NLS-1$
+				zustand.setSituation(stufe);
+				data = zustand.getData();
 				
 				this.analyseDatensatz = null;
 				this.geglaettetDatensatz = null;
