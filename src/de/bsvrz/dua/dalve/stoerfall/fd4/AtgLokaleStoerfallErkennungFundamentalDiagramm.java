@@ -97,6 +97,20 @@ implements ClientReceiverInterface{
 		return this.parameter.get(situation);
 	}
 	
+	
+	/**
+	 * Erfragt, ob alle Parameter valide sind
+	 * 
+	 * @return ob alle Parameter valide sind
+	 */
+	protected boolean alleParameterInitialisiert(){
+		for(ParameterFuerStoerfall pss:this.parameter.values()){
+			if(!pss.isInitialisiert()) return false;
+		}
+		
+		return true;
+	}
+	
 
 	/**
 	 * {@inheritDoc}

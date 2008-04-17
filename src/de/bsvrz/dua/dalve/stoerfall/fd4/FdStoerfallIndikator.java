@@ -462,7 +462,7 @@ extends AbstraktStoerfallIndikator{
 	 * gültigen (verarbeitbaren) Werten stehen
 	 */
 	private final boolean alleParameterValide(){
-		return this.fa >= 0 && this.fp >= 0 && 
+		return this.parameterLokal.alleParameterInitialisiert() && 
 		       this.Q0 >= 0 && this.K0 >= 0 &&
 		       this.V0 >= 0 && this.VFrei >= 0;
 	}

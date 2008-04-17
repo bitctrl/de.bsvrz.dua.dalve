@@ -195,15 +195,15 @@ extends NrwStoerfallIndikatorMq{
 			 * Konsitenz-Check
 			 */
 			if( !(v1 > 0 && v1 < v2) ){
-				Debug.getLogger().warning("Fehlerhafte Parameter (0<v1<v2) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0 < v1 < v2) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": v1 = " + v1 + ", v2 = " + v2);  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if( !(k1 > 0 && k1 < k2 && k2 < k3) ){
-				Debug.getLogger().warning("Fehlerhafte Parameter (0<k1<k2<k3) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0 < k1 < k2 < k3) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": k1 = " + k1 + ", k2 = " + k2 + ", k3 = " + k3);  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 			}
 			if( !(kT > 0 && kT < k3) ){
-				Debug.getLogger().warning("Fehlerhafte Parameter (0<kT<k3) empfangen fuer " + //$NON-NLS-1$
+				Debug.getLogger().warning("Fehlerhafte Parameter (0 < kT < k3) empfangen fuer " + //$NON-NLS-1$
 						this.objekt + ": kT = " + kT + ", k3 = " + k3);  //$NON-NLS-1$//$NON-NLS-2$
 			}							
 		}else{

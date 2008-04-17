@@ -76,6 +76,16 @@ extends AllgemeinerDatenContainer{
 	 */
 	private double fvHysterese = -1;
 	
+	/**
+	 * der Faktor <code>fp</code>.
+	 */
+	private double fp = -1;
+	
+	/**
+	 * der Faktor <code>fa</code>.
+	 */
+	private double fa = -1;
+	
 	
 	/**
 	 * Standardkonstruktor
@@ -151,6 +161,26 @@ extends AllgemeinerDatenContainer{
 		return VgrenzHysterese;
 	}
 
+	
+	/**
+	 * Erfragt den Faktor <code>fa</code>.
+	 * 
+	 * @return der Faktor <code>fa</code>
+	 **/
+	protected final double getFa() {
+		return fa;
+	}
+
+
+	/**
+	 * Erfragt den Faktor <code>fp</code>.
+	 * 
+	 * @return der Faktor <code>fp</code>
+	 **/
+	protected final double getFp() {
+		return fp;
+	}
+	
 
 	/**
 	 * Erfragt Faktor für den Vergleich von KKfzStörfallG mid K0
