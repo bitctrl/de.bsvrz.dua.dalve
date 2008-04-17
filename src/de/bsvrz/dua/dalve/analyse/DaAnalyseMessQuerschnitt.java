@@ -853,7 +853,7 @@ implements ClientReceiverInterface{
 			ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		}else{
 			GWert ALkwGuete = null;
-			long ALkwWert = Math.round((double)QLkw.getWertUnskaliert() / (double)QKfz.getWertUnskaliert()) * 100;
+			long ALkwWert = Math.round((double)QLkw.getWertUnskaliert() / (double)QKfz.getWertUnskaliert() * 100.0);
 				
 			if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("ALkw").getItem("Wert"), ALkwWert)){ //$NON-NLS-1$ //$NON-NLS-2$
 				try {
