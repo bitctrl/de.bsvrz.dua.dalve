@@ -77,7 +77,7 @@ implements ClientReceiverInterface{
 	 */
 	public final double getKKfzStoerfallGAktuell(double KKfzStoerfall, boolean implausibel)
 	throws PrognoseParameterException{
-		this.berechneGlaettungsParameterUndStart(Math.round(KKfzStoerfall), implausibel, false);
+		this.berechneGlaettungsParameterUndStart(Math.round(KKfzStoerfall), implausibel, false, null);
 		
 		return this.getZG();
 	}

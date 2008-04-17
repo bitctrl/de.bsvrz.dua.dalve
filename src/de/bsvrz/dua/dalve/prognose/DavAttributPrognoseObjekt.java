@@ -29,6 +29,7 @@ import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dua.dalve.AbstraktAttributPrognoseObjekt;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
 /**
@@ -119,6 +120,7 @@ implements IAtgPrognoseParameterListener{
 		if(resultat.getData() != null){
 			this.aktuellesDatum = new DaMesswertUnskaliert(attributNameQuelle, resultat.getData()); 
 			long ZAktuell = resultat.getData().getItem(attributNameQuelle).getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
+			Data davDatum = resultat.getData().getItem(attributNameQuelle).getItem("Wert");
 			boolean implausibel = resultat.getData().getItem(attributNameQuelle).getItem("Status"). //$NON-NLS-1$
 						getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
 						
@@ -150,7 +152,7 @@ implements IAtgPrognoseParameterListener{
 //								   this.prognoseObjekt.isFahrStreifen())).getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
 			}
 
-			this.berechneGlaettungsParameterUndStart(ZAktuell, implausibel, keineVerkehrsStaerke);
+			this.berechneGlaettungsParameterUndStart(ZAktuell, implausibel, keineVerkehrsStaerke, davDatum);
 		}else{
 			this.aktuellesDatum = null;
 		}

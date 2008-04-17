@@ -25,8 +25,10 @@
  */
 package de.bsvrz.dua.dalve;
 
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer ein
@@ -115,12 +117,15 @@ public class AbstraktAttributPrognoseObjekt{
 	 * @param istVAttributUndKeineVerkehrsStaerke indiziert, ob es sich
 	 * hier um ein Geschwindigkeitsattribut handelt <b>und</b> dies ein 
 	 * Messintervall ohne Fahrzeugdetektion ist
+	 * @param davDatum das DAV-Datum, aus dem der Z-Wert entnommen wurde bzw.
+	 * <code>null</code>, wenn nicht auf Wertebereiche geachtet werden soll
 	 * @throws PrognoseParameterException wenn die Parameter noch nicht gesetzt wurden
 	 */
 	protected final void berechneGlaettungsParameterUndStart(
 								final long ZAktuell,
 								final boolean implausibel,
-								final boolean istVAttributUndKeineVerkehrsStaerke)
+								final boolean istVAttributUndKeineVerkehrsStaerke,
+								Data davDatum)
 	throws PrognoseParameterException{
 		this.ueberpruefeParameter();
 		
@@ -207,8 +212,29 @@ public class AbstraktAttributPrognoseObjekt{
 			this.ZG = DUAKonstanten.NICHT_ERMITTELBAR;
 			
 			this.alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
-			this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;
+			this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;		
 		}
+		
+		if(davDatum != null && !DUAUtensilien.isWertInWerteBereich(davDatum, ZP)){
+			/**
+			 * Ausgangzustand wieder herstellen
+			 */
+			this.deltaZAlt = 0.0;
+			this.ZPAlt = -4;
+			//this.ZAlt = Double.NaN;
+			this.ZP = DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT;
+			
+			this.alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
+			this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;		
+		}
+	}
+	
+	
+	/**
+	 * Setzt ZP und ZG auf nicht ermittelbar und stellt den Ausgangszustand wieder her
+	 *
+	 */
+	private final void setNichtErmittelbar() {
 	}
 	
 	
