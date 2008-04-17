@@ -22,6 +22,12 @@ kb="kb.MQ_Konfig_A5,kb.MQ_Konfig_A6,kb.MQ_Konfig_A656,kb.MQ_Konfig_A7,kb.MQ_Konf
 # Parameter für den Datenverteiler, als Standard werden die Einstellungen aus # einstellungen.sh verwendet.
 #dav1="-datenverteiler=localhost:8083 -benutzer=Tester -authentifizierung=passwd -debugFilePath=.."
 
+jconPort="10407"
+
+if [ "$testlauf" ]; then
+	jvmArgs=$jvmArgs" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port="$jconPort" -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+fi
+
 ################################################################################
 # Ab hier muss nichts mehr angepasst werden                                    #
 ################################################################################

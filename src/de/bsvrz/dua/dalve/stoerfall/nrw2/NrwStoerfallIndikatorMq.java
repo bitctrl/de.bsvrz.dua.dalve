@@ -64,9 +64,7 @@ extends NrwStoerfallIndikatorFs{
 	 * Attributgruppe der Analysedaten von Fahrstreifen
 	 */
 	private AttributeGroup fsAnalyseAtg = null; 
-	
-	
-	
+
 
 	/**
 	 * {@inheritDoc}
