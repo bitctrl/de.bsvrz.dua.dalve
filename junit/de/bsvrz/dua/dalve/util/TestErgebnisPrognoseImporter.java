@@ -246,7 +246,7 @@ extends CSVImporter{
 	
 		if((attributName.startsWith("v") || attributName.startsWith("V")) //$NON-NLS-1$ //$NON-NLS-2$
 				&& wert >= 255) {
-			wert = -1;
+			wert = -3;
 		}
 		
 		if((attributName.startsWith("k") || attributName.startsWith("K")) //$NON-NLS-1$ //$NON-NLS-2$

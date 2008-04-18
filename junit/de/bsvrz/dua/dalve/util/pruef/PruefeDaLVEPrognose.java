@@ -150,7 +150,7 @@ implements ClientReceiverInterface {
 		 */
 		importProgFS = new TestErgebnisPrognoseImporter(dav, csvQuelle);
 		
-		System.out.println("Prüferklasse initialisiert");
+		System.out.println("Prüferklasse für Prognosewerte initialisiert");
 	}
 	
 	/**
@@ -175,8 +175,7 @@ implements ClientReceiverInterface {
 		pruefungFS1GNormalFertig = false;
 		pruefungFS1GTraegeFertig = false;
 		
-		//System.out.println("Prüferklasse parametriert -> Zeit: "+pruefZeit);
-		LOGGER.info("Prüferklasse parametriert -> Zeit: "+pruefZeit);
+		LOGGER.info("Prüferklasse für Prognosewerte parametriert -> Zeit: "+pruefZeit);
 	}
 	
 	/**
@@ -188,41 +187,34 @@ implements ClientReceiverInterface {
 	public void doNotify(int mode) {
 		switch(mode) {
 			case MODE_PFLINK: {
-				//System.out.println("Vergleich der Prognosedaten (Flink:Z"+csvIndex+") abgeschlossen");
 				pruefungFS1PFlinkFertig = true;
 				break;
 			}
 			case MODE_PNORMAL: {
-				//System.out.println("Vergleich der Prognosedaten (Normal:Z"+csvIndex+") abgeschlossen");
 				pruefungFS1PNormalFertig = true;
 				break;
 			}
 			case MODE_PTRAEGE: {
-				//System.out.println("Vergleich der Prognosedaten (Träge:Z"+csvIndex+") abgeschlossen");
 				pruefungFS1PTraegeFertig = true;
 				break;
 			}
 			case MODE_GFLINK: {
-				//System.out.println("Vergleich der geglätteten Daten (Flink:Z"+csvIndex+") abgeschlossen");
 				pruefungFS1GFlinkFertig = true;
 				break;
 			}
 			case MODE_GNORMAL: {
-				//System.out.println("Vergleich der geglätteten Daten (Normal:Z"+csvIndex+") abgeschlossen");
 				pruefungFS1GNormalFertig = true;
 				break;
 			}
 			case MODE_GTRAEGE: {
-				//System.out.println("Vergleich der geglätteten Daten (Träge:Z"+csvIndex+") abgeschlossen");
 				pruefungFS1GTraegeFertig = true;
 				break;
 			}
 		}
 		if(pruefungFS1PFlinkFertig && pruefungFS1PNormalFertig && pruefungFS1PTraegeFertig &&
 				pruefungFS1GFlinkFertig && pruefungFS1GNormalFertig && pruefungFS1GTraegeFertig) {
-			//System.out.println("Alle Daten geprüft. Benachrichtige Hauptthread...");
-			LOGGER.info("Alle Daten geprüft. Benachrichtige Hauptthread...");
-			caller.doNotify();
+			LOGGER.info("Alle Prognosedaten geprüft. Benachrichtige Hauptthread...");
+			caller.doNotify(caller.ID_PRUEFER_PROGNOSE);
 		}
 	}
 	
@@ -254,22 +246,16 @@ implements ClientReceiverInterface {
 				try {
 					//Ermittle Modus
 					if(result.getDataDescription().equals(DD_KZDFS_PF_EMPF)) {
-						//System.out.println("Zu prüfendes Prognosedatum (Flink) empfangen. Vergleiche...");
 						verglPFlink.vergleiche(result.getData(),ergebnisFSProgFlink,csvIndex);
 					} else if(result.getDataDescription().equals(DD_KZDFS_PN_EMPF)) {
-						//System.out.println("Zu prüfendes Prognosedatum (Normal) empfangen. Vergleiche...");
 						verglPNormal.vergleiche(result.getData(),ergebnisFSProgNormal,csvIndex);
 					} else if(result.getDataDescription().equals(DD_KZDFS_PT_EMPF)) {
-						//System.out.println("Zu prüfendes Prognosedatum (Träge) empfangen. Vergleiche...");
 						verglPTraege.vergleiche(result.getData(),ergebnisFSProgTraege,csvIndex);
 					} else if(result.getDataDescription().equals(DD_KZDFS_GF_EMPF)) {
-						//System.out.println("Zu prüfendes geglättetes Datum (Flink) empfangen. Vergleiche...");
 						verglGFlink.vergleiche(result.getData(),ergebnisFSGlattFlink,csvIndex);
 					} else if(result.getDataDescription().equals(DD_KZDFS_GN_EMPF)) {
-						//System.out.println("Zu prüfendes geglättetes Datum (Normal) empfangen. Vergleiche...");
 						verglGNormal.vergleiche(result.getData(),ergebnisFSGlattNormal,csvIndex);
 					} else if(result.getDataDescription().equals(DD_KZDFS_GT_EMPF)) {
-						//System.out.println("Zu prüfendes geglättetes Datum (Träge) empfangen. Vergleiche...");
 						verglGTraege.vergleiche(result.getData(),ergebnisFSGlattTraege,csvIndex);
 					}
 				} catch(Exception e) {}
@@ -311,6 +297,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	 */
 	private int csvIndex;
 	
+	
 	/**
 	 * Attributpfade der ATG
 	 * 
@@ -320,8 +307,25 @@ class VergleicheDaLVEPrognose extends Thread {
 	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die
 	 * Berechnung richtig."
 	 */
-	private String[] attributNamenPraefix = {"qB", //$NON-NLS-1$
+	private String[] attributNamenPraefixP = {"qB", //$NON-NLS-1$
 											 "vPkw"}; //$NON-NLS-1$
+	/**
+	 * Attributpfade der ATG
+	 * 
+	 * Kappich Mail vom 09.04.08:
+	 * 
+	 * "der Algorithmus in der Prüfspezifikation verwendet nicht qKfz sondern die
+	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die
+	 * Berechnung richtig."
+	 */
+	private String[] attributNamenPraefixG = {"qB", //$NON-NLS-1$
+											 "vPkw", //$NON-NLS-1$
+											 "kB"}; //$NON-NLS-1$
+	
+	/**
+	 * 	Die verwendeten Attributpfade der ATG
+	 */
+	private String[] attributNamenPraefix;
 	
 	/**
 	 * Attributnamen
@@ -342,11 +346,13 @@ class VergleicheDaLVEPrognose extends Thread {
 		
 		if(mode <= 3) {
 			this.attPraefix = "P";
+			this.attributNamenPraefix = attributNamenPraefixP;
 		} else {
 			this.attPraefix = "G";
+			this.attributNamenPraefix = attributNamenPraefixG;
 		}
 		
-		System.out.println("Prüfthread [PT] initialisiert ("+caller.getModusText(mode)+")"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("Prüfthread [PT] ("+caller.getModusText(mode)+") initialisiert"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.ident = "[PT "+caller.getModusText(mode)+"]";
 		
 		//starte Thread
@@ -362,7 +368,7 @@ class VergleicheDaLVEPrognose extends Thread {
 		this.sollErgebnis = sollErgebnis;
 		this.istErgebnis = istErgebnis;
 		this.csvIndex = csvIndex;
-//		System.out.println(ident+" Zu vergleichende Daten empfangen"); //$NON-NLS-1$ //$NON-NLS-2$
+
 		synchronized(this) {
 			//wecke Thread
 			this.notify();
@@ -376,12 +382,9 @@ class VergleicheDaLVEPrognose extends Thread {
 		//Thread läuft bis Programmende
 		while(true) {
 			//warte mit Prüfung bis geweckt
-			//System.out.println(ident+" Warte auf Trigger"); //$NON-NLS-1$ //$NON-NLS-2$
 			doWait();
 			
 			//vergleiche
-			//System.out.println(ident+" Vergleiche Daten (Z "+csvIndex+")..."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			LOGGER.info(ident+" Vergleiche Daten (Z "+csvIndex+")..."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			doVergleich();
 		}
 	}
@@ -393,9 +396,11 @@ class VergleicheDaLVEPrognose extends Thread {
 	private void doVergleich() {
 		String attributPfad = null;
 		String csvDS = ident+" (Z:"+csvIndex+")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		String loggerOut = csvDS+" Vergleichsergebnis:\n\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		String loggerOut = csvDS+" Vergleichsergebnis:\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		int sollWert;
 		int istWert;
+		
+		boolean isError = false;
 		
 		for(int i=0;i<attributNamenPraefix.length;i++) {
 			for(int j=0;j<attributNamen.length;j++) {
@@ -405,10 +410,9 @@ class VergleicheDaLVEPrognose extends Thread {
 				if(sollWert == istWert) {
 					loggerOut += "OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				} else {
+					isError = true;
 					String errOut = "ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert;
 					loggerOut += errOut + "\n";
-					
-					System.out.println(csvDS+" "+errOut);
 					
 					if(caller.useAssert) {
 						Assert.assertTrue(csvDS+" "+errOut, false);
@@ -417,11 +421,11 @@ class VergleicheDaLVEPrognose extends Thread {
 			}
 		}
 
+		if(isError && !caller.useAssert) {
+			System.out.println(loggerOut);						
+		}
+		
 		LOGGER.info(loggerOut);
-		
-		//System.out.println(csvDS+" Prüfung abgeschlossen.");
-		LOGGER.info(csvDS+" Prüfung abgeschlossen.");
-		
 		
 		//Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3) 
 		caller.doNotify(mode);

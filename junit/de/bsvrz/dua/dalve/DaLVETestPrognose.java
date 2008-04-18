@@ -12,6 +12,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.util.TestAnalyseFahrstreifenImporter;
 import de.bsvrz.dua.dalve.util.para.ParaAnaProgImport;
 import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEPrognose;
+import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEStoerfall;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
@@ -22,6 +23,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class DaLVETestPrognose implements ClientSenderInterface {
 
+	public static final boolean prStoerfall = true;
+	
 	/**
 	 * Logger
 	 */
@@ -57,6 +60,26 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	 */
 	private boolean useAssert;
 	
+	/**
+	 * ID der Prüferklasse für Prognosedaten
+	 */
+	public static final int ID_PRUEFER_PROGNOSE = 0;
+	
+	/**
+	 * ID der Prüferklasse für StörfallIndikatoren
+	 */
+	public static final int ID_PRUEFER_STOERFALL = 1;
+
+	/**
+	 * Gibt an ob die Prüferklasse für Prognosedaten die Prüfung abgeschlossen hat
+	 */
+	private boolean prPrognoseFertig = false;
+	
+	/**
+	 * Gibt an, ob die StörfallIndikatoren-Prüfung abgeschlossen ist
+	 */
+	private boolean prStoerfallFertig = false;
+	
 	
 	public DaLVETestPrognose(final ClientDavInterface dav, final ArgumentList alLogger, final String TEST_DATEN_VERZ)
 	throws Exception {
@@ -85,6 +108,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		 */
 		ParaAnaProgImport paraImport = new ParaAnaProgImport(dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImport.importiereParameterPrognose();
+		paraImport.importiereParameterStoerfall();
 		
 		/*
 		 * Initialisiert Testfahrstreifenimporter
@@ -103,26 +127,35 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		int csvIndex = 2;
 		
 		/*
-		 * Prüferklasse
+		 * Prüferklasse Prognosewerte
 		 * Empfängt Daten und vergleicht mit SOLL-Wert 
 		 */
 		PruefeDaLVEPrognose prDaLVEPrognose = new PruefeDaLVEPrognose(this, dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
-		
+
+		/*
+		 * Prüferklasse Prognosewerte
+		 * Empfängt Daten und vergleicht mit SOLL-Wert 
+		 */
+		PruefeDaLVEStoerfall prDaLVEStoerfall = new PruefeDaLVEStoerfall(this, dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
+
 		//Lese bei Importer und Prüfer den nächsten Datensatz ein
 		importFS.importNaechsteZeile();
 		prDaLVEPrognose.naechsterDatensatz(aktZeit);
+		prDaLVEStoerfall.naechsterDatensatz(aktZeit);
 		
 		//Prüfe solange Daten vorhanden
 		while((zeileFS1=importFS.getDatensatz(1)) != null) {
 			ResultData resultat1 = new ResultData(FS1, DD_KZD_SEND, aktZeit, zeileFS1);
 			
-			//System.out.println("Sende Daten: FS 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
-			LOGGER.info("Sende Daten: FS 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit);
-			this.dav.sendData(resultat1);
+			System.out.println("Sende Analysedaten: FS 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			LOGGER.info("Sende Analysedaten: FS 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit);
 			
-			//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
-//			System.out.println("Warte auf Prüfung des FS 1..."); //$NON-NLS-1$
-			doWait();
+			synchronized(this) {
+				this.dav.sendData(resultat1);
+			
+				//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
+				doWait();
+			}
 			
 			csvIndex++;
 			
@@ -132,6 +165,10 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 			//Lese bei Importer und Prüfer den nächsten Datensatz ein
 			importFS.importNaechsteZeile();
 			prDaLVEPrognose.naechsterDatensatz(aktZeit);
+			prDaLVEStoerfall.naechsterDatensatz(aktZeit);
+			
+			prPrognoseFertig = false;
+			prStoerfallFertig = false;
 		}
 	}
 	
@@ -146,12 +183,26 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	}
 	
 	/**
-	 * Weckt Thread
+	 * Weckt Thread wenn Prognose- und Störfalldaten verglichen wurden
 	 *
 	 */
-	public void doNotify() {
-		synchronized(this) {
-			notify();
+	public void doNotify(final int id_Pruefer) {
+		
+		switch(id_Pruefer) {
+			case ID_PRUEFER_PROGNOSE: {
+				prPrognoseFertig = true;
+				break;
+			}
+			case ID_PRUEFER_STOERFALL: {
+				prStoerfallFertig = true;
+				break;
+			}
+		}
+		
+		if(prPrognoseFertig && prStoerfallFertig) {
+			synchronized(this) {
+				notify();
+			}
 		}
 	}
 	

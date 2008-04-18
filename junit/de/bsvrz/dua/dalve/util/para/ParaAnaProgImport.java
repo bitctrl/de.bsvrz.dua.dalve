@@ -80,6 +80,16 @@ implements ClientSenderInterface {
 	private AttributeGroup ATG_FSPrognoseTraege;
 	
 	/**
+	 * Attributgruppe der FS-Verkehrslageverfahren 1
+	 */
+	private AttributeGroup ATG_FSVLVERFAHREN1;
+	
+	/**
+	 * Attributgruppe der FS-Verkehrslageverfahren 2
+	 */
+	private AttributeGroup ATG_FSVLVERFAHREN2;
+	
+	/**
 	 * Datenbeschreibung FS-Analyse
 	 */
 	private DataDescription DD_FSAnalyse;
@@ -98,6 +108,16 @@ implements ClientSenderInterface {
 	 * Datenbeschreibung FS-Prognose (Träge)
 	 */
 	private DataDescription DD_FSPrognoseTraege;
+	
+	/**
+	 * Datenbeschreibung FS-Verkehrslageverfahren 1
+	 */
+	private DataDescription DD_FSVLVERFAHREN1;
+	
+	/**
+	 * Datenbeschreibung FS-Verkehrslageverfahren 2
+	 */
+	private DataDescription DD_FSVLVERFAHREN2;
 	
 	/**
 	 * Standardkonstruktor
@@ -120,6 +140,8 @@ implements ClientSenderInterface {
 		ATG_FSPrognoseFlink = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkFs"); //$NON-NLS-1$
 		ATG_FSPrognoseNormal = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalFs"); //$NON-NLS-1$
 		ATG_FSPrognoseTraege = DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeFs"); //$NON-NLS-1$
+		ATG_FSVLVERFAHREN1 = DAV.getDataModel().getAttributeGroup("atg.verkehrsLageVerfahren1");
+		ATG_FSVLVERFAHREN2 = DAV.getDataModel().getAttributeGroup("atg.verkehrsLageVerfahren2");
 		
 		DD_FSAnalyse = new DataDescription(
 				ATG_FSAnalyse, 
@@ -139,6 +161,16 @@ implements ClientSenderInterface {
 		
 		DD_FSPrognoseTraege = new DataDescription(
 				ATG_FSPrognoseTraege, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0);
+		
+		DD_FSVLVERFAHREN1 = new DataDescription(
+				ATG_FSVLVERFAHREN1, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0);
+		
+		DD_FSVLVERFAHREN2 = new DataDescription(
+				ATG_FSVLVERFAHREN2, 
 				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
 				(short)0);
 		
@@ -294,6 +326,71 @@ implements ClientSenderInterface {
 	}
 	
 	/**
+	 * Führt den Parameterimport aus
+	 * 
+	 * @param index der index
+	 * @throws Exception wenn die Parameter nicht vollständig
+	 * importiert werden konnten
+	 */
+	public final void importiereParameterStoerfall()
+	throws Exception{
+		
+		this.reset();
+		this.getNaechsteZeile();
+		
+		SystemObject fsObjekt = null;
+		for(SystemObject sysObjekt : objekt) {
+			fsObjekt = sysObjekt;
+		}
+		
+		DAV.subscribeSender(this, fsObjekt,DD_FSVLVERFAHREN1, SenderRole.sender());
+		DAV.subscribeSender(this, fsObjekt,DD_FSVLVERFAHREN2, SenderRole.sender());
+		
+		String[] zeile = null;
+		
+		Data parameterVLV1 = DAV.createData(ATG_FSVLVERFAHREN1);
+		Data parameterVLV2 = DAV.createData(ATG_FSVLVERFAHREN2);
+		
+		while( (zeile = this.getNaechsteZeile()) != null ){
+			String attributInCSVDatei = zeile[0];
+			String wert = zeile[1];
+			wert = wert.replaceAll(",", "."); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			String attPfadStoer = getStoerfallAttributPfadVon(attributInCSVDatei);
+			if(attPfadStoer != null){
+				try{
+					long l = Long.parseLong(wert);
+					if(!attPfadStoer.endsWith("3") && !attPfadStoer.endsWith("T")) {
+						DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV1).asScaledValue().set(l);
+					}
+					DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV2).asScaledValue().set(l);
+				}catch(NumberFormatException ex){
+					
+				}
+				
+			}
+		}
+		
+		ResultData resultatVLV1 = new ResultData(fsObjekt, new DataDescription(
+				ATG_FSVLVERFAHREN1, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0), System.currentTimeMillis(), parameterVLV1);
+		
+		ResultData resultatVLV2 = new ResultData(fsObjekt, new DataDescription(
+				ATG_FSVLVERFAHREN2, 
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
+				(short)0), System.currentTimeMillis(), parameterVLV2);
+		
+		
+		DAV.sendData(resultatVLV1);
+		DAV.sendData(resultatVLV2);
+		
+		DAV.unsubscribeSender(this, fsObjekt, DD_FSVLVERFAHREN1);
+		DAV.unsubscribeSender(this, fsObjekt, DD_FSVLVERFAHREN2);
+	}
+	
+	
+	/**
 	 * Erfragt den Attributpfad zu einem Analyse-Attribut, das in der CSV-Datei 
 	 * den übergebenen Namen hat
 	 *  
@@ -372,6 +469,38 @@ implements ClientSenderInterface {
 		}
 		if(attributInCSVDatei.startsWith("beta2"+prognoseTyp)){ //$NON-NLS-1$
 			return ".beta2"; //$NON-NLS-1$
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Erfragt den Attributpfad zu einem Stoerfall-Attribut, das in der CSV-Datei 
+	 * den übergebenen Namen hat
+	 *  
+	 * @param attributInCSVDatei Attributname innerhalb der CSV-Datei
+	 * @param index index innerhalb von CVS-Datei
+	 * @return den kompletten Attributpfad zum assoziierten DAV-Attribut
+	 */
+	protected String getStoerfallAttributPfadVon(final String attributInCSVDatei) {
+
+		if(attributInCSVDatei.startsWith("v1")){ //$NON-NLS-1$
+			return "v1"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("v2")){ //$NON-NLS-1$
+			return "v2"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("k1")){ //$NON-NLS-1$
+			return "k1"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("k2")){ //$NON-NLS-1$
+			return "k2"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("k3")){ //$NON-NLS-1$
+			return "k3"; //$NON-NLS-1$
+		}
+		if(attributInCSVDatei.startsWith("k5T")){ //$NON-NLS-1$
+			return "kT"; //$NON-NLS-1$
 		}
 		
 		return null;
