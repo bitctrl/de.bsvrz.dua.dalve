@@ -36,52 +36,46 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
- * Stellt die aktuellen Informationen der Attributgruppe 
- * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
- * fuer einen bestimmten Messquerschnitt zur Verfuegung 
+ * Stellt die aktuellen Informationen der Attributgruppe
+ * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer einen
+ * bestimmten Messquerschnitt zur Verfuegung
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
  */
-public class AtgLokaleStoerfallErkennungFundamentalDiagramm 
-extends AllgemeinerDatenContainer
-implements ClientReceiverInterface{
+public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements
+		ClientReceiverInterface {
 
 	/**
 	 * Mappt eine Stoerfallsituation auf ihre Parameter
 	 */
-	private Map<StoerfallSituation, ParameterFuerStoerfall> parameter =
-							new HashMap<StoerfallSituation, ParameterFuerStoerfall>();
-	
-	
+	private Map<StoerfallSituation, ParameterFuerStoerfall> parameter = new HashMap<StoerfallSituation, ParameterFuerStoerfall>();
+
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Verbindung zum Datenverteiler
 	 * @param objekt Systemobjekt des betrachteten Messquerschnittes 
 	 */
-	protected AtgLokaleStoerfallErkennungFundamentalDiagramm(final ClientDavInterface dav, 
-															final SystemObject objekt){
-		this.parameter.put(StoerfallSituation.STAU,
-				new ParameterFuerStoerfall(StoerfallSituation.STAU));
+	protected AtgLokaleStoerfallErkennungFundamentalDiagramm(
+			final ClientDavInterface dav, final SystemObject objekt) {
+		this.parameter.put(StoerfallSituation.FREIER_VERKEHR,
+				new ParameterFuerStoerfall(StoerfallSituation.FREIER_VERKEHR));
+		this.parameter.put(StoerfallSituation.STAU, new ParameterFuerStoerfall(
+				StoerfallSituation.STAU));
 		this.parameter.put(StoerfallSituation.ZAEHER_VERKEHR,
 				new ParameterFuerStoerfall(StoerfallSituation.ZAEHER_VERKEHR));
-		
-		dav.subscribeReceiver(this,
-				objekt,
-				new DataDescription(
-						dav.getDataModel().getAttributeGroup("atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-						(short)0),
-				ReceiveOptions.normal(),
-				ReceiverRole.receiver());		
+
+		dav.subscribeReceiver(this, objekt, new DataDescription(
+				dav.getDataModel().getAttributeGroup(
+						"atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
+				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
-	
-	
+
 	/**
 	 * Erfragt die aktuellen Parameter der Attributgruppe 
 	 * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
@@ -93,38 +87,52 @@ implements ClientReceiverInterface{
 	 * fuer den Stoerfall
 	 */
 	protected final ParameterFuerStoerfall getParameterFuerStoerfall(
-			final StoerfallSituation situation){
+			final StoerfallSituation situation) {
 		return this.parameter.get(situation);
 	}
-	
-	
+
 	/**
 	 * Erfragt, ob alle Parameter valide sind
 	 * 
 	 * @return ob alle Parameter valide sind
 	 */
-	protected boolean alleParameterInitialisiert(){
-		for(ParameterFuerStoerfall pss:this.parameter.values()){
-			if(!pss.isInitialisiert()) return false;
+	protected boolean alleParameterInitialisiert() {
+		for (ParameterFuerStoerfall pss : this.parameter.values()) {
+			if (!pss.isInitialisiert())
+				return false;
 		}
-		
+
 		return true;
 	}
-	
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		if(resultate != null){
-			for(ResultData resultat:resultate){
-				if(resultat != null){
-					for(ParameterFuerStoerfall parameterPuffer:this.parameter.values()){
-						parameterPuffer.importiere(resultat.getData());
+		if (resultate != null) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null) {
+					if(resultat.getData() != null) {
+						ParameterFuerStoerfall frei = new ParameterFuerStoerfall(StoerfallSituation.FREIER_VERKEHR);
+						ParameterFuerStoerfall zaeh = new ParameterFuerStoerfall(StoerfallSituation.ZAEHER_VERKEHR);
+						ParameterFuerStoerfall stau = new ParameterFuerStoerfall(StoerfallSituation.STAU);
+							
+						frei.importiere(resultat.getData().getItem("FreierVerkehr"));
+						zaeh.importiere(resultat.getData().getItem("ZaehFliessenderVerkehr"));
+						stau.importiere(resultat.getData().getItem("Stau"));
+						
+						synchronized (this.parameter) {
+							this.parameter.put(StoerfallSituation.FREIER_VERKEHR,
+									frei);
+							this.parameter.put(StoerfallSituation.STAU, 
+									stau);
+							this.parameter.put(StoerfallSituation.ZAEHER_VERKEHR,
+									zaeh);
+						}
 					}
 				}
 			}
 		}
 	}
-	
+
 }

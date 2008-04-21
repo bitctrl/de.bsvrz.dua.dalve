@@ -106,14 +106,23 @@ extends AllgemeinerDatenContainer{
 	 */
 	protected final void importiere(final Data datum){
 		if(datum != null){
-			//TODO: Daten auslesen
+			this.fa = datum.getScaledValue("fa").doubleValue();
+			this.fp = datum.getScaledValue("fp").doubleValue();
+			this.fk = datum.getScaledValue("fk").doubleValue();
+			this.fkHysterese = datum.getScaledValue("fkHysterese").doubleValue();
+			this.fv = datum.getScaledValue("fv").doubleValue();
+			this.fvHysterese = datum.getScaledValue("fvHysterese").doubleValue();
+			this.Vgrenz = datum.getUnscaledValue("Vgrenz").longValue();		
+			this.VgrenzHysterese = datum.getUnscaledValue("VgrenzHysterese").longValue();
 		}else{
-			this.Vgrenz = -4;			
+			this.Vgrenz = -4;
 			this.VgrenzHysterese = -4;
 			this.fk = -1;
 			this.fkHysterese = -1;
 			this.fv = -1;
-			this.fvHysterese = -1;			
+			this.fvHysterese = -1;
+			this.fa = -1;
+			this.fp = -1;
 		}
 	}
 
@@ -126,7 +135,8 @@ extends AllgemeinerDatenContainer{
 	protected final boolean isInitialisiert(){
 		return this.Vgrenz != -4 && this.VgrenzHysterese != -4 &&
 			   this.fk != -1 &&	this.fkHysterese != -1 &&
-			   this.fv != -1 && this.fvHysterese != -1;	
+			   this.fv != -1 && this.fvHysterese != -1 &&
+			   this.fa != -1 &&	this.fp != -1;
 	}
 	
 
