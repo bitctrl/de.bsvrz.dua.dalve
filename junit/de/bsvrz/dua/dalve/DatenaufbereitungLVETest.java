@@ -38,7 +38,8 @@ public class DatenaufbereitungLVETest {
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8 (09.04.08)\\"; //$NON-NLS-1$
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.1 (12.04.08)\\"; //$NON-NLS-1$
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.2 (14.04.08)\\"; //$NON-NLS-1$
-	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.3 (22.04.08)\\"; //$NON-NLS-1$
+//	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.3 (22.04.08)\\"; //$NON-NLS-1$
+	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.4 (24.04.08)\\"; //$NON-NLS-1$
 	
 	/**
 	 * Logger und Loggerargument
@@ -78,6 +79,7 @@ public class DatenaufbereitungLVETest {
 	public void testPrognose() throws Exception {
 		DaLVETestPrognose prognoseTest = new DaLVETestPrognose(dav, alLogger, TEST_DATEN_VERZ);
 		prognoseTest.benutzeAssert(false);
+		prognoseTest.setTestStoerfall(false);
 		prognoseTest.testPrognose();
 	}
 }
