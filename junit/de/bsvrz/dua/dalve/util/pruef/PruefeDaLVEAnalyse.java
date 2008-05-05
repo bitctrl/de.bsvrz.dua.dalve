@@ -336,7 +336,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 			}
 		}
 		System.out.println(loggerOut);
-		System.out.println("[PT"+fsIndex+"] Prüfung FS "+fsIndex+" Zeile "+csvIndex+" abgeschlossen. Benachrichtige Prüfklasse..."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+//		System.out.println("[PT"+fsIndex+"] Prüfung FS "+fsIndex+" Zeile "+csvIndex+" abgeschlossen. Benachrichtige Prüfklasse..."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		//Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3) 
 		caller.doNotify(fsIndex);
 	}
