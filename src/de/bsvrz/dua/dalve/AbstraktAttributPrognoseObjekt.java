@@ -94,16 +94,31 @@ public class AbstraktAttributPrognoseObjekt{
 	 * Prognosewert
 	 */
 	private long ZP = DUAKonstanten.NICHT_ERMITTELBAR;
+
+	/**
+	 * Prognosewert (ungerundet)
+	 */
+	private double ZPd = DUAKonstanten.NICHT_ERMITTELBAR;
 	
 	/**
 	 * geglaetteter Wert ohne Prognoseanteil
 	 */
 	private long ZG = DUAKonstanten.NICHT_ERMITTELBAR;
+
+	/**
+	 * geglaetteter Wert ohne Prognoseanteil (ungerundet)
+	 */
+	private double ZGd = DUAKonstanten.NICHT_ERMITTELBAR;
 	
 	/**
 	 * Alter Wert fuer Z
 	 */
 	private double ZAlt = Double.NaN;
+	
+	/**
+	 * Wurde das Programm gerade gestartet?
+	 */
+	private boolean start = true;
 
 	
 	
@@ -137,10 +152,11 @@ public class AbstraktAttributPrognoseObjekt{
 		 * Fehlerhafte Werte werden vom Verfahren ignoriert
 		 */		
 		if(ZAktuell >= 0 && !implausibel){
-			double alpha = this.alpha1;
-			double beta = this.beta1;
+			double alpha = this.alphaAltBeiDeltaZNeuGleich0;
+			double beta = this.betaAltBeiDeltaZNeuGleich0;
 
-			if(!Double.isNaN(this.alphaAltBeiDeltaZNeuGleich0) && this.deltaZAlt == 0){
+			if(start || this.deltaZAlt != 0){
+				start = false;
 				/**
 				 * 5. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135
 				 * Ist der Trend DZNeu = 0, dann gelten die Glättungsfaktoren des letzten Glättungsintervalls
@@ -149,12 +165,12 @@ public class AbstraktAttributPrognoseObjekt{
 				 * War der Trend im letzten Intervall 0, so werden die Glättungsparamter für den aktuellen
 				 * Zyklus nicht geändert (man tut so, als ob sich der Trend der davor liegenden Zyklen fortsetzt).
 				 */
-				alpha = this.alphaAltBeiDeltaZNeuGleich0;
-				beta = this.betaAltBeiDeltaZNeuGleich0;
-			}else{
 				if(ZAktuell > ZAlt){
 					alpha = this.alpha2;
 					beta = this.beta2;
+				}else{
+					alpha = this.alpha1;
+					beta = this.beta1;					
 				}
 			}
 			
@@ -169,11 +185,14 @@ public class AbstraktAttributPrognoseObjekt{
 				 * War ZP = 0 so ist im aktuellen Zyklus der Messwert als Prognosewert zu verwenden. 
 				 * Der Trend wird dabei zu 0 gesetzt, weil in diesem Fall kein Trend ermittelbar ist.
 				 */
-				deltaZNeu = 0;
+				deltaZNeu = beta * (ZAktuell - ZAlt);
+				//deltaZNeu = 0;
 				this.ZP = ZAktuell;
+				this.ZPd = ZAktuell;
 			}else{				
 				deltaZNeu = beta * (ZAktuell - ZAlt) + (1 - beta) * deltaZAlt;
 				this.ZP = Math.round(ZNeu + deltaZNeu);
+				this.ZPd = ZNeu + deltaZNeu;
 			}
 
 			if(this.ZP < 0){
@@ -182,6 +201,9 @@ public class AbstraktAttributPrognoseObjekt{
 				 * Tritt bei der Kurzzeitprognose ein Wert ZP < 0 auf, so ist ZP = 0 zu setzen
 				 */
 				this.ZP = 0;
+				this.ZPd = 0.0;
+				
+				deltaZNeu = 0;
 			}
 
 			if(!(istVAttributUndKeineVerkehrsStaerke)){
@@ -193,6 +215,7 @@ public class AbstraktAttributPrognoseObjekt{
 				 * oder wenn es eines ist und Fahrzeuge detektiert wurden
 				 */
 				this.ZG = Math.round(ZNeu);
+				this.ZGd = ZNeu;
 			}
 
 			this.alphaAltBeiDeltaZNeuGleich0 = alpha;
@@ -209,32 +232,37 @@ public class AbstraktAttributPrognoseObjekt{
 			this.ZPAlt = -4;
 			this.ZAlt = Double.NaN;
 			this.ZP = DUAKonstanten.NICHT_ERMITTELBAR;
+			this.ZPd = DUAKonstanten.NICHT_ERMITTELBAR;
 			this.ZG = DUAKonstanten.NICHT_ERMITTELBAR;
+			this.ZGd = DUAKonstanten.NICHT_ERMITTELBAR;
 			
-			this.alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
-			this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;		
+			start = true;
+			//this.alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
+			//this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;		
 		}
 		
 		if(davDatum != null && !DUAUtensilien.isWertInWerteBereich(davDatum, ZP)){
 			/**
 			 * Ausgangzustand wieder herstellen
 			 */
-			this.deltaZAlt = 0.0;
 			this.ZPAlt = -4;
-			//this.ZAlt = Double.NaN;
 			this.ZP = DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT;
+			this.ZPd = DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT;
 			
-			this.alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
-			this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;		
+			start = true;
+			//this.alphaAltBeiDeltaZNeuGleich0 = Double.NaN;
+			//this.betaAltBeiDeltaZNeuGleich0 = Double.NaN;		
 		}
 	}
 	
 	
 	/**
-	 * Setzt ZP und ZG auf nicht ermittelbar und stellt den Ausgangszustand wieder her
-	 *
+	 * Erfragt den aktuellen Prognosewert <code>ZP</code> (ungerundet)
+	 * 
+	 * @return der aktuelle Prognosewert <code>ZP</code>
 	 */
-	private final void setNichtErmittelbar() {
+	public final double getZPOriginal() {
+		return ZPd;
 	}
 	
 	
@@ -257,6 +285,15 @@ public class AbstraktAttributPrognoseObjekt{
 		return ZG;
 	}
 
+
+	/**
+	 * Erfragt den aktuellen geglaetteten Wert <code>ZG</code> (ungerundet)
+	 * 
+	 * @return der aktuelle geglaettete Wert <code>ZG</code>
+	 */
+	public final double getZGOriginal() {
+		return ZGd;
+	}
 	
 	/**
 	 * Ueberprueft, ob die Parameter schon gesetzt wurden

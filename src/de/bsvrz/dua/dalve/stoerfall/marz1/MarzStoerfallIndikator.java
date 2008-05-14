@@ -112,7 +112,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 		if (resultat.getData() != null) {
 			String attrV = this.objekt.isFahrStreifen() ? "vKfzG" : "VKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
-			String attrK = this.objekt.isFahrStreifen() ? "kKfzG" : "KKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
+			String attrK = this.objekt.isFahrStreifen() ? "kBG" : "KBG"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			long v = resultat.getData().getItem(attrV)
 					.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
@@ -121,7 +121,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 			StoerfallSituation situation = StoerfallSituation.KEINE_AUSSAGE;
 
-			if (v1 >= 0 && v2 >= 0 && k1 >= 0 && k2 >= 0) {
+			if (v >= 0 && k >= 0 && v1 >= 0 && v2 >= 0 && k1 >= 0 && k2 >= 0) {
 				data = DAV.createData(this.pubBeschreibung.getAttributeGroup());
 
 				if (v >= v2 && k >= 0 && k <= k1) {
@@ -156,6 +156,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			}
 			zustand.setSituation(situation);
 			data = zustand.getData();
+			letzterStoerfallZustand = situation;
 		}
 
 		ResultData ergebnis = new ResultData(this.objekt.getObjekt(),

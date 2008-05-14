@@ -160,6 +160,16 @@ implements IAtgPrognoseParameterListener{
 	
 	
 	/**
+	 * Erfragt den Attributname
+	 * 
+	 * @return attribut den Attributname
+	 */
+	public PrognoseAttribut getAttribut() {
+		return attribut;
+	}
+
+
+	/**
 	 * Exportiert die letzten hier errechneten geglaetteten Werte
 	 * in das uebergebene Zieldatum
 	 * 

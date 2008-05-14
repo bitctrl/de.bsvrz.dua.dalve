@@ -28,6 +28,8 @@ package de.bsvrz.dua.dalve.prognose;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.smartcardio.ATR;
+
 import com.bitctrl.Constants;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -195,7 +197,7 @@ implements ClientReceiverInterface,
 							for(DavAttributPrognoseObjekt attribut:this.attributePuffer){
 								attribut.exportiereDatenGlatt(glaettungNutzdaten);
 							}
-							this.fuegeKBPHinzu(glaettungNutzdaten, false);
+							this.fuegeKBPHinzu(glaettungNutzdaten, false, this.attributePuffer);
 							
 							/**
 							 * Baue Prognosewert zusammen:
@@ -204,7 +206,7 @@ implements ClientReceiverInterface,
 							for(DavAttributPrognoseObjekt attribut:this.attributePuffer){
 								attribut.exportiereDatenPrognose(prognoseNutzdaten);
 							}
-							this.fuegeKBPHinzu(prognoseNutzdaten, true);
+							this.fuegeKBPHinzu(prognoseNutzdaten, true, this.attributePuffer);
 							
 							if(this.prognoseObjekt.isFahrStreifen()){
 								long T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
@@ -279,13 +281,40 @@ implements ClientReceiverInterface,
 	 * 
 	 * @param zielDatum ein veraenderbares Zieldatum der Attributgruppe
 	 * @param prognose ob ein Prognosewert veraendert werden soll
+	 * @param attributPuffer ungerundete Prognosewerte
 	 */
-	private final void fuegeKBPHinzu(Data zielDatum, final boolean prognose){
+	private final void fuegeKBPHinzu(Data zielDatum, 
+			final boolean prognose,
+			final Set<DavAttributPrognoseObjekt> attributPuffer){
 		DaMesswertUnskaliert qb = null;
+		double qBOrig = 0;
 		DaMesswertUnskaliert vKfz = null;
+		double vKfzOrig = 0;
 		MesswertUnskaliert kb = null;
 		GWert gueteVKfz = null;
 		GWert guetekb = null;
+		
+		for(DavAttributPrognoseObjekt attribut:attributPuffer){
+			if(prognose){
+				if(attribut.getAttribut().equals(PrognoseAttribut.QB)){
+					//qBOrig = attribut.getZPOriginal();
+					qBOrig = attribut.getZP();
+				}
+				if(attribut.getAttribut().equals(PrognoseAttribut.V_KFZ)){
+					//vKfzOrig = attribut.getZPOriginal();
+					vKfzOrig = attribut.getZP();
+				}
+			}else{
+				if(attribut.getAttribut().equals(PrognoseAttribut.QB)){
+					qBOrig = attribut.getZGOriginal();
+				}
+				if(attribut.getAttribut().equals(PrognoseAttribut.V_KFZ)){
+					vKfzOrig = attribut.getZGOriginal();
+				}
+			}
+
+		}
+		
 		
 		if(prognose){
 			qb = new DaMesswertUnskaliert(PrognoseAttribut.QB.getAttributNamePrognose(this.prognoseObjekt.isFahrStreifen()), zielDatum);
@@ -301,11 +330,11 @@ implements ClientReceiverInterface,
 			gueteVKfz = new GWert(zielDatum, PrognoseAttribut.V_KFZ.getAttributNameGlatt(this.prognoseObjekt.isFahrStreifen()));
 		}
 
-		kb.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		kb.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		if(vKfz.getWertUnskaliert() > 0){
 			if(qb.getWertUnskaliert() >= 0){
-				kb.setWertUnskaliert(Math.round( (double)qb.getWertUnskaliert() /
-												 (double)vKfz.getWertUnskaliert() ));
+				kb.setWertUnskaliert(Math.round( (double)qBOrig /
+												 (double)vKfzOrig ));
 				if(DUAUtensilien.isWertInWerteBereich(
 						zielDatum.getItem(kb.getName()).getItem("Wert"), kb.getWertUnskaliert())){ //$NON-NLS-1$
 					kb.setWertUnskaliert(kb.getWertUnskaliert());
