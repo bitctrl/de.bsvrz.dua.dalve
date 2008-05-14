@@ -27,7 +27,6 @@ package de.bsvrz.dua.dalve.stoerfall.nrw2;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeSet;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -137,29 +136,26 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 				this.geglaettetDatensatz = resultat;
 			}
 
-			/**
-			 * Führe jetzt eine Berechnung durch, wenn alle Daten von allen
-			 * Fahrstreifen fuer ein und denselben Zeitstempel da
-			 */
-			TreeSet<Long> zeitStempelPuffer = new TreeSet<Long>();
-			for (SystemObject fsObj : this.fsDaten.keySet()) {
-				ResultData fsDatum = this.fsDaten.get(fsObj);
-				if (fsDatum == null) {
-					zeitStempelPuffer = null;
-					break;
-				} else {
-					zeitStempelPuffer.add(fsDatum.getDataTime());
-				}
-			}
+//			/**
+//			 * Führe jetzt eine Berechnung durch, wenn alle Daten von allen
+//			 * Fahrstreifen fuer ein und denselben Zeitstempel da
+//			 */
+//			TreeSet<Long> zeitStempelPuffer = new TreeSet<Long>();
+//			for (SystemObject fsObj : this.fsDaten.keySet()) {
+//				ResultData fsDatum = this.fsDaten.get(fsObj);
+//				if (fsDatum == null) {
+//					zeitStempelPuffer = null;
+//					break;
+//				} else {
+//					zeitStempelPuffer.add(fsDatum.getDataTime());
+//				}
+//			}
 
-			if (zeitStempelPuffer != null && this.analyseDatensatz != null
+			if (this.analyseDatensatz != null
 					&& this.geglaettetDatensatz != null) {
 				
-				if (zeitStempelPuffer.size() == 1
-						&& this.analyseDatensatz.getDataTime() == this.geglaettetDatensatz
-								.getDataTime()
-						&& this.analyseDatensatz.getDataTime() == zeitStempelPuffer
-								.first()) {
+				if (this.analyseDatensatz.getDataTime() == this.geglaettetDatensatz
+								.getDataTime()) {
 					StoerfallSituation stufe = StoerfallSituation.KEINE_AUSSAGE;
 
 					if (v1 >= 0 && v2 >= 0 && k1 >= 0 && k2 >= 0 && k3 >= 0
@@ -239,15 +235,27 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 		long vvst = VKfz;
 		long min = Long.MAX_VALUE;
 
-		for (ResultData fsDatum : this.fsDaten.values()) {
-			long vgKfz = fsDatum.getData().getItem("vgKfz"). //$NON-NLS-1$
-					getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
-			if (vgKfz < min) {
-				min = vgKfz;
+		boolean einerNull = false;
+		for(ResultData r:fsDaten.values()){
+			if(r == null){
+				einerNull = true;
+				break;
 			}
 		}
-		if (min >= 0) {
-			vvst = min;
+		
+		if(einerNull){
+			vvst = VKfz;
+		}else{
+			for (ResultData fsDatum : this.fsDaten.values()) {
+				long vgKfz = fsDatum.getData().getItem("vgKfz"). //$NON-NLS-1$
+						getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
+				if (vgKfz < min) {
+					min = vgKfz;
+				}
+			}
+			if (min >= 0) {
+				vvst = min;
+			}
 		}
 
 		return vvst;
