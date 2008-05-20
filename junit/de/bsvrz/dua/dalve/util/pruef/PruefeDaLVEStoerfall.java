@@ -101,20 +101,33 @@ implements ClientReceiverInterface {
 	 */
 	private int csvIndex = 1;
 	
+	/**
+	 * Das Fahrstreifenobjekt
+	 */
+	private SystemObject FS;
+	
+	/**
+	 * Das Messquerschnittsobjekt
+	 */
+	private SystemObject MQ;
 	
 	/**
 	 * Initialisiert Prüferobjekt
 	 * @param dav Datenverteilerverbindung
 	 * @param FS Systemobjekt des Fahrstreifens
+	 * @param MQ Systemobjekt des Messquerschnittes
 	 * @param csvQuelle Testdatenverzeichnis
 	 * @throws Exception
 	 */
 	public PruefeDaLVEStoerfall(DaLVETestPrognose caller, ClientDavInterface dav,
-							  SystemObject[] FS,  String csvQuelle, boolean useAssert)
+							  SystemObject FS, SystemObject MQ,  String csvQuelle, boolean useAssert)
 	throws Exception {
 		this.dav = dav;
 		this.caller = caller;
 		this.useAssert = useAssert;
+
+		this.FS = FS;
+		this.MQ = MQ;
 		
 		/*
 		 * Empfängeranmeldung aller Störfallindikatoren
@@ -133,7 +146,7 @@ implements ClientReceiverInterface {
 
 		dav.subscribeReceiver(this, FS, DD_vst_MARZ, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, FS, DD_vst_NRW, ReceiveOptions.normal(), ReceiverRole.receiver());
-		dav.subscribeReceiver(this, FS, DD_vst_RDS, ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, MQ, DD_vst_RDS, ReceiveOptions.normal(), ReceiverRole.receiver());
 		
 		/*
 		 * Initialsiert Ergebnisimporter
@@ -202,8 +215,8 @@ implements ClientReceiverInterface {
 			}
 		}
 
-//		if((pruefungVstMARZfertig && pruefungVstNRWfertig && pruefungVstRDSfertig) || !caller.prStoerfall) {
-		if((pruefungVstMARZfertig && pruefungVstNRWfertig) || !caller.prStoerfall) {
+		if((pruefungVstMARZfertig && pruefungVstNRWfertig && pruefungVstRDSfertig) || !caller.prStoerfall) {
+//		if((pruefungVstMARZfertig && pruefungVstNRWfertig) || !caller.prStoerfall) {
 			LOGGER.info("Alle Störfallindikatoren geprüft. Benachrichtige Hauptthread..."); //$NON-NLS-1$
 			caller.doNotify(caller.ID_PRUEFER_STOERFALL);
 		}
@@ -220,13 +233,12 @@ implements ClientReceiverInterface {
 
 				try {
 					//Ermittle SF und pruefe Daten
-					if(result.getDataDescription().equals(DD_vst_MARZ)) { //$NON-NLS-1$
+					if(result.getDataDescription().equals(DD_vst_MARZ) && result.getObject().equals(FS)) { //$NON-NLS-1$
 						verglVstMARZ.vergleiche(result.getData(),ergebnisVstMARZ,csvIndex);
-					} else if(result.getDataDescription().equals(DD_vst_NRW)) { //$NON-NLS-1$
+					} else if(result.getDataDescription().equals(DD_vst_NRW) && result.getObject().equals(FS)) { //$NON-NLS-1$
 						verglVstNRW.vergleiche(result.getData(),ergebnisVstNRW,csvIndex);
-					} else if(result.getDataDescription().equals(DD_vst_RDS)) { //$NON-NLS-1$
-						//TODO: Keine Prüfung RDS
-						//verglVstRDS.vergleiche(result.getData(),ergebnisVstRDS,csvIndex);
+					} else if(result.getDataDescription().equals(DD_vst_RDS) && result.getObject().equals(MQ)) { //$NON-NLS-1$
+						verglVstRDS.vergleiche(result.getData(),ergebnisVstRDS,csvIndex);
 					}
 				} catch(Exception e) {}
 			}
@@ -341,7 +353,8 @@ class VergleicheDaLVEStoerfall extends Thread {
 		}
 
 		if(isError && !caller.useAssert) {
-			System.out.println(loggerOut);
+			//if(id_SF != caller.ID_RDS)
+				System.out.println(loggerOut);
 		}
 		
 		LOGGER.info(loggerOut);
