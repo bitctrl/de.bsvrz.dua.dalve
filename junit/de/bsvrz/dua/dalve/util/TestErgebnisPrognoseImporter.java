@@ -196,7 +196,7 @@ extends CSVImporter{
 			if(ZEILE != null){
 				try{
 					int qB = Integer.parseInt(ZEILE[2+offset+(mode*2)]);
-					int vPkw = Integer.parseInt(ZEILE[8+offset+(mode*2)]);
+					int vKfz = Integer.parseInt(ZEILE[8+offset+(mode*2)]);
 					
 					int nErmFehl = DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT;	
 					
@@ -211,8 +211,8 @@ extends CSVImporter{
 					datensatz = setAttribut("qKfz"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qPkw"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qLkw"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("vKfz"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("vPkw"+attPraefix, vPkw, null, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("vKfz"+attPraefix, vKfz, null, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("vPkw"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("vLkw"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("aLkw"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("kKfz"+attPraefix, nErmFehl, null, datensatz); //$NON-NLS-1$
