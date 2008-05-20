@@ -10,7 +10,9 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.util.TestAnalyseFahrstreifenImporter;
-import de.bsvrz.dua.dalve.util.para.ParaAnaProgImport;
+import de.bsvrz.dua.dalve.util.TestAnalyseMessquerschnittImporter;
+import de.bsvrz.dua.dalve.util.para.ParaAnaProgImportFS;
+import de.bsvrz.dua.dalve.util.para.ParaAnaProgImportMQ;
 import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEPrognose;
 import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEStoerfall;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -18,7 +20,7 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * 
+ * Überprüfung der Prognosewerte und Störfallindikatoren
  * @author Görlitz
  */
 public class DaLVETestPrognose implements ClientSenderInterface {
@@ -46,14 +48,29 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	private SystemObject FS1;
 	
 	/**
-	 * Sende-Datenbeschreibung für KZD
+	 * Zu prüfender MQ
 	 */
-	public static DataDescription DD_KZD_SEND = null;
+	private SystemObject MQ1;
 	
 	/**
-	 * Parameter Importer
+	 * Sende-Datenbeschreibung für KZD (FS)
+	 */
+	public static DataDescription DD_KZD_SEND_FS = null;
+	
+	/**
+	 * Sende-Datenbeschreibung für KZD (QM)
+	 */
+	public static DataDescription DD_KZD_SEND_MQ = null;
+	
+	/**
+	 * Datenimporter (FS)
 	 */
 	private TestAnalyseFahrstreifenImporter importFS;
+
+	/**
+	 * Datenimporter (MQ)
+	 */
+	private TestAnalyseMessquerschnittImporter importMQ;
 	
 	/**
 	 * Sollen Asserts genutzt werden
@@ -80,7 +97,24 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	 */
 	private boolean prStoerfallFertig = false;
 	
+	/**
+	 * Die erlaubte Abweichung zwischen erwartetem und geliefertem Wert
+	 */
+	private int ergebnisWertToleranz = 1;
 	
+	/**
+	 * Gibt an, ob eine Überprüfung der Störfallindikatoren durchgeführt werden soll
+	 */
+	private boolean testStoerfall = true;
+	
+	
+	/**
+	 * Initialsiert die Überprüfung der Prognosewerte und Störfallindikatoren
+	 * @param dav Datenverteilerverbindung
+	 * @param alLogger Loggerargumente
+	 * @param TEST_DATEN_VERZ Testdatenverzeichnis
+	 * @throws Exception
+	 */
 	public DaLVETestPrognose(final ClientDavInterface dav, final ArgumentList alLogger, final String TEST_DATEN_VERZ)
 	throws Exception {
 		this.dav = dav;
@@ -96,30 +130,45 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		 * Meldet Sender für KZD unter dem Aspekt Analyse an
 		 */
 		FS1 = this.dav.getDataModel().getObject("AAA.Test.fs.kzd.1"); //$NON-NLS-1$
+		MQ1 = this.dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
 		
-		DD_KZD_SEND = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+		DD_KZD_SEND_FS = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
 				  (short)0);
 		
-		this.dav.subscribeSender(this, FS1, DD_KZD_SEND, SenderRole.sender());
+		DD_KZD_SEND_MQ = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
+				  (short)0);
+		
+		this.dav.subscribeSender(this, FS1, DD_KZD_SEND_FS, SenderRole.sender());
+		this.dav.subscribeSender(this, MQ1, DD_KZD_SEND_MQ, SenderRole.sender());
 		
 		/*
 		 * Importiere Parameter
 		 */
-		ParaAnaProgImport paraImport = new ParaAnaProgImport(dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
-		paraImport.importiereParameterPrognose();
-		paraImport.importiereParameterStoerfall();
+		ParaAnaProgImportFS paraImportFS = new ParaAnaProgImportFS(dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		ParaAnaProgImportMQ paraImportMQ = new ParaAnaProgImportMQ(dav, new SystemObject[]{MQ1}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		paraImportFS.importiereParameterPrognose();
+		paraImportMQ.importiereParameterPrognose();
+		paraImportFS.importiereParameterStoerfall(1);
+		paraImportMQ.importiereParameterStoerfall(1);
 		
 		/*
 		 * Initialisiert Testfahrstreifenimporter
 		 */
 		importFS = new TestAnalyseFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Analysewerte"); //$NON-NLS-1$
+		
+		/*
+		 * Initialisiert Test-MQ-Importer
+		 */
+		importMQ = new TestAnalyseMessquerschnittImporter(dav, TEST_DATEN_VERZ + "Analysewerte"); //$NON-NLS-1$
 	}
 
 	public void testPrognose() throws Exception {
 		System.out.println("Prüfe Datenaufbereitung LVE - Prognosewerte..."); //$NON-NLS-1$
 		
 		Data zeileFS1;
+		Data zeileMQ1;
 		
 		//aktueller Prüfzeitstempel
 		long aktZeit = System.currentTimeMillis();
@@ -136,22 +185,29 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		 * Prüferklasse Prognosewerte
 		 * Empfängt Daten und vergleicht mit SOLL-Wert 
 		 */
-		PruefeDaLVEStoerfall prDaLVEStoerfall = new PruefeDaLVEStoerfall(this, dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
+		PruefeDaLVEStoerfall prDaLVEStoerfall = new PruefeDaLVEStoerfall(this, dav, FS1, MQ1, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
 
 		//Lese bei Importer und Prüfer den nächsten Datensatz ein
 		importFS.importNaechsteZeile();
+		importMQ.importNaechsteZeile();
 		prDaLVEPrognose.naechsterDatensatz(aktZeit);
-		prDaLVEStoerfall.naechsterDatensatz(aktZeit);
+		if(testStoerfall) {
+			prDaLVEStoerfall.naechsterDatensatz(aktZeit);
+		}
 		
 		//Prüfe solange Daten vorhanden
 		while((zeileFS1=importFS.getDatensatz(1)) != null) {
-			ResultData resultat1 = new ResultData(FS1, DD_KZD_SEND, aktZeit, zeileFS1);
+			zeileMQ1=importMQ.getDatensatz();
 			
-			System.out.println("Sende Analysedaten: FS 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
-			LOGGER.info("Sende Analysedaten: FS 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit);
+			ResultData resultat_FS = new ResultData(FS1, DD_KZD_SEND_FS, aktZeit, zeileFS1);
+			ResultData resultat_MQ = new ResultData(MQ1, DD_KZD_SEND_MQ, aktZeit, zeileMQ1);
+			
+			System.out.println("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			LOGGER.info("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit);
 			
 			synchronized(this) {
-				this.dav.sendData(resultat1);
+				this.dav.sendData(resultat_FS);
+				this.dav.sendData(resultat_MQ);
 			
 				//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
 				doWait();
@@ -164,8 +220,11 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 			
 			//Lese bei Importer und Prüfer den nächsten Datensatz ein
 			importFS.importNaechsteZeile();
+			importMQ.importNaechsteZeile();
 			prDaLVEPrognose.naechsterDatensatz(aktZeit);
-			prDaLVEStoerfall.naechsterDatensatz(aktZeit);
+			if(testStoerfall) {
+				prDaLVEStoerfall.naechsterDatensatz(aktZeit);
+			}
 			
 			prPrognoseFertig = false;
 			prStoerfallFertig = false;
@@ -199,6 +258,10 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 			}
 		}
 		
+		if(!testStoerfall) {
+			prStoerfallFertig = true;
+		}
+		
 		if(prPrognoseFertig && prStoerfallFertig) {
 			synchronized(this) {
 				notify();
@@ -221,6 +284,30 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 
 	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		return false;
+	}
+
+	/**
+	 * Lifert die erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert
+	 * @return Die erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert
+	 */
+	public int getErgebnisWertToleranz() {
+		return ergebnisWertToleranz;
+	}
+
+	/**
+	 * Setzt die erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert
+	 * @param ergebnisWertToleranz Erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert
+	 */
+	public void setErgebnisWertToleranz(int ergebnisWertToleranz) {
+		this.ergebnisWertToleranz = ergebnisWertToleranz;
+	}
+
+	/**
+	 * Soll eine Überprüfung der Störfallindikatoren durchgeführt werden
+	 * @param testStoerfall
+	 */
+	public void setTestStoerfall(boolean testStoerfall) {
+		this.testStoerfall = testStoerfall;
 	}
 	
 }
