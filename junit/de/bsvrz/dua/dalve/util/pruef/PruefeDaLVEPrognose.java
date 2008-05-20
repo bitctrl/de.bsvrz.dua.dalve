@@ -109,6 +109,11 @@ implements ClientReceiverInterface {
 	 */
 	protected boolean useAssert;
 	
+	/**
+	 * Die erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert
+	 */
+	protected int ergebnisWertToleranz;
+	
 	
 	/**
 	 * Initialisiert Prüferobjekt
@@ -123,6 +128,7 @@ implements ClientReceiverInterface {
 		this.dav = dav;
 		this.caller = caller;
 		this.useAssert = useAsserts;
+		this.ergebnisWertToleranz = caller.getErgebnisWertToleranz();
 		
 		/*
 		 * Empfängeranmeldung für Prognose und geglättete Werte
@@ -308,7 +314,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	 * Berechnung richtig."
 	 */
 	private String[] attributNamenPraefixP = {"qB", //$NON-NLS-1$
-											 "vPkw"}; //$NON-NLS-1$
+											 "vKfz"}; //$NON-NLS-1$
 	/**
 	 * Attributpfade der ATG
 	 * 
@@ -319,7 +325,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	 * Berechnung richtig."
 	 */
 	private String[] attributNamenPraefixG = {"qB", //$NON-NLS-1$
-											 "vPkw", //$NON-NLS-1$
+											 "vKfz", //$NON-NLS-1$
 											 "kB"}; //$NON-NLS-1$
 	
 	/**
@@ -407,7 +413,8 @@ class VergleicheDaLVEPrognose extends Thread {
 				attributPfad = attributNamenPraefix[i] + attPraefix + attributNamen[j];
 				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().intValue();
 				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis).asUnscaledValue().intValue();
-				if(sollWert == istWert) {
+				if(sollWert >= (istWert - caller.ergebnisWertToleranz) &&
+						sollWert <= (istWert + caller.ergebnisWertToleranz)) {
 					loggerOut += "OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				} else {
 					isError = true;
