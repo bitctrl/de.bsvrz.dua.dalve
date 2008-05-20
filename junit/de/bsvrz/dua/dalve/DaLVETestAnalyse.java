@@ -10,7 +10,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.util.TestFahrstreifenImporter;
-import de.bsvrz.dua.dalve.util.para.ParaAnaProgImport;
+import de.bsvrz.dua.dalve.util.para.ParaAnaProgImportFS;
 import de.bsvrz.dua.dalve.util.pruef.PruefeDaLVEAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
@@ -43,7 +43,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 	/**
 	 * Parameter Importer
 	 */
-	private ParaAnaProgImport paraImport;
+	private ParaAnaProgImportFS paraImport;
 	
 	public DaLVETestAnalyse(final ClientDavInterface dav, final ArgumentList alLogger, final String TEST_DATEN_VERZ)
 	throws Exception {
@@ -73,7 +73,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		/*
 		 * Importiere Parameter
 		 */
-		paraImport = new ParaAnaProgImport(dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		paraImport = new ParaAnaProgImportFS(dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImport.importiereParameterAnalyse(1);
 		paraImport.importiereParameterAnalyse(2);
 		paraImport.importiereParameterAnalyse(3);
