@@ -75,7 +75,9 @@ public class DatenaufbereitungLVETest {
 	 */
 	@Test
 	public void testAnalyse() throws Exception {
-//		new DaLVETestAnalyse(dav, alLogger, TEST_DATEN_VERZ);
+		DaLVETestAnalyse analzseTest = new DaLVETestAnalyse(dav, alLogger, TEST_DATEN_VERZ);
+		analzseTest.setUseAssert(true);
+		analzseTest.testAnalyse();
 	}
 	
 	/**
@@ -85,7 +87,8 @@ public class DatenaufbereitungLVETest {
 	@Test
 	public void testPrognose() throws Exception {
 		DaLVETestPrognose prognoseTest = new DaLVETestPrognose(dav, alLogger, TEST_DATEN_VERZ);
-		prognoseTest.benutzeAssert(false);
+		prognoseTest.benutzeAssert(true);
+		prognoseTest.setErgebnisWertToleranz(1);
 		prognoseTest.setTestStoerfall(true);
 		prognoseTest.testPrognose();
 	}
