@@ -31,14 +31,22 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 	/**
 	 * Testfahrstreifenimporter für FS 1-3
 	 */
-	TestFahrstreifenImporter importFS;
+	private TestFahrstreifenImporter importFS;
 	
 	/**
 	 * Sende-Datenbeschreibung für KZD
 	 */
 	public static DataDescription DD_KZD_SEND = null;
 	
+	/**
+	 * Tesdatenverzeichnis
+	 */
 	private String TEST_DATEN_VERZ;
+	
+	/**
+	 * Benutze Asserts
+	 */
+	private boolean useAssert = false;
 	
 	/**
 	 * Parameter Importer
@@ -82,11 +90,9 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		 * Initialisiert Testfahrstreifenimporter
 		 */
 		importFS = new TestFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Messwerters_LVE"); //$NON-NLS-1$
-		
-		testAnalyse();
 	}
 	
-	private void testAnalyse() throws Exception {
+	public void testAnalyse() throws Exception {
 		System.out.println("Prüfe Datenaufbereitung LVE - Analysewerte..."); //$NON-NLS-1$
 		
 		Data zeileFS1;
@@ -123,7 +129,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 			this.dav.sendData(resultat3);
 			
 			//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
-			System.out.println("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
+			//System.out.println("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
 			doWait();
 			
 			csvIndex++;
@@ -169,5 +175,21 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 	 */
 	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		return false;
+	}
+
+	/**
+	 * Sollen Asserts benutzt werden?
+	 * @return useAssert
+	 */
+	public boolean getUseAssert() {
+		return useAssert;
+	}
+
+	/**
+	 * Schaltet Asserts an und aus
+	 * @param useAssert Sollen Asserts benutzt werden
+	 */
+	public void setUseAssert(boolean useAssert) {
+		this.useAssert = useAssert;
 	}
 }
