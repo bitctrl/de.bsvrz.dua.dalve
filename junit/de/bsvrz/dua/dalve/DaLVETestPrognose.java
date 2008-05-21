@@ -100,7 +100,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	/**
 	 * Die erlaubte Abweichung zwischen erwartetem und geliefertem Wert
 	 */
-	private int ergebnisWertToleranz = 1;
+	private int ergebnisWertToleranz = 0;
 	
 	/**
 	 * Gibt an, ob eine Überprüfung der Störfallindikatoren durchgeführt werden soll
