@@ -341,6 +341,7 @@ class VergleicheDaLVEStoerfall extends Thread {
 		
 		if(sollWert == istWert) {
 			loggerOut += csvDS+" OK: -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			System.out.println(csvDS + ": " + sollWert + "," + istWert);
 		} else {
 			isError = true;
 			

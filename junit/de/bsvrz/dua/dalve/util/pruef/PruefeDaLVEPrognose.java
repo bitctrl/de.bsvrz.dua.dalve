@@ -416,6 +416,7 @@ class VergleicheDaLVEPrognose extends Thread {
 				if(sollWert >= (istWert - caller.ergebnisWertToleranz) &&
 						sollWert <= (istWert + caller.ergebnisWertToleranz)) {
 					loggerOut += "OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					System.out.println(csvDS + ": " + sollWert + "," + istWert);
 				} else {
 					isError = true;
 					String errOut = "ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert;
