@@ -335,8 +335,10 @@ class VergleicheDaLVEAnalyse extends Thread {
 				}
 				
 				if(sollIstGleich) {
-//					//System.out.println(csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert);
 //					loggerOut += csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					if(attributNamen[j].endsWith("Wert")) {
+						System.out.println("ANA "+fsIndex+"-"+csvIndex+": " + sollWert + "," + istWert);
+					}
 				} else {
 //					System.out.println(csvDS +" ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					String err = csvDS+ " ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
