@@ -36,9 +36,10 @@ fi
 java $jvmArgs -jar ../de.bsvrz.dua.dalve-runtime.jar \
 	$dav1 \
 	-KonfigurationsBereichsPid=$kb \
+	-benutzer=Tester \
 	-debugLevelStdErrText=ERROR \
 	-debugLevelFileText=INFO \
 	-debugLevelFileXML=OFF \
-	-debugLevelFileExcel=OFF \
+	-debugLevelFileExcel=OFF \ 
 	-debugLevelFileHTML=OFF \
 	&
