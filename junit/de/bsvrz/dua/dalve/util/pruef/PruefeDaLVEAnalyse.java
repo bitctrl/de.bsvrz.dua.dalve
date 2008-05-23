@@ -307,7 +307,11 @@ class VergleicheDaLVEAnalyse extends Thread {
 		String csvDS = "[FS:"+fsIndex+"-Zeile:"+csvIndex+"]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		long sollWert;
 		long istWert;
+		
+		System.out.print("ANA "+fsIndex+"-"+csvIndex);
+		
 		for(int i=0;i<attributNamenPraefix.length;i++) {
+			
 			for(int j=0;j<attributNamen.length;j++) {
 				attributPfad = attributNamenPraefix[i] + attributNamen[j];
 				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().longValue();
@@ -333,12 +337,13 @@ class VergleicheDaLVEAnalyse extends Thread {
 				}else{
 					sollIstGleich = sollWert == istWert;
 				}
-				
+								
 				if(sollIstGleich) {
 //					loggerOut += csvDS+" OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					if(attributNamen[j].endsWith("Wert")) {
-						System.out.println("ANA "+fsIndex+"-"+csvIndex+": " + sollWert + "," + istWert);
+						System.out.print(", " + sollWert + "==" + istWert);
 					}
+					
 				} else {
 //					System.out.println(csvDS +" ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					String err = csvDS+ " ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -349,6 +354,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 				}
 			}
 		}
+		System.out.println();
 		
 		if(!caller.useAssert) {
 			System.out.println(loggerOut);

@@ -32,6 +32,10 @@ Versionsgeschichte
 
   - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
 
+1.0.0
+
+  - Erste vollständige Auslieferung
+
 
 Bemerkungen
 ===========
