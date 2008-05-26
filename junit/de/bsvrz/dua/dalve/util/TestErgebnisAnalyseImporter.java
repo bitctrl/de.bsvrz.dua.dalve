@@ -324,7 +324,11 @@ extends CSVImporter{
 		if(errCode < 0)
 			wert = errCode;
 
-		DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert); //$NON-NLS-1$
+		try{
+			DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert); //$NON-NLS-1$
+		}catch (Exception e) {
+			DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(0); //$NON-NLS-1$
+		}
 		DUAUtensilien.getAttributDatum(attributName + ".Status.Erfassung.NichtErfasst", data).asUnscaledValue().set(nErf); //$NON-NLS-1$
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMax", data).asUnscaledValue().set(wMax); //$NON-NLS-1$
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMin", data).asUnscaledValue().set(wMin); //$NON-NLS-1$

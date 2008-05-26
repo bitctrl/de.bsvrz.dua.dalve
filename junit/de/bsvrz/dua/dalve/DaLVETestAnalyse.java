@@ -27,6 +27,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 	public static SystemObject FS1 = null;
 	public static SystemObject FS2 = null;
 	public static SystemObject FS3 = null;
+	public static SystemObject MQ = null;
 	
 	/**
 	 * Testfahrstreifenimporter für FS 1-3
@@ -71,6 +72,8 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		FS2 = this.dav.getDataModel().getObject("AAA.Test.fs.kzd.2"); //$NON-NLS-1$
 		FS3 = this.dav.getDataModel().getObject("AAA.Test.fs.kzd.3"); //$NON-NLS-1$
 		
+		MQ = this.dav.getDataModel().getObject("mq"); //$NON-NLS-1$
+		
 		DD_KZD_SEND = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
 				  (short)0);
@@ -108,7 +111,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		 * Prüferklasse
 		 * Empfängt Daten und vergleicht mit SOLL-Wert 
 		 */
-		PruefeDaLVEAnalyse prDaLVEAnalyse = new PruefeDaLVEAnalyse(this, dav, new SystemObject[]{FS1, FS2, FS3}, TEST_DATEN_VERZ + "Analysewerte"); //$NON-NLS-1$
+		PruefeDaLVEAnalyse prDaLVEAnalyse = new PruefeDaLVEAnalyse(this, dav, new SystemObject[]{FS1, FS2, FS3}, MQ, TEST_DATEN_VERZ + "Analysewerte"); //$NON-NLS-1$
 
 		//Lese bei Importer und Prüfer den nächsten Datensatz ein
 		importFS.importNaechsteZeile();

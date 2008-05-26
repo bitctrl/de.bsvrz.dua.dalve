@@ -47,6 +47,7 @@ public class DatenaufbereitungLVETest {
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.9 (15.05.08)\\"; //$NON-NLS-1$
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.1 (19.05.08)\\"; //$NON-NLS-1$
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.2 (20.05.08)\\"; //$NON-NLS-1$
+
 	protected static final String TEST_DATEN_VERZ = "../testDaten/V_2.9.2 (20.05.08)/"; //$NON-NLS-1$
 
 	
