@@ -42,6 +42,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
+import de.bsvrz.sys.funclib.bitctrl.dua.lve.typen.MessQuerschnittTyp;
+import de.bsvrz.sys.funclib.bitctrl.dua.lve.typen.MessQuerschnittVirtuellLage;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
 import de.bsvrz.sys.funclib.debug.Debug;
 
@@ -84,19 +86,19 @@ implements IObjektWeckerListener{
 	 * Zeigt an, ob der Messquerschnitt <b>vor</b> der Anschlussstelle, die durch diesen 
 	 * virtuellen MQ repräsentiert wird, direkt erfasst ist
 	 */
-	private boolean mqVorErfasst = false;
+	private boolean mqVorErfasst = true;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>nach</b> der Anschlussstelle, die durch diesen 
 	 * virtuellen MQ repräsentiert wird, direkt erfasst ist
 	 */
-	private boolean mqNachErfasst = false;
+	private boolean mqNachErfasst = true;
 	
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>mittig</b> der Anschlussstelle, die durch diesen 
 	 * virtuellen MQ repräsentiert wird, direkt erfasst ist
 	 */
-	private boolean mqMitteErfasst = false;
+	private boolean mqMitteErfasst = true;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>Einfahrt</b> der Anschlussstelle, die durch diesen 
@@ -131,23 +133,32 @@ implements IObjektWeckerListener{
 		this.messQuerschnitt = messQuerschnittVirtuell;
 		this.mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
 		
+
+		if(mqv.getMQVirtuellLage().equals(MessQuerschnittVirtuellLage.VOR)){
+			this.mqVorErfasst = false;
+		}else if(mqv.getMQVirtuellLage().equals(MessQuerschnittVirtuellLage.MITTE)){
+			this.mqMitteErfasst = false;
+		}else if(mqv.getMQVirtuellLage().equals(MessQuerschnittVirtuellLage.NACH)){
+			this.mqNachErfasst = false;
+		}else{
+			throw new DUAInitialisierungsException("Virtueller Messquerschnitt " + messQuerschnittVirtuell +
+					" kann nicht ausgewertet werden. Grund: Lage (" + mqv.getMQVirtuellLage() + ")");
+		}
+		
 		MessQuerschnitt mqVor = mqv.getMQVor();
 		if(mqVor != null){
-			this.mqVorErfasst = true;
 			this.aktuelleMQAnalysen.put(mqVor.getSystemObject(), null);
 			this.mqAufHauptfahrbahn.add(mqVor.getSystemObject());
 		}
 
 		MessQuerschnitt mqMitte = mqv.getMQMitte();
 		if(mqMitte != null){
-			this.mqMitteErfasst = true;
 			this.aktuelleMQAnalysen.put(mqMitte.getSystemObject(), null);
 			this.mqAufHauptfahrbahn.add(mqMitte.getSystemObject());
 		}
 
 		MessQuerschnitt mqNach = mqv.getMQNach();
 		if(mqNach != null){
-			this.mqNachErfasst = true;
 			this.aktuelleMQAnalysen.put(mqNach.getSystemObject(), null);
 			this.mqAufHauptfahrbahn.add(mqNach.getSystemObject());
 		}

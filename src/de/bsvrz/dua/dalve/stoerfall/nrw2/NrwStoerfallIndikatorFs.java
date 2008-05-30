@@ -201,15 +201,17 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 	protected StoerfallSituation getVerkehrsStufe(double kvst, double vvst) {
 		StoerfallSituation verkehrsStufe = StoerfallSituation.KEINE_AUSSAGE;
 
-		if (vvst > 0 && vvst <= v1) {
-			if (kvst > 0 && kvst <= k3) {
+		if (vvst <= v1) {
+			if (kvst > 0 && kvst < k3) {
 				if (this.letzteStufe.equals(StoerfallSituation.KEINE_AUSSAGE)
-						|| this.letzteStufe.equals(StoerfallSituation.STOERUNG)) {
+						|| this.letzteStufe.equals(StoerfallSituation.STOERUNG)
+						|| this.letzteStufe.equals(StoerfallSituation.ZAEHER_VERKEHR)
+						|| this.letzteStufe.equals(StoerfallSituation.DICHTER_VERKEHR)) {
 					verkehrsStufe = StoerfallSituation.STAU;
 				} else {
 					verkehrsStufe = this.letzteStufe;
 				}
-			} else if (kvst > k3) {
+			} else if (kvst >= k3) {
 				verkehrsStufe = StoerfallSituation.STAU;
 			}
 		} else if (vvst > v1 && vvst <= v2) {
