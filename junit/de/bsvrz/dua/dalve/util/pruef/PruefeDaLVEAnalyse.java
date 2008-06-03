@@ -407,10 +407,10 @@ class VergleicheDaLVEAnalyse extends Thread {
 							if (sollWert < 0) {
 								sollIstGleich = sollWert == istWert;
 							} else {
-								sollIstGleich = Math.abs(sollWert - istWert) <= 1;
+								sollIstGleich = Math.abs(sollWert - istWert) <= 3;
 							}
 						} else {
-							sollIstGleich = sollWert == istWert;
+							sollIstGleich = Math.abs(sollWert - istWert) <= 3;
 						}
 
 						if (sollIstGleich) {
@@ -434,7 +434,9 @@ class VergleicheDaLVEAnalyse extends Thread {
 							String err = csvDS
 									+ " ERR: " + attributPfad + " -> " + sollWert + " (SOLL) <> (IST) " + istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 							if (caller.useAssert) {
-								Assert.assertTrue(err, true);
+								Assert.assertTrue(err, false);
+							}else{
+								System.out.println(err);
 							}
 						}
 					}

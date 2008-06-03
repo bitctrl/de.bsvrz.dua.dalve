@@ -339,7 +339,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 
 					qB.getGueteIndex().setWert(
 							gueteGesamt.getIndexUnskaliert());
-					qB.setInterpoliert(qPkw.isPlausibilisiert());
+					qB.setInterpoliert(qPkw.isInterpoliert());
 				} else {
 					qB
 					.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);

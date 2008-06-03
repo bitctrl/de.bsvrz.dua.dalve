@@ -28,8 +28,6 @@ package de.bsvrz.dua.dalve.prognose;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.smartcardio.ATR;
-
 import com.bitctrl.Constants;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;

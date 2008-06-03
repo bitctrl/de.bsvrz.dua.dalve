@@ -35,6 +35,7 @@ import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
 import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
@@ -114,7 +115,19 @@ extends AbstraktStoerfallIndikator{
 		this.objekt = objekt;
 		
 		this.paraAtg = dav.getDataModel().getAttributeGroup(this.getParameterAtgPid());
-		dav.subscribeReceiver(this, objekt.getObjekt(),
+		
+		SystemObject fdObjekt = objekt.getObjekt();
+		SystemObject stsObjekt = objekt.getStraﬂenTeilSegment();
+		if(stsObjekt != null){
+			fdObjekt = stsObjekt;
+			Debug.getLogger().info("Fuer " + objekt +
+				" wird das Fundamentaldiagramm am Teilsegment " + stsObjekt + " verwendet");
+		}else{
+			Debug.getLogger().warning("Fuer " + objekt +
+					" wird das Fundamentaldiagramm am MQ verwendet");
+		}
+		
+		dav.subscribeReceiver(this, fdObjekt,
 				new DataDescription(
 						this.paraAtg,
 						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),

@@ -169,5 +169,5 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 	public double getStandardGueteFaktor() {
 		return 0.9;
 	}
-
+		
 }

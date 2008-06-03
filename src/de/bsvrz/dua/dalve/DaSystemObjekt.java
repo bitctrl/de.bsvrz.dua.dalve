@@ -26,6 +26,7 @@
 package de.bsvrz.dua.dalve;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -39,6 +40,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  *
  */
 public class DaSystemObjekt {
+	
+	/**
+	 * statische Datenverteiler-Verbindung
+	 */
+	static ClientDavInterface dDav = null;
 
 	/**
 	 * zeigt an, ob dieses Objekt vom Typ <code>typ.fahrStreifen</code> ist
@@ -63,6 +69,9 @@ public class DaSystemObjekt {
 	public DaSystemObjekt(final ClientDavInterface dav,
 					 	  final SystemObject objekt)
 	throws DUAInitialisierungsException{
+		if(dDav == null){
+			dDav = dav;
+		}
 		if(objekt == null){
 			throw new NullPointerException("Uebergebenes Objekt ist <<null>>"); //$NON-NLS-1$
 		}
@@ -106,4 +115,55 @@ public class DaSystemObjekt {
 	public String toString() {
 		return this.objekt.toString();
 	}
+	
+	
+	/**
+	 * Erfragt das Straﬂenteilsegment des Messquerschnitts.
+	 * 
+	 * @return das Straﬂenteilsegment des Messquerschnitts oder <code>null</code>,
+	 * wenn dieses nicht ermittelbar ist.
+	 */
+	public SystemObject getStraﬂenTeilSegment(){
+		SystemObject stsGesucht = null;
+		
+		if(!this.isFahrStreifen()){
+			Data mqData = this.objekt.getConfigurationData(
+					dDav.getDataModel().getAttributeGroup("atg.punktLiegtAufLinienObjekt"));
+			if(mqData != null){
+				if(mqData.getReferenceValue("LinienReferenz") != null){
+					SystemObject strassenSegment = mqData.getReferenceValue("LinienReferenz").getSystemObject();
+					double offset = mqData.getUnscaledValue("Offset").longValue() >= 0?mqData.getScaledValue("Offset").doubleValue():-1.0;
+					if(strassenSegment != null && strassenSegment.isOfType("typ.straﬂenSegment") && offset >= 0){
+						Data ssData = strassenSegment.getConfigurationData(
+								dDav.getDataModel().getAttributeGroup("atg.bestehtAusLinienObjekten"));
+						if(ssData != null){
+							double gesamtLaenge = 0;
+							for(int i=0; i<ssData.getArray("LinienReferenz").getLength(); i++){
+								if(ssData.getReferenceArray("LinienReferenz").getReferenceValue(i) != null){
+									SystemObject sts = ssData.getReferenceArray("LinienReferenz").
+										getReferenceValue(i).getSystemObject();
+									if(sts != null && sts.isOfType("typ.straﬂenTeilSegment")){
+										Data stsData = sts.getConfigurationData(dDav.getDataModel().getAttributeGroup("atg.linie"));
+										if(stsData != null){
+											double laenge = stsData.getUnscaledValue("L‰nge").longValue() >= 0?stsData.getScaledValue("L‰nge").doubleValue():-1.0;
+											if(laenge >= 0){
+												gesamtLaenge += laenge;
+											}
+										}
+										if(gesamtLaenge >= offset){
+											stsGesucht = sts;
+											break;
+										}
+									}
+								}
+							}							
+						}
+					}
+				}
+			}
+		}
+		
+		return stsGesucht;
+	}
+	
 }
