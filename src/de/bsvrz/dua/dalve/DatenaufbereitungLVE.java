@@ -34,7 +34,6 @@ import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dav.daf.main.config.ConfigurationArea;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.analyse.FsAnalyseModul;
 import de.bsvrz.dua.dalve.analyse.MqAnalyseModul;
@@ -87,7 +86,7 @@ extends AbstraktVerwaltungsAdapterMitGuete{
 		/**
 		 * Initialisiere das DUA-Verkehrsnetz
 		 */
-		DuaVerkehrsNetz.initialisiere(this.verbindung, this.getKonfigurationsBereiche().toArray(new ConfigurationArea[0]));
+		DuaVerkehrsNetz.initialisiere(this.verbindung);
 		
 		/**
 		 * Ermittle nur die Fahrstreifen und Messquerschnitte

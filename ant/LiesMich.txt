@@ -36,6 +36,13 @@ Versionsgeschichte
 
   - Erste vollständige Auslieferung
 
+1.1.0
+
+  - Berechnungsverfahren zur Berechnung der virtuellen MQs ergaenzt
+    (jetzt zusaetzlich auf Basis von atg.messQuerschnittVirtuellVLage)
+  - Stoerfallindikator VKDiffKfz ergaenzt
+  - Uebernahme des Fundamentaldiagramms bei entsprechendem Stoerfallindikator
+    auf Strassenteilsegment geaendert
 
 Bemerkungen
 ===========

@@ -50,114 +50,116 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Repräsentiert einen Stoerfallindikator nach Verfahren Fundamentaldiagramm
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
  */
-public class FdStoerfallIndikator
-extends AbstraktStoerfallIndikator{
-		
+public class FdStoerfallIndikator extends AbstraktStoerfallIndikator {
+
 	/**
 	 * Faktor für die Ermittlung der Analysedichte
 	 */
 	private double fa = -1;
-	
+
 	/**
 	 * Faktor für die Ermittlung der Prognosedichte
 	 */
 	private double fp = -1;
-	
+
 	/**
 	 * Verkehrsmenge des Fundamentaldiagramms
 	 */
 	private double Q0 = -4;
-	
+
 	/**
 	 * Maximale Dichte des Fundamentaldiagramms
 	 */
 	private double K0 = -4;
-	
+
 	/**
 	 * V0-Geschwindigkeit des Fundamentaldiagramms
 	 */
 	private double V0 = -4;
-	
+
 	/**
 	 * Freie Geschwindigkeit des Fundamentaldiagramms
 	 */
 	private double VFrei = -4;
-	
+
 	/**
 	 * Objekt, das die Prognosedichte ermittelt
 	 */
 	private KKfzStoerfallGErmittler prognoseDichteObj = null;
-	
+
 	/**
-	 * Parameter der Attributgruppe <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
+	 * Parameter der Attributgruppe
+	 * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
 	 */
 	private AtgLokaleStoerfallErkennungFundamentalDiagramm parameterLokal = null;
-	
+
 	/**
 	 * der Zuatsnd, der zum Zeitpunkt t-T errechnet wurde
 	 */
 	private StoerfallSituation alterZustand = StoerfallSituation.KEINE_AUSSAGE;
-	
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialisiere(ClientDavInterface dav, 
-							  PrognoseSystemObjekt objekt)
-	throws DUAInitialisierungsException {
-		if(DAV == null){
+	public void initialisiere(ClientDavInterface dav,
+			PrognoseSystemObjekt objekt) throws DUAInitialisierungsException {
+		if (DAV == null) {
 			DAV = dav;
 		}
 		this.objekt = objekt;
-		
-		this.paraAtg = dav.getDataModel().getAttributeGroup(this.getParameterAtgPid());
-		
+
+		this.paraAtg = dav.getDataModel().getAttributeGroup(
+				this.getParameterAtgPid());
+
 		SystemObject fdObjekt = objekt.getObjekt();
 		SystemObject stsObjekt = objekt.getStraßenTeilSegment();
-		if(stsObjekt != null){
+		if (stsObjekt != null) {
 			fdObjekt = stsObjekt;
-			Debug.getLogger().info("Fuer " + objekt +
-				" wird das Fundamentaldiagramm am Teilsegment " + stsObjekt + " verwendet");
-		}else{
-			Debug.getLogger().warning("Fuer " + objekt +
-					" wird das Fundamentaldiagramm am MQ verwendet");
+			Debug.getLogger().info(
+					"Fuer " + objekt
+							+ " wird das Fundamentaldiagramm am Teilsegment "
+							+ stsObjekt + " verwendet");
+		} else {
+			Debug
+					.getLogger()
+					.warning(
+							"Fuer "
+									+ objekt
+									+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
+									+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
+									+ "dies konnte aber nicht ermittelt werden.");
 		}
-		
-		dav.subscribeReceiver(this, fdObjekt,
-				new DataDescription(
-						this.paraAtg,
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-						(short)0),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
-		
-		this.prognoseDichteObj = new KKfzStoerfallGErmittler(dav, objekt.getObjekt()); 
-		this.parameterLokal = new AtgLokaleStoerfallErkennungFundamentalDiagramm(dav, objekt.getObjekt());
-		
-		this.pubBeschreibung = new DataDescription(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
-				dav.getDataModel().getAspect(this.getPubAspektPid()),
-				(short)0);
+
+		dav.subscribeReceiver(this, fdObjekt, new DataDescription(this.paraAtg,
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
+				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+
+		this.prognoseDichteObj = new KKfzStoerfallGErmittler(dav, objekt
+				.getObjekt());
+		this.parameterLokal = new AtgLokaleStoerfallErkennungFundamentalDiagramm(
+				dav, objekt.getObjekt());
+
+		this.pubBeschreibung = new DataDescription(dav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav
+				.getDataModel().getAspect(this.getPubAspektPid()), (short) 0);
 		try {
-			dav.subscribeSender(this, objekt.getObjekt(), this.pubBeschreibung, SenderRole.source());
+			dav.subscribeSender(this, objekt.getObjekt(), this.pubBeschreibung,
+					SenderRole.source());
 		} catch (OneSubscriptionPerSendData e) {
 			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 		}
-		
-		
+
 		/**
 		 * Anmeldung auf Daten (hier Analysedaten)
 		 */
-		dav.subscribeReceiver(this, objekt.getObjekt(),
-				new DataDescription(this.objekt.getAnalyseAtg(),
-						dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
-						(short)0),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, objekt.getObjekt(), new DataDescription(
+				this.objekt.getAnalyseAtg(), dav.getDataModel().getAspect(
+						DUAKonstanten.ASP_ANALYSE), (short) 0), ReceiveOptions
+				.normal(), ReceiverRole.receiver());
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -167,7 +169,6 @@ extends AbstraktStoerfallIndikator{
 		return "atg.fundamentalDiagramm"; //$NON-NLS-1$
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -176,326 +177,374 @@ extends AbstraktStoerfallIndikator{
 		return "asp.störfallVerfahrenFD"; //$NON-NLS-1$
 	}
 
-
 	/**
-	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Analysedaten
-	 * analog SE-02.00.00.00.00-AFo-4.0 (S.160 f) - Fundamentaldiagramm
+	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen
+	 * Analysedaten analog SE-02.00.00.00.00-AFo-4.0 (S.160 f) -
+	 * Fundamentaldiagramm
 	 * 
-	 * @param resultat ein empfangenes Analysedatum mit Nutzdaten
+	 * @param resultat
+	 *            ein empfangenes Analysedatum mit Nutzdaten
 	 */
-	protected void berechneStoerfallIndikator(ResultData resultat){
+	protected void berechneStoerfallIndikator(ResultData resultat) {
 		Data data = null;
-		
-		if(resultat.getData() != null){						
+
+		if (resultat.getData() != null) {
 			StoerfallSituation stufe = StoerfallSituation.KEINE_AUSSAGE;
-			
-			if(this.alleParameterValide()){
+
+			if (this.alleParameterValide()) {
 				data = DAV.createData(this.pubBeschreibung.getAttributeGroup());
-				
+
 				AnalyseDichte KKfzStoerfall = this.getAnalyseDichte(resultat);
 				double KKfzStoerfallG = Double.NaN;
 				try {
-					KKfzStoerfallG = this.prognoseDichteObj.getKKfzStoerfallGAktuell(KKfzStoerfall.getWert(), KKfzStoerfall.isImplausibel());
+					KKfzStoerfallG = this.prognoseDichteObj
+							.getKKfzStoerfallGAktuell(KKfzStoerfall.getWert(),
+									KKfzStoerfall.isImplausibel());
 				} catch (PrognoseParameterException e) {
 					Debug.getLogger().warning(e.getMessage());
 				}
-				
-				if(Double.isNaN(KKfzStoerfallG)){
+
+				if (Double.isNaN(KKfzStoerfallG)) {
 					stufe = StoerfallSituation.FREIER_VERKEHR;
-					stufe = berechneStufe(StoerfallSituation.ZAEHER_VERKEHR, KKfzStoerfallG, stufe);
-					stufe = berechneStufe(StoerfallSituation.STAU, KKfzStoerfallG, stufe);
-										
+					stufe = berechneStufe(StoerfallSituation.ZAEHER_VERKEHR,
+							KKfzStoerfallG, stufe);
+					stufe = berechneStufe(StoerfallSituation.STAU,
+							KKfzStoerfallG, stufe);
+
 					StoerfallZustand zustand = new StoerfallZustand(DAV);
-					zustand.setHorizont(resultat.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
+					zustand.setHorizont(resultat.getData()
+							.getTimeValue("T").getMillis()); //$NON-NLS-1$
 					zustand.setSituation(stufe);
 					data = zustand.getData();
 				}
-			}else{
-				Debug.getLogger().warning("Keine gueltigen Parameter fuer Stoerfallprognose: " + this.objekt); //$NON-NLS-1$
+			} else {
+				Debug
+						.getLogger()
+						.warning(
+								"Keine gueltigen Parameter fuer Stoerfallprognose: " + this.objekt); //$NON-NLS-1$
 			}
-			
+
 			this.alterZustand = stufe;
 		}
-		
-		ResultData ergebnis = new ResultData(this.objekt.getObjekt(), 
+
+		ResultData ergebnis = new ResultData(this.objekt.getObjekt(),
 				this.pubBeschreibung, resultat.getDataTime(), data);
 		this.sendeErgebnis(ergebnis);
 	}
 
-	
 	/**
 	 * Berechnet, ob die uebergebene Stoerfallsituation gerade anliegt
 	 * 
-	 * @param stufe die Stoerfallsituation, deren Existenz zu ueberpruefen ist
-	 * @param KKfzStoerfallG das geglaettete Attribut <code>KKfzStoerfall</code>
-	 * @param stufeAlt die Stoerfallsituation die bereits detektiert wurde
-	 * @return die Stoerfallsituation deren Anliegen ueberprueft werden sollte, wenn
-	 * diese tatsaechlich anliegt, oder die Stoerfallsituation die bereits detektiert 
-	 * wurde, sonst
+	 * @param stufe
+	 *            die Stoerfallsituation, deren Existenz zu ueberpruefen ist
+	 * @param KKfzStoerfallG
+	 *            das geglaettete Attribut <code>KKfzStoerfall</code>
+	 * @param stufeAlt
+	 *            die Stoerfallsituation die bereits detektiert wurde
+	 * @return die Stoerfallsituation deren Anliegen ueberprueft werden sollte,
+	 *         wenn diese tatsaechlich anliegt, oder die Stoerfallsituation die
+	 *         bereits detektiert wurde, sonst
 	 */
-	private final StoerfallSituation berechneStufe(final StoerfallSituation stufe,
-												   final double KKfzStoerfallG,
-												   final StoerfallSituation stufeAlt){
+	private final StoerfallSituation berechneStufe(
+			final StoerfallSituation stufe, final double KKfzStoerfallG,
+			final StoerfallSituation stufeAlt) {
 		StoerfallSituation ergebnis = stufeAlt;
-		
-		ParameterFuerStoerfall parameter = this.parameterLokal.getParameterFuerStoerfall(stufe);
-		if(parameter.isInitialisiert()){
+
+		ParameterFuerStoerfall parameter = this.parameterLokal
+				.getParameterFuerStoerfall(stufe);
+		if (parameter.isInitialisiert()) {
 			double VKfzStoerfallG = 0;
-			if(KKfzStoerfallG < this.fp * K0){
-				if(K0 > 0){
-					VKfzStoerfallG = VFrei - ( (VFrei - V0) / K0 ) * KKfzStoerfallG;
-				}else{
+			if (KKfzStoerfallG < this.fp * K0) {
+				if (K0 > 0) {
+					VKfzStoerfallG = VFrei - ((VFrei - V0) / K0)
+							* KKfzStoerfallG;
+				} else {
 					VKfzStoerfallG = VFrei;
-				}					 
-			}else{
-				if(KKfzStoerfallG != 0){
+				}
+			} else {
+				if (KKfzStoerfallG != 0) {
 					VKfzStoerfallG = Q0 * K0 / Math.pow(KKfzStoerfallG, 2.0);
-				}		
+				}
 			}
-			
+
 			boolean fkVergleichMachen = parameter.getFk() != 0;
-			boolean fvVergleichMachen = parameter.getFv() != 0;			
+			boolean fvVergleichMachen = parameter.getFv() != 0;
 			boolean vGrenzVergleichMachen = parameter.getVgrenz() != 0;
 
 			boolean fkVergleichsErgebnis;
-			boolean fvVergleichsErgebnis;			
+			boolean fvVergleichsErgebnis;
 			boolean vGrenzVergleichsErgebnis;
 
-			if(this.alterZustand.equals(stufe)){
+			if (this.alterZustand.equals(stufe)) {
 				/**
 				 * Ausschalthysterese
 				 */
-				fkVergleichsErgebnis = KKfzStoerfallG > (parameter.getFk() - parameter.getFkHysterese()) * K0;
-				fvVergleichsErgebnis = VKfzStoerfallG < (parameter.getFv() + parameter.getFvHysterese()) * V0;
-				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter.getVgrenz() + parameter.getVgrenzHysterese());				
-			}else{
+				fkVergleichsErgebnis = KKfzStoerfallG > (parameter.getFk() - parameter
+						.getFkHysterese())
+						* K0;
+				fvVergleichsErgebnis = VKfzStoerfallG < (parameter.getFv() + parameter
+						.getFvHysterese())
+						* V0;
+				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter
+						.getVgrenz() + parameter.getVgrenzHysterese());
+			} else {
 				/**
 				 * Einschalthysterese
 				 */
-				fkVergleichsErgebnis = KKfzStoerfallG > (parameter.getFk() + parameter.getFkHysterese()) * K0;
-				fvVergleichsErgebnis = VKfzStoerfallG < (parameter.getFv() - parameter.getFvHysterese()) * V0;
-				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter.getVgrenz() - parameter.getVgrenzHysterese());				
+				fkVergleichsErgebnis = KKfzStoerfallG > (parameter.getFk() + parameter
+						.getFkHysterese())
+						* K0;
+				fvVergleichsErgebnis = VKfzStoerfallG < (parameter.getFv() - parameter
+						.getFvHysterese())
+						* V0;
+				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter
+						.getVgrenz() - parameter.getVgrenzHysterese());
 			}
-			
-			if(this.getErgebnisAusBoolscherFormel(
-					fkVergleichMachen, fvVergleichMachen, vGrenzVergleichMachen,
-					fkVergleichsErgebnis, fvVergleichsErgebnis, vGrenzVergleichsErgebnis)){
+
+			if (this.getErgebnisAusBoolscherFormel(fkVergleichMachen,
+					fvVergleichMachen, vGrenzVergleichMachen,
+					fkVergleichsErgebnis, fvVergleichsErgebnis,
+					vGrenzVergleichsErgebnis)) {
 				ergebnis = stufe;
 			}
 		}
-		
+
 		return ergebnis;
 	}
-	
-	
+
 	/**
-	 * Berechnet die boolesche Formel:<br><code>
+	 * Berechnet die boolesche Formel:<br>
+	 * <code>
 	 * ergebnis := fkVergleichsErgebnis & fvVergleichsErgebnis | vGrenzVergleichsErgebnis
 	 * </code><br>
-	 * wobei jeweils nur die Teile in der Formel verbleiben, die als "zu machen" uebergeben
-	 * wurden
-	 *  
-	 * @param fkVergleichMachen Indikator fuer die Existenz des 1. Terms
-	 * @param fvVergleichMachen Indikator fuer die Existenz des 2. Terms
-	 * @param vGrenzVergleichMachen Indikator fuer die Existenz des 3. Terms
-	 * @param fkVergleichsErgebnis Wert des 1. Terms
-	 * @param fvVergleichsErgebnis Wert des 2. Terms
-	 * @param vGrenzVergleichsErgebnis Wert des 3. Terms
-	 * @return Ergebnis der Verknuepfung der drei Werte ueber die manipulierte Formel
+	 * wobei jeweils nur die Teile in der Formel verbleiben, die als "zu machen"
+	 * uebergeben wurden
+	 * 
+	 * @param fkVergleichMachen
+	 *            Indikator fuer die Existenz des 1. Terms
+	 * @param fvVergleichMachen
+	 *            Indikator fuer die Existenz des 2. Terms
+	 * @param vGrenzVergleichMachen
+	 *            Indikator fuer die Existenz des 3. Terms
+	 * @param fkVergleichsErgebnis
+	 *            Wert des 1. Terms
+	 * @param fvVergleichsErgebnis
+	 *            Wert des 2. Terms
+	 * @param vGrenzVergleichsErgebnis
+	 *            Wert des 3. Terms
+	 * @return Ergebnis der Verknuepfung der drei Werte ueber die manipulierte
+	 *         Formel
 	 */
-	private final boolean getErgebnisAusBoolscherFormel(boolean fkVergleichMachen,
-														boolean fvVergleichMachen,
-														boolean vGrenzVergleichMachen,
-														boolean fkVergleichsErgebnis,
-														boolean fvVergleichsErgebnis,
-														boolean vGrenzVergleichsErgebnis){
+	private final boolean getErgebnisAusBoolscherFormel(
+			boolean fkVergleichMachen, boolean fvVergleichMachen,
+			boolean vGrenzVergleichMachen, boolean fkVergleichsErgebnis,
+			boolean fvVergleichsErgebnis, boolean vGrenzVergleichsErgebnis) {
 		boolean ergebnis;
-		
-		if(!fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen){
-			ergebnis = false; 
-		}else
-		if(!fkVergleichMachen && !fvVergleichMachen && vGrenzVergleichMachen){
-			ergebnis = vGrenzVergleichsErgebnis;
-		}else
-		if(!fkVergleichMachen && fvVergleichMachen && !vGrenzVergleichMachen){
-			ergebnis = fvVergleichsErgebnis;
-		}else
-		if(!fkVergleichMachen && fvVergleichMachen && vGrenzVergleichMachen){
-			ergebnis = fvVergleichsErgebnis || vGrenzVergleichsErgebnis;	
-		}else
 
-		if(fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen){
+		if (!fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen) {
+			ergebnis = false;
+		} else if (!fkVergleichMachen && !fvVergleichMachen
+				&& vGrenzVergleichMachen) {
+			ergebnis = vGrenzVergleichsErgebnis;
+		} else if (!fkVergleichMachen && fvVergleichMachen
+				&& !vGrenzVergleichMachen) {
+			ergebnis = fvVergleichsErgebnis;
+		} else if (!fkVergleichMachen && fvVergleichMachen
+				&& vGrenzVergleichMachen) {
+			ergebnis = fvVergleichsErgebnis || vGrenzVergleichsErgebnis;
+		} else
+
+		if (fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen) {
 			ergebnis = fkVergleichsErgebnis;
-		}else
-		if(fkVergleichMachen && !fvVergleichMachen && vGrenzVergleichMachen){
+		} else if (fkVergleichMachen && !fvVergleichMachen
+				&& vGrenzVergleichMachen) {
 			ergebnis = fkVergleichsErgebnis || vGrenzVergleichsErgebnis;
-		}else
-		if(fkVergleichMachen && fvVergleichMachen && !vGrenzVergleichMachen){
+		} else if (fkVergleichMachen && fvVergleichMachen
+				&& !vGrenzVergleichMachen) {
 			ergebnis = fkVergleichsErgebnis && fvVergleichsErgebnis;
-		}else{
-			ergebnis = fkVergleichsErgebnis && fvVergleichsErgebnis || vGrenzVergleichsErgebnis;
+		} else {
+			ergebnis = fkVergleichsErgebnis && fvVergleichsErgebnis
+					|| vGrenzVergleichsErgebnis;
 		}
 
 		return ergebnis;
 	}
-	
-	
-	
-//	/**
-//	 * Erfragt die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>.
-//	 * Die Berechnung erfolgt analog SE-02.00.00.00.00-AFo-4.0 (siehe 6.6.4.3.2.1.2)
-//	 * 
-//	 * @param resultat ein Analysedatum des MQs (muss <code> != null</code> sein und
-//	 * Nutzdaten enthalten)
-//	 * @return die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>
-//	 */
-//	private final double getAnalyseDichte(ResultData resultat){
-//		double KKfzStoerfall;
-//		
-//		double QKfz = resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-//		double VKfz = resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-//		double KKfz = resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-//		
-//		if(QKfz == 0){
-//			KKfzStoerfall = 0;
-//		}else{
-//			if(VKfz == 0 || VKfz == DUAKonstanten.NICHT_ERMITTELBAR){
-//				KKfzStoerfall = this.K0;
-//			}else
-//			if(VKfz >= this.fa * this.V0){
-//				KKfzStoerfall = KKfz;
-//			}else{
-//				if(QKfz > 0){
-//					KKfzStoerfall = Math.min(K0 * Q0 / QKfz, 2.0 * K0);	
-//				}else{
-//					KKfzStoerfall = 2.0 * K0;
-//				}			
-//			}			
-//		}
-//		
-//		return KKfzStoerfall;
-//	}
-	
-	
+
+	// /**
+	// * Erfragt die Analysedichte zur Störfallerkennung
+	// <code>KKfzStoerfall</code>.
+	// * Die Berechnung erfolgt analog SE-02.00.00.00.00-AFo-4.0 (siehe
+	// 6.6.4.3.2.1.2)
+	// *
+	// * @param resultat ein Analysedatum des MQs (muss <code> != null</code>
+	// sein und
+	// * Nutzdaten enthalten)
+	// * @return die Analysedichte zur Störfallerkennung
+	// <code>KKfzStoerfall</code>
+	// */
+	// private final double getAnalyseDichte(ResultData resultat){
+	// double KKfzStoerfall;
+	//		
+	// double QKfz =
+	// resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue();
+	// //$NON-NLS-1$ //$NON-NLS-2$
+	// double VKfz =
+	// resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue();
+	// //$NON-NLS-1$ //$NON-NLS-2$
+	// double KKfz =
+	// resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue();
+	// //$NON-NLS-1$ //$NON-NLS-2$
+	//		
+	// if(QKfz == 0){
+	// KKfzStoerfall = 0;
+	// }else{
+	// if(VKfz == 0 || VKfz == DUAKonstanten.NICHT_ERMITTELBAR){
+	// KKfzStoerfall = this.K0;
+	// }else
+	// if(VKfz >= this.fa * this.V0){
+	// KKfzStoerfall = KKfz;
+	// }else{
+	// if(QKfz > 0){
+	// KKfzStoerfall = Math.min(K0 * Q0 / QKfz, 2.0 * K0);
+	// }else{
+	// KKfzStoerfall = 2.0 * K0;
+	// }
+	// }
+	// }
+	//		
+	// return KKfzStoerfall;
+	// }
+
 	/**
-	 * Erfragt die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>.
-	 * Die Berechnung erfolgt analog SE-02.00.00.00.00-AFo-4.0 (siehe 6.6.4.3.2.1.2)
+	 * Erfragt die Analysedichte zur Störfallerkennung
+	 * <code>KKfzStoerfall</code>. Die Berechnung erfolgt analog
+	 * SE-02.00.00.00.00-AFo-4.0 (siehe 6.6.4.3.2.1.2)
 	 * 
-	 * @param resultat ein Analysedatum des MQs (muss <code> != null</code> sein und
-	 * Nutzdaten enthalten)
-	 * @return die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>
+	 * @param resultat
+	 *            ein Analysedatum des MQs (muss <code> != null</code> sein und
+	 *            Nutzdaten enthalten)
+	 * @return die Analysedichte zur Störfallerkennung
+	 *         <code>KKfzStoerfall</code>
 	 */
-	private final AnalyseDichte getAnalyseDichte(ResultData resultat){
+	private final AnalyseDichte getAnalyseDichte(ResultData resultat) {
 		double KKfzStoerfall;
 		boolean implausibel = false;
-		
-		double QKfz = resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-		boolean QKfzImpl = resultat.getData().getItem("QKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
-					getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
-		double VKfz = resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-		double KKfz = resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-		boolean KKfzImpl = resultat.getData().getItem("KKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
-						getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
-		
-		if(QKfz == 0){
+
+		double QKfz = resultat.getData()
+				.getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		boolean QKfzImpl = resultat
+				.getData()
+				.getItem("QKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
+				getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
+		double VKfz = resultat.getData()
+				.getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		double KKfz = resultat.getData()
+				.getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		boolean KKfzImpl = resultat
+				.getData()
+				.getItem("KKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
+				getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (QKfz == 0) {
 			KKfzStoerfall = 0;
-		}else{
-			if(VKfz == 0 || VKfz == DUAKonstanten.NICHT_ERMITTELBAR){
+		} else {
+			if (VKfz == 0 || VKfz == DUAKonstanten.NICHT_ERMITTELBAR) {
 				KKfzStoerfall = this.K0;
-			}else
-			if(VKfz >= this.fa * this.V0){
+			} else if (VKfz >= this.fa * this.V0) {
 				KKfzStoerfall = KKfz;
 				implausibel = KKfzImpl;
-			}else{
-				if(QKfz > 0){
+			} else {
+				if (QKfz > 0) {
 					KKfzStoerfall = Math.min(K0 * Q0 / QKfz, 2.0 * K0);
 					implausibel = QKfzImpl;
-				}else{
+				} else {
 					KKfzStoerfall = 2.0 * K0;
-				}			
-			}			
+				}
+			}
 		}
-		
+
 		return new AnalyseDichte(KKfzStoerfall, implausibel);
 	}
-	
-	
+
 	/**
-	 * Klasse zur Speicherung der Analysedichte mit dem Flag <code>implausibel</code>
+	 * Klasse zur Speicherung der Analysedichte mit dem Flag
+	 * <code>implausibel</code>
 	 */
-	protected class AnalyseDichte{
-		
+	protected class AnalyseDichte {
+
 		/**
 		 * der Wert
 		 */
 		private double wert = Double.NaN;
-		
+
 		/**
-		 * Zeigt an, ob der Wert als <code>implausibel</code> gekennzeichnet ist
+		 * Zeigt an, ob der Wert als <code>implausibel</code> gekennzeichnet
+		 * ist
 		 */
 		private boolean implausibel = false;
-		
-		
+
 		/**
 		 * Standardkonstruktor
 		 * 
-		 * @param wert der Wert
-		 * @param implausibel ob der Wert als <code>implausibel</code> gekennzeichnet ist
+		 * @param wert
+		 *            der Wert
+		 * @param implausibel
+		 *            ob der Wert als <code>implausibel</code> gekennzeichnet
+		 *            ist
 		 */
-		protected AnalyseDichte(double wert, boolean implausibel){
+		protected AnalyseDichte(double wert, boolean implausibel) {
 			this.wert = wert;
 			this.implausibel = implausibel;
 		}
-		
+
 		/**
 		 * Erfragt den Wert
 		 * 
 		 * @return der Wert
 		 */
-		public final double getWert(){
-			return this.wert; 
+		public final double getWert() {
+			return this.wert;
 		}
-		
+
 		/**
-		 * Erfragt, ob der Wert als <code>implausibel</code> gekennzeichnet ist
+		 * Erfragt, ob der Wert als <code>implausibel</code> gekennzeichnet
+		 * ist
 		 * 
 		 * @return ob der Wert als <code>implausibel</code> gekennzeichnet ist
 		 */
-		public final boolean isImplausibel(){
+		public final boolean isImplausibel() {
 			return this.implausibel;
-		}		
+		}
 	}
-	
-	
+
 	/**
-	 * Erfragt, ob bereits alle Parameter initialisiert wurden und sie auf 
+	 * Erfragt, ob bereits alle Parameter initialisiert wurden und sie auf
 	 * gültigen (verarbeitbaren) Werten stehen
 	 * 
-	 * @return ob bereits alle Parameter initialisiert wurden und sie auf 
-	 * gültigen (verarbeitbaren) Werten stehen
+	 * @return ob bereits alle Parameter initialisiert wurden und sie auf
+	 *         gültigen (verarbeitbaren) Werten stehen
 	 */
-	private final boolean alleParameterValide(){
-		return this.parameterLokal.alleParameterInitialisiert() && 
-		       this.Q0 >= 0 && this.K0 >= 0 &&
-		       this.V0 >= 0 && this.VFrei >= 0;
+	private final boolean alleParameterValide() {
+		return this.parameterLokal.alleParameterInitialisiert() && this.Q0 >= 0
+				&& this.K0 >= 0 && this.V0 >= 0 && this.VFrei >= 0;
 	}
-	
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void readParameter(ResultData parameter) {
-		if(parameter.getData() != null){
+		if (parameter.getData() != null) {
 			this.Q0 = parameter.getData().getUnscaledValue("Q0").longValue(); //$NON-NLS-1$
 			this.K0 = parameter.getData().getUnscaledValue("K0").longValue(); //$NON-NLS-1$
 			this.V0 = parameter.getData().getUnscaledValue("V0").longValue(); //$NON-NLS-1$
-			this.VFrei = parameter.getData().getUnscaledValue("VFrei").longValue(); //$NON-NLS-1$
-		}else{
+			this.VFrei = parameter.getData()
+					.getUnscaledValue("VFrei").longValue(); //$NON-NLS-1$
+		} else {
 			this.Q0 = -4;
 			this.K0 = -4;
 			this.V0 = -4;
 			this.VFrei = -4;
-		} 
+		}
 	}
 }
