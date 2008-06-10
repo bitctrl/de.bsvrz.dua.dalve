@@ -27,10 +27,8 @@ package de.bsvrz.dua.dalve.analyse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -52,8 +50,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Analysewerte eines virtuellen Messquerschnitts notwendig sind gespeichert.
  * Wenn die Werte für ein bestimmtes Intervall bereit stehen (oder eine Timeout
  * abgelaufen ist), wird eine Berechnung durchgefuehrt und der Wert publiziert.
- * <br><b>Achtung: Verfahren auf Basis der Konfigurationsdaten aus 
- * Attributgruppe <code>atg.messQuerschnittVirtuellVLage</code>.</b><br>
+ * <br>
+ * <b>Achtung: Verfahren auf Basis der Konfigurationsdaten aus Attributgruppe
+ * <code>atg.messQuerschnittVirtuellVLage</code>.</b><br>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -71,7 +70,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	/**
 	 * Alle Anteile des VMQ.
 	 */
-	private Set<SystemObject> mqAnteilsListe = new HashSet<SystemObject>();
+	private Map<SystemObject, Double> mqAnteilsListe = new HashMap<SystemObject, Double>();
 
 	/**
 	 * der aufgeloesste virtuelle Messquerschnitt.
@@ -114,11 +113,14 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 
 		if (this.mqT == null) {
 			/**
-			 * TODO: RuntimeException wieder rein:
-			 * throw new RuntimeException("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell + " kann nicht ermittelt werden.");
+			 * TODO: RuntimeException wieder rein: throw new
+			 * RuntimeException("Erfassungsintervalldauer von VMQ " +
+			 * messQuerschnittVirtuell + " kann nicht ermittelt werden.");
 			 */
 			Debug.getLogger().warning(
-					"Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell + " kann nicht ermittelt werden.");
+					"Erfassungsintervalldauer von VMQ "
+							+ messQuerschnittVirtuell
+							+ " kann nicht ermittelt werden.");
 			return null;
 		}
 
@@ -141,14 +143,15 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 					.getAtgMessQuerschnittVirtuellVLage()
 					.getMessQuerSchnittBestandTeile()) {
 				this.aktuelleMQAnalysen.put(bestandteil.getMQReferenz(), null);
-				this.mqAnteilsListe.add(bestandteil.getMQReferenz());
+				this.mqAnteilsListe.put(bestandteil.getMQReferenz(),
+						bestandteil.getAnteil());
 			}
 
 			if (this.mqv.getAtgMessQuerschnittVirtuellVLage()
 					.getMessQuerschnittGeschwindigkeit() != null) {
 				this.geschwMQ = this.mqv.getAtgMessQuerschnittVirtuellVLage()
 						.getMessQuerschnittGeschwindigkeit();
-				if (!this.mqAnteilsListe.contains(this.geschwMQ)) {
+				if (!this.mqAnteilsListe.keySet().contains(this.geschwMQ)) {
 					this.aktuelleMQAnalysen.put(this.geschwMQ, null);
 				}
 			}
@@ -197,7 +200,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 				}
 			}
 		}
-
+		
+		System.out.println(ergebnis);
 		return ergebnis;
 	}
 
@@ -213,8 +217,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	private boolean isKeineDaten() {
 		for (SystemObject mq : this.aktuelleMQAnalysen.keySet()) {
 			ResultData aktuellesMQDatum = this.aktuelleMQAnalysen.get(mq);
-			if (aktuellesMQDatum == null
-					|| aktuellesMQDatum.getData() == null) {
+			if (aktuellesMQDatum == null || aktuellesMQDatum.getData() == null) {
 				return true;
 			}
 		}
@@ -269,7 +272,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 				MqAnalyseModul.pubBeschreibung.getAttributeGroup());
 
 		/**
-		 * Ermittle Werte fuer <code>VKfz, VLkw, VPkw</code> und <code>VgKfz</code> via Ersetzung
+		 * Ermittle Werte fuer <code>VKfz, VLkw, VPkw</code> und
+		 * <code>VgKfz</code> via Ersetzung
 		 */
 		ResultData ersetzung = this.aktuelleMQAnalysen.get(this.geschwMQ);
 
@@ -338,7 +342,6 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 		return ergebnis;
 	}
 
-
 	/**
 	 * Publiziert eine Analysedatum (so nicht <code>null</code> uebergeben
 	 * wurde).
@@ -349,6 +352,11 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	private void publiziere(final ResultData ergebnis) {
 		if (ergebnis != null) {
 
+			System.out.println("Erg" + ergebnis);
+			System.out.println(letztesErgebnis);
+			if(letztesErgebnis != null){
+				System.out.println("le:" + letztesErgebnis);
+			}
 			/**
 			 * nur echt neue Daten versenden
 			 */
@@ -438,7 +446,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den
 	 * Attributen <code>QKfz, QLkw</code> und <code>QPkw</code>.
 	 * 
-	 * @param analyseDatum das zu modifizierende Datum.
+	 * @param analyseDatum
+	 *            das zu modifizierende Datum.
 	 * @param attName
 	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt
 	 *            werden soll
@@ -446,8 +455,9 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	private void setBilanzDatum(Data analyseDatum, String attName) {
 		List<QWert> qWerte = new ArrayList<QWert>();
 
-		for (SystemObject mq : this.mqAnteilsListe) {
-			qWerte.add(new QWert(this.aktuelleMQAnalysen.get(mq), attName));
+		for (SystemObject mq : this.mqAnteilsListe.keySet()) {
+			qWerte.add(new QWert(this.aktuelleMQAnalysen.get(mq), attName,
+					this.mqAnteilsListe.get(mq)));
 		}
 
 		QWert qQ = null;

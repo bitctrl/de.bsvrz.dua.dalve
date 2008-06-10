@@ -52,6 +52,13 @@ public class DatenaufbereitungLVETest {
 
 	
 	/**
+	 * Verzeichnis, in dem sich die CSV-Datei mit den Testdaten fuer virtuelle MQs befinden
+	 */
+	protected static final String TEST_DATEN_VERZ_VIRTUELL = ".\\extra\\testDaten\\mqVirtuell\\"; //$NON-NLS-1$
+	
+//	protected static final String TEST_DATEN_VERZ_VIRTUELL = "../testDaten/mqVirtuell/"; //$NON-NLS-1$
+	
+	/**
 	 * Logger und Loggerargument
 	 * 
 	 * Pfadangabe mit Argument: -debugFilePath=[Pfad]
@@ -69,7 +76,7 @@ public class DatenaufbereitungLVETest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.dav = DAVTest.getDav(CON_DATA);
+		this.dav = DAVTest.getDav(CON_DATA.clone());
 	}
 	
 	/**
