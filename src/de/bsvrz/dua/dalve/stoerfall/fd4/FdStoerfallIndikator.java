@@ -528,7 +528,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 	public void datensatzAktualisiert(DatensatzUpdateEvent event) {
 		if (event.getDatum().isValid() && event.getDatensatz() != null) {
 			PdFundamentalDiagramm.Daten daten = (PdFundamentalDiagramm.Daten) event
-					.getDatensatz();
+					.getDatum();
 			if (daten.getDatenStatus() == Datum.Status.DATEN) {
 				this.Q0 = daten.getQ0();
 				this.K0 = daten.getK0();

@@ -83,8 +83,8 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 * Parameter <code>QKfzDiffAus</code>.
 	 */
 	private long qKfzDiffAus = -4;
-	
-	//private long tReise = 
+
+	// private long tReise =
 
 	/**
 	 * Daten des Fundamentaldiagramms des Einfahrtsquerschnitts.
@@ -95,7 +95,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 * Daten des Fundamentaldiagramms des Ausfahrtsquerschnitts.
 	 */
 	private PdFundamentalDiagramm.Daten fda = null;
-	
 
 	/**
 	 * {@inheritDoc}
@@ -159,16 +158,19 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 							DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel()
 							.getAspect(DUAKonstanten.ASP_ANALYSE)),
 					ReceiveOptions.normal(), ReceiverRole.receiver());
-			
+
 			SystemObject fdObjektVon = von;
 			SystemObject stsObjektVon = DatenaufbereitungLVE
 					.getStraßenTeilSegment(von);
 			if (stsObjektVon != null) {
 				fdObjektVon = stsObjektVon;
-				Debug.getLogger().info(
-						"Fuer " + objekt
-								+ " wird das Fundamentaldiagramm am Teilsegment "
-								+ stsObjektVon + " verwendet");
+				Debug
+						.getLogger()
+						.info(
+								"Fuer "
+										+ objekt
+										+ " wird das Fundamentaldiagramm am Teilsegment "
+										+ stsObjektVon + " verwendet");
 			} else {
 				Debug
 						.getLogger()
@@ -182,27 +184,30 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 			PdFundamentalDiagramm fdVon = new PdFundamentalDiagramm(
 					new StoerfallIndikator(fdObjektVon));
-			fdVon.addUpdateListener(new DatensatzUpdateListener(){
+			fdVon.addUpdateListener(new DatensatzUpdateListener() {
 
 				public void datensatzAktualisiert(DatensatzUpdateEvent event) {
-					if (event.getDatum().isValid() && event.getDatensatz() != null) {
+					if (event.getDatum().isValid()
+							&& event.getDatensatz() != null) {
 						VKDiffKfzStoerfallIndikator.this.fde = (PdFundamentalDiagramm.Daten) event
-								.getDatensatz();						
+								.getDatum();
 					}
 				}
-				
+
 			});
 
-			
 			SystemObject fdObjektBis = von;
 			SystemObject stsObjektBis = DatenaufbereitungLVE
 					.getStraßenTeilSegment(von);
 			if (stsObjektBis != null) {
 				fdObjektBis = stsObjektBis;
-				Debug.getLogger().info(
-						"Fuer " + objekt
-								+ " wird das Fundamentaldiagramm am Teilsegment "
-								+ stsObjektBis + " verwendet");
+				Debug
+						.getLogger()
+						.info(
+								"Fuer "
+										+ objekt
+										+ " wird das Fundamentaldiagramm am Teilsegment "
+										+ stsObjektBis + " verwendet");
 			} else {
 				Debug
 						.getLogger()
@@ -216,15 +221,16 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 			PdFundamentalDiagramm fdBis = new PdFundamentalDiagramm(
 					new StoerfallIndikator(fdObjektBis));
-			fdBis.addUpdateListener(new DatensatzUpdateListener(){
+			fdBis.addUpdateListener(new DatensatzUpdateListener() {
 
 				public void datensatzAktualisiert(DatensatzUpdateEvent event) {
-					if (event.getDatum().isValid() && event.getDatensatz() != null) {
+					if (event.getDatum().isValid()
+							&& event.getDatensatz() != null) {
 						VKDiffKfzStoerfallIndikator.this.fda = (PdFundamentalDiagramm.Daten) event
-								.getDatensatz();						
+								.getDatum();
 					}
 				}
-				
+
 			});
 		}
 	}
@@ -279,61 +285,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	protected void berechneStoerfallIndikator(ResultData resultat) {
 		Data data = null;
 
-		// if (resultat.getData() != null) {
-		// String attrV = this.objekt.isFahrStreifen() ? "vKfzG" : "VKfzG";
-		// //$NON-NLS-1$ //$NON-NLS-2$
-		// String attrK = this.objekt.isFahrStreifen() ? "kBG" : "KBG";
-		// //$NON-NLS-1$ //$NON-NLS-2$
-		//
-		// long v = resultat.getData().getItem(attrV)
-		// .getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
-		// long k = resultat.getData().getItem(attrK)
-		// .getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
-		//
-		// StoerfallSituation situation = StoerfallSituation.KEINE_AUSSAGE;
-		//
-		// if (v >= 0 && k >= 0 && v1 >= 0 && v2 >= 0 && k1 >= 0 && k2 >= 0) {
-		// data = DAV.createData(this.pubBeschreibung.getAttributeGroup());
-		//
-		// if (v >= v2 && k >= 0 && k <= k1) {
-		// situation = Z1;
-		// }
-		// if (v >= v2 && k > k1 && k <= k2) {
-		// situation = Z2;
-		// }
-		// if (v >= v1 && v < v2 && k <= k2) {
-		// situation = Z3;
-		// }
-		// if (v < v1 && k > k2) {
-		// situation = Z4;
-		// } else if (v < v1 || k > k2) {
-		// if (letzterStoerfallZustand.equals(Z3)
-		// || letzterStoerfallZustand.equals(Z4)) {
-		// situation = Z4;
-		// } else {
-		// if (v >= v2 && k > k2) {
-		// situation = Z2;
-		// }
-		// if ((v < v2 && k > k2) || (v < v1 && k <= k2)) {
-		// situation = Z3;
-		// }
-		// }
-		// }
-		// }
-		//
-		// StoerfallZustand zustand = new StoerfallZustand(DAV);
-		// if (this.objekt.isFahrStreifen()) {
-		// zustand.setT(resultat.getData().getTimeValue("T").getMillis());
-		// //$NON-NLS-1$
-		// }
-		// zustand.setSituation(situation);
-		// data = zustand.getData();
-		// letzterStoerfallZustand = situation;
-		// }
-		//
-		// ResultData ergebnis = new ResultData(this.objekt.getObjekt(),
-		// this.pubBeschreibung, resultat.getDataTime(), data);
-		// this.sendeErgebnis(ergebnis);
+		System.out.println("VKDiffKfz: " + resultat);
 	}
 
 }

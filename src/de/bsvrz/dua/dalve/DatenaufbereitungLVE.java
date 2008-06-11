@@ -49,6 +49,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktVerwaltungsAdapterMitGuete;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
+import de.bsvrz.sys.funclib.bitctrl.modell.ObjektFactory;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -117,6 +118,9 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
+		
+		ObjektFactory.getInstanz().setVerbindung(this.getVerbindung());
+		
 		dDav = this.getVerbindung();
 		pubAtgPrognoseFS = dDav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_KURZZEIT_TRENT_FS);
