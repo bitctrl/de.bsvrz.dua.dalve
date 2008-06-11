@@ -26,83 +26,89 @@
 package de.bsvrz.dua.dalve.stoerfall;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.fd4.FdStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.marz1.MarzStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.nrw2.NrwStoerfallIndikatorFs;
 import de.bsvrz.dua.dalve.stoerfall.nrw2.NrwStoerfallIndikatorMq;
 import de.bsvrz.dua.dalve.stoerfall.rds3.RdsStoerfallIndikator;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Von diesem Objekt aus wird die Berechnung der einzelnen
- * Stoerfallindikatoren gestartet
+ * Von diesem Objekt aus wird die Berechnung der einzelnen Stoerfallindikatoren
+ * gestartet.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public class StoerfallModul {
-
 
 	/**
 	 * Initialisiert alle Stoerfallindikatoren
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekte Menge der Fahrstreifen und Messquerschnitte, die betrachtet werden sollen
-	 * @throws DUAInitialisierungsException wird weitergereicht
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekte
+	 *            Menge der Fahrstreifen und Messquerschnitte, die betrachtet
+	 *            werden sollen
+	 * @throws DUAInitialisierungsException
+	 *             wird weitergereicht
 	 */
 	public final void initialisiere(final ClientDavInterface dav,
-									final Collection<SystemObject> objekte) 
-	throws DUAInitialisierungsException{
-
-		Collection<PrognoseSystemObjekt> stoerfallObjekte = new HashSet<PrognoseSystemObjekt>();
-		for(SystemObject obj:objekte){
-			stoerfallObjekte.add(new PrognoseSystemObjekt(dav, obj));
-		}
-		
-		/**
-		 * (I) SFI nach Verfahren MARZ 
-		 */
-		for(PrognoseSystemObjekt obj:stoerfallObjekte){
-			new MarzStoerfallIndikator().initialisiere(dav, obj);
-		}
-		
+			final Collection<SystemObject> objekte)
+			throws DUAInitialisierungsException {
 
 		/**
-		 * (II) SFI nach Verfahren NRW  
+		 * (I) SFI nach Verfahren MARZ
 		 */
-		for(PrognoseSystemObjekt obj:stoerfallObjekte){
-			if(obj.isFahrStreifen()){
+		for (SystemObject obj : objekte) {
+			if (obj.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)
+					|| obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
+				new MarzStoerfallIndikator().initialisiere(dav, obj);
+			}
+		}
+
+		/**
+		 * (II) SFI nach Verfahren NRW
+		 */
+		for (SystemObject obj : objekte) {
+			if (obj.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
 				new NrwStoerfallIndikatorFs().initialisiere(dav, obj);
-			}else{
+			} else if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 				new NrwStoerfallIndikatorMq().initialisiere(dav, obj);
 			}
 		}
-		
 
 		/**
-		 * (III) SFI nach Verfahren RDS  
+		 * (III) SFI nach Verfahren RDS
 		 */
-		for(PrognoseSystemObjekt obj:stoerfallObjekte){
-			if(!obj.isFahrStreifen()){
+		for (SystemObject obj : objekte) {
+			if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 				new RdsStoerfallIndikator().initialisiere(dav, obj);
 			}
 		}
 
-		
 		/**
-		 * (IV) SFI nach Verfahren Fundamentaldiagramm  
+		 * (IV) SFI nach Verfahren Fundamentaldiagramm
 		 */
-		for(PrognoseSystemObjekt obj:stoerfallObjekte){
-			if(!obj.isFahrStreifen()){
-				new FdStoerfallIndikator().initialisiere(dav, obj);				
+		for (SystemObject obj : objekte) {
+			if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
+				new FdStoerfallIndikator().initialisiere(dav, obj);
+			}
+		}
+
+		/**
+		 * (V) SFI nach Verfahren VKDiffKfz
+		 */
+		for (SystemObject obj : objekte) {
+			if (obj.isOfType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT)) {
+				new FdStoerfallIndikator().initialisiere(dav, obj);
 			}
 		}
 	}
-	
+
 }

@@ -25,24 +25,24 @@
  */
 package de.bsvrz.dua.dalve.stoerfall.fd4;
 
-import com.bitctrl.Constants;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
-import de.bsvrz.dav.daf.main.OneSubscriptionPerSendData;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
-import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
-import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.modell.DatensatzUpdateEvent;
+import de.bsvrz.sys.funclib.bitctrl.modell.DatensatzUpdateListener;
+import de.bsvrz.sys.funclib.bitctrl.modell.Datum;
+import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.objekte.StoerfallIndikator;
+import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.parameter.PdFundamentalDiagramm;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
@@ -52,7 +52,28 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  */
-public class FdStoerfallIndikator extends AbstraktStoerfallIndikator {
+public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
+		DatensatzUpdateListener {
+
+	/**
+	 * Verkehrsmenge des Fundamentaldiagramms.
+	 */
+	private double Q0 = -4;
+
+	/**
+	 * Maximale Dichte des Fundamentaldiagramms.
+	 */
+	private double K0 = -4;
+
+	/**
+	 * V0-Geschwindigkeit des Fundamentaldiagramms.
+	 */
+	private double V0 = -4;
+
+	/**
+	 * Freie Geschwindigkeit des Fundamentaldiagramms.
+	 */
+	private double VFrei = -4;
 
 	/**
 	 * Faktor für die Ermittlung der Analysedichte
@@ -63,26 +84,6 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 * Faktor für die Ermittlung der Prognosedichte
 	 */
 	private double fp = -1;
-
-	/**
-	 * Verkehrsmenge des Fundamentaldiagramms
-	 */
-	private double Q0 = -4;
-
-	/**
-	 * Maximale Dichte des Fundamentaldiagramms
-	 */
-	private double K0 = -4;
-
-	/**
-	 * V0-Geschwindigkeit des Fundamentaldiagramms
-	 */
-	private double V0 = -4;
-
-	/**
-	 * Freie Geschwindigkeit des Fundamentaldiagramms
-	 */
-	private double VFrei = -4;
 
 	/**
 	 * Objekt, das die Prognosedichte ermittelt
@@ -104,18 +105,13 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialisiere(ClientDavInterface dav,
-			PrognoseSystemObjekt objekt) throws DUAInitialisierungsException {
-		if (DAV == null) {
-			DAV = dav;
-		}
-		this.objekt = objekt;
+	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
+			throws DUAInitialisierungsException {
+		super.initialisiere(dav, objekt);
 
-		this.paraAtg = dav.getDataModel().getAttributeGroup(
-				this.getParameterAtgPid());
-
-		SystemObject fdObjekt = objekt.getObjekt();
-		SystemObject stsObjekt = objekt.getStraßenTeilSegment();
+		SystemObject fdObjekt = objekt;
+		SystemObject stsObjekt = DatenaufbereitungLVE
+				.getStraßenTeilSegment(objekt);
 		if (stsObjekt != null) {
 			fdObjekt = stsObjekt;
 			Debug.getLogger().info(
@@ -133,40 +129,21 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator {
 									+ "dies konnte aber nicht ermittelt werden.");
 		}
 
-		dav.subscribeReceiver(this, fdObjekt, new DataDescription(this.paraAtg,
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+		PdFundamentalDiagramm fd = new PdFundamentalDiagramm(
+				new StoerfallIndikator(fdObjekt));
+		fd.addUpdateListener(this);
 
-		this.prognoseDichteObj = new KKfzStoerfallGErmittler(dav, objekt
-				.getObjekt());
+		this.prognoseDichteObj = new KKfzStoerfallGErmittler(dav, objekt);
 		this.parameterLokal = new AtgLokaleStoerfallErkennungFundamentalDiagramm(
-				dav, objekt.getObjekt());
-
-		this.pubBeschreibung = new DataDescription(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav
-				.getDataModel().getAspect(this.getPubAspektPid()), (short) 0);
-		try {
-			dav.subscribeSender(this, objekt.getObjekt(), this.pubBeschreibung,
-					SenderRole.source());
-		} catch (OneSubscriptionPerSendData e) {
-			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
-		}
+				dav, objekt);
 
 		/**
 		 * Anmeldung auf Daten (hier Analysedaten)
 		 */
-		dav.subscribeReceiver(this, objekt.getObjekt(), new DataDescription(
-				this.objekt.getAnalyseAtg(), dav.getDataModel().getAspect(
-						DUAKonstanten.ASP_ANALYSE), (short) 0), ReceiveOptions
-				.normal(), ReceiverRole.receiver());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getParameterAtgPid() {
-		return "atg.fundamentalDiagramm"; //$NON-NLS-1$
+		dav.subscribeReceiver(this, objekt, new DataDescription(
+				DatenaufbereitungLVE.getAnalyseAtg(this.objekt), dav
+						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
+				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -227,8 +204,8 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator {
 			this.alterZustand = stufe;
 		}
 
-		ResultData ergebnis = new ResultData(this.objekt.getObjekt(),
-				this.pubBeschreibung, resultat.getDataTime(), data);
+		ResultData ergebnis = new ResultData(this.objekt, this.pubBeschreibung,
+				resultat.getDataTime(), data);
 		this.sendeErgebnis(ergebnis);
 	}
 
@@ -530,21 +507,41 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator {
 	}
 
 	/**
+	 * wird nicht gebraucht
+	 */
+	@Override
+	protected String getParameterAtgPid() {
+		return null;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void readParameter(ResultData parameter) {
-		if (parameter.getData() != null) {
-			this.Q0 = parameter.getData().getUnscaledValue("Q0").longValue(); //$NON-NLS-1$
-			this.K0 = parameter.getData().getUnscaledValue("K0").longValue(); //$NON-NLS-1$
-			this.V0 = parameter.getData().getUnscaledValue("V0").longValue(); //$NON-NLS-1$
-			this.VFrei = parameter.getData()
-					.getUnscaledValue("VFrei").longValue(); //$NON-NLS-1$
-		} else {
-			this.Q0 = -4;
-			this.K0 = -4;
-			this.V0 = -4;
-			this.VFrei = -4;
-		}
+		// wird nicht gebraucht
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void datensatzAktualisiert(DatensatzUpdateEvent event) {
+		if (event.getDatum().isValid() && event.getDatensatz() != null) {
+			PdFundamentalDiagramm.Daten daten = (PdFundamentalDiagramm.Daten) event
+					.getDatensatz();
+			if (daten.getDatenStatus() == Datum.Status.DATEN) {
+				this.Q0 = daten.getQ0();
+				this.K0 = daten.getK0();
+				this.V0 = daten.getV0();
+				this.VFrei = daten.getVFrei();
+				return;
+			}
+		}
+
+		this.Q0 = -4;
+		this.K0 = -4;
+		this.V0 = -4;
+		this.VFrei = -4;
+	}
+
 }

@@ -26,7 +26,6 @@
 package de.bsvrz.dua.dalve.prognose;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -41,8 +40,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
  *
  */
 public class PrognoseModul {
-	
-	
+
 	/**
 	 * Initialisiert alle Klassen die zur Berechnung der geglaetteten und der Prognosewerte
 	 * notwendig sind
@@ -52,20 +50,14 @@ public class PrognoseModul {
 	 * @throws DUAInitialisierungsException wird weitergereicht
 	 */
 	public final void initialisiere(final ClientDavInterface dav,
-									final Collection<SystemObject> objekte) 
-	throws DUAInitialisierungsException{
-		
+			final Collection<SystemObject> objekte)
+			throws DUAInitialisierungsException {
 		PrognoseTyp.initialisiere(dav);
 
-		Collection<PrognoseSystemObjekt> prognoseObjekte = new HashSet<PrognoseSystemObjekt>();
-		for(SystemObject obj:objekte){
-			prognoseObjekte.add(new PrognoseSystemObjekt(dav, obj));
-		}
-		
 		/**
 		 * (I) SFI nach Verfahren MARZ 
 		 */
-		for(PrognoseSystemObjekt obj:prognoseObjekte){
+		for (SystemObject obj : objekte) {
 			new PrognoseObjektFlink().initialisiere(dav, obj);
 			new PrognoseObjektNormal().initialisiere(dav, obj);
 			new PrognoseObjektTraege().initialisiere(dav, obj);

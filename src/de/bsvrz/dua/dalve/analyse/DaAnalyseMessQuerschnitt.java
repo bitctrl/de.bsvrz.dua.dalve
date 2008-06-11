@@ -63,27 +63,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
 	/**
-	 * alle Attributnamen der Atg <code>atg.verkehrsDatenKurzZeitMq</code>.
-	 */
-	private static final String[] ATTS = new String[] { "QKfz", //$NON-NLS-1$
-			"VKfz", //$NON-NLS-1$
-			"QLkw", //$NON-NLS-1$
-			"VLkw", //$NON-NLS-1$
-			"QPkw", //$NON-NLS-1$
-			"VPkw", //$NON-NLS-1$
-			"B", //$NON-NLS-1$
-			"BMax", //$NON-NLS-1$
-			"SKfz", //$NON-NLS-1$
-			"VgKfz", //$NON-NLS-1$
-			"ALkw", //$NON-NLS-1$
-			"KKfz", //$NON-NLS-1$
-			"KLkw", //$NON-NLS-1$
-			"KPkw", //$NON-NLS-1$
-			"QB", //$NON-NLS-1$
-			"KB", //$NON-NLS-1$
-			"VDelta" }; //$NON-NLS-1$
-
-	/**
 	 * Verbindung zum Analysemodul.
 	 */
 	protected static MqAnalyseModul mqAnalyse = null;

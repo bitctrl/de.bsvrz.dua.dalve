@@ -31,7 +31,9 @@ import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
+import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
+import de.bsvrz.dua.dalve.prognose.PrognoseTyp;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
@@ -97,12 +99,19 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialisiere(ClientDavInterface dav,
-			PrognoseSystemObjekt objekt) throws DUAInitialisierungsException {
+	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
+			throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
 
-		dav.subscribeReceiver(this, this.objekt.getObjekt(),
-				new DataDescription(objekt.getAnalyseAtg(), dav.getDataModel()
+		/**
+		 * Anmeldung auf Daten
+		 */
+		dav.subscribeReceiver(this, objekt, new DataDescription(
+				DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
+				PrognoseTyp.NORMAL.getAspekt(), (short) 0), ReceiveOptions
+				.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, this.objekt, new DataDescription(
+				DatenaufbereitungLVE.getAnalyseAtg(objekt), dav.getDataModel()
 						.getAspect(DUAKonstanten.ASP_ANALYSE), (short) 0),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
@@ -132,7 +141,7 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 
 		if (resultat.getData() != null) {
 			if (resultat.getDataDescription().getAttributeGroup().equals(
-					objekt.getAnalyseAtg())) {
+					DatenaufbereitungLVE.getAnalyseAtg(objekt))) {
 				this.analyseDatensatz = resultat;
 			} else {
 				this.geglaettetDatensatz = resultat;
@@ -166,23 +175,22 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 						this.letzteStufe = stufe;
 					}
 				}
-				
+
 				StoerfallZustand zustand = new StoerfallZustand(DAV);
-				zustand.setT(resultat.getData()
-						.getTimeValue("T").getMillis()); //$NON-NLS-1$
+				zustand.setT(resultat.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
 				zustand.setSituation(stufe);
 				data = zustand.getData();
-				
+
 				this.analyseDatensatz = null;
 				this.geglaettetDatensatz = null;
 
-				ResultData ergebnis = new ResultData(this.objekt.getObjekt(),
+				ResultData ergebnis = new ResultData(this.objekt,
 						this.pubBeschreibung, resultat.getDataTime(), data);
 				this.sendeErgebnis(ergebnis);
 			}
-			
+
 		} else {
-			ResultData ergebnis = new ResultData(this.objekt.getObjekt(),
+			ResultData ergebnis = new ResultData(this.objekt,
 					this.pubBeschreibung, resultat.getDataTime(), data);
 			this.sendeErgebnis(ergebnis);
 		}
@@ -205,8 +213,10 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 			if (kvst > 0 && kvst < k3) {
 				if (this.letzteStufe.equals(StoerfallSituation.KEINE_AUSSAGE)
 						|| this.letzteStufe.equals(StoerfallSituation.STOERUNG)
-						|| this.letzteStufe.equals(StoerfallSituation.ZAEHER_VERKEHR)
-						|| this.letzteStufe.equals(StoerfallSituation.DICHTER_VERKEHR)) {
+						|| this.letzteStufe
+								.equals(StoerfallSituation.ZAEHER_VERKEHR)
+						|| this.letzteStufe
+								.equals(StoerfallSituation.DICHTER_VERKEHR)) {
 					verkehrsStufe = StoerfallSituation.STAU;
 				} else {
 					verkehrsStufe = this.letzteStufe;

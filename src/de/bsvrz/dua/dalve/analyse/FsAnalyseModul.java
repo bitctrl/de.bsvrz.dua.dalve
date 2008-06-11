@@ -87,6 +87,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	public void initialisiere(IVerwaltung dieVerwaltung)
 	throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
+		this.setPublikation(true);
 		
 		if(PUB_BESCHREIBUNG == null){
 			PUB_BESCHREIBUNG = new DataDescription(

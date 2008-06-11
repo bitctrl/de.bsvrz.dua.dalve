@@ -36,7 +36,9 @@ import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Haelt für ein bestimmtes Objekt (Fahrstreifen oder Messquerschnitt) alle
@@ -53,11 +55,11 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	 * der Prognosetyp
 	 */
 	private PrognoseTyp typ = null;
-	
+
 	/**
 	 * das Objekt, auf dessen Prognose-Parameter sich angemeldet werden soll
 	 */
-	private PrognoseSystemObjekt objekt = null;
+	private SystemObject objekt = null;
 
 	/**
 	 * Menge aktueller Werte der Attributparameter
@@ -82,14 +84,15 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	 *            (Flink, Normal, Träge)
 	 */
 	public AtgPrognoseParameter(final ClientDavInterface dav,
-			final PrognoseSystemObjekt objekt, final PrognoseTyp typ) {
+			final SystemObject objekt, final PrognoseTyp typ) {
 		this.objekt = objekt;
 		this.typ = typ;
 		this.initialisiere();
-		dav.subscribeReceiver(this, objekt.getObjekt(), new DataDescription(typ
-				.getParameterAtg(objekt.isFahrStreifen()), dav.getDataModel()
-				.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL), (short) 0),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, objekt, new DataDescription(typ
+				.getParameterAtg(objekt
+						.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), dav
+				.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
+				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -121,17 +124,18 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	 */
 	private final void informiereAlleBeobachter() {
 		synchronized (this) {
-			//System.out.println();
+			// System.out.println();
 			for (PrognoseAttribut attribut : this.attributListener.keySet()) {
 				PrognoseAttributParameter einzelWert = this.einzelWerte
 						.get(attribut);
 				for (IAtgPrognoseParameterListener listener : this.attributListener
 						.get(attribut)) {
-//					System.out.println("Informiere: " + listener.toString() + ", ueber: " + einzelWert) ;
+					// System.out.println("Informiere: " + listener.toString() +
+					// ", ueber: " + einzelWert) ;
 					listener.aktualisiereParameter(einzelWert);
 				}
 			}
-			//System.out.println();
+			// System.out.println();
 		}
 	}
 
@@ -162,9 +166,12 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 						if (resultat.getData() != null) {
 							for (PrognoseAttribut attribut : PrognoseAttribut
 									.getInstanzen()) {
-								this.einzelWerte.get(attribut).setDaten(
-										resultat.getData(),
-										this.objekt.isFahrStreifen());
+								this.einzelWerte
+										.get(attribut)
+										.setDaten(
+												resultat.getData(),
+												this.objekt
+														.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
 							}
 						} else {
 							this.initialisiere();
@@ -176,7 +183,6 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		}
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -184,5 +190,5 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	public String toString() {
 		return this.objekt + ", " + this.typ;
 	}
-	
+
 }

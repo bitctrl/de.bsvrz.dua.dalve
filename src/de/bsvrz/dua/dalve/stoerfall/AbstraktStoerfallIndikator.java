@@ -40,8 +40,6 @@ import de.bsvrz.dav.daf.main.SendSubscriptionNotConfirmed;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
-import de.bsvrz.dua.dalve.prognose.PrognoseTyp;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -51,26 +49,26 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Repräsentiert einen Stoerfallindikator
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
  */
-public abstract class AbstraktStoerfallIndikator
-implements ClientReceiverInterface, ClientSenderInterface{
-		
+public abstract class AbstraktStoerfallIndikator implements
+		ClientReceiverInterface, ClientSenderInterface {
+
 	/**
 	 * Verbindung zum Datenverteiler
 	 */
 	protected static ClientDavInterface DAV = null;
-	
+
 	/**
 	 * Das Objekt, fuer dass der Stoerfallzustand berechnet werden soll
 	 */
-	protected PrognoseSystemObjekt objekt = null;
-	
+	protected SystemObject objekt = null;
+
 	/**
 	 * Indiziert, ob ein Abnehmer für die Daten dieses Objektes da ist
 	 */
 	protected boolean sendenOk = false;
-		
+
 	/**
 	 * Parameter Attributgruppe
 	 */
@@ -80,64 +78,96 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	 * Datenbeschreibung der zu publizierenden Daten
 	 */
 	protected DataDescription pubBeschreibung = null;
-	
+
 	/**
-	 * Indiziert, ob dieses Objekt im Moment auf <code>keine Daten</code> steht
+	 * Indiziert, ob dieses Objekt im Moment auf <code>keine Daten</code>
+	 * steht
 	 */
 	protected boolean aktuellKeineDaten = true;
 
-		
 	/**
-	 * Initialisiert diese Instanz
+	 * Initialisiert diese Instanz indem sich auf Parameter angemeldet wird und
+	 * eine Sendeanmeldung durchgefuehrt wird.
 	 * 
-	 * @param dav Datenverteiler-Verbindung
-	 * @param objekt das Objekt, fuer dass der Stoerfallzustand berechnet werden soll
-	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht vollständig
-	 * initialisiert werden konnte
+	 * @param dav
+	 *            Datenverteiler-Verbindung
+	 * @param objekt
+	 *            das Objekt, fuer dass der Stoerfallzustand berechnet werden
+	 *            soll
+	 * @throws DUAInitialisierungsException
+	 *             wenn dieses Objekt nicht vollständig initialisiert werden
+	 *             konnte
 	 */
 	public void initialisiere(final ClientDavInterface dav,
-							  final PrognoseSystemObjekt objekt)
-	throws DUAInitialisierungsException{
-		if(DAV == null){
+			final SystemObject objekt) throws DUAInitialisierungsException {
+		if (DAV == null) {
 			DAV = dav;
 		}
 		this.objekt = objekt;
-		
-		this.paraAtg = dav.getDataModel().getAttributeGroup(this.getParameterAtgPid());
-		dav.subscribeReceiver(this, objekt.getObjekt(),
-				new DataDescription(this.paraAtg, dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL), (short)0),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
-		
-		
-		this.pubBeschreibung = new DataDescription(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
-				dav.getDataModel().getAspect(this.getPubAspektPid()),
-				(short)0);
+
+		if (this.getParameterAtgPid() != null) {
+			this.paraAtg = dav.getDataModel().getAttributeGroup(
+					this.getParameterAtgPid());
+			dav.subscribeReceiver(this, objekt, new DataDescription(
+					this.paraAtg, dav.getDataModel().getAspect(
+							DaVKonstanten.ASP_PARAMETER_SOLL), (short) 0),
+					ReceiveOptions.normal(), ReceiverRole.receiver());
+		}
+
+		this.pubBeschreibung = new DataDescription(dav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav
+				.getDataModel().getAspect(this.getPubAspektPid()), (short) 0);
 		try {
-			dav.subscribeSender(this, objekt.getObjekt(), this.pubBeschreibung, SenderRole.source());
+			dav.subscribeSender(this, objekt, this.pubBeschreibung, SenderRole
+					.source());
 		} catch (OneSubscriptionPerSendData e) {
 			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 		}
-		
-		/**
-		 * Anmeldung auf Daten
-		 */
-		dav.subscribeReceiver(this, objekt.getObjekt(),
-				new DataDescription(this.objekt.getPubAtgGlatt(),
-						PrognoseTyp.NORMAL.getAspekt(),
-						(short)0),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+	}
+	
+	/**
+	 * Macht alle Anmeldungen aus dem Konstruktor wieder rueckgaengig. 
+	 */
+	protected void abmelden() throws DUAInitialisierungsException {
+		if (this.paraAtg != null) {
+			DAV.unsubscribeReceiver(this, objekt, new DataDescription(
+					this.paraAtg, DAV.getDataModel().getAspect(
+							DaVKonstanten.ASP_PARAMETER_SOLL)));
+		}
+		DAV.unsubscribeSender(this, objekt, this.pubBeschreibung);
+		this.paraAtg = null;
+		this.objekt = null;
+		this.pubBeschreibung = null;
 	}
 
-	
 	/**
 	 * Erfragt die Pid der Parameterattributgruppe
 	 * 
 	 * @return die Pid der Parameterattributgruppe
 	 */
-	protected abstract String getParameterAtgPid();
+	protected String getParameterAtgPid() {
+		return null;
+	}
 
-	
+	/**
+	 * Liest einen Parametersatz
+	 * 
+	 * @param parameter
+	 *            einen Parametersatz
+	 */
+	protected void readParameter(ResultData parameter) {
+		// zum ueberschreiben bzw. weglassen gedacht
+	}
+
+	/**
+	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten
+	 * und publiziert diesen ggf.
+	 * 
+	 * @param resultat
+	 *            ein empfangenes Datum zur Berechnung des Stoerfallindikators
+	 */
+	protected abstract void berechneStoerfallIndikator(ResultData resultat);
+
 	/**
 	 * Erfragt die Pid des Publikationsaspektes
 	 * 
@@ -145,90 +175,76 @@ implements ClientReceiverInterface, ClientSenderInterface{
 	 */
 	protected abstract String getPubAspektPid();
 
-
-	/**
-	 * Liest einen Parametersatz
-	 * 
-	 * @param parameter einen Parametersatz
-	 */
-	protected abstract void readParameter(ResultData parameter);
-	
-	
-	/**
-	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten
-	 * und publiziert diesen ggf.
-	 * 
-	 * @param resultat ein empfangenes Datum zur Berechnung des Stoerfallindikators
-	 */
-	protected abstract void berechneStoerfallIndikator(ResultData resultat);
-	
-	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		if(resultate != null) {
-			for(ResultData resultat:resultate){
-				if(resultat != null){
-					if(resultat.getDataDescription().getAttributeGroup().getId() == this.paraAtg.getId()){
+		if (resultate != null) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null) {
+					if (this.paraAtg != null
+							&& resultat.getDataDescription()
+									.getAttributeGroup().getId() == this.paraAtg
+									.getId()) {
 						/**
 						 * Parameter empfangen
 						 */
 						this.readParameter(resultat);
-					}else{
+					} else {
 						/**
 						 * Daten empfangen
 						 */
-						this.berechneStoerfallIndikator(resultat);							
+						this.berechneStoerfallIndikator(resultat);
 					}
 				}
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Sendet einen Ergebnisdatensatz
 	 * 
-	 * @param ergebnis ein Ergebnisdatensatz
+	 * @param ergebnis
+	 *            ein Ergebnisdatensatz
 	 */
-	protected final void sendeErgebnis(final ResultData ergebnis){
-		if(ergebnis.getData() != null){
+	protected final void sendeErgebnis(final ResultData ergebnis) {
+		if (ergebnis.getData() != null) {
 			try {
-				if(sendenOk){
+				if (sendenOk) {
 					DAV.sendData(ergebnis);
 					this.aktuellKeineDaten = false;
-				}else{
-					Debug.getLogger().info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
+				} else {
+					Debug.getLogger().info(
+							"Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 				}
-			} catch (DataNotSubscribedException  e) {
+			} catch (DataNotSubscribedException e) {
 				Debug.getLogger().error(Constants.EMPTY_STRING, e);
 				e.printStackTrace();
-			} catch(SendSubscriptionNotConfirmed  e){
+			} catch (SendSubscriptionNotConfirmed e) {
 				Debug.getLogger().error(Constants.EMPTY_STRING, e);
-				e.printStackTrace();				
+				e.printStackTrace();
 			}
-		}else{
-			if(!this.aktuellKeineDaten){
+		} else {
+			if (!this.aktuellKeineDaten) {
 				try {
-					if(sendenOk){
+					if (sendenOk) {
 						DAV.sendData(ergebnis);
 						this.aktuellKeineDaten = true;
-					}else{
-						Debug.getLogger().info("Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
+					} else {
+						Debug.getLogger().info(
+								"Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
 					}
-				} catch (DataNotSubscribedException  e) {
+				} catch (DataNotSubscribedException e) {
 					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
-				} catch(SendSubscriptionNotConfirmed  e){
+				} catch (SendSubscriptionNotConfirmed e) {
 					Debug.getLogger().error(Constants.EMPTY_STRING, e);
-					e.printStackTrace();				
+					e.printStackTrace();
 				}
-			}							
-		}		
+			}
+		}
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -237,7 +253,6 @@ implements ClientReceiverInterface, ClientSenderInterface{
 		this.sendenOk = state == ClientSenderInterface.START_SENDING;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -245,5 +260,5 @@ implements ClientReceiverInterface, ClientSenderInterface{
 			DataDescription dataDescription) {
 		return true;
 	}
-	
+
 }

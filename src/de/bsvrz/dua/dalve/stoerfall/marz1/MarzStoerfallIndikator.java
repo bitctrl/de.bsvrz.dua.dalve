@@ -25,10 +25,19 @@
  */
 package de.bsvrz.dua.dalve.stoerfall.marz1;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
+import de.bsvrz.dua.dalve.prognose.PrognoseTyp;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
@@ -36,7 +45,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Repräsentiert einen Stoerfallindikator nach MARZ
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
  */
 public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
@@ -61,7 +70,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	private static final StoerfallSituation Z4 = StoerfallSituation.STAU;
 
 	/**
-	 * Grenzgeschwindigkeit 1 (0<v1<v2) 
+	 * Grenzgeschwindigkeit 1 (0<v1<v2)
 	 */
 	private long v1 = -4;
 
@@ -85,6 +94,26 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	private StoerfallSituation letzterStoerfallZustand = StoerfallSituation.KEINE_AUSSAGE;
 
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
+			throws DUAInitialisierungsException {
+		// TODO Auto-generated method stub
+		super.initialisiere(dav, objekt);
+		
+		/**
+		 * Anmeldung auf Daten
+		 */
+		dav.subscribeReceiver(this, objekt, new DataDescription(
+				DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
+				PrognoseTyp.NORMAL.getAspekt(), (short) 0), ReceiveOptions
+				.normal(), ReceiverRole.receiver());
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -105,14 +134,15 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten
 	 * analog MARZ 2004 (siehe 2.3.2.1.4 Verkehrssituationsuebersicht)
 	 * 
-	 * @param resultat ein empfangenes geglaettes Datum mit Nutzdaten
+	 * @param resultat
+	 *            ein empfangenes geglaettes Datum mit Nutzdaten
 	 */
 	protected void berechneStoerfallIndikator(ResultData resultat) {
 		Data data = null;
 
 		if (resultat.getData() != null) {
-			String attrV = this.objekt.isFahrStreifen() ? "vKfzG" : "VKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
-			String attrK = this.objekt.isFahrStreifen() ? "kBG" : "KBG"; //$NON-NLS-1$ //$NON-NLS-2$
+			String attrV = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "vKfzG" : "VKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
+			String attrK = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kBG" : "KBG"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			long v = resultat.getData().getItem(attrV)
 					.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
@@ -151,7 +181,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			}
 
 			StoerfallZustand zustand = new StoerfallZustand(DAV);
-			if (this.objekt.isFahrStreifen()) {
+			if (this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
 				zustand.setT(resultat.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
 			}
 			zustand.setSituation(situation);
@@ -159,8 +189,8 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			letzterStoerfallZustand = situation;
 		}
 
-		ResultData ergebnis = new ResultData(this.objekt.getObjekt(),
-				this.pubBeschreibung, resultat.getDataTime(), data);
+		ResultData ergebnis = new ResultData(this.objekt, this.pubBeschreibung,
+				resultat.getDataTime(), data);
 		this.sendeErgebnis(ergebnis);
 	}
 

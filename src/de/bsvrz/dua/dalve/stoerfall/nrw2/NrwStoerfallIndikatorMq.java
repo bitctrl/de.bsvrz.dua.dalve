@@ -36,7 +36,7 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.dalve.prognose.PrognoseSystemObjekt;
+import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -63,7 +63,7 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 	 * Attributgruppe der Analysedaten von Fahrstreifen
 	 */
 	private AttributeGroup fsAnalyseAtg = null;
-	
+
 	/**
 	 * der Messquerschnitt
 	 */
@@ -73,16 +73,15 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialisiere(ClientDavInterface dav,
-			PrognoseSystemObjekt objekt) throws DUAInitialisierungsException {
+	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
+			throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
 
 		/**
 		 * Anmeldung auf Analysedaten aller Fahrstreifen dieses
 		 * Messquerschnittes
 		 */
-		mq = MessQuerschnittAllgemein
-				.getInstanz(objekt.getObjekt());
+		mq = MessQuerschnittAllgemein.getInstanz(objekt);
 
 		if (mq != null) {
 			for (FahrStreifen fs : mq.getFahrStreifen()) {
@@ -127,7 +126,7 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 
 		if (resultat.getData() != null) {
 			if (resultat.getDataDescription().getAttributeGroup().equals(
-					objekt.getAnalyseAtg())) {
+					DatenaufbereitungLVE.getAnalyseAtg(objekt))) {
 				this.analyseDatensatz = resultat;
 			} else if (resultat.getDataDescription().getAttributeGroup()
 					.equals(this.fsAnalyseAtg)) {
@@ -136,26 +135,26 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 				this.geglaettetDatensatz = resultat;
 			}
 
-//			/**
-//			 * Führe jetzt eine Berechnung durch, wenn alle Daten von allen
-//			 * Fahrstreifen fuer ein und denselben Zeitstempel da
-//			 */
-//			TreeSet<Long> zeitStempelPuffer = new TreeSet<Long>();
-//			for (SystemObject fsObj : this.fsDaten.keySet()) {
-//				ResultData fsDatum = this.fsDaten.get(fsObj);
-//				if (fsDatum == null) {
-//					zeitStempelPuffer = null;
-//					break;
-//				} else {
-//					zeitStempelPuffer.add(fsDatum.getDataTime());
-//				}
-//			}
+			// /**
+			// * Führe jetzt eine Berechnung durch, wenn alle Daten von allen
+			// * Fahrstreifen fuer ein und denselben Zeitstempel da
+			// */
+			// TreeSet<Long> zeitStempelPuffer = new TreeSet<Long>();
+			// for (SystemObject fsObj : this.fsDaten.keySet()) {
+			// ResultData fsDatum = this.fsDaten.get(fsObj);
+			// if (fsDatum == null) {
+			// zeitStempelPuffer = null;
+			// break;
+			// } else {
+			// zeitStempelPuffer.add(fsDatum.getDataTime());
+			// }
+			// }
 
 			if (this.analyseDatensatz != null
 					&& this.geglaettetDatensatz != null) {
-				
+
 				if (this.analyseDatensatz.getDataTime() == this.geglaettetDatensatz
-								.getDataTime()) {
+						.getDataTime()) {
 					StoerfallSituation stufe = StoerfallSituation.KEINE_AUSSAGE;
 
 					if (v1 >= 0 && v2 >= 0 && k1 >= 0 && k2 >= 0 && k3 >= 0
@@ -188,27 +187,25 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 					zustand.setSituation(stufe);
 					data = zustand.getData();
 
-					ResultData ergebnis = new ResultData(this.objekt
-							.getObjekt(), this.pubBeschreibung, resultat
-							.getDataTime(), data);
+					ResultData ergebnis = new ResultData(this.objekt,
+							this.pubBeschreibung, resultat.getDataTime(), data);
 					this.sendeErgebnis(ergebnis);
 
 				} else {
-					ResultData ergebnis = new ResultData(this.objekt
-							.getObjekt(), this.pubBeschreibung, resultat
-							.getDataTime(), data);
+					ResultData ergebnis = new ResultData(this.objekt,
+							this.pubBeschreibung, resultat.getDataTime(), data);
 					this.sendeErgebnis(ergebnis);
 				}
-				
+
 				this.analyseDatensatz = null;
 				this.geglaettetDatensatz = null;
-				for(FahrStreifen fs:this.mq.getFahrStreifen()){
+				for (FahrStreifen fs : this.mq.getFahrStreifen()) {
 					this.fsDaten.put(fs.getSystemObject(), null);
 				}
 			}
 
 		} else {
-			ResultData ergebnis = new ResultData(this.objekt.getObjekt(),
+			ResultData ergebnis = new ResultData(this.objekt,
 					this.pubBeschreibung, resultat.getDataTime(), data);
 			this.sendeErgebnis(ergebnis);
 		}
@@ -236,16 +233,16 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 		long min = Long.MAX_VALUE;
 
 		boolean einerNull = false;
-		for(ResultData r:fsDaten.values()){
-			if(r == null){
+		for (ResultData r : fsDaten.values()) {
+			if (r == null) {
 				einerNull = true;
 				break;
 			}
 		}
-		
-		if(einerNull){
+
+		if (einerNull) {
 			vvst = VKfz;
-		}else{
+		} else {
 			for (ResultData fsDatum : this.fsDaten.values()) {
 				long vgKfz = fsDatum.getData().getItem("vgKfz"). //$NON-NLS-1$
 						getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
