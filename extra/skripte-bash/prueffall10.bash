@@ -48,7 +48,7 @@ do
 	echo "="
 	echo "================================================="
 	echo 
-	java -cp $cp $jvmArgs org.junit.runner.JUnitCore "de.bsvrz.dua."$appname"."${tests[$i]}
+	$java -cp $cp $jvmArgs org.junit.runner.JUnitCore "de.bsvrz.dua."$appname"."${tests[$i]}
 	sleep 2
 done
 

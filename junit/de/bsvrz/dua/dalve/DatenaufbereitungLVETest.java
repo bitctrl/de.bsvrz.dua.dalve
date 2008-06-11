@@ -21,7 +21,7 @@ public class DatenaufbereitungLVETest {
 	public static final String[] CON_DATA = new String[] {
 			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
 			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=c:\\passwd" }; //$NON-NLS-1$
+			"-authentifizierung=passwd" }; //$NON-NLS-1$
 	
 	/**
 	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden
@@ -46,17 +46,17 @@ public class DatenaufbereitungLVETest {
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.8 (15.05.08)\\"; //$NON-NLS-1$
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.8.9 (15.05.08)\\"; //$NON-NLS-1$
 //	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.1 (19.05.08)\\"; //$NON-NLS-1$
-	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.2 (20.05.08)\\"; //$NON-NLS-1$
+//	protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.2 (20.05.08)\\"; //$NON-NLS-1$
 
-//	protected static final String TEST_DATEN_VERZ = "../testDaten/V_2.9.2 (20.05.08)/"; //$NON-NLS-1$
+	protected static final String TEST_DATEN_VERZ = "../testDaten/V_2.9.2 (20.05.08)/"; //$NON-NLS-1$
 
 	
 	/**
 	 * Verzeichnis, in dem sich die CSV-Datei mit den Testdaten fuer virtuelle MQs befinden
 	 */
-	protected static final String TEST_DATEN_VERZ_VIRTUELL = ".\\extra\\testDaten\\mqVirtuell\\"; //$NON-NLS-1$
+//	protected static final String TEST_DATEN_VERZ_VIRTUELL = ".\\extra\\testDaten\\mqVirtuell\\"; //$NON-NLS-1$
 	
-//	protected static final String TEST_DATEN_VERZ_VIRTUELL = "../testDaten/mqVirtuell/"; //$NON-NLS-1$
+	protected static final String TEST_DATEN_VERZ_VIRTUELL = "../testDaten/mqVirtuell/"; //$NON-NLS-1$
 	
 	/**
 	 * Logger und Loggerargument

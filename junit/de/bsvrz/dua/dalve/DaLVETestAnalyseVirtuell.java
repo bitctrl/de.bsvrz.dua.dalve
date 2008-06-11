@@ -29,8 +29,6 @@ package de.bsvrz.dua.dalve;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitctrl.Constants;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -140,7 +138,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 					zeileFS3);
 
 			System.out
-					.println("Sende Daten: FS 1-3 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+					.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dav.sendData(resultat1);
 			this.dav.sendData(resultat2);
 			this.dav.sendData(resultat3);
@@ -153,7 +151,6 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
-			
 
 			// setze neue Prüfzeit
 			aktZeit = System.currentTimeMillis();

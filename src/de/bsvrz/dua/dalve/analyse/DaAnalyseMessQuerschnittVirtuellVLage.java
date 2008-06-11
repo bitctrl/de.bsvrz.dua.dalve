@@ -201,7 +201,6 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 			}
 		}
 		
-		System.out.println(ergebnis);
 		return ergebnis;
 	}
 
@@ -352,11 +351,6 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	private void publiziere(final ResultData ergebnis) {
 		if (ergebnis != null) {
 
-			System.out.println("Erg" + ergebnis);
-			System.out.println(letztesErgebnis);
-			if(letztesErgebnis != null){
-				System.out.println("le:" + letztesErgebnis);
-			}
 			/**
 			 * nur echt neue Daten versenden
 			 */

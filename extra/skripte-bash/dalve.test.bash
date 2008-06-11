@@ -33,7 +33,7 @@ fi
 ################################################################################
 
 # Applikation starten
-java $jvmArgs -jar ../de.bsvrz.dua.dalve-runtime.jar \
+$java $jvmArgs -jar ../de.bsvrz.dua.dalve-runtime.jar \
 	$dav1 \
 	-KonfigurationsBereichsPid=$kb \
 	-gueteFaktor=0.97 \
