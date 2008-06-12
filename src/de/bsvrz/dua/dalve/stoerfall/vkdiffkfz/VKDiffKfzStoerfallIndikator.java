@@ -26,6 +26,8 @@
 
 package de.bsvrz.dua.dalve.stoerfall.vkdiffkfz;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
@@ -34,9 +36,16 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
+import de.bsvrz.dua.dalve.ErfassungsIntervallDauerMQ;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
+import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
+import de.bsvrz.dua.guete.GWert;
+import de.bsvrz.dua.guete.GueteException;
+import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
+import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.bitctrl.modell.DatensatzUpdateEvent;
 import de.bsvrz.sys.funclib.bitctrl.modell.DatensatzUpdateListener;
 import de.bsvrz.sys.funclib.bitctrl.modell.Datum;
@@ -65,6 +74,11 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	private static final StoerfallSituation STAU = StoerfallSituation.STAU;
 
 	/**
+	 * VKDiffKfz-Situation <code>keine Aussage</code>.
+	 */
+	private static final StoerfallSituation KEINE_AUSSAGE = StoerfallSituation.KEINE_AUSSAGE;
+
+	/**
 	 * Parameter <code>VKDiffEin</code>.
 	 */
 	private long vKDiffEin = -4;
@@ -84,17 +98,90 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	private long qKfzDiffAus = -4;
 
-	// private long tReise =
+	/**
+	 * Freie Geschwindigkeit des Fundamentaldiagramms (Einfahrt).
+	 */
+	private double vFreiE = Double.NaN;
 
 	/**
-	 * Daten des Fundamentaldiagramms des Einfahrtsquerschnitts.
+	 * Maximale Dichte des Fundamentaldiagramms (Einfahrt).
 	 */
-	private PdFundamentalDiagramm.Daten fde = null;
+	private double k0E = Double.NaN;
 
 	/**
-	 * Daten des Fundamentaldiagramms des Ausfahrtsquerschnitts.
+	 * Freie Geschwindigkeit des Fundamentaldiagramms (Ausfahrt).
 	 */
-	private PdFundamentalDiagramm.Daten fda = null;
+	private double vFreiA = Double.NaN;
+
+	/**
+	 * Maximale Dichte des Fundamentaldiagramms (Ausfahrt).
+	 */
+	private double k0A = Double.NaN;
+
+	/**
+	 * Parametrierte Reisezeit zwischen den beiden MQs.
+	 */
+	private long tReise = -4;
+
+	/**
+	 * Ringpuffer fuer VKfz(e).
+	 */
+	private RingPuffer vKfzEPuffer = new RingPuffer();;
+
+	/**
+	 * Ringpuffer fuer kKfz(e).
+	 */
+	private RingPuffer kKfzEPuffer = new RingPuffer();;
+
+	/**
+	 * Aktueller Wert fuer VKfz(a).
+	 */
+	private VKDiffWert vKfzAAktuell = VKDiffWert.getLeer(System
+			.currentTimeMillis());
+
+	/**
+	 * Aktueller Wert fuer KKfz(a).
+	 */
+	private VKDiffWert kKfzAAktuell = VKDiffWert.getLeer(System
+			.currentTimeMillis());
+
+	/**
+	 * Aktueller Wert fuer QKfz(e).
+	 */
+	private VKDiffWert qKfzEAktuell = VKDiffWert.getLeer(System
+			.currentTimeMillis());
+
+	/**
+	 * Die im Schritt <code>t-T</code> ermittelte Stoerfallsituation.
+	 */
+	private StoerfallSituation alteSituation = KEINE_AUSSAGE;
+
+	/**
+	 * Die im Schritt <code>t-T</code> ermittelte Guete der
+	 * Stoerfallsituation.
+	 */
+	private GWert alteGuete = GWert
+			.getNichtErmittelbareGuete(GueteVerfahren.STANDARD);
+
+	/**
+	 * 1. Messquerschnitt.
+	 */
+	private SystemObject von = null;
+
+	/**
+	 * 2. Messquerschnitt.
+	 */
+	private SystemObject bis = null;
+
+	/**
+	 * T vom 1. Messquerschnitt.
+	 */
+	private ErfassungsIntervallDauerMQ vonT = null;
+
+	/**
+	 * T vom 2. Messquerschnitt.
+	 */
+	private ErfassungsIntervallDauerMQ bisT = null;
 
 	/**
 	 * {@inheritDoc}
@@ -106,9 +193,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 		Data konfigData = objekt.getConfigurationData(dav.getDataModel()
 				.getAttributeGroup("atg.straßenAbschnitt"));
-
-		SystemObject von = null;
-		SystemObject bis = null;
 
 		if (konfigData != null) {
 			if (konfigData.getReferenceValue("vonMessQuerschnitt") != null
@@ -153,6 +237,9 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		}
 
 		if (von != null && bis != null) {
+			this.vonT = ErfassungsIntervallDauerMQ.getInstanz(dav, von);
+			this.bisT = ErfassungsIntervallDauerMQ.getInstanz(dav, bis);
+
 			dav.subscribeReceiver(this, new SystemObject[] { von, bis },
 					new DataDescription(dav.getDataModel().getAttributeGroup(
 							DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel()
@@ -188,9 +275,25 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 				public void datensatzAktualisiert(DatensatzUpdateEvent event) {
 					if (event.getDatum().isValid()
-							&& event.getDatensatz() != null) {
-						VKDiffKfzStoerfallIndikator.this.fde = (PdFundamentalDiagramm.Daten) event
+							&& event.getDatensatz() != null
+							&& event.getDatum() != null
+							&& event.getDatum().getDatenStatus() == Datum.Status.DATEN) {
+						PdFundamentalDiagramm.Daten fde = (PdFundamentalDiagramm.Daten) event
 								.getDatum();
+						if (fde.getK0() >= 0) {
+							VKDiffKfzStoerfallIndikator.this.k0E = fde.getK0();
+						} else {
+							VKDiffKfzStoerfallIndikator.this.k0E = Double.NaN;
+						}
+						if (fde.getVFrei() >= 0) {
+							VKDiffKfzStoerfallIndikator.this.vFreiE = fde
+									.getVFrei();
+						} else {
+							VKDiffKfzStoerfallIndikator.this.vFreiE = Double.NaN;
+						}
+					} else {
+						VKDiffKfzStoerfallIndikator.this.k0E = Double.NaN;
+						VKDiffKfzStoerfallIndikator.this.vFreiE = Double.NaN;
 					}
 				}
 
@@ -225,9 +328,25 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 				public void datensatzAktualisiert(DatensatzUpdateEvent event) {
 					if (event.getDatum().isValid()
-							&& event.getDatensatz() != null) {
-						VKDiffKfzStoerfallIndikator.this.fda = (PdFundamentalDiagramm.Daten) event
+							&& event.getDatensatz() != null
+							&& event.getDatum() != null
+							&& event.getDatum().getDatenStatus() == Datum.Status.DATEN) {
+						PdFundamentalDiagramm.Daten fda = (PdFundamentalDiagramm.Daten) event
 								.getDatum();
+						if (fda.getK0() >= 0) {
+							VKDiffKfzStoerfallIndikator.this.k0A = fda.getK0();
+						} else {
+							VKDiffKfzStoerfallIndikator.this.k0A = Double.NaN;
+						}
+						if (fda.getVFrei() >= 0) {
+							VKDiffKfzStoerfallIndikator.this.vFreiA = fda
+									.getVFrei();
+						} else {
+							VKDiffKfzStoerfallIndikator.this.vFreiA = Double.NaN;
+						}
+					} else {
+						VKDiffKfzStoerfallIndikator.this.k0A = Double.NaN;
+						VKDiffKfzStoerfallIndikator.this.vFreiA = Double.NaN;
 					}
 				}
 
@@ -258,11 +377,17 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 						.getUnscaledValue("Ein").longValue();
 				this.qKfzDiffAus = parameter.getData().getItem("QKfzDiff")
 						.getUnscaledValue("Aus").longValue();
+				
+				this.tReise = Constants.MILLIS_PER_MINUTE * 3;
+				this.kKfzEPuffer.setGroesse(tReise);
+				this.vKfzEPuffer.setGroesse(tReise);
+					
 			} else {
 				this.vKDiffEin = -4;
 				this.vKDiffAus = -4;
 				this.qKfzDiffEin = -4;
 				this.qKfzDiffAus = -4;
+				this.tReise = -4;
 			}
 		}
 	}
@@ -277,15 +402,230 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 	/**
 	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten
-	 * analog MARZ 2004 (siehe 2.3.2.1.4 Verkehrssituationsuebersicht)
+	 * analog DUA-50.
 	 * 
 	 * @param resultat
-	 *            ein empfangenes geglaettes Datum mit Nutzdaten
+	 *            ein empfangenes Analyse-Datum eines MQ mit Nutzdaten.
 	 */
 	protected void berechneStoerfallIndikator(ResultData resultat) {
 		Data data = null;
 
-		System.out.println("VKDiffKfz: " + resultat);
+		if (resultat.getData() != null) {
+			this.puffereDaten(resultat);
+
+			if (this.isNeuerIntervallVergangen()) {
+				double qKfzE = this.qKfzEAktuell.getWert();
+				GWert qKfzEGuete = this.qKfzEAktuell.getGWert();
+
+				double vKfzEtMinustReise = this.kKfzEPuffer
+						.getDatumFuerZeitpunkt(
+								resultat.getDataTime() - this.tReise).getWert();
+				GWert vKfzEtMinustReiseGuete = this.kKfzEPuffer
+						.getDatumFuerZeitpunkt(
+								resultat.getDataTime() - this.tReise)
+						.getGWert();
+
+				double kKfzEtMinustReise = this.kKfzEPuffer
+						.getDatumFuerZeitpunkt(
+								resultat.getDataTime() - this.tReise).getWert();
+				GWert kKfzEtMinustReiseGuete = this.kKfzEPuffer
+						.getDatumFuerZeitpunkt(
+								resultat.getDataTime() - this.tReise)
+						.getGWert();
+
+				double vKfzAt = this.vKfzAAktuell.getWert();
+				GWert vKfzAtGuete = this.vKfzAAktuell.getGWert();
+
+				double kKfzAt = this.kKfzAAktuell.getWert();
+				GWert kKfzAtGuete = this.kKfzAAktuell.getGWert();
+
+				if (!Double.isNaN(this.vFreiA) && !Double.isNaN(this.vFreiE)
+						&& !Double.isNaN(this.k0A) && !Double.isNaN(this.k0E)
+						&& !Double.isNaN(vKfzEtMinustReise)
+						&& !Double.isNaN(kKfzEtMinustReise)
+						&& !Double.isNaN(vKfzAt) && !Double.isNaN(kKfzAt)
+						&& !Double.isNaN(qKfzE)) {
+					/**
+					 * d.h., alle zur Berechnung notwendigen Werte sind valide.
+					 */
+
+					double vFreiEMinusVKfzEtMinustReise = 0.0;
+					if (this.vFreiE - vKfzEtMinustReise >= 0.0) {
+						vFreiEMinusVKfzEtMinustReise = this.vFreiE
+								- vKfzEtMinustReise;
+					}
+					double vFreiAMinusVKfzAt = 0.0;
+					if (this.vFreiA - vKfzAt >= 0.0) {
+						vFreiAMinusVKfzAt = this.vFreiA - vKfzAt;
+					}
+
+					GWert vKDiffKfzGuete = GWert
+							.getNichtErmittelbareGuete(GueteVerfahren.STANDARD);
+					try {
+						vKDiffKfzGuete = GueteVerfahren.differenz(
+								GueteVerfahren.exp(GueteVerfahren.summe(
+										GueteVerfahren.exp(
+												vKfzEtMinustReiseGuete, 2.0),
+										GueteVerfahren.exp(
+												kKfzEtMinustReiseGuete, 2.0)),
+										0.5), GueteVerfahren.exp(GueteVerfahren
+										.summe(GueteVerfahren.exp(vKfzAtGuete,
+												2.0), GueteVerfahren.exp(
+												kKfzAtGuete, 2.0)), 0.5));
+					} catch (GueteException ex) {
+						Debug
+								.getLogger()
+								.error(
+										"Guete von VKDiffKfz fuer "
+												+ this.objekt
+												+ " konnte nicht bestimmte werden. Grund:\n"
+												+ ex.getMessage());
+					}
+
+					double vKDiffKfz = Math
+							.sqrt(Math.pow(vFreiEMinusVKfzEtMinustReise
+									/ this.vFreiE, 2.0)
+									+ Math.pow(kKfzEtMinustReise
+											/ (2 * this.k0E), 2.0))
+							- Math.sqrt(Math.pow(vFreiAMinusVKfzAt
+									/ this.vFreiA, 2.0)
+									+ Math.pow(kKfzAt / (2 * this.k0A), 2.0));
+
+					StoerfallSituation situation = this.alteSituation;
+					GWert situationsGuete = this.alteGuete;
+					if (this.vKDiffEin >= 0 && this.qKfzDiffEin >= 0
+							&& this.vKDiffAus >= 0 && this.qKfzDiffAus >= 0
+							&& qKfzE >= 0) {
+
+						boolean neueStufeBerechnet = false;
+						if (vKDiffKfz > this.vKDiffEin
+								&& qKfzE > this.qKfzDiffEin) {
+							situation = STAU;
+							neueStufeBerechnet = true;
+						}
+
+						if (vKDiffKfz < vKDiffAus && qKfzE < qKfzDiffAus) {
+							situation = FREI;
+							neueStufeBerechnet = true;
+						}
+
+						if (neueStufeBerechnet) {
+							try {
+								situationsGuete = GueteVerfahren.summe(
+										vKDiffKfzGuete, qKfzEGuete);
+							} catch (GueteException ex) {
+								Debug
+										.getLogger()
+										.error(
+												"Guete von Stoerfallindikator VKDiffKfz fuer "
+														+ this.objekt
+														+ " konnte nicht bestimmte werden. Grund:\n"
+														+ ex.getMessage());
+							}
+						}
+					} else {
+						/**
+						 * Keine Aussage, wenn zwar VKDiffKfz berechnet werden
+						 * konnte, aber der Stoerfallzustand aufgrund von
+						 * fehlenden Parametern nicht ausgerechnet werden
+						 * konnte.
+						 */
+						situation = KEINE_AUSSAGE;
+					}
+
+					data = DAV.createData(this.pubBeschreibung
+							.getAttributeGroup());
+
+					StoerfallZustand zustand = new StoerfallZustand(DAV);
+					zustand.setHorizont(0);
+					zustand.setT(this.vonT.getT()); //$NON-NLS-1$
+					zustand.setSituation(situation);
+					zustand.setVerfahren(GueteVerfahren.STANDARD);
+					GanzZahl g = GanzZahl.getGueteIndex();
+					g.setWert(situationsGuete.getIndexUnskaliert());
+					zustand.setGuete(g);
+					data = zustand.getData();
+
+					this.alteSituation = situation;
+					this.alteGuete = situationsGuete;
+				}
+			} else {
+				/**
+				 * warte auf Restdatum von anderem MQ
+				 */
+				return;
+			}
+		}
+
+		ResultData ergebnis = new ResultData(this.objekt, this.pubBeschreibung,
+				resultat.getDataTime(), data);
+		this.sendeErgebnis(ergebnis);
+	}
+
+	/**
+	 * Erfragt, ob eine neuer Intervall vergangen ist.
+	 * 
+	 * @return ob eine neuer Intervall vergangen ist.
+	 */
+	private boolean isNeuerIntervallVergangen() {
+		if (!this.qKfzEAktuell.isLeer() && !this.vKfzAAktuell.isLeer()) {
+			return this.qKfzEAktuell.getZeitStempel() == this.vKfzAAktuell
+					.getZeitStempel();
+		}
+		return false;
+	}
+
+	/**
+	 * Puffert alle relevanten empfangenen Daten.
+	 * 
+	 * @param result
+	 *            ein MQ-Datum.
+	 */
+	private void puffereDaten(ResultData result) {
+		if (this.vonT.getT() >= 0 && this.vonT.getT() == this.bisT.getT()) {
+			/**
+			 * MQs haben die gleiche Erfassungsintervalldauer
+			 */
+			if (result.getObject().equals(this.von)) {
+				/**
+				 * 1. Messquerschnitt
+				 */
+				if (result.getData() == null) {
+					qKfzEAktuell = VKDiffWert.getLeer(result.getDataTime());
+					vKfzEPuffer.put(VKDiffWert.getLeer(result.getDataTime()));
+					kKfzEPuffer.put(VKDiffWert.getLeer(result.getDataTime()));
+				} else {
+					qKfzEAktuell = new VKDiffWert(new MesswertUnskaliert(
+							"QKfz", result.getData()), result.getDataTime(),
+							this.bisT.getT());
+					vKfzEPuffer.put(new VKDiffWert(new MesswertUnskaliert(
+							"VKfz", result.getData()), result.getDataTime(),
+							this.bisT.getT()));
+					kKfzEPuffer.put(new VKDiffWert(new MesswertUnskaliert(
+							"KKfz", result.getData()), result.getDataTime(),
+							this.bisT.getT()));
+				}
+			} else {
+				/**
+				 * 2. Messquerschnitt
+				 */
+				if (result.getData() == null) {
+					vKfzAAktuell = VKDiffWert.getLeer(result.getDataTime());
+					kKfzAAktuell = VKDiffWert.getLeer(result.getDataTime());
+				} else {
+					vKfzAAktuell = new VKDiffWert(new MesswertUnskaliert(
+							"VKfz", result.getData()), result.getDataTime(),
+							this.bisT.getT());
+					kKfzAAktuell = new VKDiffWert(new MesswertUnskaliert(
+							"KKfz", result.getData()), result.getDataTime(),
+							this.bisT.getT());
+				}
+			}
+		} else {
+			qKfzEAktuell = VKDiffWert.getLeer(result.getDataTime());
+			vKfzAAktuell = VKDiffWert.getLeer(result.getDataTime());
+			kKfzAAktuell = VKDiffWert.getLeer(result.getDataTime());
+		}
 	}
 
 }

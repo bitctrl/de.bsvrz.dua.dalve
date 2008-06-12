@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
-package de.bsvrz.dua.dalve.analyse;
+package de.bsvrz.dua.dalve;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,17 +53,17 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @version $Id$
  */
-final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
+public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
 
 	/**
 	 * Platzhalter fuer noch nicht ermittelbare Erfassungsintervalldauer.
 	 */
-	static final long NOCH_NICHT_ERMITTELBAR = -1;
+	public static final long NOCH_NICHT_ERMITTELBAR = -1;
 	
 	/**
 	 * Platzhalter fuer nicht einheitliche Erfassungsintervalldauern.
 	 */
-	static final long NICHT_EINHEITLICH = -2;
+	public static final long NICHT_EINHEITLICH = -2;
 
 	/**
 	 * Alle statischen Instanzen dieser Klasse.
@@ -134,7 +134,7 @@ final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
 	 * @return eine statische Instanz dieser Klasse, oder <code>null</code>,
 	 *         wenn diese nicht ermittelt werden konnte
 	 */
-	static ErfassungsIntervallDauerMQ getInstanz(ClientDavInterface dav,
+	public static ErfassungsIntervallDauerMQ getInstanz(ClientDavInterface dav,
 			SystemObject mq) {
 		ErfassungsIntervallDauerMQ instanz = null;
 
@@ -163,7 +163,7 @@ final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
 	 * @return die aktuelle virtuelle Erfassungsintervalldauer <code>T</code>
 	 *         dieses MQ.
 	 */
-	long getT() {
+	public long getT() {
 		return this.erfassungsIntervallDauer;
 	}
 

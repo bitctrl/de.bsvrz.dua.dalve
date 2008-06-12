@@ -58,6 +58,10 @@ public class DatenaufbereitungLVETest {
 	
 //	protected static final String TEST_DATEN_VERZ_VIRTUELL = "../testDaten/mqVirtuell/"; //$NON-NLS-1$
 	
+	protected static final String TEST_DATEN_VERZ_VKDIFFKFZ = ".\\extra\\testDaten\\VKDiffKfz\\"; //$NON-NLS-1$
+	
+//	protected static final String TEST_DATEN_VERZ_VKDIFFKFZ = "../testDaten/VKDiffKfz/"; //$NON-NLS-1$
+	
 	/**
 	 * Logger und Loggerargument
 	 * 
