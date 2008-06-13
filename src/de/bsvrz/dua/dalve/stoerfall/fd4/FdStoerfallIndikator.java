@@ -33,6 +33,7 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
+import de.bsvrz.dua.dalve.ErfassungsIntervallDauerMQ;
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
@@ -100,6 +101,11 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 	 * der Zuatsnd, der zum Zeitpunkt t-T errechnet wurde
 	 */
 	private StoerfallSituation alterZustand = StoerfallSituation.KEINE_AUSSAGE;
+	
+	/**
+	 * Erfassungsintervalldauer.
+	 */
+	private ErfassungsIntervallDauerMQ erf = null;
 
 	/**
 	 * {@inheritDoc}
@@ -109,6 +115,10 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 			throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
 
+		if(objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
+			this.erf = ErfassungsIntervallDauerMQ.getInstanz(dav, objekt); 
+		}
+		
 		SystemObject fdObjekt = objekt;
 		SystemObject stsObjekt = DatenaufbereitungLVE
 				.getStraßenTeilSegment(objekt);
@@ -170,7 +180,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 
 			if (this.alleParameterValide()) {
 				data = DAV.createData(this.pubBeschreibung.getAttributeGroup());
-
+				
 				AnalyseDichte KKfzStoerfall = this.getAnalyseDichte(resultat);
 				double KKfzStoerfallG = Double.NaN;
 				try {
@@ -181,19 +191,21 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 					Debug.getLogger().warning(e.getMessage());
 				}
 
-				if (Double.isNaN(KKfzStoerfallG)) {
+				System.out.println(KKfzStoerfallG);
+				if (!Double.isNaN(KKfzStoerfallG)) {
 					stufe = StoerfallSituation.FREIER_VERKEHR;
 					stufe = berechneStufe(StoerfallSituation.ZAEHER_VERKEHR,
 							KKfzStoerfallG, stufe);
 					stufe = berechneStufe(StoerfallSituation.STAU,
 							KKfzStoerfallG, stufe);
-
-					StoerfallZustand zustand = new StoerfallZustand(DAV);
-					zustand.setHorizont(resultat.getData()
-							.getTimeValue("T").getMillis()); //$NON-NLS-1$
-					zustand.setSituation(stufe);
-					data = zustand.getData();
 				}
+				
+				StoerfallZustand zustand = new StoerfallZustand(DAV);
+				if(this.erf != null && this.erf.getT() > 0) {
+					zustand.setT(this.erf.getT());
+				}
+				zustand.setSituation(stufe);
+				data = zustand.getData();
 			} else {
 				Debug
 						.getLogger()

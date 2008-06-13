@@ -37,6 +37,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
+import de.bsvrz.dua.dalve.ErfassungsIntervallDauerMQ;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -70,12 +71,22 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 	private MessQuerschnittAllgemein mq = null;
 
 	/**
+	 * Erfassungsintervalldauer.
+	 */
+	private ErfassungsIntervallDauerMQ erf = null;
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
 			throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
+		
+		if(objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
+			this.erf = ErfassungsIntervallDauerMQ.getInstanz(dav, objekt); 
+		}
 
 		/**
 		 * Anmeldung auf Analysedaten aller Fahrstreifen dieses
@@ -176,21 +187,19 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 
 							stufe = this.getVerkehrsStufe(kvst, vvst);
 							this.letzteStufe = stufe;
-
-							StoerfallZustand zustand = new StoerfallZustand(DAV);
-							zustand.setSituation(stufe);
-							data = zustand.getData();
 						}
 					}
 
 					StoerfallZustand zustand = new StoerfallZustand(DAV);
+					if(this.erf != null && this.erf.getT() > 0){
+						zustand.setT(this.erf.getT());								
+					}
 					zustand.setSituation(stufe);
 					data = zustand.getData();
 
 					ResultData ergebnis = new ResultData(this.objekt,
 							this.pubBeschreibung, resultat.getDataTime(), data);
 					this.sendeErgebnis(ergebnis);
-
 				} else {
 					ResultData ergebnis = new ResultData(this.objekt,
 							this.pubBeschreibung, resultat.getDataTime(), data);

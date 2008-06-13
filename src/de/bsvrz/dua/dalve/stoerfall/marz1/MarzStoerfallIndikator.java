@@ -33,6 +33,7 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.DatenaufbereitungLVE;
+import de.bsvrz.dua.dalve.ErfassungsIntervallDauerMQ;
 import de.bsvrz.dua.dalve.prognose.PrognoseTyp;
 import de.bsvrz.dua.dalve.stoerfall.AbstraktStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.StoerfallZustand;
@@ -94,7 +95,10 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	private StoerfallSituation letzterStoerfallZustand = StoerfallSituation.KEINE_AUSSAGE;
 
-	
+	/**
+	 * Erfassungsintervalldauer.
+	 */
+	private ErfassungsIntervallDauerMQ erf = null;
 	
 	/**
 	 * {@inheritDoc}
@@ -102,9 +106,12 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	@Override
 	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
 			throws DUAInitialisierungsException {
-		// TODO Auto-generated method stub
 		super.initialisiere(dav, objekt);
 		
+		if(objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
+			this.erf = ErfassungsIntervallDauerMQ.getInstanz(dav, objekt); 
+		}
+			
 		/**
 		 * Anmeldung auf Daten
 		 */
@@ -183,6 +190,10 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			StoerfallZustand zustand = new StoerfallZustand(DAV);
 			if (this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
 				zustand.setT(resultat.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
+			} else {
+				if(this.erf != null && this.erf.getT() > 0) {
+					zustand.setT(this.erf.getT()); //$NON-NLS-1$
+				}
 			}
 			zustand.setSituation(situation);
 			data = zustand.getData();

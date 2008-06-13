@@ -81,6 +81,9 @@ public class StoerfallModul {
 			if (obj.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
 				new NrwStoerfallIndikatorFs().initialisiere(dav, obj);
 			} else if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
+				if(obj.isOfType(DUAKonstanten.TYP_MQ_VIRTUELL)){
+					System.out.println();
+				}
 				new NrwStoerfallIndikatorMq().initialisiere(dav, obj);
 			}
 		}
