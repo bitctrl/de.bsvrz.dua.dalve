@@ -31,6 +31,7 @@ import java.util.LinkedList;
 /**
  * Ringpuffer fuer aktuelle und zurueckliegende Werte des Stoerfallindikators
  * VKDiffKfz.
+ * TODO: Anpassen an nicht auf Erfassungsintervalldauer genormte tReise-Paramter
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -93,7 +94,9 @@ class RingPuffer {
 		VKDiffWert wert = VKDiffWert.getLeer(zeitStempel);
 		
 		if(!this.ringPuffer.isEmpty()) {
-			wert = this.ringPuffer.getLast();
+			if(this.ringPuffer.getLast().getZeitStempel() <= zeitStempel){
+				wert = this.ringPuffer.getLast();
+			} 
 		}
 		
 		return wert;

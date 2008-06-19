@@ -378,7 +378,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				this.qKfzDiffAus = parameter.getData().getItem("QKfzDiff")
 						.getUnscaledValue("Aus").longValue();
 				
-				this.tReise = Constants.MILLIS_PER_MINUTE * 3;
+				this.tReise = 130 * 1000;//Constants.MILLIS_PER_MINUTE;
 				this.kKfzEPuffer.setGroesse(tReise);
 				this.vKfzEPuffer.setGroesse(tReise);
 					
@@ -409,6 +409,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	protected void berechneStoerfallIndikator(ResultData resultat) {
 		Data data = null;
+		double vKDiffKfz = -1;
 
 		if (resultat.getData() != null) {
 			this.puffereDaten(resultat);
@@ -417,10 +418,10 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				double qKfzE = this.qKfzEAktuell.getWert();
 				GWert qKfzEGuete = this.qKfzEAktuell.getGWert();
 
-				double vKfzEtMinustReise = this.kKfzEPuffer
+				double vKfzEtMinustReise = this.vKfzEPuffer
 						.getDatumFuerZeitpunkt(
 								resultat.getDataTime() - this.tReise).getWert();
-				GWert vKfzEtMinustReiseGuete = this.kKfzEPuffer
+				GWert vKfzEtMinustReiseGuete = this.vKfzEPuffer
 						.getDatumFuerZeitpunkt(
 								resultat.getDataTime() - this.tReise)
 						.getGWert();
@@ -439,12 +440,14 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				double kKfzAt = this.kKfzAAktuell.getWert();
 				GWert kKfzAtGuete = this.kKfzAAktuell.getGWert();
 
+//				System.out.println("QKfz(e) = " + qKfzE + ", VKfz(e, t-tr) = " + vKfzEtMinustReise + ", KKfz(e, t-tr) = " + kKfzEtMinustReise + ", VKfz(a, t) = " + vKfzAt + ", KKfz(a, t) = " + kKfzAt);
 				if (!Double.isNaN(this.vFreiA) && !Double.isNaN(this.vFreiE)
 						&& !Double.isNaN(this.k0A) && !Double.isNaN(this.k0E)
 						&& !Double.isNaN(vKfzEtMinustReise)
 						&& !Double.isNaN(kKfzEtMinustReise)
 						&& !Double.isNaN(vKfzAt) && !Double.isNaN(kKfzAt)
 						&& !Double.isNaN(qKfzE)) {
+						
 					/**
 					 * d.h., alle zur Berechnung notwendigen Werte sind valide.
 					 */
@@ -478,11 +481,11 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 								.error(
 										"Guete von VKDiffKfz fuer "
 												+ this.objekt
-												+ " konnte nicht bestimmte werden. Grund:\n"
+												+ " konnte nicht bestimmt werden. Grund:\n"
 												+ ex.getMessage());
 					}
 
-					double vKDiffKfz = Math
+					vKDiffKfz = Math
 							.sqrt(Math.pow(vFreiEMinusVKfzEtMinustReise
 									/ this.vFreiE, 2.0)
 									+ Math.pow(kKfzEtMinustReise
@@ -519,7 +522,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 										.error(
 												"Guete von Stoerfallindikator VKDiffKfz fuer "
 														+ this.objekt
-														+ " konnte nicht bestimmte werden. Grund:\n"
+														+ " konnte nicht bestimmt werden. Grund:\n"
 														+ ex.getMessage());
 							}
 						}
@@ -559,6 +562,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 		ResultData ergebnis = new ResultData(this.objekt, this.pubBeschreibung,
 				resultat.getDataTime(), data);
+//		System.out.println((resultat.getDataTime() / Constants.MILLIS_PER_MINUTE) + ": " + vKDiffKfz);
 		this.sendeErgebnis(ergebnis);
 	}
 

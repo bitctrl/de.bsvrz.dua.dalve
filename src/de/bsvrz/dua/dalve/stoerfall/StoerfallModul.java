@@ -37,7 +37,6 @@ import de.bsvrz.dua.dalve.stoerfall.rds3.RdsStoerfallIndikator;
 import de.bsvrz.dua.dalve.stoerfall.vkdiffkfz.VKDiffKfzStoerfallIndikator;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.modell.ObjektFactory;
 
 /**
  * Von diesem Objekt aus wird die Berechnung der einzelnen Stoerfallindikatoren
@@ -81,9 +80,6 @@ public class StoerfallModul {
 			if (obj.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
 				new NrwStoerfallIndikatorFs().initialisiere(dav, obj);
 			} else if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
-				if(obj.isOfType(DUAKonstanten.TYP_MQ_VIRTUELL)){
-					System.out.println();
-				}
 				new NrwStoerfallIndikatorMq().initialisiere(dav, obj);
 			}
 		}

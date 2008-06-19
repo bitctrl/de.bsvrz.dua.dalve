@@ -145,7 +145,6 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 					instanz = new ErfassungsIntervallDauerMQ(dav, mq);
 					instanzen.put(mq, instanz);
 				} catch (InvalidArgumentException e) {
-					e.printStackTrace();
 					Debug.getLogger().error(
 							"Erfassungsintervalldauer von " + mq
 									+ " kann nicht ueberwacht werden.\nGrund: "	+ e.getMessage());

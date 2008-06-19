@@ -75,6 +75,16 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 	 * Freie Geschwindigkeit des Fundamentaldiagramms.
 	 */
 	private double VFrei = -4;
+	
+	/**
+	 * Fundamentaldiagramm am MQ.
+	 */
+	private PdFundamentalDiagramm.Daten fdMQ = null;
+
+	/**
+	 * Fundamentaldiagramm am Straﬂenteilsegment.
+	 */
+	private PdFundamentalDiagramm.Daten fdSts = null;
 
 	/**
 	 * Faktor f¸r die Ermittlung der Analysedichte
@@ -119,29 +129,30 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 			this.erf = ErfassungsIntervallDauerMQ.getInstanz(dav, objekt); 
 		}
 		
-		SystemObject fdObjekt = objekt;
 		SystemObject stsObjekt = DatenaufbereitungLVE
 				.getStraﬂenTeilSegment(objekt);
 		if (stsObjekt != null) {
-			fdObjekt = stsObjekt;
+			PdFundamentalDiagramm fdAmSts = new PdFundamentalDiagramm(
+					new StoerfallIndikator(stsObjekt));
+			fdAmSts.addUpdateListener(this);
 			Debug.getLogger().info(
 					"Fuer " + objekt
-							+ " wird das Fundamentaldiagramm am Teilsegment "
-							+ stsObjekt + " verwendet");
+							+ " wird (falls versorgt) das Fundamentaldiagramm am Teilsegment "
+							+ stsObjekt + " verwendet. Falls nicht versorgt wird das Fundamentaldiagramm am MQ selbst verwendet");
 		} else {
 			Debug
 					.getLogger()
 					.warning(
 							"Fuer "
 									+ objekt
-									+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
+									+ " wird nur das Fundamentaldiagramm am MQ selbst verwendet."
 									+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
 									+ "dies konnte aber nicht ermittelt werden.");
 		}
 
-		PdFundamentalDiagramm fd = new PdFundamentalDiagramm(
-				new StoerfallIndikator(fdObjekt));
-		fd.addUpdateListener(this);
+		PdFundamentalDiagramm fdAmMQ = new PdFundamentalDiagramm(
+				new StoerfallIndikator(objekt));
+		fdAmMQ.addUpdateListener(this);
 
 		this.prognoseDichteObj = new KKfzStoerfallGErmittler(dav, objekt);
 		this.parameterLokal = new AtgLokaleStoerfallErkennungFundamentalDiagramm(
@@ -191,7 +202,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 					Debug.getLogger().warning(e.getMessage());
 				}
 
-				System.out.println(KKfzStoerfallG);
+				//System.out.println(KKfzStoerfallG);
 				if (!Double.isNaN(KKfzStoerfallG)) {
 					stufe = StoerfallSituation.FREIER_VERKEHR;
 					stufe = berechneStufe(StoerfallSituation.ZAEHER_VERKEHR,
@@ -538,18 +549,47 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 	 * {@inheritDoc}
 	 */
 	public void datensatzAktualisiert(DatensatzUpdateEvent event) {
-		if (event.getDatum().isValid() && event.getDatensatz() != null) {
-			PdFundamentalDiagramm.Daten daten = (PdFundamentalDiagramm.Daten) event
+		if(event.getObjekt() != null) {
+			if(event.getObjekt().equals(this.objekt)) {
+				/**
+				 * Fundamentaldiagramm am MQ
+				 */
+				if (event.getDatum().isValid() && event.getDatensatz() != null && event
+						.getDatum().getDatenStatus() == Datum.Status.DATEN) {
+					this.fdMQ = (PdFundamentalDiagramm.Daten) event
 					.getDatum();
-			if (daten.getDatenStatus() == Datum.Status.DATEN) {
-				this.Q0 = daten.getQ0();
-				this.K0 = daten.getK0();
-				this.V0 = daten.getV0();
-				this.VFrei = daten.getVFrei();
-				return;
-			}
+				}else{
+					this.fdMQ = null;
+				}
+			}else {
+				/**
+				 * Fundamentaldiagramm am Straﬂenteilsegment
+				 */
+				if (event.getDatum().isValid() && event.getDatensatz() != null && event
+						.getDatum().getDatenStatus() == Datum.Status.DATEN) {
+					this.fdSts = (PdFundamentalDiagramm.Daten) event
+					.getDatum();
+				}else{
+					this.fdSts = null;
+				}
+			}		
 		}
-
+		
+		if(this.fdSts != null) {
+			this.Q0 = this.fdSts.getQ0();
+			this.K0 = this.fdSts.getK0();
+			this.V0 = this.fdSts.getV0();
+			this.VFrei = this.fdSts.getVFrei();			
+			return;
+		}
+		if(this.fdMQ != null) {
+			this.Q0 = this.fdMQ.getQ0();
+			this.K0 = this.fdMQ.getK0();
+			this.V0 = this.fdMQ.getV0();
+			this.VFrei = this.fdMQ.getVFrei();			
+			return;
+		}
+		
 		this.Q0 = -4;
 		this.K0 = -4;
 		this.V0 = -4;

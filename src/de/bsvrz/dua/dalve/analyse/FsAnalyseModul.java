@@ -487,7 +487,7 @@ extends AbstraktBearbeitungsKnotenAdapter{
 		qB.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 	
-	
+
 	/**
 	 * Berechnet die Bemessungsdichte <code>kB</code> (nach SE-02.00.00.00.00-AFo-4.0 S.116f)
 	 * 

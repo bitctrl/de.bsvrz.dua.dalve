@@ -1009,6 +1009,20 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							e.printStackTrace();
 						}
 
+						long max = -1;
+
+						if (attName.startsWith("K")) { // Kfz //$NON-NLS-1$
+							max = parameter.getKKfzMax();
+						} else if (attName.startsWith("L")) { // Lkw //$NON-NLS-1$
+							max = parameter.getKLkwMax();
+						} else { // Pkw
+							max = parameter.getKPkwMax();
+						}
+
+						if (max > 0 && KWert > max) {
+							KWert = max;
+						}
+						
 						KAnalyse.setWertUnskaliert(KWert);
 						KAnalyse.setInterpoliert(interpoliert);
 						if (KGuete != null) {
