@@ -40,6 +40,7 @@ import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.util.TestFahrstreifenImporter;
 import de.bsvrz.dua.dalve.util.para.ParaAnaProgImportFS;
+import de.bsvrz.dua.dalve.util.para.ParaAnaProgImportMQAlsFS;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
@@ -97,6 +98,16 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface {
 		FS2 = this.dav.getDataModel().getObject("fs.2"); //$NON-NLS-1$
 		FS3 = this.dav.getDataModel().getObject("fs.3"); //$NON-NLS-1$
 
+		SystemObject MQ1 = this.dav.getDataModel().getObject("mq1"); //$NON-NLS-1$
+		SystemObject MQ2 = this.dav.getDataModel().getObject("mq2"); //$NON-NLS-1$
+				
+		/*
+		 * Importiere Parameter
+		 */
+		ParaAnaProgImportMQAlsFS paraImportFS = new ParaAnaProgImportMQAlsFS(dav, new SystemObject[]{MQ1, MQ2}, DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		paraImportFS.importiereParameterAnalyse(1);
+		paraImportFS.importiereParameterAnalyse(2);
+		
 		DataDescription ddKzdSend = new DataDescription(this.dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KZD), this.dav
 				.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),

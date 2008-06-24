@@ -30,20 +30,20 @@ import java.util.LinkedList;
 
 /**
  * Ringpuffer fuer aktuelle und zurueckliegende Werte des Stoerfallindikators
- * VKDiffKfz.
- * TODO: Anpassen an nicht auf Erfassungsintervalldauer genormte tReise-Paramter
+ * <code>VKDiffKfz</code>.<br>
+ * <b>Achtung:</b> nicht synchronisierter Puffer!
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
 class RingPuffer {
-	
+
 	/**
 	 * die Zeitspanne, die im Puffer verarbeitet werden soll.
 	 */
 	private long zeitSpanne = -1;
-	
+
 	/**
 	 * Ringpuffer mit den zeitlich aktuellsten Daten.
 	 */
@@ -58,20 +58,14 @@ class RingPuffer {
 	 */
 	void put(VKDiffWert wert) {
 		this.ringPuffer.addFirst(wert);
-		
-		long letzteErlaubteDatenzeit = wert.getZeitStempel() - zeitSpanne;
-		boolean stop = false;
-		do{
-			if(!this.ringPuffer.isEmpty()) {
-				if(this.ringPuffer.getLast().getZeitStempel() < letzteErlaubteDatenzeit) {
-					this.ringPuffer.removeLast();
-				}else{
-					stop = true;
-				}
+		final long letzteErlaubteDatenzeit = wert.getZeitStempel() - this.zeitSpanne;
+		for (int i = this.ringPuffer.size() - 2; i > -1; i--) {
+			if (this.ringPuffer.get(i).getZeitStempel() < letzteErlaubteDatenzeit) {
+				this.ringPuffer.removeLast();
 			} else {
-				stop = true;
+				break;
 			}
-		}while(!stop);
+		}
 	}
 
 	/**
@@ -92,14 +86,28 @@ class RingPuffer {
 	 */
 	VKDiffWert getDatumFuerZeitpunkt(long zeitStempel) {
 		VKDiffWert wert = VKDiffWert.getLeer(zeitStempel);
-		
+
 		if(!this.ringPuffer.isEmpty()) {
-			if(this.ringPuffer.getLast().getZeitStempel() <= zeitStempel){
-				wert = this.ringPuffer.getLast();
-			} 
+			final VKDiffWert letzter = this.ringPuffer.getLast();
+			final long diffZumLetzten = Math.abs(zeitStempel - letzter.getZeitStempel());
+			
+			if(this.ringPuffer.size() > 1){
+				final VKDiffWert vorLetzer = this.ringPuffer.get(this.ringPuffer.size() - 2);
+				final long diffZumVorLetzten = Math.abs(zeitStempel - vorLetzer.getZeitStempel());
+				
+				if(diffZumLetzten > diffZumVorLetzten && diffZumVorLetzten <= this.zeitSpanne) {
+					wert = vorLetzer;
+				}else if(diffZumLetzten <= diffZumVorLetzten && diffZumLetzten <= this.zeitSpanne){
+					wert = letzter;
+				}
+			}else{
+				if(diffZumLetzten <= this.zeitSpanne) {
+					wert = letzter;
+				}
+			}
 		}
-		
+
 		return wert;
 	}
-		
+
 }

@@ -161,7 +161,7 @@ implements ClientSenderInterface {
 	 * @throws Exception wenn die Parameter nicht vollständig
 	 * importiert werden konnten
 	 */
-	public final void importiereParameterAnalyse(int index)
+	public void importiereParameterAnalyse(int index)
 	throws Exception{
 		
 		this.reset();

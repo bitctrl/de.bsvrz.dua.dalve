@@ -299,9 +299,9 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 			});
 
-			SystemObject fdObjektBis = von;
+			SystemObject fdObjektBis = bis;
 			SystemObject stsObjektBis = DatenaufbereitungLVE
-					.getStraßenTeilSegment(von);
+					.getStraßenTeilSegment(bis);
 			if (stsObjektBis != null) {
 				fdObjektBis = stsObjektBis;
 				Debug
@@ -378,7 +378,13 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				this.qKfzDiffAus = parameter.getData().getItem("QKfzDiff")
 						.getUnscaledValue("Aus").longValue();
 				
-				this.tReise = 130 * 1000;//Constants.MILLIS_PER_MINUTE;
+				long tReiseDummy = parameter.getData().getItem("tReise").asUnscaledValue().longValue() * Constants.MILLIS_PER_SECOND;
+				if(tReiseDummy >= 0) {
+					this.tReise = tReiseDummy;
+				}else{
+					tReise = -4;
+				}
+				
 				this.kKfzEPuffer.setGroesse(tReise);
 				this.vKfzEPuffer.setGroesse(tReise);
 					
@@ -440,7 +446,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				double kKfzAt = this.kKfzAAktuell.getWert();
 				GWert kKfzAtGuete = this.kKfzAAktuell.getGWert();
 
-//				System.out.println("QKfz(e) = " + qKfzE + ", VKfz(e, t-tr) = " + vKfzEtMinustReise + ", KKfz(e, t-tr) = " + kKfzEtMinustReise + ", VKfz(a, t) = " + vKfzAt + ", KKfz(a, t) = " + kKfzAt);
+				System.out.println("QKfz(e) = " + qKfzE + ", VKfz(e, t-tr) = " + vKfzEtMinustReise + ", KKfz(e, t-tr) = " + kKfzEtMinustReise + ", VKfz(a, t) = " + vKfzAt + ", KKfz(a, t) = " + kKfzAt);
 				if (!Double.isNaN(this.vFreiA) && !Double.isNaN(this.vFreiE)
 						&& !Double.isNaN(this.k0A) && !Double.isNaN(this.k0E)
 						&& !Double.isNaN(vKfzEtMinustReise)
@@ -562,7 +568,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 		ResultData ergebnis = new ResultData(this.objekt, this.pubBeschreibung,
 				resultat.getDataTime(), data);
-//		System.out.println((resultat.getDataTime() / Constants.MILLIS_PER_MINUTE) + ": " + vKDiffKfz);
+		System.out.println(((resultat.getDataTime() / Constants.MILLIS_PER_MINUTE) + 2) + ": " + vKDiffKfz);
 		this.sendeErgebnis(ergebnis);
 	}
 
