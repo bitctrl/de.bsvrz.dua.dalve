@@ -62,6 +62,12 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
+	
+	/**
+	 * Letzter von irgend einer Instanz dieser Klasse errechneter Wert
+	 * <code>VKDiffKfz</code>. Nur fuer Testzwecke.
+	 */
+	private static double aktuellesVkDiffKfz = Double.NaN;
 
 	/**
 	 * VKDiffKfz-Situation <code>freier Verkehr</code>.
@@ -154,7 +160,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	/**
 	 * Die im Schritt <code>t-T</code> ermittelte Stoerfallsituation.
 	 */
-	private StoerfallSituation alteSituation = KEINE_AUSSAGE;
+	private StoerfallSituation alteSituation = FREI;
 
 	/**
 	 * Die im Schritt <code>t-T</code> ermittelte Guete der
@@ -416,6 +422,8 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	protected void berechneStoerfallIndikator(ResultData resultat) {
 		Data data = null;
 		double vKDiffKfz = -1;
+		StoerfallSituation situation = this.alteSituation;
+		GWert situationsGuete = this.alteGuete;
 
 		if (resultat.getData() != null) {
 			this.puffereDaten(resultat);
@@ -446,7 +454,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				double kKfzAt = this.kKfzAAktuell.getWert();
 				GWert kKfzAtGuete = this.kKfzAAktuell.getGWert();
 
-				System.out.println("QKfz(e) = " + qKfzE + ", VKfz(e, t-tr) = " + vKfzEtMinustReise + ", KKfz(e, t-tr) = " + kKfzEtMinustReise + ", VKfz(a, t) = " + vKfzAt + ", KKfz(a, t) = " + kKfzAt);
+				//System.out.println("QKfz(e) = " + qKfzE + ", VKfz(e, t-tr) = " + vKfzEtMinustReise + ", KKfz(e, t-tr) = " + kKfzEtMinustReise + ", VKfz(a, t) = " + vKfzAt + ", KKfz(a, t) = " + kKfzAt);
 				if (!Double.isNaN(this.vFreiA) && !Double.isNaN(this.vFreiE)
 						&& !Double.isNaN(this.k0A) && !Double.isNaN(this.k0E)
 						&& !Double.isNaN(vKfzEtMinustReise)
@@ -500,8 +508,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 									/ this.vFreiA, 2.0)
 									+ Math.pow(kKfzAt / (2 * this.k0A), 2.0));
 
-					StoerfallSituation situation = this.alteSituation;
-					GWert situationsGuete = this.alteGuete;
 					if (this.vKDiffEin >= 0 && this.qKfzDiffEin >= 0
 							&& this.vKDiffAus >= 0 && this.qKfzDiffAus >= 0
 							&& qKfzE >= 0) {
@@ -541,22 +547,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 						 */
 						situation = KEINE_AUSSAGE;
 					}
-
-					data = DAV.createData(this.pubBeschreibung
-							.getAttributeGroup());
-
-					StoerfallZustand zustand = new StoerfallZustand(DAV);
-					zustand.setHorizont(0);
-					zustand.setT(this.vonT.getT()); //$NON-NLS-1$
-					zustand.setSituation(situation);
-					zustand.setVerfahren(GueteVerfahren.STANDARD);
-					GanzZahl g = GanzZahl.getGueteIndex();
-					g.setWert(situationsGuete.getIndexUnskaliert());
-					zustand.setGuete(g);
-					data = zustand.getData();
-
-					this.alteSituation = situation;
-					this.alteGuete = situationsGuete;
 				}
 			} else {
 				/**
@@ -566,9 +556,30 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			}
 		}
 
+		aktuellesVkDiffKfz = vKDiffKfz;
+		
+		if(this.vonT.getT() > 0){
+			data = DAV.createData(this.pubBeschreibung
+					.getAttributeGroup());
+	
+			StoerfallZustand zustand = new StoerfallZustand(DAV);
+			zustand.setHorizont(0);
+			zustand.setT(this.vonT.getT()); //$NON-NLS-1$
+			zustand.setSituation(situation);
+			zustand.setVerfahren(GueteVerfahren.STANDARD);
+			GanzZahl g = GanzZahl.getGueteIndex();
+			g.setWert(situationsGuete.getIndexUnskaliert());
+			zustand.setGuete(g);
+			data = zustand.getData();
+	
+			this.alteSituation = situation;
+			this.alteGuete = situationsGuete;
+		}
+			
 		ResultData ergebnis = new ResultData(this.objekt, this.pubBeschreibung,
 				resultat.getDataTime(), data);
-		System.out.println(((resultat.getDataTime() / Constants.MILLIS_PER_MINUTE) + 2) + ": " + vKDiffKfz);
+		
+		//System.out.println(((resultat.getDataTime() / Constants.MILLIS_PER_MINUTE) + 2) + ": " + vKDiffKfz);
 		this.sendeErgebnis(ergebnis);
 	}
 
@@ -638,4 +649,15 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		}
 	}
 
+	
+	/**
+	 * Erfragt letzten von irgend einer Instanz dieser Klasse errechneten Wert
+	 * <code>VKDiffKfz</code>. Nur fuer Testzwecke.
+	 * 
+	 * @return letzten von irgend einer Instanz dieser Klasse errechneten Wert
+	 * <code>VKDiffKfz</code>. 
+	 */
+	public static final double getTestVkDiffKfz(){
+		return aktuellesVkDiffKfz;
+	}
 }
