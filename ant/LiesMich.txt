@@ -28,13 +28,9 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten
 Versionsgeschichte
 ==================
 
-1.0.0b
-
-  - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
-
-1.0.0
-
-  - Erste vollständige Auslieferung
+1.2.0
+  - Berechnung von Stoerfallzustand nach Verfahren MARZ korrigiert (Verwendung von 
+    kKfzG statt kBG)
 
 1.1.0
 
@@ -43,6 +39,14 @@ Versionsgeschichte
   - Stoerfallindikator VKDiffKfz ergaenzt
   - Uebernahme des Fundamentaldiagramms bei entsprechendem Stoerfallindikator
     auf Strassenteilsegment geaendert
+
+1.0.0
+
+  - Erste vollständige Auslieferung
+
+1.0.0b
+
+  - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
 
 Bemerkungen
 ===========

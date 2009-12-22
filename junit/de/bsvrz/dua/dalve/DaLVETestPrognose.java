@@ -25,7 +25,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class DaLVETestPrognose implements ClientSenderInterface {
 
-	public static final boolean prStoerfall = true;
+	public static final boolean prStoerfall = false;
 	
 	/**
 	 * Logger
@@ -195,6 +195,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 			prDaLVEStoerfall.naechsterDatensatz(aktZeit);
 		}
 		
+		int er = 0;
 		//Prüfe solange Daten vorhanden
 		while((zeileFS1=importFS.getDatensatz(1)) != null) {
 			zeileMQ1=importMQ.getDatensatz();

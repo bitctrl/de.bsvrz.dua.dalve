@@ -149,7 +149,8 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 		if (resultat.getData() != null) {
 			String attrV = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "vKfzG" : "VKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
-			String attrK = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kBG" : "KBG"; //$NON-NLS-1$ //$NON-NLS-2$
+			String attrK = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kKfzG" : "KKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
+			//String attrK = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kBG" : "KBG"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			long v = resultat.getData().getItem(attrV)
 					.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$

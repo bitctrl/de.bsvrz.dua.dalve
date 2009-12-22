@@ -168,8 +168,8 @@ extends CSVImporter{
 					String BMaxStatus = ZEILE[101];
 					int SKfz = Integer.parseInt(ZEILE[102]);
 					String SKfzStatus = ZEILE[103];
-					int ALkw = Integer.parseInt(ZEILE[102]);
-					String ALkwStatus = ZEILE[103];
+					int ALkw = Integer.parseInt(ZEILE[104]);
+					String ALkwStatus = ZEILE[105];
 					int KKfz = Integer.parseInt(ZEILE[106]);
 					String KKfzStatus = ZEILE[107];
 					int KLkw = Integer.parseInt(ZEILE[108]);

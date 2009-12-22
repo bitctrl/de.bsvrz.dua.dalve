@@ -78,7 +78,7 @@ public class DatenaufbereitungLVETest {
 	// protected static final String TEST_DATEN_VERZ =
 	// ".\\extra\\testDaten\\V_2.9.1 (19.05.08)\\"; //$NON-NLS-1$
 	// protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.2 (20.05.08)\\"; //$NON-NLS-1$
-	// protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.3 (24.05.08)\\"; //$NON-NLS-1$
+	//protected static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\V_2.9.3 (24.05.08)\\"; //$NON-NLS-1$
 
 	protected static final String TEST_DATEN_VERZ = "../testDaten/V_2.9.3 (24.05.08)/";
 
@@ -88,7 +88,7 @@ public class DatenaufbereitungLVETest {
 	 */
 	//protected static final String TEST_DATEN_VERZ_VIRTUELL = ".\\extra\\testDaten\\mqVirtuell\\"; //$NON-NLS-1$
 
-	 protected static final String TEST_DATEN_VERZ_VIRTUELL = "../testDaten/mqVirtuell/"; //$NON-NLS-1$
+	protected static final String TEST_DATEN_VERZ_VIRTUELL = "../testDaten/mqVirtuell/"; //$NON-NLS-1$
 
 	/**
 	 * Logger und Loggerargument
@@ -133,7 +133,7 @@ public class DatenaufbereitungLVETest {
 	public void testPrognose() throws Exception {
 		DaLVETestPrognose prognoseTest = new DaLVETestPrognose(dav, alLogger,
 				TEST_DATEN_VERZ);
-		prognoseTest.benutzeAssert(true);
+		prognoseTest.benutzeAssert(false);
 		prognoseTest.setErgebnisWertToleranz(1);
 		prognoseTest.setTestStoerfall(true);
 		prognoseTest.testPrognose();
