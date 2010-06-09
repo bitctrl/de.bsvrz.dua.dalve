@@ -142,7 +142,7 @@ public class MqAnalyseModul {
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), verwaltung
 				.getVerbindung().getDataModel().getAspect(
-						DUAKonstanten.ASP_ANALYSE), (short) 0);
+						DUAKonstanten.ASP_ANALYSE));
 
 		Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
 		for (SystemObject mq : messQuerschnitteGesamt) {

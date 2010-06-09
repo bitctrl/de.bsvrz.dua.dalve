@@ -203,8 +203,8 @@ implements ClientSenderInterface {
 		
 		ResultData resultat = new ResultData(fsObjekt, new DataDescription(
 				ATG_Analyse, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0), System.currentTimeMillis(), parameter);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameter);
 		DAV.sendData(resultat);
 		
 		DAV.unsubscribeSender(this, fsObjekt, DD_Analyse);
@@ -276,18 +276,18 @@ implements ClientSenderInterface {
 		
 		ResultData resultatFlink = new ResultData(obj, new DataDescription(
 				ATG_PrognoseFlink, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0), System.currentTimeMillis(), parameterProgFlink);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameterProgFlink);
 		
 		ResultData resultatNormal = new ResultData(obj, new DataDescription(
 				ATG_PrognoseNormal, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0), System.currentTimeMillis(), parameterProgNorm);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameterProgNorm);
 		
 		ResultData resultatTraege = new ResultData(obj, new DataDescription(
 				ATG_PrognoseTraege, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0), System.currentTimeMillis(), parameterProgTraege);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameterProgTraege);
 		
 		DAV.sendData(resultatFlink);
 		DAV.sendData(resultatNormal);
@@ -370,13 +370,13 @@ implements ClientSenderInterface {
 		
 		ResultData resultatVLV1 = new ResultData(obj, new DataDescription(
 				ATG_VLVERFAHREN1, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0), System.currentTimeMillis(), parameterVLV1);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameterVLV1);
 		
 		ResultData resultatVLV2 = new ResultData(obj, new DataDescription(
 				ATG_VLVERFAHREN2, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0), System.currentTimeMillis(), parameterVLV2);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameterVLV2);
 		
 		DAV.sendData(resultatVLV1);
 		DAV.sendData(resultatVLV2);
@@ -389,14 +389,14 @@ implements ClientSenderInterface {
 		if(isMQ) {
 			resultatVLV3 = new ResultData(obj, new DataDescription(
 					ATG_VLVERFAHREN3, 
-					DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-					(short)0), System.currentTimeMillis(), parameterVLV3);
+					DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+					System.currentTimeMillis(), parameterVLV3);
 			DAV.sendData(resultatVLV3);
 			
 			resultatFD = new ResultData(obj, new DataDescription(
 					ATG_FUNDAMENTALDIAGRAMM, 
-					DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-					(short)0), System.currentTimeMillis(), parameterFD);
+					DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+					System.currentTimeMillis(), parameterFD);
 			DAV.sendData(resultatFD);
 			
 			DAV.unsubscribeSender(this, obj, DD_VLVERFAHREN3);

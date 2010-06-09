@@ -193,8 +193,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 		 */
 		DataDescription ddKzdSend = new DataDescription(this.dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KZD), this.dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
-				(short) 0);
+				.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 		this.dav.subscribeSender(this, new SystemObject[] { fs1, fs2, fs3 },
 				ddKzdSend, SenderRole.source());
 
@@ -204,8 +203,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 		DataDescription ddVkDiffKfz = new DataDescription(this.dav
 				.getDataModel().getAttributeGroup(
 						DUAKonstanten.ATG_STOERFALL_ZUSTAND), this.dav
-				.getDataModel().getAspect("asp.störfallVerfahrenVKDiffKfz"),
-				(short) 0);
+				.getDataModel().getAspect("asp.störfallVerfahrenVKDiffKfz"));
 		this.dav.subscribeReceiver(this, new SystemObject[] { abschnitt },
 				ddVkDiffKfz, ReceiveOptions.normal(), ReceiverRole.receiver());
 

@@ -163,8 +163,8 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 		 */
 		dav.subscribeReceiver(this, objekt, new DataDescription(
 				DatenaufbereitungLVE.getAnalyseAtg(this.objekt), dav
-						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
-				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

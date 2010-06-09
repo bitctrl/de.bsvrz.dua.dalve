@@ -82,7 +82,7 @@ public class RdsStoerfallIndikator extends NrwStoerfallIndikatorMq {
 
 		dav.subscribeReceiver(this, this.objekt, new DataDescription(
 				DatenaufbereitungLVE.getAnalyseAtg(objekt), dav.getDataModel()
-						.getAspect(DUAKonstanten.ASP_ANALYSE), (short) 0),
+						.getAspect(DUAKonstanten.ASP_ANALYSE)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 

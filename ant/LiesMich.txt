@@ -28,6 +28,10 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten
 Versionsgeschichte
 ==================
 
+1.2.1
+  - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
+         DataDescription(atg, asp)
+
 1.2.0
   - Berechnung von Stoerfallzustand nach Verfahren MARZ korrigiert (Verwendung von 
     kKfzG statt kBG)

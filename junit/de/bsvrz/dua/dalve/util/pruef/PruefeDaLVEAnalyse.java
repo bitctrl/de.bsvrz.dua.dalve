@@ -112,12 +112,10 @@ implements ClientReceiverInterface {
 		 * Empfängeranmeldung aller 3 Fahrstreifen
 		 */
 		DD_KZDFS_EMPF = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
-				  this.dav.getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
-				  (short)0);
+				  this.dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 
 		DD_KZDMQ_EMPF = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-				  this.dav.getDataModel().getAspect("asp.analyse"), //$NON-NLS-1$
-				  (short)0);
+				  this.dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 
 		dav.subscribeReceiver(this, FS, DD_KZDFS_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, mq, DD_KZDMQ_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());

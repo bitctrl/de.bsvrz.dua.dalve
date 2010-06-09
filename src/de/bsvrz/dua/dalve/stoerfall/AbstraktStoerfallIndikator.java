@@ -110,13 +110,13 @@ public abstract class AbstraktStoerfallIndikator implements
 					this.getParameterAtgPid());
 			dav.subscribeReceiver(this, objekt, new DataDescription(
 					this.paraAtg, dav.getDataModel().getAspect(
-							DaVKonstanten.ASP_PARAMETER_SOLL), (short) 0),
+							DaVKonstanten.ASP_PARAMETER_SOLL)),
 					ReceiveOptions.normal(), ReceiverRole.receiver());
 		}
 
 		this.pubBeschreibung = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav
-				.getDataModel().getAspect(this.getPubAspektPid()), (short) 0);
+				.getDataModel().getAspect(this.getPubAspektPid()));
 		try {
 			dav.subscribeSender(this, objekt, this.pubBeschreibung, SenderRole
 					.source());

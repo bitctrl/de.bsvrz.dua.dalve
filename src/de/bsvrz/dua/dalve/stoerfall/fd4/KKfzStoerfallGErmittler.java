@@ -60,8 +60,7 @@ implements ClientReceiverInterface{
 		dav.subscribeReceiver(this, obj,
 				new DataDescription(
 						dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-						(short)0),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 	

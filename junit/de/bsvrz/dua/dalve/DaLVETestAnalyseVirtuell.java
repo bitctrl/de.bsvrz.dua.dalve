@@ -97,8 +97,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 
 		DataDescription ddKzdSend = new DataDescription(this.dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KZD), this.dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
-				(short) 0);
+				.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
 		this.dav.subscribeSender(this, new SystemObject[] { FS1, FS2, FS3 },
 				ddKzdSend, SenderRole.source());

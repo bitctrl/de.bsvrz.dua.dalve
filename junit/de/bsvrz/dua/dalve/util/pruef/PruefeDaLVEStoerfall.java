@@ -133,16 +133,13 @@ implements ClientReceiverInterface {
 		 * Empfängeranmeldung aller Störfallindikatoren
 		 */
 		DD_vst_MARZ = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.störfallZustand"), //$NON-NLS-1$
-				  this.dav.getDataModel().getAspect("asp.störfallVerfahrenMARZ"), //$NON-NLS-1$
-				  (short)0);
+				  this.dav.getDataModel().getAspect("asp.störfallVerfahrenMARZ")); //$NON-NLS-1$
 		
 		DD_vst_NRW = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.störfallZustand"), //$NON-NLS-1$
-				  this.dav.getDataModel().getAspect("asp.störfallVerfahrenNRW"), //$NON-NLS-1$
-				  (short)0);
+				  this.dav.getDataModel().getAspect("asp.störfallVerfahrenNRW")); //$NON-NLS-1$
 		
 		DD_vst_RDS = new DataDescription(this.dav.getDataModel().getAttributeGroup("atg.störfallZustand"), //$NON-NLS-1$
-				  this.dav.getDataModel().getAspect("asp.störfallVerfahrenRDS"), //$NON-NLS-1$
-				  (short)0);
+				  this.dav.getDataModel().getAspect("asp.störfallVerfahrenRDS")); //$NON-NLS-1$
 
 		dav.subscribeReceiver(this, FS, DD_vst_MARZ, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, FS, DD_vst_NRW, ReceiveOptions.normal(), ReceiverRole.receiver());

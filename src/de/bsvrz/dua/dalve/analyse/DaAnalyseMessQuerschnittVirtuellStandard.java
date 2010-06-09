@@ -223,8 +223,8 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
 						mqAnalyse.getDav().getDataModel().getAspect(
-								"asp.analyse"), //$NON-NLS-1$
-						(short) 0), ReceiveOptions.normal(),
+								"asp.analyse")), //$NON-NLS-1$
+						ReceiveOptions.normal(),
 				ReceiverRole.receiver());
 
 		return this;

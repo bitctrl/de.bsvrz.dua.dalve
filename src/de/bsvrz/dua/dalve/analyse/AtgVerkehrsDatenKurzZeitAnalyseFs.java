@@ -117,8 +117,8 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 		dav.subscribeReceiver(this, fs, new DataDescription(
 				dav.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitAnalyseFs"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

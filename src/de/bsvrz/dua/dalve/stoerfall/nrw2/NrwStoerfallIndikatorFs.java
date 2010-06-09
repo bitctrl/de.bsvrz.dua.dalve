@@ -108,11 +108,11 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 		 */
 		dav.subscribeReceiver(this, objekt, new DataDescription(
 				DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
-				PrognoseTyp.NORMAL.getAspekt(), (short) 0), ReceiveOptions
+				PrognoseTyp.NORMAL.getAspekt()), ReceiveOptions
 				.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, this.objekt, new DataDescription(
 				DatenaufbereitungLVE.getAnalyseAtg(objekt), dav.getDataModel()
-						.getAspect(DUAKonstanten.ASP_ANALYSE), (short) 0),
+						.getAspect(DUAKonstanten.ASP_ANALYSE)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 

@@ -133,12 +133,10 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		MQ1 = this.dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
 		
 		DD_KZD_SEND_FS = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
-				  (short)0);
+				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 		
 		DD_KZD_SEND_MQ = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
-				  (short)0);
+				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 		
 		this.dav.subscribeSender(this, FS1, DD_KZD_SEND_FS, SenderRole.sender());
 		this.dav.subscribeSender(this, MQ1, DD_KZD_SEND_MQ, SenderRole.sender());
@@ -195,7 +193,6 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 			prDaLVEStoerfall.naechsterDatensatz(aktZeit);
 		}
 		
-		int er = 0;
 		//Prüfe solange Daten vorhanden
 		while((zeileFS1=importFS.getDatensatz(1)) != null) {
 			zeileMQ1=importMQ.getDatensatz();

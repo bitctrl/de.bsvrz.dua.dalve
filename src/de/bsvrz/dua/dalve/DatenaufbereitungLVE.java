@@ -195,8 +195,8 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 						this.verbindung.getDataModel().getAttributeGroup(
 								DUAKonstanten.ATG_KZD), this.verbindung
 								.getDataModel().getAspect(
-										DUAKonstanten.ASP_MESSWERTERSETZUNG),
-						(short) 0), ReceiveOptions.normal(), ReceiverRole
+										DUAKonstanten.ASP_MESSWERTERSETZUNG)),
+						ReceiveOptions.normal(), ReceiverRole
 						.receiver());
 	}
 

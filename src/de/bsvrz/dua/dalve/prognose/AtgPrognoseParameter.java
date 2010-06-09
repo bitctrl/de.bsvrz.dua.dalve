@@ -91,8 +91,8 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		dav.subscribeReceiver(this, objekt, new DataDescription(typ
 				.getParameterAtg(objekt
 						.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), dav
-				.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+				.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

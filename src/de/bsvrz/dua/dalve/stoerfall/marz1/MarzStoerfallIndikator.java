@@ -117,7 +117,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		 */
 		dav.subscribeReceiver(this, objekt, new DataDescription(
 				DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
-				PrognoseTyp.NORMAL.getAspekt(), (short) 0), ReceiveOptions
+				PrognoseTyp.NORMAL.getAspekt()), ReceiveOptions
 				.normal(), ReceiverRole.receiver());
 	}
 

@@ -161,7 +161,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 						mqAnalyse.getDav().getDataModel().getAspect(
-								DUAKonstanten.ASP_ANALYSE), (short) 0),
+								DUAKonstanten.ASP_ANALYSE)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;

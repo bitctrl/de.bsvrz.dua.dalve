@@ -75,8 +75,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		MQ = this.dav.getDataModel().getObject("mq"); //$NON-NLS-1$
 		
 		DD_KZD_SEND = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
-				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
-				  (short)0);
+				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 		
 		this.dav.subscribeSender(this, new SystemObject[]{FS1, FS2, FS3}, 
 				DD_KZD_SEND, SenderRole.source());

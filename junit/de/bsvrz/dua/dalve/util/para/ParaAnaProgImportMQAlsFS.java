@@ -71,55 +71,45 @@ extends AbstractParaAnaProgImport {
 		
 		DD_Analyse = new DataDescription(
 				ATG_Analyse, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		DD_PrognoseFlink = new DataDescription(
 				ATG_PrognoseFlink, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		
 		DD_PrognoseNormal = new DataDescription(
 				ATG_PrognoseNormal, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		DD_PrognoseTraege = new DataDescription(
 				ATG_PrognoseTraege, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 
 		DD_Analyse = new DataDescription(
 				ATG_Analyse, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		DD_PrognoseFlink = new DataDescription(
 				ATG_PrognoseFlink, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		
 		DD_PrognoseNormal = new DataDescription(
 				ATG_PrognoseNormal, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		DD_PrognoseTraege = new DataDescription(
 				ATG_PrognoseTraege, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		DD_VLVERFAHREN1 = new DataDescription(
 				ATG_VLVERFAHREN1, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		DD_VLVERFAHREN2 = new DataDescription(
 				ATG_VLVERFAHREN2, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE));
 		
 		this.objekt = objekt;
 	}
@@ -173,8 +163,8 @@ extends AbstractParaAnaProgImport {
 		
 		ResultData resultat = new ResultData(fsObjekt, new DataDescription(
 				ATG_Analyse, 
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE),
-				(short)0), System.currentTimeMillis(), parameter);
+				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameter);
 		DAV.sendData(resultat);
 		
 		DAV.unsubscribeSender(this, fsObjekt, DD_Analyse);

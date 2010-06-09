@@ -104,7 +104,7 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 
 			dav.subscribeReceiver(this, fsDaten.keySet(), new DataDescription(
 					this.fsAnalyseAtg, dav.getDataModel().getAspect(
-							DUAKonstanten.ASP_ANALYSE), (short) 0),
+							DUAKonstanten.ASP_ANALYSE)),
 					ReceiveOptions.normal(), ReceiverRole.receiver());
 		} else {
 			throw new DUAInitialisierungsException("Messquerschnitt " + objekt + //$NON-NLS-1$

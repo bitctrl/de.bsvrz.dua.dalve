@@ -150,10 +150,10 @@ public abstract class AbstraktPrognoseObjekt implements
 		 */
 		this.pubBeschreibungPrognose = new DataDescription(DatenaufbereitungLVE
 				.getPubAtgPrognose(prognoseObjekt), this.getPrognoseTyp()
-				.getAspekt(), (short) 0);
+				.getAspekt());
 		this.pubBeschreibungGlatt = new DataDescription(DatenaufbereitungLVE
 				.getPubAtgGlatt(prognoseObjekt), this.getPrognoseTyp()
-				.getAspekt(), (short) 0);
+				.getAspekt());
 		try {
 			DAV.subscribeSender(this, prognoseObjekt,
 					this.pubBeschreibungPrognose, SenderRole.source());
@@ -168,8 +168,8 @@ public abstract class AbstraktPrognoseObjekt implements
 		 */
 		DAV.subscribeReceiver(this, prognoseObjekt, new DataDescription(
 				DatenaufbereitungLVE.getAnalyseAtg(prognoseObjekt), DAV
-						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE),
-				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

@@ -167,7 +167,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"),
 						mqAnalyse.getDav().getDataModel().getAspect(
-								"asp.analyse"), (short) 0),
+								"asp.analyse")),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
