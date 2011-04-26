@@ -28,6 +28,12 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten
 Versionsgeschichte
 ==================
 
+1.2.2
+
+  - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle Messquerschnitte
+         auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, die Applikation sich
+         mit einem Fehler beendet.
+  
 1.2.1
   - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
          DataDescription(atg, asp)

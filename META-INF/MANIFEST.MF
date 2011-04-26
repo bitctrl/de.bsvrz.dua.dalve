@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Datenaufbereitung LVE
 Bundle-SymbolicName: de.bsvrz.dua.dalve
-Bundle-Version: 1.1.1
+Bundle-Version: 1.2.2
 Require-Bundle: de.bsvrz.dua.guete,
  de.bsvrz.sys.funclib.bitctrl
 Bundle-Vendor: BitCtrl Systems GmbH
