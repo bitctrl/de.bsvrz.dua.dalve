@@ -136,17 +136,17 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	public DaAnalyseMessQuerschnittVirtuellStandard initialisiere(
 			MqAnalyseModul analyseModul, SystemObject messQuerschnittVirtuell)
 			throws DUAInitialisierungsException {
-
+		if (mqAnalyse == null) {
+			mqAnalyse = analyseModul;
+		}
+		
 		this.mqT = ErfassungsIntervallDauerMQ.getInstanz(mqAnalyse.getDav(),
 				messQuerschnittVirtuell);
 		if (this.mqT == null) {
 			throw new RuntimeException("Erfassungsintervalldauer von VMQ "
 					+ messQuerschnittVirtuell + " kann nicht ermittelt werden.");
 		}
-
-		if (mqAnalyse == null) {
-			mqAnalyse = analyseModul;
-		}
+		
 		this.messQuerschnitt = messQuerschnittVirtuell;
 		this.mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
 
