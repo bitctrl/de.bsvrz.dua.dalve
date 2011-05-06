@@ -125,8 +125,8 @@ public class QWert {
 		boolean exportierbar = false;
 
 		if (datum != null && this.wert != null) {
-			exportierbar = DUAUtensilien.isWertInWerteBereich(datum.getItem(
-					this.wert.getName()).getItem("Wert"), //$NON-NLS-1$
+			exportierbar = DUAUtensilien.isWertInWerteBereich(
+					datum.getItem(this.wert.getName()).getItem("Wert"), //$NON-NLS-1$
 					this.wert.getWertUnskaliert());
 		}
 
@@ -158,9 +158,10 @@ public class QWert {
 	 * SE-02.00.00.00.00-AFo-4.0 (S.121).
 	 * 
 	 * @param summanden
-	 *            Liste der Summanden (<b>Muss mindestens ein Element enthalten</b>).
-	 * @return die Summe der beiden Summanden oder <code>null</code>, wenn
-	 *         diese nicht ermittelt werden konnte
+	 *            Liste der Summanden (<b>Muss mindestens ein Element
+	 *            enthalten</b>).
+	 * @return die Summe der beiden Summanden oder <code>null</code>, wenn diese
+	 *         nicht ermittelt werden konnte
 	 */
 	public static final QWert summe(QWert... summanden) {
 		QWert ergebnis = new QWert(summanden[0].getWert().getName());
@@ -189,10 +190,11 @@ public class QWert {
 			interpoliert |= summand.getWert().isInterpoliert();
 
 			try {
-				gueteListe.add(GueteVerfahren.gewichte(new GWert(summand
-						.getWert().getGueteIndex(), GueteVerfahren
-						.getZustand(summand.getWert().getVerfahren()), false),
-						Math.abs(summand.getAnteil())));
+				gueteListe.add(GueteVerfahren.gewichte(
+						new GWert(summand.getWert().getGueteIndex(),
+								GueteVerfahren.getZustand(summand.getWert()
+										.getVerfahren()), false), Math
+								.abs(summand.getAnteil())));
 			} catch (GueteException e) {
 				e.printStackTrace();
 				Debug.getLogger().error(
@@ -214,8 +216,8 @@ public class QWert {
 		try {
 			GWert gueteGesamt = GueteVerfahren.summe(gueteListe
 					.toArray(new GWert[0]));
-			ergebnis.getWert().getGueteIndex().setWert(
-					gueteGesamt.getIndexUnskaliert());
+			ergebnis.getWert().getGueteIndex()
+					.setWert(gueteGesamt.getIndexUnskaliert());
 			ergebnis.getWert().setVerfahren(
 					gueteGesamt.getVerfahren().getCode());
 		} catch (GueteException e) {
@@ -240,13 +242,14 @@ public class QWert {
 	 *            1. Summand (kann auch <code>null</code> sein)
 	 * @param summand2
 	 *            2. Summand (kann auch <code>null</code> sein)
-	 * @return die Summe der beiden Summanden oder <code>null</code>, wenn
-	 *         diese nicht ermittelt werden konnte
+	 * @return die Summe der beiden Summanden oder <code>null</code>, wenn diese
+	 *         nicht ermittelt werden konnte
 	 */
 	public static final QWert summe(QWert summand1, QWert summand2) {
 		QWert ergebnis = null;
 
-		if (summand1 != null && summand2 != null) {
+		if (summand1 != null && summand2 != null && summand1.getWert() != null
+				&& summand2.getWert() != null) {
 			if (summand1.getWert().isFehlerhaftBzwImplausibel()
 					|| summand2.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(summand1.getWert().getName());
@@ -278,31 +281,29 @@ public class QWert {
 				 */
 				try {
 					GWert gueteSummand1 = new GWert(summand1.getWert()
-							.getGueteIndex(), GueteVerfahren
-							.getZustand(summand1.getWert().getVerfahren()),
-							false);
+							.getGueteIndex(),
+							GueteVerfahren.getZustand(summand1.getWert()
+									.getVerfahren()), false);
 
 					GWert gueteSummand2 = new GWert(summand2.getWert()
-							.getGueteIndex(), GueteVerfahren
-							.getZustand(summand2.getWert().getVerfahren()),
-							false);
+							.getGueteIndex(),
+							GueteVerfahren.getZustand(summand2.getWert()
+									.getVerfahren()), false);
 
-					GWert gueteGesamt = GueteVerfahren.summe(GueteVerfahren
-							.gewichte(gueteSummand1, Math.abs(summand1
-									.getAnteil())), GueteVerfahren.gewichte(
-							gueteSummand2, Math.abs(summand2.getAnteil())));
-					ergebnis.getWert().getGueteIndex().setWert(
-							gueteGesamt.getIndexUnskaliert());
+					GWert gueteGesamt = GueteVerfahren.summe(
+							GueteVerfahren.gewichte(gueteSummand1,
+									Math.abs(summand1.getAnteil())),
+							GueteVerfahren.gewichte(gueteSummand2,
+									Math.abs(summand2.getAnteil())));
+					ergebnis.getWert().getGueteIndex()
+							.setWert(gueteGesamt.getIndexUnskaliert());
 					ergebnis.getWert().setVerfahren(
 							gueteGesamt.getVerfahren().getCode());
 				} catch (GueteException e) {
 					e.printStackTrace();
-					Debug
-							.getLogger()
-							.error(
-									"Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
-											"\n***Summand2***\n"
-											+ summand2.getWert()); //$NON-NLS-1$
+					Debug.getLogger()
+							.error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
+									"\n***Summand2***\n" + summand2.getWert()); //$NON-NLS-1$
 				}
 			}
 		}
@@ -325,7 +326,8 @@ public class QWert {
 	public static final QWert differenz(QWert minuend, QWert subtrahend) {
 		QWert ergebnis = null;
 
-		if (minuend != null && subtrahend != null) {
+		if (minuend != null && minuend.getWert() != null && subtrahend != null
+				&& subtrahend.getWert() != null) {
 			if (minuend.getWert().isFehlerhaftBzwImplausibel()
 					|| subtrahend.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(minuend.getWert().getName());
@@ -361,26 +363,25 @@ public class QWert {
 							.getWert().getVerfahren()), false);
 
 					GWert gueteSummand2 = new GWert(subtrahend.getWert()
-							.getGueteIndex(), GueteVerfahren
-							.getZustand(subtrahend.getWert().getVerfahren()),
-							false);
+							.getGueteIndex(),
+							GueteVerfahren.getZustand(subtrahend.getWert()
+									.getVerfahren()), false);
 
-					GWert gueteGesamt = GueteVerfahren.differenz(GueteVerfahren
-							.gewichte(gueteSummand1, Math.abs(minuend
-									.getAnteil())), GueteVerfahren.gewichte(
-							gueteSummand2, Math.abs(subtrahend.getAnteil())));
-					ergebnis.getWert().getGueteIndex().setWert(
-							gueteGesamt.getIndexUnskaliert());
+					GWert gueteGesamt = GueteVerfahren.differenz(
+							GueteVerfahren.gewichte(gueteSummand1,
+									Math.abs(minuend.getAnteil())),
+							GueteVerfahren.gewichte(gueteSummand2,
+									Math.abs(subtrahend.getAnteil())));
+					ergebnis.getWert().getGueteIndex()
+							.setWert(gueteGesamt.getIndexUnskaliert());
 					ergebnis.getWert().setVerfahren(
 							gueteGesamt.getVerfahren().getCode());
 				} catch (GueteException e) {
 					e.printStackTrace();
-					Debug
-							.getLogger()
-							.error(
-									"Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
-											"\n***Subtrahend***\n"
-											+ subtrahend.getWert()); //$NON-NLS-1$
+					Debug.getLogger()
+							.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
+									"\n***Subtrahend***\n"
+									+ subtrahend.getWert()); //$NON-NLS-1$
 				}
 			}
 		}

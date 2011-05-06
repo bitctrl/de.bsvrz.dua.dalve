@@ -106,13 +106,13 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	 * Zeigt an, ob der Messquerschnitt <b>Einfahrt</b> der Anschlussstelle,
 	 * die durch diesen virtuellen MQ repräsentiert wird, direkt erfasst ist.
 	 */
-	private boolean mqEinfahrtErfasst = false;
+	private boolean mqEinfahrtErfasst = true;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>Ausfahrt</b> der Anschlussstelle,
 	 * die durch diesen virtuellen MQ repräsentiert wird, direkt erfasst ist.
 	 */
-	private boolean mqAusfahrtErfasst = false;
+	private boolean mqAusfahrtErfasst = true;
 
 	/**
 	 * Tracker fuer die Erfassungsintervalldauer des MQ.
@@ -150,49 +150,57 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 		this.messQuerschnitt = messQuerschnittVirtuell;
 		this.mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
 
-		if (mqv.getMQVirtuellLage().equals(MessQuerschnittVirtuellLage.VOR)) {
-			this.mqVorErfasst = false;
-		} else if (mqv.getMQVirtuellLage().equals(
-				MessQuerschnittVirtuellLage.MITTE)) {
-			this.mqMitteErfasst = false;
-		} else if (mqv.getMQVirtuellLage().equals(
-				MessQuerschnittVirtuellLage.NACH)) {
-			this.mqNachErfasst = false;
-		} else {
-			throw new DUAInitialisierungsException(
-					"Virtueller Messquerschnitt " + messQuerschnittVirtuell
-							+ " kann nicht ausgewertet werden. Grund: Lage ("
-							+ mqv.getMQVirtuellLage() + ")");
-		}
+//		if (mqv.getMQVirtuellLage().equals(MessQuerschnittVirtuellLage.VOR)) {
+//			this.mqVorErfasst = false;
+//		} else if (mqv.getMQVirtuellLage().equals(
+//				MessQuerschnittVirtuellLage.MITTE)) {
+//			this.mqMitteErfasst = false;
+//		} else if (mqv.getMQVirtuellLage().equals(
+//				MessQuerschnittVirtuellLage.NACH)) {
+//			this.mqNachErfasst = false;
+//		} else {
+//			throw new DUAInitialisierungsException(
+//					"Virtueller Messquerschnitt " + messQuerschnittVirtuell
+//							+ " kann nicht ausgewertet werden. Grund: Lage ("
+//							+ mqv.getMQVirtuellLage() + ")");
+//		}
 
 		MessQuerschnitt mqVor = mqv.getMQVor();
 		if (mqVor != null) {
 			this.aktuelleMQAnalysen.put(mqVor.getSystemObject(), null);
 			this.mqAufHauptfahrbahn.add(mqVor.getSystemObject());
+		} else {
+			this.mqVorErfasst = false;
 		}
 
 		MessQuerschnitt mqMitte = mqv.getMQMitte();
 		if (mqMitte != null) {
 			this.aktuelleMQAnalysen.put(mqMitte.getSystemObject(), null);
 			this.mqAufHauptfahrbahn.add(mqMitte.getSystemObject());
+		} else {
+			this.mqMitteErfasst = false;
 		}
 
 		MessQuerschnitt mqNach = mqv.getMQNach();
 		if (mqNach != null) {
 			this.aktuelleMQAnalysen.put(mqNach.getSystemObject(), null);
 			this.mqAufHauptfahrbahn.add(mqNach.getSystemObject());
+		} else {
+			this.mqNachErfasst = false;
 		}
 
 		MessQuerschnitt mqEin = mqv.getMQEinfahrt();
 		if (mqEin != null) {
-			this.mqEinfahrtErfasst = true;
 			this.aktuelleMQAnalysen.put(mqEin.getSystemObject(), null);
+		} else {
+			this.mqEinfahrtErfasst = false;
 		}
 
 		MessQuerschnitt mqAus = mqv.getMQAusfahrt();
 		if (mqAus != null) {
-			this.mqAusfahrtErfasst = true;
 			this.aktuelleMQAnalysen.put(mqAus.getSystemObject(), null);
+		} else {
+			this.mqAusfahrtErfasst = false;
 		}
 
 		boolean nichtBetrachtet = false;
