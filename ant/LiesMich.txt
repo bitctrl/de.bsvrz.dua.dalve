@@ -28,6 +28,12 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten
 Versionsgeschichte
 ==================
 
+1.3.0
+
+  - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle Messquerschnitte
+         auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, teilweise falsch 
+         gerechnet wird.
+         
 1.2.2
 
   - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle Messquerschnitte

@@ -26,6 +26,7 @@
 package de.bsvrz.dua.dalve.analyse;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -51,9 +52,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der
  * Analysewerte eines virtuellen Messquerschnitts notwendig sind gespeichert.
  * Wenn die Werte für ein bestimmtes Intervall bereit stehen (oder eine Timeout
- * abgelaufen ist), wird eine Berechnung durchgeführt und der Wert publiziert.
- * <br><b>Achtung: Verfahren auf Basis der Konfigurationsdaten aus 
- * Attributgruppe <code>atg.messQuerschnittVirtuellStandard</code>.</b><br>
+ * abgelaufen ist), wird eine Berechnung durchgeführt und der Wert publiziert. <br>
+ * <b>Achtung: Verfahren auf Basis der Konfigurationsdaten aus Attributgruppe
+ * <code>atg.messQuerschnittVirtuellStandard</code>.</b><br>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -103,14 +104,14 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	private boolean mqMitteErfasst = true;
 
 	/**
-	 * Zeigt an, ob der Messquerschnitt <b>Einfahrt</b> der Anschlussstelle,
-	 * die durch diesen virtuellen MQ repräsentiert wird, direkt erfasst ist.
+	 * Zeigt an, ob der Messquerschnitt <b>Einfahrt</b> der Anschlussstelle, die
+	 * durch diesen virtuellen MQ repräsentiert wird, direkt erfasst ist.
 	 */
 	private boolean mqEinfahrtErfasst = true;
 
 	/**
-	 * Zeigt an, ob der Messquerschnitt <b>Ausfahrt</b> der Anschlussstelle,
-	 * die durch diesen virtuellen MQ repräsentiert wird, direkt erfasst ist.
+	 * Zeigt an, ob der Messquerschnitt <b>Ausfahrt</b> der Anschlussstelle, die
+	 * durch diesen virtuellen MQ repräsentiert wird, direkt erfasst ist.
 	 */
 	private boolean mqAusfahrtErfasst = true;
 
@@ -118,6 +119,11 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	 * Tracker fuer die Erfassungsintervalldauer des MQ.
 	 */
 	private ErfassungsIntervallDauerMQ mqT = null;
+
+	/**
+	 * Die zu berechnende Lage.
+	 */
+	private MessQuerschnittVirtuellLage lage = null;
 
 	/**
 	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurück.
@@ -139,31 +145,22 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 		if (mqAnalyse == null) {
 			mqAnalyse = analyseModul;
 		}
-		
+
+		if (messQuerschnittVirtuell.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
+			System.out.println();
+		}
+
 		this.mqT = ErfassungsIntervallDauerMQ.getInstanz(mqAnalyse.getDav(),
 				messQuerschnittVirtuell);
 		if (this.mqT == null) {
 			throw new RuntimeException("Erfassungsintervalldauer von VMQ "
 					+ messQuerschnittVirtuell + " kann nicht ermittelt werden.");
 		}
-		
+
 		this.messQuerschnitt = messQuerschnittVirtuell;
 		this.mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
 
-//		if (mqv.getMQVirtuellLage().equals(MessQuerschnittVirtuellLage.VOR)) {
-//			this.mqVorErfasst = false;
-//		} else if (mqv.getMQVirtuellLage().equals(
-//				MessQuerschnittVirtuellLage.MITTE)) {
-//			this.mqMitteErfasst = false;
-//		} else if (mqv.getMQVirtuellLage().equals(
-//				MessQuerschnittVirtuellLage.NACH)) {
-//			this.mqNachErfasst = false;
-//		} else {
-//			throw new DUAInitialisierungsException(
-//					"Virtueller Messquerschnitt " + messQuerschnittVirtuell
-//							+ " kann nicht ausgewertet werden. Grund: Lage ("
-//							+ mqv.getMQVirtuellLage() + ")");
-//		}
+		lage = mqv.getMQVirtuellLage();
 
 		MessQuerschnitt mqVor = mqv.getMQVor();
 		if (mqVor != null) {
@@ -211,29 +208,28 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 							+ " sind keine MQ referenziert"); //$NON-NLS-1$ //$NON-NLS-2$
 			nichtBetrachtet = true;
 		}
-		if (!mqAusfahrtErfasst || !mqEinfahrtErfasst) {
-			Debug
-					.getLogger()
-					.warning("Beim virtuellen MQ " + messQuerschnittVirtuell + //$NON-NLS-1$
-							" sind nicht Ein- UND Ausfahrt definiert (beide gleichzeitig)"); //$NON-NLS-1$
-			nichtBetrachtet = true;
-		}
+		
+//		if (!mqAusfahrtErfasst || !mqEinfahrtErfasst) {
+//			Debug.getLogger()
+//					.warning("Beim virtuellen MQ " + messQuerschnittVirtuell + //$NON-NLS-1$
+//							" sind nicht Ein- UND Ausfahrt definiert (beide gleichzeitig)"); //$NON-NLS-1$
+//			nichtBetrachtet = true;
+//		}
 
-		if (nichtBetrachtet) {
+		if (lage == null || nichtBetrachtet) {
 			return null;
 		}
 
-		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(mqAnalyse
-				.getDav(), messQuerschnitt);
+		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(
+				mqAnalyse.getDav(), messQuerschnitt);
 		mqAnalyse.getDav().subscribeReceiver(
 				this,
 				this.aktuelleMQAnalysen.keySet(),
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-						mqAnalyse.getDav().getDataModel().getAspect(
-								"asp.analyse")), //$NON-NLS-1$
-						ReceiveOptions.normal(),
-				ReceiverRole.receiver());
+						mqAnalyse.getDav().getDataModel()
+								.getAspect("asp.analyse")), //$NON-NLS-1$
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -252,16 +248,42 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	 */
 	@Override
 	public ResultData trigger(ResultData triggerDatum) {
+		if (this.messQuerschnitt.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
+			System.out.println();
+		}
+
 		ResultData ergebnis = null;
 		this.aktuelleMQAnalysen.put(triggerDatum.getObject(), triggerDatum);
 
-		if (this.isKeineDaten()) {
-			ergebnis = new ResultData(this.messQuerschnitt,
-					MqAnalyseModul.pubBeschreibung,
-					triggerDatum.getDataTime(), null);
-		} else {
+//		if (this.isKeineDaten()) {
+//			if (this.messQuerschnitt.getPid().equals(
+//					"mq.MQ_61.240_HFB_NO_NACH")) {
+//				System.out.println("keine Daten");
+//			}
+//			ergebnis = new ResultData(this.messQuerschnitt,
+//					MqAnalyseModul.pubBeschreibung, triggerDatum.getDataTime(),
+//					null);
+//		} else {
 			if (triggerDatum.getData() != null) {
 				if (this.isAlleDatenVollstaendig()) {
+					if (this.messQuerschnitt.getPid().equals(
+							"mq.MQ_61.240_HFB_NO_NACH")) {
+						// for (SystemObject obj : this.aktuelleMQAnalysen
+						// .keySet()) {
+						// ResultData r = this.aktuelleMQAnalysen.get(obj);
+						// if (r != null) {
+						// System.out.println(obj.getPid()
+						// + " --> "
+						// + this.aktuelleMQAnalysen.get(obj)
+						// .getDataTime());
+						// } else {
+						// System.out.println(obj.getPid() + " --> "
+						// + this.aktuelleMQAnalysen.get(obj));
+						// }
+						// break;
+						// }
+						// System.out.println();
+					}
 					ergebnis = this.getErgebnisAufBasisAktuellerDaten();
 				} else {
 					/**
@@ -271,14 +293,13 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 						long tT = this.mqT.getT();
 						if (tT != ErfassungsIntervallDauerMQ.NOCH_NICHT_ERMITTELBAR) {
 							long timeoutZeitStempel = triggerDatum
-									.getDataTime()
-									+ tT + tT / 2;
+									.getDataTime() + tT + tT / 2;
 							WECKER.setWecker(this, timeoutZeitStempel);
 						}
 					}
 				}
 			}
-		}
+		//}
 
 		return ergebnis;
 	}
@@ -319,41 +340,70 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 		long letzteBerechnungsZeit = this.letztesErgebnis == null ? -1
 				: this.letztesErgebnis.getDataTime();
 
+		if (this.messQuerschnitt.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
+			System.out.println("Voll: " + new Date(letzteBerechnungsZeit));
+		}
+
 		if (this.mqVorErfasst) {
-			ResultData vorData = this.aktuelleMQAnalysen.get(this.mqv
-					.getMQVor().getSystemObject());
+			ResultData vorData = getMQData(this.mqv.getMQVor());
 			alleDatenVollstaendig &= vorData != null
 					&& vorData.getData() != null
 					&& vorData.getDataTime() > letzteBerechnungsZeit;
+
+			if (vorData != null
+					&& this.messQuerschnitt.getPid().equals(
+							"mq.MQ_61.240_HFB_NO_NACH")) {
+				System.out.println("VOR: " + new Date(vorData.getDataTime()));
+			}
 		}
 		if (alleDatenVollstaendig && this.mqNachErfasst) {
-			ResultData nachData = this.aktuelleMQAnalysen.get(this.mqv
-					.getMQNach().getSystemObject());
+			ResultData nachData = getMQData(this.mqv.getMQNach());
 			alleDatenVollstaendig &= nachData != null
 					&& nachData.getData() != null
 					&& nachData.getDataTime() > letzteBerechnungsZeit;
+			if (nachData != null
+					&& this.messQuerschnitt.getPid().equals(
+							"mq.MQ_61.240_HFB_NO_NACH")) {
+				System.out.println("NACH: " + new Date(nachData.getDataTime()));
+			}
+
 		}
 		if (alleDatenVollstaendig && this.mqMitteErfasst) {
-			ResultData mitteData = this.aktuelleMQAnalysen.get(this.mqv
-					.getMQMitte().getSystemObject());
+			ResultData mitteData = getMQData(this.mqv.getMQMitte());
 			alleDatenVollstaendig &= mitteData != null
 					&& mitteData.getData() != null
 					&& mitteData.getDataTime() > letzteBerechnungsZeit;
+			if (mitteData != null
+					&& this.messQuerschnitt.getPid().equals(
+							"mq.MQ_61.240_HFB_NO_NACH")) {
+				System.out.println("MITTE: " + new Date(mitteData.getDataTime()));
+			}
+
 		}
 
 		if (alleDatenVollstaendig && this.mqEinfahrtErfasst) {
-			ResultData einData = this.aktuelleMQAnalysen.get(this.mqv
-					.getMQEinfahrt().getSystemObject());
+			ResultData einData = getMQData(this.mqv.getMQEinfahrt());
 			alleDatenVollstaendig &= einData != null
 					&& einData.getData() != null
 					&& einData.getDataTime() > letzteBerechnungsZeit;
+			if (einData != null
+					&& this.messQuerschnitt.getPid().equals(
+							"mq.MQ_61.240_HFB_NO_NACH")) {
+				System.out.println("EIN: " + new Date(einData.getDataTime()));
+			}
+
 		}
 		if (alleDatenVollstaendig && this.mqAusfahrtErfasst) {
-			ResultData ausData = this.aktuelleMQAnalysen.get(this.mqv
-					.getMQAusfahrt().getSystemObject());
+			ResultData ausData = getMQData(this.mqv.getMQAusfahrt());
 			alleDatenVollstaendig &= ausData != null
 					&& ausData.getData() != null
 					&& ausData.getDataTime() > letzteBerechnungsZeit;
+			if (ausData != null
+					&& this.messQuerschnitt.getPid().equals(
+							"mq.MQ_61.240_HFB_NO_NACH")) {
+				System.out.println("AUS: " + new Date(ausData.getDataTime()));
+			}
+
 		}
 
 		return alleDatenVollstaendig;
@@ -389,15 +439,11 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 				new MesswertUnskaliert(attName, ersetzung.getData())
 						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
-				Debug
-						.getLogger()
-						.error(
-								"Es konnte kein Ersetzungsdatum fuer " + this.messQuerschnitt + //$NON-NLS-1$
-										" im Attribut " + attName
-										+ " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$					
+				Debug.getLogger()
+						.error("Es konnte kein Ersetzungsdatum fuer " + this.messQuerschnitt + //$NON-NLS-1$
+								" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$					
 				MesswertUnskaliert mw = new MesswertUnskaliert(attName);
-				mw
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			}
 		}
@@ -422,18 +468,18 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 		this.berechneBemessungsdichte(analyseDatum);
 
 		ResultData aktuellesReferenzDatum = this.getAktuellesReferenzDatum();
-		if (aktuellesReferenzDatum == null
-				|| aktuellesReferenzDatum.getData() == null) {
+		if (aktuellesReferenzDatum != null
+				&& aktuellesReferenzDatum.getData() != null) {
 			ergebnis = new ResultData(this.messQuerschnitt,
-					MqAnalyseModul.pubBeschreibung, aktuellesReferenzDatum
-							.getDataTime(), analyseDatum);
+					MqAnalyseModul.pubBeschreibung,
+					aktuellesReferenzDatum.getDataTime(), analyseDatum);
 		} else {
 			/**
 			 * Notbremse
 			 */
 			ergebnis = new ResultData(this.messQuerschnitt,
-					MqAnalyseModul.pubBeschreibung,
-					System.currentTimeMillis(), null);
+					MqAnalyseModul.pubBeschreibung, System.currentTimeMillis(),
+					null);
 		}
 
 		return ergebnis;
@@ -448,6 +494,10 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 
 		assert (resultat != null);
 
+		if (this.messQuerschnitt.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
+			System.out.println("alarm: " + new Date(resultat.getDataTime()));
+		}
+
 		this.publiziere(resultat);
 	}
 
@@ -460,6 +510,12 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	 */
 	private synchronized void publiziere(final ResultData ergebnis) {
 		if (ergebnis != null) {
+
+			if (this.messQuerschnitt.getPid()
+					.equals("mq.MQ_61.240_HFB_NO_NACH")) {
+				System.out.println("1: " + new Date(ergebnis.getDataTime()));
+			}
+
 			/**
 			 * nur echt neue Daten versenden
 			 */
@@ -496,6 +552,13 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 
 				if (publikationsDatum != null) {
 					this.letztesErgebnis = ergebnis;
+
+					if (this.messQuerschnitt.getPid().equals(
+							"mq.MQ_61.240_HFB_NO_NACH")) {
+						System.out.println("2: "
+								+ new Date(letztesErgebnis.getDataTime()));
+					}
+
 					mqAnalyse.sendeDaten(publikationsDatum);
 				}
 			}
@@ -539,78 +602,59 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	 *            werden soll
 	 * @return das Ersatzdatum für diesen virtuellen Messquerschnitt in den
 	 *         Attributen <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code>
-	 *         und <code>VDelta</code> oder <code>null</code>, wenn dieses
-	 *         nicht ermittelt werden konnte, weil z.B. alle MQs erfasst sind
-	 *         (wäre ein Konfigurationsfehler)
+	 *         und <code>VDelta</code> oder <code>null</code>, wenn dieses nicht
+	 *         ermittelt werden konnte, weil z.B. alle MQs erfasst sind (wäre
+	 *         ein Konfigurationsfehler)
 	 */
 	private ResultData getErsatzDatum(String attName) {
 		ResultData ersatzDatum = null;
 
-		/**
-		 * 1. MQVor nicht direkt erfasst
-		 */
-		if (!this.mqVorErfasst) {
-			ResultData mqDataMitte = this.aktuelleMQAnalysen.get(this.mqv
-					.getMQMitte());
+		if (lage.equals(MessQuerschnittVirtuellLage.VOR)) {
+			/**
+			 * 1. MQVor nicht direkt erfasst
+			 */
+			ResultData mqDataMitte = getMQData(this.mqv.getMQMitte());
 
 			if (isDatumOk(mqDataMitte)) {
 				ersatzDatum = mqDataMitte;
 			}
 
 			if (!isDatumNutzbar(ersatzDatum, attName)) {
-				ResultData mqDataNach = this.aktuelleMQAnalysen.get(this.mqv
-						.getMQNach());
+				ResultData mqDataNach = getMQData(this.mqv.getMQNach());
 				if (isDatumOk(mqDataNach)) {
 					ersatzDatum = mqDataNach;
 				}
 			}
-		}
-
-		/**
-		 * Wenn Ersetzungsdatum noch nicht gefunden ist, mache weiter
-		 */
-		if (!isDatumOk(ersatzDatum)) {
-
+		} else if (lage.equals(MessQuerschnittVirtuellLage.MITTE)) {
 			/**
 			 * 2. MQMitte nicht direkt erfasst
 			 */
-			if (!this.mqMitteErfasst) {
-				ResultData mqDataVor = this.aktuelleMQAnalysen.get(this.mqv
-						.getMQVor());
+			ResultData mqDataVor = getMQData(this.mqv.getMQVor());
 
-				if (isDatumOk(mqDataVor)) {
-					ersatzDatum = mqDataVor;
-				}
-
-				if (!isDatumNutzbar(ersatzDatum, attName)) {
-					ResultData mqDataNach = this.aktuelleMQAnalysen
-							.get(this.mqv.getMQNach());
-					if (isDatumOk(mqDataNach)) {
-						ersatzDatum = mqDataNach;
-					}
-				}
+			if (isDatumOk(mqDataVor)) {
+				ersatzDatum = mqDataVor;
 			}
 
-			if (!isDatumOk(ersatzDatum)) {
+			if (!isDatumNutzbar(ersatzDatum, attName)) {
+				ResultData mqDataNach = getMQData(this.mqv.getMQNach());
+				if (isDatumOk(mqDataNach)) {
+					ersatzDatum = mqDataNach;
+				}
+			}
+		} else if (lage.equals(MessQuerschnittVirtuellLage.NACH)) {
+			/**
+			 * 3. MQNach nicht direkt erfasst
+			 */
+			ResultData mqDataMitte = getMQData(this.mqv.getMQMitte());
 
-				/**
-				 * 3. MQNach nicht direkt erfasst
-				 */
-				if (!this.mqNachErfasst) {
-					ResultData mqDataMitte = this.aktuelleMQAnalysen
-							.get(this.mqv.getMQMitte());
+			if (isDatumOk(mqDataMitte)) {
+				ersatzDatum = mqDataMitte;
+			}
 
-					if (isDatumOk(mqDataMitte)) {
-						ersatzDatum = mqDataMitte;
-					}
-
-					if (!isDatumNutzbar(ersatzDatum, attName)) {
-						ResultData mqDataVor = this.aktuelleMQAnalysen
-								.get(this.mqv.getMQVor());
-						if (isDatumOk(mqDataVor)) {
-							ersatzDatum = mqDataVor;
-						}
-					}
+			if (!isDatumNutzbar(ersatzDatum, attName)) {
+				ResultData mqDataVor = getMQData(this.mqv.getMQVor());
+				if (isDatumOk(mqDataVor)) {
+					ersatzDatum = mqDataVor;
 				}
 			}
 		}
@@ -641,6 +685,14 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 		return ergebnis;
 	}
 
+	private final ResultData getMQData(final MessQuerschnitt mq) {
+		ResultData rd = null;
+		if (mq != null) {
+			rd = this.aktuelleMQAnalysen.get(mq.getSystemObject());
+		}
+		return rd;
+	}
+
 	/**
 	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den
 	 * Attributen <code>QKfz, QLkw</code> und <code>QPkw</code>.
@@ -652,25 +704,23 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 	private final void setBilanzDatum(Data analyseDatum, String attName) {
 		QWert Q = null;
 
-		/**
-		 * 1. MQVor nicht direkt erfasst: Q(MQVor)=Q(MQMitte)+Q(MQAus). Wenn an
-		 * MQMitte der jeweilige Wert nicht vorhanden ist, gilt:
-		 * Q(MQVor)=Q(MQNach)+Q(MQAus)-Q(MQEin).
-		 */
-		if (!this.mqVorErfasst) {
-			QWert QMitte = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-					.getMQMitte()), attName);
-			QWert QAus = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-					.getMQAusfahrt()), attName);
+		if (lage.equals(MessQuerschnittVirtuellLage.VOR)) {
+			/**
+			 * 1. MQVor nicht direkt erfasst: Q(MQVor)=Q(MQMitte)+Q(MQAus). Wenn
+			 * an MQMitte der jeweilige Wert nicht vorhanden ist, gilt:
+			 * Q(MQVor)=Q(MQNach)+Q(MQAus)-Q(MQEin).
+			 */
+			QWert QMitte = new QWert(getMQData(this.mqv.getMQMitte()), attName);
+			QWert QAus = new QWert(getMQData(this.mqv.getMQAusfahrt()), attName);
 
 			Q = QWert.summe(QMitte, QAus);
 
 			if (Q == null || !Q.isExportierbarNach(analyseDatum)
 					|| !Q.isVerrechenbar()) {
-				QWert QNach = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-						.getMQNach()), attName);
-				QWert QEin = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-						.getMQEinfahrt()), attName);
+				QWert QNach = new QWert(getMQData(this.mqv.getMQNach()),
+						attName);
+				QWert QEin = new QWert(getMQData(this.mqv.getMQEinfahrt()),
+						attName);
 
 				if (QNach.isVerrechenbar() && QEin.isVerrechenbar()) {
 					if (Q == null || !Q.isExportierbarNach(analyseDatum)) {
@@ -680,8 +730,80 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 						 * Also Q != null und Q ist exportierbar
 						 */
 						if (!Q.isVerrechenbar()) {
-							QWert dummy = QWert.differenz(QWert.summe(QNach,
-									QAus), QEin);
+							QWert dummy = QWert.differenz(
+									QWert.summe(QNach, QAus), QEin);
+							if (dummy != null
+									&& dummy.isExportierbarNach(analyseDatum)
+									&& dummy.isVerrechenbar()) {
+								Q = dummy;
+							}
+						}
+					}
+				}
+			}
+		} else if (lage.equals(MessQuerschnittVirtuellLage.MITTE)) {
+			/**
+			 * 2. MQMitte nicht direkt erfasst: Q(MQMitte)=Q(MQVor)-Q(MQAus).
+			 * Wenn an MQVor der jeweilige Wert nicht vorhanden ist, gilt
+			 * Q(MQMitte)=Q(MQNach)-Q(MQEin).
+			 */
+			QWert QVor = new QWert(getMQData(this.mqv.getMQVor()), attName);
+			QWert QAus = new QWert(getMQData(this.mqv.getMQAusfahrt()), attName);
+
+			Q = QWert.differenz(QVor, QAus);
+
+			if (Q == null || !Q.isExportierbarNach(analyseDatum)
+					|| !Q.isVerrechenbar()) {
+				QWert QNach = new QWert(getMQData(this.mqv.getMQNach()),
+						attName);
+				QWert QEin = new QWert(getMQData(this.mqv.getMQEinfahrt()),
+						attName);
+
+				if (QNach.isVerrechenbar() && QEin.isVerrechenbar()) {
+					if (Q == null || !Q.isExportierbarNach(analyseDatum)) {
+						Q = QWert.differenz(QNach, QEin);
+					} else {
+						/**
+						 * Also Q != null und Q ist exportierbar
+						 */
+						if (!Q.isVerrechenbar()) {
+							QWert dummy = QWert.differenz(QNach, QEin);
+							if (dummy != null
+									&& dummy.isExportierbarNach(analyseDatum)
+									&& dummy.isVerrechenbar()) {
+								Q = dummy;
+							}
+						}
+					}
+				}
+			}
+		} else if (lage.equals(MessQuerschnittVirtuellLage.NACH)) {
+			/**
+			 * 3. MQNach nicht direkt erfasst Q(MQNach)=Q(MQMitte)+Q(MQEin).
+			 * Wenn an MQMitte der jeweilige Wert nicht vorhanden ist, gilt
+			 * Q(MQNach)=Q(MQVor)+Q(MQEin)-Q(MQAus).
+			 */
+			QWert QMitte = new QWert(getMQData(this.mqv.getMQMitte()), attName);
+			QWert QEin = new QWert(getMQData(this.mqv.getMQEinfahrt()), attName);
+
+			Q = QWert.summe(QMitte, QEin);
+
+			if (Q == null || !Q.isExportierbarNach(analyseDatum)
+					|| !Q.isVerrechenbar()) {
+				QWert QVor = new QWert(getMQData(this.mqv.getMQVor()), attName);
+				QWert QAus = new QWert(getMQData(this.mqv.getMQAusfahrt()),
+						attName);
+
+				if (QVor.isVerrechenbar() && QAus.isVerrechenbar()) {
+					if (Q == null || !Q.isExportierbarNach(analyseDatum)) {
+						Q = QWert.differenz(QWert.summe(QVor, QEin), QAus);
+					} else {
+						/**
+						 * Also Q != null und Q ist exportierbar
+						 */
+						if (!Q.isVerrechenbar()) {
+							QWert dummy = QWert.differenz(
+									QWert.summe(QVor, QEin), QAus);
 							if (dummy != null
 									&& dummy.isExportierbarNach(analyseDatum)
 									&& dummy.isVerrechenbar()) {
@@ -693,106 +815,9 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 			}
 		}
 
-		/**
-		 * Wenn Ersetzungsdatum noch nicht gefunden ist, mache weiter
-		 */
-		if (Q == null || !Q.isExportierbarNach(analyseDatum)
-				|| !Q.isVerrechenbar()) {
-
-			/**
-			 * 2. MQMitte nicht direkt erfasst: Q(MQMitte)=Q(MQVor)-Q(MQAus).
-			 * Wenn an MQVor der jeweilige Wert nicht vorhanden ist, gilt
-			 * Q(MQMitte)=Q(MQNach)-Q(MQEin).
-			 */
-			if (!this.mqMitteErfasst) {
-				QWert QVor = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-						.getMQVor()), attName);
-				QWert QAus = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-						.getMQAusfahrt()), attName);
-
-				Q = QWert.differenz(QVor, QAus);
-
-				if (Q == null || !Q.isExportierbarNach(analyseDatum)
-						|| !Q.isVerrechenbar()) {
-					QWert QNach = new QWert(this.aktuelleMQAnalysen
-							.get(this.mqv.getMQNach()), attName);
-					QWert QEin = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-							.getMQEinfahrt()), attName);
-
-					if (QNach.isVerrechenbar() && QEin.isVerrechenbar()) {
-						if (Q == null || !Q.isExportierbarNach(analyseDatum)) {
-							Q = QWert.differenz(QNach, QEin);
-						} else {
-							/**
-							 * Also Q != null und Q ist exportierbar
-							 */
-							if (!Q.isVerrechenbar()) {
-								QWert dummy = QWert.differenz(QNach, QEin);
-								if (dummy != null
-										&& dummy
-												.isExportierbarNach(analyseDatum)
-										&& dummy.isVerrechenbar()) {
-									Q = dummy;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			if (Q == null || !Q.isExportierbarNach(analyseDatum)
-					|| !Q.isVerrechenbar()) {
-
-				/**
-				 * 3. MQNach nicht direkt erfasst Q(MQNach)=Q(MQMitte)+Q(MQEin).
-				 * Wenn an MQMitte der jeweilige Wert nicht vorhanden ist, gilt
-				 * Q(MQNach)=Q(MQVor)+Q(MQEin)-Q(MQAus).
-				 */
-				if (!this.mqNachErfasst) {
-					QWert QMitte = new QWert(this.aktuelleMQAnalysen
-							.get(this.mqv.getMQMitte()), attName);
-					QWert QEin = new QWert(this.aktuelleMQAnalysen.get(this.mqv
-							.getMQEinfahrt()), attName);
-
-					Q = QWert.summe(QMitte, QEin);
-
-					if (Q == null || !Q.isExportierbarNach(analyseDatum)
-							|| !Q.isVerrechenbar()) {
-						QWert QVor = new QWert(this.aktuelleMQAnalysen
-								.get(this.mqv.getMQVor()), attName);
-						QWert QAus = new QWert(this.aktuelleMQAnalysen
-								.get(this.mqv.getMQAusfahrt()), attName);
-
-						if (QVor.isVerrechenbar() && QAus.isVerrechenbar()) {
-							if (Q == null
-									|| !Q.isExportierbarNach(analyseDatum)) {
-								Q = QWert.differenz(QWert.summe(QVor, QEin),
-										QAus);
-							} else {
-								/**
-								 * Also Q != null und Q ist exportierbar
-								 */
-								if (!Q.isVerrechenbar()) {
-									QWert dummy = QWert.differenz(QWert.summe(
-											QVor, QEin), QAus);
-									if (dummy != null
-											&& dummy
-													.isExportierbarNach(analyseDatum)
-											&& dummy.isVerrechenbar()) {
-										Q = dummy;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
 		MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 		if (Q == null || !Q.isExportierbarNach(analyseDatum)) {
-			mw
-					.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		} else {
 			mw = Q.getWert();
 		}
