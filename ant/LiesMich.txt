@@ -28,24 +28,28 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten
 Versionsgeschichte
 ==================
 
+1.3.1
+  - mit dem Kommandozeilenparameter "-ignoreDichteMax=true" kann die Beschränkung der Dichtewerte auf den parametrierten
+    Maximalwert abgeschaltet werden
+
 1.3.0
 
   - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle Messquerschnitte
-         auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, teilweise falsch 
+         auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, teilweise falsch
          gerechnet wird.
-         
+
 1.2.2
 
   - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle Messquerschnitte
          auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, die Applikation sich
          mit einem Fehler beendet.
-  
+
 1.2.1
   - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
          DataDescription(atg, asp)
 
 1.2.0
-  - Berechnung von Stoerfallzustand nach Verfahren MARZ korrigiert (Verwendung von 
+  - Berechnung von Stoerfallzustand nach Verfahren MARZ korrigiert (Verwendung von
     kKfzG statt kBG)
 
 1.1.0
@@ -71,8 +75,8 @@ Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Kla
 de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werden kann
 (zusaetzlich zu den normalen Parametern jeder Datenverteiler-Applikation):
 	-KonfigurationsBereichsPid=pid(,pid)
-	
-	
+
+
 - Tests:
 
 	Die automatischen Tests, die in Zusammenhang mit der Prüfspezifikation durchgeführt
@@ -87,17 +91,17 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 	 * Verbindungsdaten
 	 */
 	public static final String[] CON_DATA = new String[] {
-			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
+			"-datenverteiler=localhost:8083", //$NON-NLS-1$
 			"-benutzer=Tester", //$NON-NLS-1$
 			"-authentifizierung=c:\\passwd"}; //$NON-NLS-1$
-	
+
 	Das Wurzelverzeichnis mit den Testdaten (csv-Dateien) muss ebenfalls innerhalb dieser Datei verlinkt sein:
-	
+
 	/**
 	 * Wurzelverzeichnis der Testdaten
 	 */
 	public static final String TEST_DATEN_VERZ = "...extra\\"; //$NON-NLS-1$
-	
+
 
 - Logging-Hierarchie (Wann wird welche Art von Logging-Meldung produziert?):
 
@@ -105,12 +109,12 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 	- DUAInitialisierungsException --> Beendigung der Applikation
 	- Fehler beim An- oder Abmelden von Daten beim Datenverteiler
 	- Interne unerwartete Fehler
-	
+
 	WARNING:
 	- Fehler, die die Funktionalität grundsätzlich nicht
 	  beeinträchtigen, aber zum Datenverlust führen können
 	- Nicht identifizierbare Konfigurationsbereiche
-	- Probleme beim Explorieren von Attributpfaden 
+	- Probleme beim Explorieren von Attributpfaden
 	  (von Plausibilisierungsbeschreibungen)
 	- Wenn mehrere Objekte eines Typs vorliegen, von dem
 	  nur eine Instanz erwartet wird
@@ -119,10 +123,10 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 	- Wenn inkompatible Parameter übergeben wurden
 	- Wenn Parameter unvollständig sind
 	- Wenn ein Wert bzw. Status nicht gesetzt werden konnte
-	
+
 	INFO:
 	- Wenn neue Parameter empfangen wurden
-	
+
 	CONFIG:
 	- Allgemeine Ausgaben, welche die Konfiguration betreffen
 	- Benutzte Konfigurationsbereiche der Applikation bzw.
@@ -130,18 +134,18 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 	- Benutzte Objekte für Parametersteuerung von Applikationen
 	  (z.B. die Instanz der Datenflusssteuerung, die verwendet wird)
 	- An- und Abmeldungen von Daten beim Datenverteiler
-	
+
 	FINE:
-	- Wenn Daten empfangen wurden, die nicht weiterverarbeitet 
+	- Wenn Daten empfangen wurden, die nicht weiterverarbeitet
 	  (plausibilisiert) werden können (weil keine Parameter vorliegen)
-	- Informationen, die nur zum Debugging interessant sind 
-	
+	- Informationen, die nur zum Debugging interessant sind
+
 
 Disclaimer
 ==========
 
 Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
-Copyright (C) 2007 BitCtrl Systems GmbH 
+Copyright (C) 2007 BitCtrl Systems GmbH
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

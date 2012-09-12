@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -58,9 +58,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
  * Testet die Berechnung von <code>VKDiffKfz</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class DaLVETestVKDiffKfz implements ClientSenderInterface,
@@ -79,11 +79,11 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 	/**
 	 * Ueberpruefte Instanz der Datenaufbereitung LVE.
 	 */
-	private DatenaufbereitungLVE testInstanz = new DatenaufbereitungLVE();
+	private DatenaufbereitungLVE testInstanz = DatenaufbereitungLVE.getInstance();
 
 	/**
 	 * Vorbereitungen.
-	 * 
+	 *
 	 * @throws Exception
 	 *             wird weitergereicht.
 	 */
@@ -94,14 +94,14 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 		/**
 		 * Start einer Instanz der Testapplikation
 		 */
-		this.testInstanz = new DatenaufbereitungLVE();
+//		this.testInstanz = new DatenaufbereitungLVE();
 		StandardApplicationRunner.run(testInstanz,
 				DatenaufbereitungLVETest.CON_DATA_APP);
 	}
 
 	/**
 	 * Test auf Genauigkeit von Wert <code>VKDiffKfz</code>.
-	 * 
+	 *
 	 * @throws Exception
 	 *             wird weitergereicht.
 	 */
@@ -244,15 +244,15 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 
 				dav.wait();
 			}
-			
+
 			String[] soll = prognoseDatei.getNaechsteZeile();
 			double sollVkDiff = Double.parseDouble(soll[0].replaceAll(",", "."));
 			double istVkDiff = VKDiffKfzStoerfallIndikator.getTestVkDiffKfz();
 			String debug = "(Soll/Ist) --> VKDiffKfz = " +
-			DUAUtensilien.runde(sollVkDiff, 5) + "/" + 
+			DUAUtensilien.runde(sollVkDiff, 5) + "/" +
 			DUAUtensilien.runde(istVkDiff, 5) +
 			", Situation: " + soll[1].toLowerCase() + "/"	+ this.aktuellerStoerfallzustand.toLowerCase();
-			
+
 			System.out.println(debug);
 			Assert.assertEquals("VKDiffKfz-Fehler: " + debug, DUAUtensilien.runde(sollVkDiff, 5), DUAUtensilien.runde(istVkDiff, 5));
 			Assert.assertEquals("Stoerfall-Fehler: " + debug, soll[1].toLowerCase(), this.aktuellerStoerfallzustand.toLowerCase());
@@ -309,9 +309,9 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 
 	/**
 	 * Parameter.
-	 * 
+	 *
 	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
+	 *
 	 * @version $Id$
 	 */
 	private class Parameter extends CSVImporter {
@@ -323,7 +323,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 
 		/**
 		 * Standardkonstruktor.
-		 * 
+		 *
 		 * @param dateiName
 		 *            CSV-Datei
 		 * @throws Exception
@@ -339,7 +339,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 
 		/**
 		 * Erfragt den Wert eines Schluessels.
-		 * 
+		 *
 		 * @param key
 		 *            der Schluessel
 		 * @return der Wert eines Schluessels.
