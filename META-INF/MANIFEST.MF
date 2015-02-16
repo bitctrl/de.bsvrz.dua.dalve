@@ -17,3 +17,4 @@ Export-Package: de.bsvrz.dua.dalve,
  de.bsvrz.dua.dalve.util,
  de.bsvrz.dua.dalve.util.para,
  de.bsvrz.dua.dalve.util.pruef
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
