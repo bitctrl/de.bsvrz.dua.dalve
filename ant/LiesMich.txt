@@ -36,11 +36,11 @@ Versionsgeschichte
 1.4.0
 
   - Für die Berechnung von VKfz am Messquerschnitt wird wenn VKFz eines Fahrstreifens nicht
-    ermittelbar ist, jetzt die Durchschnittschwindigkeit aller anderen Fahrstreifen zur Berechnung
-    herangezogen. Bisher wurde wenn VKfz eines Fahrstreifen nicht ermittelbar war, die QKfz dieses
-    Fahrstreifen mit in die Berechnung einbezogen, so das für den Mittelwert der
-    Durchschnittsgeschwindigkeit mehr Fahrzeuge bekannt waren, als deren Geschwindkeit. Das hat die
-    Durchschnittsgeschwindigkeit unverhältnismäßig nach unten gedrückt.
+    ermittelbar ist, jetzt die Durchschnittsgeschwindigkeit aller anderen Fahrstreifen zur
+    Berechnung herangezogen. Bisher wurde wenn VKfz eines Fahrstreifen nicht ermittelbar war, die
+    QKfz dieses Fahrstreifen mit in die Berechnung einbezogen, so das für den Mittelwert der
+    Durchschnittsgeschwindigkeit mehr Fahrzeuge bekannt waren, als deren Geschwindigkeit. Das hat
+    die Durchschnittsgeschwindigkeit unverhältnismäßig nach unten gedrückt.
 
 1.3.1
 
