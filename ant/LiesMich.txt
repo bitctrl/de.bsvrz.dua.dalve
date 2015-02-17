@@ -9,56 +9,72 @@ Version: @Version@
 =========
 
 Die SWE Datenaufbereitung LVE dient der Aufbereitung von messwertersetzten Kurzzeitdaten.
+
 Sie ermittelt folgende Kenngrößen:
-•	Analysewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 115f.
-•	Prognosewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 134f.
+•
+  - Analysewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 115f.
+•  - Prognosewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 134f.
+
 Weiterhin wird hier die lokale Störfallerkennung bzw. die Ermittlung der Verkehrslagen wie folgt
 durchgeführt:
-•	Ermittlung spurbezogener Verkehrslagen (Störfallzustände), siehe [Afo] S. 151f.
-•	Nach Verfahren I (MARZ)
-•	Nach Verfahren II (NRW Verkehrslage)
-•	Ermittlung querschnittsorientierter Verkehrslagen (Störfallzustände), siehe [Afo] S. 154f.
-•	Nach Verfahren I (MARZ)
-•	Nach Verfahren II (NRW Verkehrslage)
-•	Nach Verfahren III (NRW Verkehrslage für RDS-Meldungen)
-•	Nach Verfahren IV (Fundamentaldiagramm)
+•
+  - Ermittlung spurbezogener Verkehrslagen (Störfallzustände), siehe [Afo] S. 151f.
+  - Nach Verfahren I (MARZ)
+  - Nach Verfahren II (NRW Verkehrslage)
+  - Ermittlung querschnittsorientierter Verkehrslagen (Störfallzustände), siehe [Afo] S. 154f.
+  - Nach Verfahren I (MARZ)
+  - Nach Verfahren II (NRW Verkehrslage)
+  - Nach Verfahren III (NRW Verkehrslage für RDS-Meldungen)
+  - Nach Verfahren IV (Fundamentaldiagramm)
+
 Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten publiziert.
 
 
 Versionsgeschichte
 ==================
 
+1.4.0
+
+  - Für die Berechnung von VKfz am Messquerschnitt wird wenn VKFz eines Fahrstreifens nicht
+    ermittelbar ist, jetzt die Durchschnittschwindigkeit aller anderen Fahrstreifen zur Berechnung
+    herangezogen. Bisher wurde wenn VKfz eines Fahrstreifen nicht ermittelbar war, die QKfz dieses
+    Fahrstreifen mit in die Berechnung einbezogen, so das für den Mittelwert der
+    Durchschnittsgeschwindigkeit mehr Fahrzeuge bekannt waren, als deren Geschwindkeit. Das hat die
+    Durchschnittsgeschwindigkeit unverhältnismäßig nach unten gedrückt.
+
 1.3.1
-  - mit dem Kommandozeilenparameter "-ignoreDichteMax=true" kann die Beschränkung der Dichtewerte auf den parametrierten
-    Maximalwert abgeschaltet werden
+
+  - mit dem Kommandozeilenparameter "-ignoreDichteMax=true" kann die Beschränkung der Dichtewerte
+    auf den parametrierten Maximalwert abgeschaltet werden
 
 1.3.0
 
-  - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle Messquerschnitte
-         auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, teilweise falsch
-         gerechnet wird.
+  - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle
+    Messquerschnitte auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen,
+    teilweise falsch gerechnet wird.
 
 1.2.2
 
-  - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle Messquerschnitte
-         auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, die Applikation sich
-         mit einem Fehler beendet.
+  - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle
+    Messquerschnitte auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, die
+    Applikation sich mit einem Fehler beendet.
 
 1.2.1
+
   - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
-         DataDescription(atg, asp)
+     DataDescription(atg, asp)
 
 1.2.0
-  - Berechnung von Stoerfallzustand nach Verfahren MARZ korrigiert (Verwendung von
-    kKfzG statt kBG)
+
+  - Berechnung von Stoerfallzustand nach Verfahren MARZ korrigiert (Verwendung von kKfzG statt kBG)
 
 1.1.0
 
-  - Berechnungsverfahren zur Berechnung der virtuellen MQs ergaenzt
-    (jetzt zusaetzlich auf Basis von atg.messQuerschnittVirtuellVLage)
+  - Berechnungsverfahren zur Berechnung der virtuellen MQs ergaenzt (jetzt zusaetzlich auf Basis von
+    atg.messQuerschnittVirtuellVLage)
   - Stoerfallindikator VKDiffKfz ergaenzt
-  - Uebernahme des Fundamentaldiagramms bei entsprechendem Stoerfallindikator
-    auf Strassenteilsegment geaendert
+  - Uebernahme des Fundamentaldiagramms bei entsprechendem Stoerfallindikator auf
+    Strassenteilsegment geaendert
 
 1.0.0
 
@@ -67,6 +83,7 @@ Versionsgeschichte
 1.0.0b
 
   - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
+
 
 Bemerkungen
 ===========
