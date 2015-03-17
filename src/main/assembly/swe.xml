@@ -1,0 +1,94 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+
+	<id>swe</id>
+
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<formats>
+		<format>zip</format>
+	</formats>
+
+	<fileSets>
+		<fileSet>
+			<directory>src/main/dist</directory>
+			<outputDirectory>${project.artifactId}</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${project.build.directory}/dependencies</directory>
+			<outputDirectory>${project.artifactId}/lib</outputDirectory>
+			<includes>
+				<include>*</include>
+			</includes>
+			<excludes>
+				<exclude>de.bsvrz.*</exclude>
+				<exclude>com.bitctrl*</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+
+	<files>
+		<file>
+			<source>${project.build.directory}/${artifactId}-runtime.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}.jar</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}-doc-api-javadoc.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-doc-api.zip</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}-doc-design-javadoc.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-doc-design.zip</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}-sources.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-src.zip</destName>
+		</file>
+		<file>
+			<source>LICENSE.txt</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-Lizenz.txt</destName>
+		</file>
+		<file>
+			<source>README.txt</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-Build-Report.txt</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}-tests.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-test.jar</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}-doc-api-test-javadoc.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-test-doc-api.zip</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}-doc-design-test-javadoc.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-test-doc-design.zip</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${artifactId}-${version}-test-sources.jar</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-test-src.zip</destName>
+		</file>
+		<file>
+			<source>LICENSE.txt</source>
+			<outputDirectory>${artifactId}</outputDirectory>
+			<destName>${artifactId}-test-Lizenz.txt</destName>
+		</file>
+	</files>
+
+</assembly>
