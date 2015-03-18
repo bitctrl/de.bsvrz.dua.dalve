@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -51,8 +51,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public abstract class AbstraktStoerfallIndikator implements
-		ClientReceiverInterface, ClientSenderInterface {
+public abstract class AbstraktStoerfallIndikator implements ClientReceiverInterface,
+		ClientSenderInterface {
 
 	/** Verbindung zum Datenverteiler. */
 	protected static ClientDavInterface DAV = null;
@@ -73,60 +73,55 @@ public abstract class AbstraktStoerfallIndikator implements
 	protected boolean aktuellKeineDaten = true;
 
 	/**
-	 * Initialisiert diese Instanz indem sich auf Parameter angemeldet wird und
-	 * eine Sendeanmeldung durchgefuehrt wird.
-	 * 
+	 * Initialisiert diese Instanz indem sich auf Parameter angemeldet wird und eine Sendeanmeldung
+	 * durchgefuehrt wird.
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param objekt
-	 *            das Objekt, fuer dass der Stoerfallzustand berechnet werden
-	 *            soll
+	 *            das Objekt, fuer dass der Stoerfallzustand berechnet werden soll
 	 * @throws DUAInitialisierungsException
-	 *             wenn dieses Objekt nicht vollständig initialisiert werden
-	 *             konnte
+	 *             wenn dieses Objekt nicht vollständig initialisiert werden konnte
 	 */
-	public void initialisiere(final ClientDavInterface dav,
-			final SystemObject objekt) throws DUAInitialisierungsException {
+	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
+			throws DUAInitialisierungsException {
 		if (DAV == null) {
 			DAV = dav;
 		}
 		this.objekt = objekt;
 
-		if (this.getParameterAtgPid() != null) {
-			this.paraAtg = dav.getDataModel().getAttributeGroup(
-					this.getParameterAtgPid());
-			dav.subscribeReceiver(this, objekt, new DataDescription(
-					this.paraAtg, dav.getDataModel().getAspect(
-							DaVKonstanten.ASP_PARAMETER_SOLL)),
-					ReceiveOptions.normal(), ReceiverRole.receiver());
+		if (getParameterAtgPid() != null) {
+			paraAtg = dav.getDataModel().getAttributeGroup(getParameterAtgPid());
+			dav.subscribeReceiver(this, objekt, new DataDescription(paraAtg, dav.getDataModel()
+					.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions.normal(),
+					ReceiverRole.receiver());
 		}
 
-		this.pubBeschreibung = new DataDescription(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav
-				.getDataModel().getAspect(this.getPubAspektPid()));
+		pubBeschreibung = new DataDescription(dav.getDataModel().getAttributeGroup(
+				DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav.getDataModel().getAspect(
+				getPubAspektPid()));
 		try {
-			dav.subscribeSender(this, objekt, this.pubBeschreibung, SenderRole
-					.source());
-		} catch (OneSubscriptionPerSendData e) {
+			dav.subscribeSender(this, objekt, pubBeschreibung, SenderRole.source());
+		} catch (final OneSubscriptionPerSendData e) {
 			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 		}
 	}
-	
+
 	/**
 	 * Macht alle Anmeldungen aus dem Konstruktor wieder rueckgaengig.
 	 *
-	 * @throws DUAInitialisierungsException the DUA initialisierungs exception
+	 * @throws DUAInitialisierungsException
+	 *             the DUA initialisierungs exception
 	 */
 	protected void abmelden() throws DUAInitialisierungsException {
-		if (this.paraAtg != null) {
-			DAV.unsubscribeReceiver(this, objekt, new DataDescription(
-					this.paraAtg, DAV.getDataModel().getAspect(
-							DaVKonstanten.ASP_PARAMETER_SOLL)));
+		if (paraAtg != null) {
+			DAV.unsubscribeReceiver(this, objekt, new DataDescription(paraAtg, DAV.getDataModel()
+					.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)));
 		}
-		DAV.unsubscribeSender(this, objekt, this.pubBeschreibung);
-		this.paraAtg = null;
-		this.objekt = null;
-		this.pubBeschreibung = null;
+		DAV.unsubscribeSender(this, objekt, pubBeschreibung);
+		paraAtg = null;
+		objekt = null;
+		pubBeschreibung = null;
 	}
 
 	/**
@@ -141,16 +136,17 @@ public abstract class AbstraktStoerfallIndikator implements
 	/**
 	 * Liest einen Parametersatz.
 	 *
-	 * @param parameter            einen Parametersatz
+	 * @param parameter
+	 *            einen Parametersatz
 	 */
-	protected void readParameter(ResultData parameter) {
+	protected void readParameter(final ResultData parameter) {
 		// zum ueberschreiben bzw. weglassen gedacht
 	}
 
 	/**
-	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten
-	 * und publiziert diesen ggf.
-	 * 
+	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten und publiziert diesen
+	 * ggf.
+	 *
 	 * @param resultat
 	 *            ein empfangenes Datum zur Berechnung des Stoerfallindikators
 	 */
@@ -166,23 +162,23 @@ public abstract class AbstraktStoerfallIndikator implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if (resultat != null) {
-					if (this.paraAtg != null
-							&& resultat.getDataDescription()
-									.getAttributeGroup().getId() == this.paraAtg
-									.getId()) {
+					if ((paraAtg != null)
+							&& (resultat.getDataDescription().getAttributeGroup().getId() == paraAtg
+									.getId())) {
 						/**
 						 * Parameter empfangen
 						 */
-						this.readParameter(resultat);
+						readParameter(resultat);
 					} else {
 						/**
 						 * Daten empfangen
 						 */
-						this.berechneStoerfallIndikator(resultat);
+						berechneStoerfallIndikator(resultat);
 					}
 				}
 			}
@@ -192,39 +188,38 @@ public abstract class AbstraktStoerfallIndikator implements
 	/**
 	 * Sendet einen Ergebnisdatensatz.
 	 *
-	 * @param ergebnis            ein Ergebnisdatensatz
+	 * @param ergebnis
+	 *            ein Ergebnisdatensatz
 	 */
 	protected final void sendeErgebnis(final ResultData ergebnis) {
 		if (ergebnis.getData() != null) {
 			try {
 				if (sendenOk) {
 					DAV.sendData(ergebnis);
-					this.aktuellKeineDaten = false;
+					aktuellKeineDaten = false;
 				} else {
-					Debug.getLogger().info(
-							"Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
+					Debug.getLogger().info("Keine Abnehmer fuer Daten von " + objekt); //$NON-NLS-1$
 				}
-			} catch (DataNotSubscribedException e) {
+			} catch (final DataNotSubscribedException e) {
 				Debug.getLogger().error(Constants.EMPTY_STRING, e);
 				e.printStackTrace();
-			} catch (SendSubscriptionNotConfirmed e) {
+			} catch (final SendSubscriptionNotConfirmed e) {
 				Debug.getLogger().error(Constants.EMPTY_STRING, e);
 				e.printStackTrace();
 			}
 		} else {
-			if (!this.aktuellKeineDaten) {
+			if (!aktuellKeineDaten) {
 				try {
 					if (sendenOk) {
 						DAV.sendData(ergebnis);
-						this.aktuellKeineDaten = true;
+						aktuellKeineDaten = true;
 					} else {
-						Debug.getLogger().info(
-								"Keine Abnehmer fuer Daten von " + this.objekt); //$NON-NLS-1$
+						Debug.getLogger().info("Keine Abnehmer fuer Daten von " + objekt); //$NON-NLS-1$
 					}
-				} catch (DataNotSubscribedException e) {
+				} catch (final DataNotSubscribedException e) {
 					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
-				} catch (SendSubscriptionNotConfirmed e) {
+				} catch (final SendSubscriptionNotConfirmed e) {
 					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
 				}
@@ -235,16 +230,18 @@ public abstract class AbstraktStoerfallIndikator implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
-		this.sendenOk = state == ClientSenderInterface.START_SENDING;
+	@Override
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
+			final byte state) {
+		sendenOk = state == ClientSenderInterface.START_SENDING;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return true;
 	}
 

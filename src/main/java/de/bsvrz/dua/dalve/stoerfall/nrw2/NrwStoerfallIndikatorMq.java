@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -47,15 +47,14 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 // TODO: Auto-generated Javadoc
 /**
- * Repräsentiert einen Stoerfallindikator nach Verfahren NRW (nur fuer
- * Messquerschnitte).
+ * Repräsentiert einen Stoerfallindikator nach Verfahren NRW (nur fuer Messquerschnitte).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 
 	/** Mappt alle Fahrstreifen dieses Messquerschnitts auf deren letztes empfangenes Analysedatum. */
-	private Map<SystemObject, ResultData> fsDaten = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> fsDaten = new HashMap<SystemObject, ResultData>();
 
 	/** Attributgruppe der Analysedaten von Fahrstreifen. */
 	private AttributeGroup fsAnalyseAtg = null;
@@ -68,37 +67,33 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 	 */
 	private ErfassungsIntervallDauerMQ erf = null;
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
+	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
 			throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
-		
-		if(objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
-			this.erf = ErfassungsIntervallDauerMQ.getInstanz(dav, objekt); 
+
+		if (objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
+			erf = ErfassungsIntervallDauerMQ.getInstanz(dav, objekt);
 		}
 
 		/**
-		 * Anmeldung auf Analysedaten aller Fahrstreifen dieses
-		 * Messquerschnittes
+		 * Anmeldung auf Analysedaten aller Fahrstreifen dieses Messquerschnittes
 		 */
 		mq = MessQuerschnittAllgemein.getInstanz(objekt);
 
 		if (mq != null) {
-			for (FahrStreifen fs : mq.getFahrStreifen()) {
-				this.fsDaten.put(fs.getSystemObject(), null);
+			for (final FahrStreifen fs : mq.getFahrStreifen()) {
+				fsDaten.put(fs.getSystemObject(), null);
 			}
 
-			this.fsAnalyseAtg = dav.getDataModel().getAttributeGroup(
-					DUAKonstanten.ATG_KURZZEIT_FS);
+			fsAnalyseAtg = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
 
-			dav.subscribeReceiver(this, fsDaten.keySet(), new DataDescription(
-					this.fsAnalyseAtg, dav.getDataModel().getAspect(
-							DUAKonstanten.ASP_ANALYSE)),
-					ReceiveOptions.normal(), ReceiverRole.receiver());
+			dav.subscribeReceiver(this, fsDaten.keySet(), new DataDescription(fsAnalyseAtg, dav
+					.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions.normal(),
+					ReceiverRole.receiver());
 		} else {
 			throw new DUAInitialisierungsException("Messquerschnitt " + objekt + //$NON-NLS-1$
 					" konnte nicht vollstaendig ausgelesen werden"); //$NON-NLS-1$
@@ -125,18 +120,17 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void berechneStoerfallIndikator(ResultData resultat) {
+	protected void berechneStoerfallIndikator(final ResultData resultat) {
 		Data data = null;
 
 		if (resultat.getData() != null) {
-			if (resultat.getDataDescription().getAttributeGroup().equals(
-					DatenaufbereitungLVE.getAnalyseAtg(objekt))) {
-				this.analyseDatensatz = resultat;
-			} else if (resultat.getDataDescription().getAttributeGroup()
-					.equals(this.fsAnalyseAtg)) {
-				this.fsDaten.put(resultat.getObject(), resultat);
+			if (resultat.getDataDescription().getAttributeGroup()
+					.equals(DatenaufbereitungLVE.getAnalyseAtg(objekt))) {
+				analyseDatensatz = resultat;
+			} else if (resultat.getDataDescription().getAttributeGroup().equals(fsAnalyseAtg)) {
+				fsDaten.put(resultat.getObject(), resultat);
 			} else {
-				this.geglaettetDatensatz = resultat;
+				geglaettetDatensatz = resultat;
 			}
 
 			// /**
@@ -154,80 +148,73 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 			// }
 			// }
 
-			if (this.analyseDatensatz != null
-					&& this.geglaettetDatensatz != null) {
+			if ((analyseDatensatz != null) && (geglaettetDatensatz != null)) {
 
-				if (this.analyseDatensatz.getDataTime() == this.geglaettetDatensatz
-						.getDataTime()) {
+				if (analyseDatensatz.getDataTime() == geglaettetDatensatz.getDataTime()) {
 					StoerfallSituation stufe = StoerfallSituation.KEINE_AUSSAGE;
 
-					if (v1 >= 0 && v2 >= 0 && k1 >= 0 && k2 >= 0 && k3 >= 0
-							&& kT >= 0) {
+					if ((v1 >= 0) && (v2 >= 0) && (k1 >= 0) && (k2 >= 0) && (k3 >= 0) && (kT >= 0)) {
 
-						long QKfzGNormal = this.geglaettetDatensatz
-								.getData()
+						final long QKfzGNormal = geglaettetDatensatz.getData()
 								.getItem("QKfzG").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						long VKfz = this.analyseDatensatz.getData().getItem(
-								"VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						final long VKfz = analyseDatensatz.getData()
+								.getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						if (QKfzGNormal >= 0 && VKfz > 0) {
-							double kvst = (double) QKfzGNormal / (double) VKfz;
+						if ((QKfzGNormal >= 0) && (VKfz > 0)) {
+							final double kvst = (double) QKfzGNormal / (double) VKfz;
 
 							/**
 							 * Ermittlung von vvst
 							 */
-							double vvst = this.getVVST(VKfz);
+							final double vvst = getVVST(VKfz);
 
-							stufe = this.getVerkehrsStufe(kvst, vvst);
-							this.letzteStufe = stufe;
+							stufe = getVerkehrsStufe(kvst, vvst);
+							letzteStufe = stufe;
 						}
 					}
 
-					StoerfallZustand zustand = new StoerfallZustand(DAV);
-					if(this.erf != null && this.erf.getT() > 0){
-						zustand.setT(this.erf.getT());								
+					final StoerfallZustand zustand = new StoerfallZustand(DAV);
+					if ((erf != null) && (erf.getT() > 0)) {
+						zustand.setT(erf.getT());
 					}
 					zustand.setSituation(stufe);
 					data = zustand.getData();
 
-					ResultData ergebnis = new ResultData(this.objekt,
-							this.pubBeschreibung, resultat.getDataTime(), data);
-					this.sendeErgebnis(ergebnis);
+					final ResultData ergebnis = new ResultData(objekt, pubBeschreibung,
+							resultat.getDataTime(), data);
+					sendeErgebnis(ergebnis);
 				} else {
-					ResultData ergebnis = new ResultData(this.objekt,
-							this.pubBeschreibung, resultat.getDataTime(), data);
-					this.sendeErgebnis(ergebnis);
+					final ResultData ergebnis = new ResultData(objekt, pubBeschreibung,
+							resultat.getDataTime(), data);
+					sendeErgebnis(ergebnis);
 				}
 
-				this.analyseDatensatz = null;
-				this.geglaettetDatensatz = null;
-				for (FahrStreifen fs : this.mq.getFahrStreifen()) {
-					this.fsDaten.put(fs.getSystemObject(), null);
+				analyseDatensatz = null;
+				geglaettetDatensatz = null;
+				for (final FahrStreifen fs : mq.getFahrStreifen()) {
+					fsDaten.put(fs.getSystemObject(), null);
 				}
 			}
 
 		} else {
-			ResultData ergebnis = new ResultData(this.objekt,
-					this.pubBeschreibung, resultat.getDataTime(), data);
-			this.sendeErgebnis(ergebnis);
+			final ResultData ergebnis = new ResultData(objekt, pubBeschreibung,
+					resultat.getDataTime(), data);
+			sendeErgebnis(ergebnis);
 		}
 	}
 
 	/**
-	 * Ermittelt den Parameter VVST zur Berechnung der Verkehrslage analog zu
-	 * den Vorgaben aus SE-02.00.00.00.00-AFo-4.0 (S.155)<br>
+	 * Ermittelt den Parameter VVST zur Berechnung der Verkehrslage analog zu den Vorgaben aus
+	 * SE-02.00.00.00.00-AFo-4.0 (S.155)<br>
 	 * <br>
 	 * <code>VVST = MIN(vgKfz(fs1), vgKfz(fs2), ... , vgKfz(fsN))</code>,<br>
-	 * wenn die geglaettete mittlere Geschwindigkeit (TLS) vorliegt und
-	 * <code>VKfz</code> sonst <br>
+	 * wenn die geglaettete mittlere Geschwindigkeit (TLS) vorliegt und <code>VKfz</code> sonst <br>
 	 * <br>
-	 * <b>Achtung:</b> Diese Methode darf nur aufgerufen werden, wenn fuer alle
-	 * in diesem Messquerschnitt betrachteten Fahstreifen Daten mit dem gleichen
-	 * Zeitstempel verfuegbar sind
-	 * 
+	 * <b>Achtung:</b> Diese Methode darf nur aufgerufen werden, wenn fuer alle in diesem
+	 * Messquerschnitt betrachteten Fahstreifen Daten mit dem gleichen Zeitstempel verfuegbar sind
+	 *
 	 * @param VKfz
-	 *            wird benutzt, wenn die geglaettete mittlere Geschwindigkeit
-	 *            (TLS) nicht vorliegt
+	 *            wird benutzt, wenn die geglaettete mittlere Geschwindigkeit (TLS) nicht vorliegt
 	 * @return der Parameter VVST zur Berechnung der Verkehrslage
 	 */
 	private final long getVVST(final long VKfz) {
@@ -235,7 +222,7 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 		long min = Long.MAX_VALUE;
 
 		boolean einerNull = false;
-		for (ResultData r : fsDaten.values()) {
+		for (final ResultData r : fsDaten.values()) {
 			if (r == null) {
 				einerNull = true;
 				break;
@@ -245,8 +232,8 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 		if (einerNull) {
 			vvst = VKfz;
 		} else {
-			for (ResultData fsDatum : this.fsDaten.values()) {
-				long vgKfz = fsDatum.getData().getItem("vgKfz"). //$NON-NLS-1$
+			for (final ResultData fsDatum : fsDaten.values()) {
+				final long vgKfz = fsDatum.getData().getItem("vgKfz"). //$NON-NLS-1$
 						getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 				if (vgKfz < min) {
 					min = vgKfz;

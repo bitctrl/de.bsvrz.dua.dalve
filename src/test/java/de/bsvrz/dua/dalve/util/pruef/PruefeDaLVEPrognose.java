@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -46,177 +46,202 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  * @author Görlitz
  */
-public class PruefeDaLVEPrognose
-implements ClientReceiverInterface {
+public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 
 	/** Logger. */
 	protected Debug LOGGER = Debug.getLogger();
-	
+
 	/** Datenverteilerverbindung. */
 	private ClientDavInterface dav = null;
-	
+
 	/** Empfangsdatenbeschreibung. */
 	private DataDescription DD_KZDFS_PF_EMPF = null;
-	
+
 	/** The dd kzdfs pn empf. */
 	private DataDescription DD_KZDFS_PN_EMPF = null;
-	
+
 	/** The dd kzdfs pt empf. */
 	private DataDescription DD_KZDFS_PT_EMPF = null;
-	
+
 	/** The dd kzdfs gf empf. */
 	private DataDescription DD_KZDFS_GF_EMPF = null;
-	
+
 	/** The dd kzdfs gn empf. */
 	private DataDescription DD_KZDFS_GN_EMPF = null;
-	
+
 	/** The dd kzdfs gt empf. */
 	private DataDescription DD_KZDFS_GT_EMPF = null;
-	
+
 	/** Ergbnisimporter für Prognosewerte der FS. */
-	private TestErgebnisPrognoseImporter importProgFS;
-	
+	private final TestErgebnisPrognoseImporter importProgFS;
+
 	/** Halten das aktuelle SOLL-Ergebnis der CSV-Datei. */
 	private Data ergebnisFSProgFlink;
-	
+
 	/** The ergebnis fs prog normal. */
 	private Data ergebnisFSProgNormal;
-	
+
 	/** The ergebnis fs prog traege. */
 	private Data ergebnisFSProgTraege;
-	
+
 	/** The ergebnis fs glatt flink. */
 	private Data ergebnisFSGlattFlink;
-	
+
 	/** The ergebnis fs glatt normal. */
 	private Data ergebnisFSGlattNormal;
-	
+
 	/** The ergebnis fs glatt traege. */
 	private Data ergebnisFSGlattTraege;
-	
+
 	/** Zeitstempel, auf den gewartet wird. */
 	private long pruefZeit;
-	
+
 	/** Gibt den Prüfungsabschluss des jeweiligen FS an. */
 	private boolean pruefungFS1PFlinkFertig = false;
-	
+
 	/** The pruefung f s1 p normal fertig. */
 	private boolean pruefungFS1PNormalFertig = false;
-	
+
 	/** The pruefung f s1 p traege fertig. */
 	private boolean pruefungFS1PTraegeFertig = false;
-	
+
 	/** The pruefung f s1 g flink fertig. */
 	private boolean pruefungFS1GFlinkFertig = false;
-	
+
 	/** The pruefung f s1 g normal fertig. */
 	private boolean pruefungFS1GNormalFertig = false;
-	
+
 	/** The pruefung f s1 g traege fertig. */
 	private boolean pruefungFS1GTraegeFertig = false;
-	
+
 	/** Aufrufende Klasse. */
 	protected DaLVETestPrognose caller;
-	
+
 	/** Initial CSV-Index. */
 	private int csvIndex = 1;
-	
+
 	/** Datenmodi. */
 	protected static final int MODE_PFLINK = 1;
-	
+
 	/** The Constant MODE_PNORMAL. */
 	protected static final int MODE_PNORMAL = 2;
-	
+
 	/** The Constant MODE_PTRAEGE. */
 	protected static final int MODE_PTRAEGE = 3;
-	
+
 	/** The Constant MODE_GFLINK. */
 	protected static final int MODE_GFLINK = 4;
-	
+
 	/** The Constant MODE_GNORMAL. */
 	protected static final int MODE_GNORMAL = 5;
-	
+
 	/** The Constant MODE_GTRAEGE. */
 	protected static final int MODE_GTRAEGE = 6;
-	
+
 	/** Prüferthreads für alle Modi. */
-	private VergleicheDaLVEPrognose verglPFlink = new VergleicheDaLVEPrognose(this, MODE_PFLINK);
-	
+	private final VergleicheDaLVEPrognose verglPFlink = new VergleicheDaLVEPrognose(this,
+			MODE_PFLINK);
+
 	/** The vergl p normal. */
-	private VergleicheDaLVEPrognose verglPNormal = new VergleicheDaLVEPrognose(this, MODE_PNORMAL);
-	
+	private final VergleicheDaLVEPrognose verglPNormal = new VergleicheDaLVEPrognose(this,
+			MODE_PNORMAL);
+
 	/** The vergl p traege. */
-	private VergleicheDaLVEPrognose verglPTraege = new VergleicheDaLVEPrognose(this, MODE_PTRAEGE);
-	
+	private final VergleicheDaLVEPrognose verglPTraege = new VergleicheDaLVEPrognose(this,
+			MODE_PTRAEGE);
+
 	/** The vergl g flink. */
-	private VergleicheDaLVEPrognose verglGFlink = new VergleicheDaLVEPrognose(this, MODE_GFLINK);
-	
+	private final VergleicheDaLVEPrognose verglGFlink = new VergleicheDaLVEPrognose(this,
+			MODE_GFLINK);
+
 	/** The vergl g normal. */
-	private VergleicheDaLVEPrognose verglGNormal = new VergleicheDaLVEPrognose(this, MODE_GNORMAL);
-	
+	private final VergleicheDaLVEPrognose verglGNormal = new VergleicheDaLVEPrognose(this,
+			MODE_GNORMAL);
+
 	/** The vergl g traege. */
-	private VergleicheDaLVEPrognose verglGTraege = new VergleicheDaLVEPrognose(this, MODE_GTRAEGE);
-	
+	private final VergleicheDaLVEPrognose verglGTraege = new VergleicheDaLVEPrognose(this,
+			MODE_GTRAEGE);
+
 	/** Sollen Asserts genutzt werden. */
 	protected boolean useAssert;
-	
+
 	/** Die erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert. */
 	protected int ergebnisWertToleranz;
-	
-	
+
 	/**
 	 * Initialisiert Prüferobjekt.
 	 *
-	 * @param caller the caller
-	 * @param dav Datenverteilerverbindung
-	 * @param FS Systemobjekt des Fahrstreifens
-	 * @param csvQuelle Testdatenverzeichnis
-	 * @param useAsserts the use asserts
-	 * @throws Exception the exception
+	 * @param caller
+	 *            the caller
+	 * @param dav
+	 *            Datenverteilerverbindung
+	 * @param FS
+	 *            Systemobjekt des Fahrstreifens
+	 * @param csvQuelle
+	 *            Testdatenverzeichnis
+	 * @param useAsserts
+	 *            the use asserts
+	 * @throws Exception
+	 *             the exception
 	 */
-	public PruefeDaLVEPrognose(DaLVETestPrognose caller, ClientDavInterface dav,
-							  SystemObject[] FS, String csvQuelle, boolean useAsserts)
-	throws Exception {
+	public PruefeDaLVEPrognose(final DaLVETestPrognose caller, final ClientDavInterface dav,
+			final SystemObject[] FS, final String csvQuelle, final boolean useAsserts)
+			throws Exception {
 		this.dav = dav;
 		this.caller = caller;
-		this.useAssert = useAsserts;
-		this.ergebnisWertToleranz = caller.getErgebnisWertToleranz();
-		
+		useAssert = useAsserts;
+		ergebnisWertToleranz = caller.getErgebnisWertToleranz();
+
 		/*
 		 * Empfängeranmeldung für Prognose und geglättete Werte
 		 */
-		AttributeGroup atgFSPrognose = this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationFs");
-		AttributeGroup atgFSGeglaettet = this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitGeglättetFs");
-		
-		DD_KZDFS_PF_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect("asp.prognoseFlink"));
-		DD_KZDFS_PN_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect("asp.prognoseNormal"));
-		DD_KZDFS_PT_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect("asp.prognoseTräge"));
+		final AttributeGroup atgFSPrognose = this.dav.getDataModel().getAttributeGroup(
+				"atg.verkehrsDatenKurzZeitTrendExtraPolationFs");
+		final AttributeGroup atgFSGeglaettet = this.dav.getDataModel().getAttributeGroup(
+				"atg.verkehrsDatenKurzZeitGeglättetFs");
 
-		DD_KZDFS_GF_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect("asp.prognoseFlink"));
-		DD_KZDFS_GN_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect("asp.prognoseNormal"));
-		DD_KZDFS_GT_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect("asp.prognoseTräge"));
-		
-		dav.subscribeReceiver(this, FS, DD_KZDFS_PF_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
-		dav.subscribeReceiver(this, FS, DD_KZDFS_PN_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
-		dav.subscribeReceiver(this, FS, DD_KZDFS_PT_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
-		dav.subscribeReceiver(this, FS, DD_KZDFS_GF_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
-		dav.subscribeReceiver(this, FS, DD_KZDFS_GN_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
-		dav.subscribeReceiver(this, FS, DD_KZDFS_GT_EMPF, ReceiveOptions.normal(), ReceiverRole.receiver());
-		
+		DD_KZDFS_PF_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect(
+				"asp.prognoseFlink"));
+		DD_KZDFS_PN_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect(
+				"asp.prognoseNormal"));
+		DD_KZDFS_PT_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect(
+				"asp.prognoseTräge"));
+
+		DD_KZDFS_GF_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect(
+				"asp.prognoseFlink"));
+		DD_KZDFS_GN_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect(
+				"asp.prognoseNormal"));
+		DD_KZDFS_GT_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect(
+				"asp.prognoseTräge"));
+
+		dav.subscribeReceiver(this, FS, DD_KZDFS_PF_EMPF, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
+		dav.subscribeReceiver(this, FS, DD_KZDFS_PN_EMPF, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
+		dav.subscribeReceiver(this, FS, DD_KZDFS_PT_EMPF, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
+		dav.subscribeReceiver(this, FS, DD_KZDFS_GF_EMPF, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
+		dav.subscribeReceiver(this, FS, DD_KZDFS_GN_EMPF, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
+		dav.subscribeReceiver(this, FS, DD_KZDFS_GT_EMPF, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
+
 		/*
 		 * Initialsiert Ergebnisimporter
 		 */
 		importProgFS = new TestErgebnisPrognoseImporter(dav, csvQuelle);
-		
+
 		System.out.println("Prüferklasse für Prognosewerte initialisiert");
 	}
-	
+
 	/**
 	 * Importiert nächsten Ergebnisdatensatz und setzt Prüfzeitstempel.
 	 *
-	 * @param pruefZeit Prüfzeitstempel
+	 * @param pruefZeit
+	 *            Prüfzeitstempel
 	 */
-	public void naechsterDatensatz(long pruefZeit) {
+	public void naechsterDatensatz(final long pruefZeit) {
 		this.pruefZeit = pruefZeit;
 		csvIndex++;
 		importProgFS.importNaechsteZeile();
@@ -226,284 +251,303 @@ implements ClientReceiverInterface {
 		ergebnisFSGlattFlink = importProgFS.getFSGeglaettetFlinkDatensatz();
 		ergebnisFSGlattNormal = importProgFS.getFSGeglaettetNormalDatensatz();
 		ergebnisFSGlattTraege = importProgFS.getFSGeglaettetTraegeDatensatz();
-		
+
 		pruefungFS1PFlinkFertig = false;
 		pruefungFS1PNormalFertig = false;
 		pruefungFS1PTraegeFertig = false;
 		pruefungFS1GFlinkFertig = false;
 		pruefungFS1GNormalFertig = false;
 		pruefungFS1GTraegeFertig = false;
-		
-		LOGGER.info("Prüferklasse für Prognosewerte parametriert -> Zeit: "+pruefZeit);
+
+		LOGGER.info("Prüferklasse für Prognosewerte parametriert -> Zeit: " + pruefZeit);
 	}
-	
+
 	/**
-	 * Wird von den Prüferthreads getriggert und
-	 * benachrichtigt, wenn die Prüfung aller Daten
+	 * Wird von den Prüferthreads getriggert und benachrichtigt, wenn die Prüfung aller Daten
 	 * abgeschlossen ist, die Aufrufende Klasse.
 	 *
-	 * @param mode the mode
+	 * @param mode
+	 *            the mode
 	 */
-	public void doNotify(int mode) {
-		switch(mode) {
-			case MODE_PFLINK: {
-				pruefungFS1PFlinkFertig = true;
-				break;
-			}
-			case MODE_PNORMAL: {
-				pruefungFS1PNormalFertig = true;
-				break;
-			}
-			case MODE_PTRAEGE: {
-				pruefungFS1PTraegeFertig = true;
-				break;
-			}
-			case MODE_GFLINK: {
-				pruefungFS1GFlinkFertig = true;
-				break;
-			}
-			case MODE_GNORMAL: {
-				pruefungFS1GNormalFertig = true;
-				break;
-			}
-			case MODE_GTRAEGE: {
-				pruefungFS1GTraegeFertig = true;
-				break;
-			}
+	public void doNotify(final int mode) {
+		switch (mode) {
+		case MODE_PFLINK: {
+			pruefungFS1PFlinkFertig = true;
+			break;
 		}
-		if(pruefungFS1PFlinkFertig && pruefungFS1PNormalFertig && pruefungFS1PTraegeFertig &&
-				pruefungFS1GFlinkFertig && pruefungFS1GNormalFertig && pruefungFS1GTraegeFertig) {
+		case MODE_PNORMAL: {
+			pruefungFS1PNormalFertig = true;
+			break;
+		}
+		case MODE_PTRAEGE: {
+			pruefungFS1PTraegeFertig = true;
+			break;
+		}
+		case MODE_GFLINK: {
+			pruefungFS1GFlinkFertig = true;
+			break;
+		}
+		case MODE_GNORMAL: {
+			pruefungFS1GNormalFertig = true;
+			break;
+		}
+		case MODE_GTRAEGE: {
+			pruefungFS1GTraegeFertig = true;
+			break;
+		}
+		}
+		if (pruefungFS1PFlinkFertig && pruefungFS1PNormalFertig && pruefungFS1PTraegeFertig
+				&& pruefungFS1GFlinkFertig && pruefungFS1GNormalFertig && pruefungFS1GTraegeFertig) {
 			LOGGER.info("Alle Prognosedaten geprüft. Benachrichtige Hauptthread...");
-			caller.doNotify(caller.ID_PRUEFER_PROGNOSE);
+			caller.doNotify(DaLVETestPrognose.ID_PRUEFER_PROGNOSE);
 		}
 	}
-	
+
 	/**
 	 * Gibt einen repräsentativen Text zum übergebenen Modus zurück.
 	 *
-	 * @param mode Der Modus
+	 * @param mode
+	 *            Der Modus
 	 * @return Der repräsentativen Text
 	 */
 	public String getModusText(final int mode) {
-		switch(mode) {
-			case MODE_PFLINK: return("Prognose Flink");
-			case MODE_PNORMAL: return("Prognose Normal");
-			case MODE_PTRAEGE: return("Prognose Träge");
-			case MODE_GFLINK: return("Geglättet Flink");
-			case MODE_GNORMAL: return("Geglättet Normal");
-			case MODE_GTRAEGE: return("Geglättet Träge");
-			default: return null;
+		switch (mode) {
+		case MODE_PFLINK:
+			return ("Prognose Flink");
+		case MODE_PNORMAL:
+			return ("Prognose Normal");
+		case MODE_PTRAEGE:
+			return ("Prognose Träge");
+		case MODE_GFLINK:
+			return ("Geglättet Flink");
+		case MODE_GNORMAL:
+			return ("Geglättet Normal");
+		case MODE_GTRAEGE:
+			return ("Geglättet Träge");
+		default:
+			return null;
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] results) {
-		for (ResultData result : results) {
-			//Pruefe Ergebnisdatensatz auf Zeitstempel
-			if (result.getData() != null &&	result.getDataTime() == pruefZeit) {
+	@Override
+	public void update(final ResultData[] results) {
+		for (final ResultData result : results) {
+			// Pruefe Ergebnisdatensatz auf Zeitstempel
+			if ((result.getData() != null) && (result.getDataTime() == pruefZeit)) {
 
 				try {
-					//Ermittle Modus
-					if(result.getDataDescription().equals(DD_KZDFS_PF_EMPF)) {
-						verglPFlink.vergleiche(result.getData(),ergebnisFSProgFlink,csvIndex);
-					} else if(result.getDataDescription().equals(DD_KZDFS_PN_EMPF)) {
-						verglPNormal.vergleiche(result.getData(),ergebnisFSProgNormal,csvIndex);
-					} else if(result.getDataDescription().equals(DD_KZDFS_PT_EMPF)) {
-						verglPTraege.vergleiche(result.getData(),ergebnisFSProgTraege,csvIndex);
-					} else if(result.getDataDescription().equals(DD_KZDFS_GF_EMPF)) {
-						verglGFlink.vergleiche(result.getData(),ergebnisFSGlattFlink,csvIndex);
-					} else if(result.getDataDescription().equals(DD_KZDFS_GN_EMPF)) {
-						verglGNormal.vergleiche(result.getData(),ergebnisFSGlattNormal,csvIndex);
-					} else if(result.getDataDescription().equals(DD_KZDFS_GT_EMPF)) {
-						verglGTraege.vergleiche(result.getData(),ergebnisFSGlattTraege,csvIndex);
+					// Ermittle Modus
+					if (result.getDataDescription().equals(DD_KZDFS_PF_EMPF)) {
+						verglPFlink.vergleiche(result.getData(), ergebnisFSProgFlink, csvIndex);
+					} else if (result.getDataDescription().equals(DD_KZDFS_PN_EMPF)) {
+						verglPNormal.vergleiche(result.getData(), ergebnisFSProgNormal, csvIndex);
+					} else if (result.getDataDescription().equals(DD_KZDFS_PT_EMPF)) {
+						verglPTraege.vergleiche(result.getData(), ergebnisFSProgTraege, csvIndex);
+					} else if (result.getDataDescription().equals(DD_KZDFS_GF_EMPF)) {
+						verglGFlink.vergleiche(result.getData(), ergebnisFSGlattFlink, csvIndex);
+					} else if (result.getDataDescription().equals(DD_KZDFS_GN_EMPF)) {
+						verglGNormal.vergleiche(result.getData(), ergebnisFSGlattNormal, csvIndex);
+					} else if (result.getDataDescription().equals(DD_KZDFS_GT_EMPF)) {
+						verglGTraege.vergleiche(result.getData(), ergebnisFSGlattTraege, csvIndex);
 					}
-				} catch(Exception e) {}
+				} catch (final Exception e) {
+				}
 			}
-		}		
+		}
 	}
 }
 
 class VergleicheDaLVEPrognose extends Thread {
-	
+
 	/**
 	 * Die Ident dieses Prüferthreads
 	 */
-	private String ident;
-	
+	private final String ident;
+
 	/**
 	 * Logger
 	 */
 	protected Debug LOGGER = Debug.getLogger();
-	
+
 	/**
 	 * Aufrufende Klasse
 	 */
-	private PruefeDaLVEPrognose caller; 
-	
+	private final PruefeDaLVEPrognose caller;
+
 	/**
 	 * Modus
 	 */
-	private int mode;
-	
+	private final int mode;
+
 	/**
-	 * Zu vergleichendes SOLL- und IST-Ergebnis 
+	 * Zu vergleichendes SOLL- und IST-Ergebnis
 	 */
 	private Data sollErgebnis;
 	private Data istErgebnis;
-	
+
 	/**
 	 * Aktueller CSV-Index der SOLL- und IST-Daten
 	 */
 	private int csvIndex;
-	
-	
+
 	/**
 	 * Attributpfade der ATG
-	 * 
+	 *
 	 * Kappich Mail vom 09.04.08:
-	 * 
+	 *
 	 * "der Algorithmus in der Prüfspezifikation verwendet nicht qKfz sondern die
-	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die
-	 * Berechnung richtig."
+	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die Berechnung
+	 * richtig."
 	 */
-	private String[] attributNamenPraefixP = {"qB", //$NON-NLS-1$
-											 "vKfz"}; //$NON-NLS-1$
+	private final String[] attributNamenPraefixP = { "qB", //$NON-NLS-1$
+			"vKfz" }; //$NON-NLS-1$
 	/**
 	 * Attributpfade der ATG
-	 * 
+	 *
 	 * Kappich Mail vom 09.04.08:
-	 * 
+	 *
 	 * "der Algorithmus in der Prüfspezifikation verwendet nicht qKfz sondern die
-	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die
-	 * Berechnung richtig."
+	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die Berechnung
+	 * richtig."
 	 */
-	private String[] attributNamenPraefixG = {"qB", //$NON-NLS-1$
-											 "vKfz", //$NON-NLS-1$
-											 "kB"}; //$NON-NLS-1$
-	
+	private final String[] attributNamenPraefixG = { "qB", //$NON-NLS-1$
+			"vKfz", //$NON-NLS-1$
+			"kB" }; //$NON-NLS-1$
+
 	/**
-	 * 	Die verwendeten Attributpfade der ATG
+	 * Die verwendeten Attributpfade der ATG
 	 */
 	private String[] attributNamenPraefix;
-	
+
 	/**
 	 * Attributnamen
 	 */
-	private String[] attributNamen = {".Wert" }; //$NON-NLS-1$
-	
-	private String attPraefix; 
-	
-	
+	private final String[] attributNamen = { ".Wert" }; //$NON-NLS-1$
+
+	private String attPraefix;
+
 	/**
 	 * Initialisiert Prüferthread
-	 * @param caller Aufrufende Klasse
-	 * @param fsIndex Zu prüfender Fahrstreifen
+	 * 
+	 * @param caller
+	 *            Aufrufende Klasse
+	 * @param fsIndex
+	 *            Zu prüfender Fahrstreifen
 	 */
-	public VergleicheDaLVEPrognose(PruefeDaLVEPrognose caller, int mode) {
+	public VergleicheDaLVEPrognose(final PruefeDaLVEPrognose caller, final int mode) {
 		this.caller = caller;
 		this.mode = mode;
-		
-		if(mode <= 3) {
-			this.attPraefix = "P";
-			this.attributNamenPraefix = attributNamenPraefixP;
+
+		if (mode <= 3) {
+			attPraefix = "P";
+			attributNamenPraefix = attributNamenPraefixP;
 		} else {
-			this.attPraefix = "G";
-			this.attributNamenPraefix = attributNamenPraefixG;
+			attPraefix = "G";
+			attributNamenPraefix = attributNamenPraefixG;
 		}
-		
-		System.out.println("Prüfthread [PT] ("+caller.getModusText(mode)+") initialisiert"); //$NON-NLS-1$ //$NON-NLS-2$
-		this.ident = "[PT "+caller.getModusText(mode)+"]";
-		
-		//starte Thread
-		this.start();
+
+		System.out.println("Prüfthread [PT] (" + caller.getModusText(mode) + ") initialisiert"); //$NON-NLS-1$ //$NON-NLS-2$
+		ident = "[PT " + caller.getModusText(mode) + "]";
+
+		// starte Thread
+		start();
 	}
-	
+
 	/**
 	 * Vergleiche SOLL- und IST-Ergebnisdatensatz
-	 * @param sollErgebnis SOLL-Datensatz
-	 * @param istErgebnis IST-Datensatz
+	 * 
+	 * @param sollErgebnis
+	 *            SOLL-Datensatz
+	 * @param istErgebnis
+	 *            IST-Datensatz
 	 */
-	public void vergleiche(Data istErgebnis, Data sollErgebnis, int csvIndex) {
+	public void vergleiche(final Data istErgebnis, final Data sollErgebnis, final int csvIndex) {
 		this.sollErgebnis = sollErgebnis;
 		this.istErgebnis = istErgebnis;
 		this.csvIndex = csvIndex;
 
-		synchronized(this) {
-			//wecke Thread
-			this.notify();
+		synchronized (this) {
+			// wecke Thread
+			notify();
 		}
 	}
-	
+
 	/**
 	 * Prüfthread
 	 */
+	@Override
 	public void run() {
-		//Thread läuft bis Programmende
-		while(true) {
-			//warte mit Prüfung bis geweckt
+		// Thread läuft bis Programmende
+		while (true) {
+			// warte mit Prüfung bis geweckt
 			doWait();
-			
-			//vergleiche
+
+			// vergleiche
 			doVergleich();
 		}
 	}
-	
+
 	/**
-	 * Führt vergleich durch 
+	 * Führt vergleich durch
 	 *
 	 */
 	private void doVergleich() {
 		String attributPfad = null;
-		String csvDS = ident+" (Z:"+csvIndex+")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		String loggerOut = csvDS+" Vergleichsergebnis:\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		final String csvDS = ident + " (Z:" + csvIndex + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		String loggerOut = csvDS + " Vergleichsergebnis:\n"; //$NON-NLS-1$
 		int sollWert;
 		int istWert;
-		
+
 		boolean isError = false;
-		
-		for(int i=0;i<attributNamenPraefix.length;i++) {
-			for(int j=0;j<attributNamen.length;j++) {
-				attributPfad = attributNamenPraefix[i] + attPraefix + attributNamen[j];
-				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis).asUnscaledValue().intValue();
-				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis).asUnscaledValue().intValue();
-				if(sollWert >= (istWert - caller.ergebnisWertToleranz) &&
-						sollWert <= (istWert + caller.ergebnisWertToleranz)) {
-					loggerOut += "OK : "+attributPfad+" -> "+sollWert+" (SOLL) == (IST) "+istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					System.out.println("PROG: " + sollWert + "==" + istWert + " (" + attributPfad + " --> " + this.caller.getModusText(mode) + ")");
+
+		for (final String element : attributNamenPraefix) {
+			for (final String element2 : attributNamen) {
+				attributPfad = element + attPraefix + element2;
+				sollWert = DUAUtensilien.getAttributDatum(attributPfad, sollErgebnis)
+						.asUnscaledValue().intValue();
+				istWert = DUAUtensilien.getAttributDatum(attributPfad, istErgebnis)
+						.asUnscaledValue().intValue();
+				if ((sollWert >= (istWert - caller.ergebnisWertToleranz))
+						&& (sollWert <= (istWert + caller.ergebnisWertToleranz))) {
+					loggerOut += "OK : " + attributPfad + " -> " + sollWert + " (SOLL) == (IST) " + istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					System.out.println("PROG: " + sollWert + "==" + istWert + " (" + attributPfad
+							+ " --> " + caller.getModusText(mode) + ")");
 				} else {
 					isError = true;
-					String errOut = "ERR: "+attributPfad+" -> "+sollWert+" (SOLL) <> (IST) "+istWert;
+					final String errOut = "ERR: " + attributPfad + " -> " + sollWert
+							+ " (SOLL) <> (IST) " + istWert;
 					loggerOut += errOut + "\n";
-					
-					if(caller.useAssert) {
-						Assert.assertTrue(csvDS+" "+errOut, false);
+
+					if (caller.useAssert) {
+						Assert.assertTrue(csvDS + " " + errOut, false);
 					}
 				}
 			}
 		}
 
-		if(isError && !caller.useAssert) {
-			System.out.println(loggerOut);						
+		if (isError && !caller.useAssert) {
+			System.out.println(loggerOut);
 		}
-		
+
 		LOGGER.info(loggerOut);
-		
-		//Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3) 
+
+		// Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3)
 		caller.doNotify(mode);
 	}
-	
+
 	/**
 	 * Lässt Prüfthread warten
 	 *
 	 */
 	private void doWait() {
-		synchronized(this) {
+		synchronized (this) {
 			try {
 				this.wait();
-			} catch (Exception e) {
-				System.out.println("Error: "+ident+" (wait)");
+			} catch (final Exception e) {
+				System.out.println("Error: " + ident + " (wait)");
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -41,53 +41,51 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 // TODO: Auto-generated Javadoc
 /**
  * Stellt die aktuellen Informationen der Attributgruppe
- * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer einen
- * bestimmten Messquerschnitt zur Verfuegung
- * 
+ * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer einen bestimmten Messquerschnitt
+ * zur Verfuegung
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  */
-public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements
-		ClientReceiverInterface {
+public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements ClientReceiverInterface {
 
 	/** Mappt eine Stoerfallsituation auf ihre Parameter. */
-	private Map<StoerfallSituation, ParameterFuerStoerfall> parameter = new HashMap<StoerfallSituation, ParameterFuerStoerfall>();
+	private final Map<StoerfallSituation, ParameterFuerStoerfall> parameter = new HashMap<StoerfallSituation, ParameterFuerStoerfall>();
 
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt Systemobjekt des betrachteten Messquerschnittes
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            Systemobjekt des betrachteten Messquerschnittes
 	 */
-	protected AtgLokaleStoerfallErkennungFundamentalDiagramm(
-			final ClientDavInterface dav, final SystemObject objekt) {
-		this.parameter.put(StoerfallSituation.FREIER_VERKEHR,
-				new ParameterFuerStoerfall(StoerfallSituation.FREIER_VERKEHR));
-		this.parameter.put(StoerfallSituation.STAU, new ParameterFuerStoerfall(
-				StoerfallSituation.STAU));
-		this.parameter.put(StoerfallSituation.ZAEHER_VERKEHR,
-				new ParameterFuerStoerfall(StoerfallSituation.ZAEHER_VERKEHR));
+	protected AtgLokaleStoerfallErkennungFundamentalDiagramm(final ClientDavInterface dav,
+			final SystemObject objekt) {
+		parameter.put(StoerfallSituation.FREIER_VERKEHR, new ParameterFuerStoerfall(
+				StoerfallSituation.FREIER_VERKEHR));
+		parameter.put(StoerfallSituation.STAU, new ParameterFuerStoerfall(StoerfallSituation.STAU));
+		parameter.put(StoerfallSituation.ZAEHER_VERKEHR, new ParameterFuerStoerfall(
+				StoerfallSituation.ZAEHER_VERKEHR));
 
-		dav.subscribeReceiver(this, objekt, new DataDescription(
-				dav.getDataModel().getAttributeGroup(
-						"atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, objekt, new DataDescription(dav.getDataModel()
+				.getAttributeGroup("atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions
+				.normal(), ReceiverRole.receiver());
 	}
 
 	/**
-	 * Erfragt die aktuellen Parameter der Attributgruppe 
-	 * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
-	 * fuer einen bestimmten Stoerfall
-	 * 
-	 * @param situation ein bestimmter Stoerfall
-	 * @return die aktuellen Parameter der Attributgruppe 
-	 * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
-	 * fuer den Stoerfall
+	 * Erfragt die aktuellen Parameter der Attributgruppe
+	 * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer einen bestimmten Stoerfall
+	 *
+	 * @param situation
+	 *            ein bestimmter Stoerfall
+	 * @return die aktuellen Parameter der Attributgruppe
+	 *         <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer den Stoerfall
 	 */
 	protected final ParameterFuerStoerfall getParameterFuerStoerfall(
 			final StoerfallSituation situation) {
-		return this.parameter.get(situation);
+		return parameter.get(situation);
 	}
 
 	/**
@@ -96,9 +94,10 @@ public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements
 	 * @return ob alle Parameter valide sind
 	 */
 	protected boolean alleParameterInitialisiert() {
-		for (ParameterFuerStoerfall pss : this.parameter.values()) {
-			if (!pss.isInitialisiert())
+		for (final ParameterFuerStoerfall pss : parameter.values()) {
+			if (!pss.isInitialisiert()) {
 				return false;
+			}
 		}
 
 		return true;
@@ -107,26 +106,27 @@ public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if (resultat != null) {
-					if(resultat.getData() != null) {
-						ParameterFuerStoerfall frei = new ParameterFuerStoerfall(StoerfallSituation.FREIER_VERKEHR);
-						ParameterFuerStoerfall zaeh = new ParameterFuerStoerfall(StoerfallSituation.ZAEHER_VERKEHR);
-						ParameterFuerStoerfall stau = new ParameterFuerStoerfall(StoerfallSituation.STAU);
-							
+					if (resultat.getData() != null) {
+						final ParameterFuerStoerfall frei = new ParameterFuerStoerfall(
+								StoerfallSituation.FREIER_VERKEHR);
+						final ParameterFuerStoerfall zaeh = new ParameterFuerStoerfall(
+								StoerfallSituation.ZAEHER_VERKEHR);
+						final ParameterFuerStoerfall stau = new ParameterFuerStoerfall(
+								StoerfallSituation.STAU);
+
 						frei.importiere(resultat.getData().getItem("FreierVerkehr"));
 						zaeh.importiere(resultat.getData().getItem("ZaehFliessenderVerkehr"));
 						stau.importiere(resultat.getData().getItem("Stau"));
-						
-						synchronized (this.parameter) {
-							this.parameter.put(StoerfallSituation.FREIER_VERKEHR,
-									frei);
-							this.parameter.put(StoerfallSituation.STAU, 
-									stau);
-							this.parameter.put(StoerfallSituation.ZAEHER_VERKEHR,
-									zaeh);
+
+						synchronized (parameter) {
+							parameter.put(StoerfallSituation.FREIER_VERKEHR, frei);
+							parameter.put(StoerfallSituation.STAU, stau);
+							parameter.put(StoerfallSituation.ZAEHER_VERKEHR, zaeh);
 						}
 					}
 				}

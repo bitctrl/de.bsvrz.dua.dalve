@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -43,11 +43,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 // TODO: Auto-generated Javadoc
 /**
- * Testet die Berechnung der virtuellen Messquerschnitte auf Basis der
- * Attributgruppe <code>atg.messQuerschnittVirtuellVLage</code>.
- * 
+ * Testet die Berechnung der virtuellen Messquerschnitte auf Basis der Attributgruppe
+ * <code>atg.messQuerschnittVirtuellVLage</code>.
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
@@ -61,10 +61,10 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 	 * Testfahrstreifen KZD FS1, FS2, FS3.
 	 */
 	public static SystemObject FS1 = null;
-	
+
 	/** The F s2. */
 	public static SystemObject FS2 = null;
-	
+
 	/** The F s3. */
 	public static SystemObject FS3 = null;
 
@@ -75,18 +75,18 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 
 	/**
 	 * Vorbereitungen.
-	 * 
+	 *
 	 * @throws Exception
 	 *             wird weitergereicht.
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.dav = DAVTest.getDav(DatenaufbereitungLVETest.CON_DATA.clone());
+		dav = DAVTest.getDav(DatenaufbereitungLVETest.CON_DATA.clone());
 	}
 
 	/**
 	 * Test Analysewerte.
-	 * 
+	 *
 	 * @throws Exception
 	 *             wird weitergereicht.
 	 */
@@ -96,23 +96,22 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 		/*
 		 * Meldet Sender für KZD unter dem Aspekt Messwertersetzung an
 		 */
-		FS1 = this.dav.getDataModel().getObject("fs.1"); //$NON-NLS-1$
-		FS2 = this.dav.getDataModel().getObject("fs.2"); //$NON-NLS-1$
-		FS3 = this.dav.getDataModel().getObject("fs.3"); //$NON-NLS-1$
+		FS1 = dav.getDataModel().getObject("fs.1"); //$NON-NLS-1$
+		FS2 = dav.getDataModel().getObject("fs.2"); //$NON-NLS-1$
+		FS3 = dav.getDataModel().getObject("fs.3"); //$NON-NLS-1$
 
-		DataDescription ddKzdSend = new DataDescription(this.dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KZD), this.dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
+		final DataDescription ddKzdSend = new DataDescription(dav.getDataModel().getAttributeGroup(
+				DUAKonstanten.ATG_KZD), dav.getDataModel().getAspect(
+				DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
-		this.dav.subscribeSender(this, new SystemObject[] { FS1, FS2, FS3 },
-				ddKzdSend, SenderRole.source());
+		dav.subscribeSender(this, new SystemObject[] { FS1, FS2, FS3 }, ddKzdSend,
+				SenderRole.source());
 
 		/*
 		 * Importiere Parameter
 		 */
-		ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav,
-				new SystemObject[] { FS1, FS2, FS3 },
-				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		final ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav, new SystemObject[] {
+				FS1, FS2, FS3 }, DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImport.importiereParameterAnalyse(1);
 		paraImport.importiereParameterAnalyse(2);
 		paraImport.importiereParameterAnalyse(3);
@@ -126,33 +125,29 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 		int csvIndex = 2;
 
 		importFS = new TestFahrstreifenImporter(dav,
-				DatenaufbereitungLVETest.TEST_DATEN_VERZ_VIRTUELL
-						+ "Messwerters_LVE"); //$NON-NLS-1$
+				DatenaufbereitungLVETest.TEST_DATEN_VERZ_VIRTUELL + "Messwerters_LVE"); //$NON-NLS-1$
 		importFS.importNaechsteZeile();
 
 		while ((zeileFS1 = importFS.getDatensatz(1)) != null) {
 			zeileFS2 = importFS.getDatensatz(2);
 			zeileFS3 = importFS.getDatensatz(3);
 
-			ResultData resultat1 = new ResultData(FS1, ddKzdSend, aktZeit,
-					zeileFS1);
-			ResultData resultat2 = new ResultData(FS2, ddKzdSend, aktZeit,
-					zeileFS2);
-			ResultData resultat3 = new ResultData(FS3, ddKzdSend, aktZeit,
-					zeileFS3);
+			final ResultData resultat1 = new ResultData(FS1, ddKzdSend, aktZeit, zeileFS1);
+			final ResultData resultat2 = new ResultData(FS2, ddKzdSend, aktZeit, zeileFS2);
+			final ResultData resultat3 = new ResultData(FS3, ddKzdSend, aktZeit, zeileFS3);
 
 			System.out
-					.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
-			this.dav.sendData(resultat1);
-			this.dav.sendData(resultat2);
-			this.dav.sendData(resultat3);
+			.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			dav.sendData(resultat1);
+			dav.sendData(resultat2);
+			dav.sendData(resultat3);
 
 			// Lese bei Importer und Prüfer den nächsten Datensatz ein
 			importFS.importNaechsteZeile();
 
 			try {
 				Thread.sleep(1000L);
-			} catch (InterruptedException ex) {
+			} catch (final InterruptedException ex) {
 				ex.printStackTrace();
 			}
 
@@ -164,15 +159,17 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
+			final byte state) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 

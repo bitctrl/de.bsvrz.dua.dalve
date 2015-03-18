@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -193,37 +193,37 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 							.getSystemObject();
 					final double offset = mqData.getUnscaledValue("Offset").longValue() >= 0 ? mqData
 							.getScaledValue("Offset").doubleValue() : -1.0;
-									if ((strassenSegment != null) && strassenSegment.isOfType("typ.straßenSegment")
-											&& (offset >= 0)) {
-										final Data ssData = strassenSegment.getConfigurationData(dDav
-												.getDataModel().getAttributeGroup("atg.bestehtAusLinienObjekten"));
-										if (ssData != null) {
-											double gesamtLaenge = 0;
-											for (int i = 0; i < ssData.getArray("LinienReferenz").getLength(); i++) {
-												if (ssData.getReferenceArray("LinienReferenz").getReferenceValue(i) != null) {
-													final SystemObject sts = ssData
-															.getReferenceArray("LinienReferenz")
-															.getReferenceValue(i).getSystemObject();
-													if ((sts != null) && sts.isOfType("typ.straßenTeilSegment")) {
-														final Data stsData = sts.getConfigurationData(dDav
-												.getDataModel().getAttributeGroup("atg.linie"));
-														if (stsData != null) {
-															final double laenge = stsData.getUnscaledValue("Länge")
-																	.longValue() >= 0 ? stsData.getScaledValue(
-													"Länge").doubleValue() : -1.0;
-																			if (laenge >= 0) {
-																				gesamtLaenge += laenge;
-																			}
-														}
-														if (gesamtLaenge >= offset) {
-															stsGesucht = sts;
-															break;
-														}
-													}
-												}
+					if ((strassenSegment != null) && strassenSegment.isOfType("typ.straßenSegment")
+							&& (offset >= 0)) {
+						final Data ssData = strassenSegment.getConfigurationData(dDav
+								.getDataModel().getAttributeGroup("atg.bestehtAusLinienObjekten"));
+						if (ssData != null) {
+							double gesamtLaenge = 0;
+							for (int i = 0; i < ssData.getArray("LinienReferenz").getLength(); i++) {
+								if (ssData.getReferenceArray("LinienReferenz").getReferenceValue(i) != null) {
+									final SystemObject sts = ssData
+											.getReferenceArray("LinienReferenz")
+											.getReferenceValue(i).getSystemObject();
+									if ((sts != null) && sts.isOfType("typ.straßenTeilSegment")) {
+										final Data stsData = sts.getConfigurationData(dDav
+														.getDataModel().getAttributeGroup("atg.linie"));
+										if (stsData != null) {
+											final double laenge = stsData.getUnscaledValue("Länge")
+													.longValue() >= 0 ? stsData.getScaledValue(
+																	"Länge").doubleValue() : -1.0;
+											if (laenge >= 0) {
+												gesamtLaenge += laenge;
 											}
 										}
+										if (gesamtLaenge >= offset) {
+											stsGesucht = sts;
+											break;
+										}
 									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -309,7 +309,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 				getKonfigurationsBereiche());
 		final Collection<SystemObject> abschnitte = DUAUtensilien.getBasisInstanzen(verbindung
 				.getDataModel().getType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT), verbindung,
-						getKonfigurationsBereiche());
+				getKonfigurationsBereiche());
 		objekte = fahrStreifen.toArray(new SystemObject[0]);
 
 		final Collection<SystemObject> lveObjekte = new HashSet<SystemObject>();
@@ -346,8 +346,8 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 				objekte,
 				new DataDescription(verbindung.getDataModel().getAttributeGroup(
 						DUAKonstanten.ATG_KZD), verbindung.getDataModel().getAspect(
-						DUAKonstanten.ASP_MESSWERTERSETZUNG)), ReceiveOptions.normal(),
-				ReceiverRole.receiver());
+								DUAKonstanten.ASP_MESSWERTERSETZUNG)), ReceiveOptions.normal(),
+								ReceiverRole.receiver());
 	}
 
 	/**

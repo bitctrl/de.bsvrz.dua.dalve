@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -25,20 +25,17 @@
  */
 package de.bsvrz.dua.dalve.prognose;
 
-
 // TODO: Auto-generated Javadoc
 /**
- * Ueber dieses Objekt werden die Prognosedaten fuer <b>einen</b>
- * Fahrstreifen oder einen Messquerschnitt erstellt/publiziert
- * bzw. deren Erstellung verwaltet<br>
+ * Ueber dieses Objekt werden die Prognosedaten fuer <b>einen</b> Fahrstreifen oder einen
+ * Messquerschnitt erstellt/publiziert bzw. deren Erstellung verwaltet<br>
  * (fuer den Prognosetyp <code>Flink</code>)
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class PrognoseObjektFlink 
-extends AbstraktPrognoseObjekt{	
-	
+public class PrognoseObjektFlink extends AbstraktPrognoseObjekt {
+
 	/**
 	 * {@inheritDoc}
 	 */

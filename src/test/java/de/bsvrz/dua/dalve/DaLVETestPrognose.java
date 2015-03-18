@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -54,105 +54,112 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 
 	/** The Constant prStoerfall. */
 	public static final boolean prStoerfall = false;
-	
+
 	/** Logger. */
 	protected Debug LOGGER;
-	
+
 	/** Datenverteilerverbindung. */
-	private ClientDavInterface dav;
-	
+	private final ClientDavInterface dav;
+
 	/** Testdatenverzeichnis. */
-	private String TEST_DATEN_VERZ;
-	
+	private final String TEST_DATEN_VERZ;
+
 	/** Zu prüfender FS. */
-	private SystemObject FS1;
-	
+	private final SystemObject FS1;
+
 	/** Zu prüfender MQ. */
-	private SystemObject MQ1;
-	
+	private final SystemObject MQ1;
+
 	/** Sende-Datenbeschreibung für KZD (FS). */
 	public static DataDescription DD_KZD_SEND_FS = null;
-	
+
 	/** Sende-Datenbeschreibung für KZD (QM). */
 	public static DataDescription DD_KZD_SEND_MQ = null;
-	
+
 	/** Datenimporter (FS). */
-	private TestAnalyseFahrstreifenImporter importFS;
+	private final TestAnalyseFahrstreifenImporter importFS;
 
 	/** Datenimporter (MQ). */
-	private TestAnalyseMessquerschnittImporter importMQ;
-	
+	private final TestAnalyseMessquerschnittImporter importMQ;
+
 	/** Sollen Asserts genutzt werden. */
 	private boolean useAssert;
-	
+
 	/** ID der Prüferklasse für Prognosedaten. */
 	public static final int ID_PRUEFER_PROGNOSE = 0;
-	
+
 	/** ID der Prüferklasse für StörfallIndikatoren. */
 	public static final int ID_PRUEFER_STOERFALL = 1;
 
 	/** Gibt an ob die Prüferklasse für Prognosedaten die Prüfung abgeschlossen hat. */
 	private boolean prPrognoseFertig = false;
-	
+
 	/** Gibt an, ob die StörfallIndikatoren-Prüfung abgeschlossen ist. */
 	private boolean prStoerfallFertig = false;
-	
+
 	/** Die erlaubte Abweichung zwischen erwartetem und geliefertem Wert. */
 	private int ergebnisWertToleranz = 0;
-	
+
 	/** Gibt an, ob eine Überprüfung der Störfallindikatoren durchgeführt werden soll. */
 	private boolean testStoerfall = true;
-	
-	
+
 	/**
 	 * Initialsiert die Überprüfung der Prognosewerte und Störfallindikatoren.
 	 *
-	 * @param dav Datenverteilerverbindung
-	 * @param alLogger Loggerargumente
-	 * @param TEST_DATEN_VERZ Testdatenverzeichnis
-	 * @throws Exception the exception
+	 * @param dav
+	 *            Datenverteilerverbindung
+	 * @param alLogger
+	 *            Loggerargumente
+	 * @param TEST_DATEN_VERZ
+	 *            Testdatenverzeichnis
+	 * @throws Exception
+	 *             the exception
 	 */
-	public DaLVETestPrognose(final ClientDavInterface dav, final ArgumentList alLogger, final String TEST_DATEN_VERZ)
-	throws Exception {
+	public DaLVETestPrognose(final ClientDavInterface dav, final ArgumentList alLogger,
+			final String TEST_DATEN_VERZ) throws Exception {
 		this.dav = dav;
 		this.TEST_DATEN_VERZ = TEST_DATEN_VERZ;
-		
+
 		/*
 		 * Initialisiere Logger
 		 */
 		Debug.init("DatenaufbereitungLVEPrognose", alLogger); //$NON-NLS-1$
 		LOGGER = Debug.getLogger();
-		
+
 		/*
 		 * Meldet Sender für KZD unter dem Aspekt Analyse an
 		 */
 		FS1 = this.dav.getDataModel().getObject("AAA.Test.fs.kzd.1"); //$NON-NLS-1$
 		MQ1 = this.dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
-		
-		DD_KZD_SEND_FS = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
-		
-		DD_KZD_SEND_MQ = new DataDescription(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-				  this.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
-		
+
+		DD_KZD_SEND_FS = new DataDescription(this.dav.getDataModel().getAttributeGroup(
+				DUAKonstanten.ATG_KURZZEIT_FS), this.dav.getDataModel().getAspect(
+				DUAKonstanten.ASP_ANALYSE));
+
+		DD_KZD_SEND_MQ = new DataDescription(this.dav.getDataModel().getAttributeGroup(
+				DUAKonstanten.ATG_KURZZEIT_MQ), this.dav.getDataModel().getAspect(
+				DUAKonstanten.ASP_ANALYSE));
+
 		this.dav.subscribeSender(this, FS1, DD_KZD_SEND_FS, SenderRole.sender());
 		this.dav.subscribeSender(this, MQ1, DD_KZD_SEND_MQ, SenderRole.sender());
-		
+
 		/*
 		 * Importiere Parameter
 		 */
-		ParaAnaProgImportFS paraImportFS = new ParaAnaProgImportFS(dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
-		ParaAnaProgImportMQ paraImportMQ = new ParaAnaProgImportMQ(dav, new SystemObject[]{MQ1}, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		final ParaAnaProgImportFS paraImportFS = new ParaAnaProgImportFS(dav,
+				new SystemObject[] { FS1 }, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		final ParaAnaProgImportMQ paraImportMQ = new ParaAnaProgImportMQ(dav,
+				new SystemObject[] { MQ1 }, TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImportFS.importiereParameterPrognose();
 		paraImportMQ.importiereParameterPrognose();
 		paraImportFS.importiereParameterStoerfall(1);
 		paraImportMQ.importiereParameterStoerfall(1);
-		
+
 		/*
 		 * Initialisiert Testfahrstreifenimporter
 		 */
 		importFS = new TestAnalyseFahrstreifenImporter(dav, TEST_DATEN_VERZ + "Analysewerte"); //$NON-NLS-1$
-		
+
 		/*
 		 * Initialisiert Test-MQ-Importer
 		 */
@@ -162,136 +169,153 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	/**
 	 * Test prognose.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void testPrognose() throws Exception {
 		System.out.println("Prüfe Datenaufbereitung LVE - Prognosewerte..."); //$NON-NLS-1$
-		
+
 		Data zeileFS1;
 		Data zeileMQ1;
-		
-		//aktueller Prüfzeitstempel
+
+		// aktueller Prüfzeitstempel
 		long aktZeit = System.currentTimeMillis();
-		
+
 		int csvIndex = 2;
-		
-		/*
-		 * Prüferklasse Prognosewerte
-		 * Empfängt Daten und vergleicht mit SOLL-Wert 
-		 */
-		PruefeDaLVEPrognose prDaLVEPrognose = new PruefeDaLVEPrognose(this, dav, new SystemObject[]{FS1}, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
 
 		/*
-		 * Prüferklasse Prognosewerte
-		 * Empfängt Daten und vergleicht mit SOLL-Wert 
+		 * Prüferklasse Prognosewerte Empfängt Daten und vergleicht mit SOLL-Wert
 		 */
-		PruefeDaLVEStoerfall prDaLVEStoerfall = new PruefeDaLVEStoerfall(this, dav, FS1, MQ1, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
+		final PruefeDaLVEPrognose prDaLVEPrognose = new PruefeDaLVEPrognose(this, dav,
+				new SystemObject[] { FS1 }, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
 
-		//Lese bei Importer und Prüfer den nächsten Datensatz ein
+		/*
+		 * Prüferklasse Prognosewerte Empfängt Daten und vergleicht mit SOLL-Wert
+		 */
+		final PruefeDaLVEStoerfall prDaLVEStoerfall = new PruefeDaLVEStoerfall(this, dav, FS1, MQ1,
+				TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
+
+		// Lese bei Importer und Prüfer den nächsten Datensatz ein
 		importFS.importNaechsteZeile();
 		importMQ.importNaechsteZeile();
 		prDaLVEPrognose.naechsterDatensatz(aktZeit);
-		if(testStoerfall) {
+		if (testStoerfall) {
 			prDaLVEStoerfall.naechsterDatensatz(aktZeit);
 		}
-		
-		//Prüfe solange Daten vorhanden
-		while((zeileFS1=importFS.getDatensatz(1)) != null) {
-			zeileMQ1=importMQ.getDatensatz();
-			
-			ResultData resultat_FS = new ResultData(FS1, DD_KZD_SEND_FS, aktZeit, zeileFS1);
-			ResultData resultat_MQ = new ResultData(MQ1, DD_KZD_SEND_MQ, aktZeit, zeileMQ1);
-			
-			System.out.println("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+
+		// Prüfe solange Daten vorhanden
+		while ((zeileFS1 = importFS.getDatensatz(1)) != null) {
+			zeileMQ1 = importMQ.getDatensatz();
+
+			final ResultData resultat_FS = new ResultData(FS1, DD_KZD_SEND_FS, aktZeit, zeileFS1);
+			final ResultData resultat_MQ = new ResultData(MQ1, DD_KZD_SEND_MQ, aktZeit, zeileMQ1);
+
+			System.out
+					.println("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 			LOGGER.info("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit);
-			
-			synchronized(this) {
-				this.dav.sendData(resultat_FS);
-				this.dav.sendData(resultat_MQ);
-			
-				//Warte auf Prüfungsabschluss aller FS für diesen Datensatz
+
+			synchronized (this) {
+				dav.sendData(resultat_FS);
+				dav.sendData(resultat_MQ);
+
+				// Warte auf Prüfungsabschluss aller FS für diesen Datensatz
 				doWait();
 			}
-			
+
 			csvIndex++;
-			
-			//setze neue Prüfzeit
+
+			// setze neue Prüfzeit
 			aktZeit = aktZeit + Constants.MILLIS_PER_MINUTE;
-			
-			//Lese bei Importer und Prüfer den nächsten Datensatz ein
+
+			// Lese bei Importer und Prüfer den nächsten Datensatz ein
 			importFS.importNaechsteZeile();
 			importMQ.importNaechsteZeile();
 			prDaLVEPrognose.naechsterDatensatz(aktZeit);
-			if(testStoerfall) {
+			if (testStoerfall) {
 				prDaLVEStoerfall.naechsterDatensatz(aktZeit);
 			}
-			
+
 			prPrognoseFertig = false;
 			prStoerfallFertig = false;
 		}
 	}
-	
+
 	/**
 	 * Lässt Thread warten.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void doWait() throws Exception {
-		synchronized(this) {
+		synchronized (this) {
 			wait();
 		}
 	}
-	
+
 	/**
 	 * Weckt Thread wenn Prognose- und Störfalldaten verglichen wurden.
 	 *
-	 * @param id_Pruefer the id_ pruefer
+	 * @param id_Pruefer
+	 *            the id_ pruefer
 	 */
 	public void doNotify(final int id_Pruefer) {
-		
-		switch(id_Pruefer) {
-			case ID_PRUEFER_PROGNOSE: {
-				prPrognoseFertig = true;
-				break;
-			}
-			case ID_PRUEFER_STOERFALL: {
-				prStoerfallFertig = true;
-				break;
-			}
+
+		switch (id_Pruefer) {
+		case ID_PRUEFER_PROGNOSE: {
+			prPrognoseFertig = true;
+			break;
 		}
-		
-		if(!testStoerfall) {
+		case ID_PRUEFER_STOERFALL: {
+			prStoerfallFertig = true;
+			break;
+		}
+		}
+
+		if (!testStoerfall) {
 			prStoerfallFertig = true;
 		}
-		
-		if(prPrognoseFertig && prStoerfallFertig) {
-			synchronized(this) {
+
+		if (prPrognoseFertig && prStoerfallFertig) {
+			synchronized (this) {
 				notify();
 			}
 		}
 	}
-	
+
 	/**
 	 * Sollen Asserts genutzt werden.
 	 *
-	 * @param useAssert the use assert
+	 * @param useAssert
+	 *            the use assert
 	 */
-	public void benutzeAssert(boolean useAssert) {
+	public void benutzeAssert(final boolean useAssert) {
 		this.useAssert = useAssert;
 	}
-		
-	/* (non-Javadoc)
-	 * @see de.bsvrz.dav.daf.main.ClientSenderInterface#dataRequest(de.bsvrz.dav.daf.main.config.SystemObject, de.bsvrz.dav.daf.main.DataDescription, byte)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.bsvrz.dav.daf.main.ClientSenderInterface#dataRequest(de.bsvrz.dav.daf.main.config.SystemObject
+	 * , de.bsvrz.dav.daf.main.DataDescription, byte)
 	 */
-	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
-		//VOID
-		
+	@Override
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
+			final byte state) {
+		// VOID
+
 	}
 
-	/* (non-Javadoc)
-	 * @see de.bsvrz.dav.daf.main.ClientSenderInterface#isRequestSupported(de.bsvrz.dav.daf.main.config.SystemObject, de.bsvrz.dav.daf.main.DataDescription)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.bsvrz.dav.daf.main.ClientSenderInterface#isRequestSupported(de.bsvrz.dav.daf.main.config
+	 * .SystemObject, de.bsvrz.dav.daf.main.DataDescription)
 	 */
-	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 
@@ -307,19 +331,21 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	/**
 	 * Setzt die erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert.
 	 *
-	 * @param ergebnisWertToleranz Erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert
+	 * @param ergebnisWertToleranz
+	 *            Erlaubte Abweichung zwischen erwartetem und berechnetem Prognosewert
 	 */
-	public void setErgebnisWertToleranz(int ergebnisWertToleranz) {
+	public void setErgebnisWertToleranz(final int ergebnisWertToleranz) {
 		this.ergebnisWertToleranz = ergebnisWertToleranz;
 	}
 
 	/**
 	 * Soll eine Überprüfung der Störfallindikatoren durchgeführt werden.
 	 *
-	 * @param testStoerfall the new test stoerfall
+	 * @param testStoerfall
+	 *            the new test stoerfall
 	 */
-	public void setTestStoerfall(boolean testStoerfall) {
+	public void setTestStoerfall(final boolean testStoerfall) {
 		this.testStoerfall = testStoerfall;
 	}
-	
+
 }

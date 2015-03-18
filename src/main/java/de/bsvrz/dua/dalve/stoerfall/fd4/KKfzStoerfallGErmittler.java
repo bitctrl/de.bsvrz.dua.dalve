@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -38,75 +38,78 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 // TODO: Auto-generated Javadoc
 /**
- * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer die
- * Ermittlung des Störfallindikators <code>Fundamentaldiagramm</code> fuer 
- * <code>KKfzStoerfall</code> durch und ermittlt so <code>KKfzStoerfallG</code> 
- * (Prognosedichte) 
- * 
+ * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer die Ermittlung des
+ * Störfallindikators <code>Fundamentaldiagramm</code> fuer <code>KKfzStoerfall</code> durch und
+ * ermittlt so <code>KKfzStoerfallG</code> (Prognosedichte)
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class KKfzStoerfallGErmittler 
-extends AbstraktAttributPrognoseObjekt
-implements ClientReceiverInterface{
+public class KKfzStoerfallGErmittler extends AbstraktAttributPrognoseObjekt implements
+		ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param obj das Objekt, dessen Daten hier betrachtet werden
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param obj
+	 *            das Objekt, dessen Daten hier betrachtet werden
 	 */
-	protected KKfzStoerfallGErmittler(ClientDavInterface dav,
-									  SystemObject obj){		
-		dav.subscribeReceiver(this, obj,
-				new DataDescription(
-						dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"), //$NON-NLS-1$
+	protected KKfzStoerfallGErmittler(final ClientDavInterface dav, final SystemObject obj) {
+		dav.subscribeReceiver(
+				this,
+				obj,
+				new DataDescription(dav.getDataModel().getAttributeGroup(
+						"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
-	
-	
+
 	/**
 	 * Erfragt das geglaettete Attribut <code>KKfzStoerfallG</code>.
 	 *
-	 * @param KKfzStoerfall zu glaettendes Attribut <code>KKfzStoerfall</code>
-	 * @param implausibel ob das zu glaettende Attribut <code>KKfzStoerfall</code> als implausibel
-	 * gekennzeichnet wird
+	 * @param KKfzStoerfall
+	 *            zu glaettendes Attribut <code>KKfzStoerfall</code>
+	 * @param implausibel
+	 *            ob das zu glaettende Attribut <code>KKfzStoerfall</code> als implausibel
+	 *            gekennzeichnet wird
 	 * @return das geglaettete Attribut <code>KKfzStoerfallG</code>
-	 * @throws PrognoseParameterException wenn die Parameter noch nicht gesetzt wurden
+	 * @throws PrognoseParameterException
+	 *             wenn die Parameter noch nicht gesetzt wurden
 	 */
-	public final double getKKfzStoerfallGAktuell(double KKfzStoerfall, boolean implausibel)
-	throws PrognoseParameterException{
-		this.berechneGlaettungsParameterUndStart(Math.round(KKfzStoerfall), implausibel, false, null);
-		
-		return this.getZG();
+	public final double getKKfzStoerfallGAktuell(final double KKfzStoerfall,
+			final boolean implausibel) throws PrognoseParameterException {
+		berechneGlaettungsParameterUndStart(Math.round(KKfzStoerfall), implausibel, false, null);
+
+		return getZG();
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] parameterSaetze) {
-		if(parameterSaetze != null){
-			for(ResultData parameter:parameterSaetze){
-				if(parameter != null){
-					if(parameter.getData() != null){			
-						this.ZAltInit =  parameter.getData().getUnscaledValue("KKfzStart").longValue(); //$NON-NLS-1$
-						this.alpha1 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
-										getScaledValue("alpha1").doubleValue(); //$NON-NLS-1$
-						this.alpha2 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
-										getScaledValue("alpha2").doubleValue(); //$NON-NLS-1$
-						this.beta1 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
-										getScaledValue("beta1").doubleValue(); //$NON-NLS-1$
-						this.beta2 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
-										getScaledValue("beta2").doubleValue(); //$NON-NLS-1$
-					}else{
-						this.ZAltInit = -4;
-						this.alpha1 = -1;
-						this.alpha2 = -1;
-						this.beta1 = -1;
-						this.beta2 = -1;
-					} 					
+	@Override
+	public void update(final ResultData[] parameterSaetze) {
+		if (parameterSaetze != null) {
+			for (final ResultData parameter : parameterSaetze) {
+				if (parameter != null) {
+					if (parameter.getData() != null) {
+						ZAltInit = parameter.getData().getUnscaledValue("KKfzStart").longValue(); //$NON-NLS-1$
+						alpha1 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
+								getScaledValue("alpha1").doubleValue(); //$NON-NLS-1$
+						alpha2 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
+								getScaledValue("alpha2").doubleValue(); //$NON-NLS-1$
+						beta1 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
+								getScaledValue("beta1").doubleValue(); //$NON-NLS-1$
+						beta2 = parameter.getData().getItem("KKfz"). //$NON-NLS-1$
+								getScaledValue("beta2").doubleValue(); //$NON-NLS-1$
+					} else {
+						ZAltInit = -4;
+						alpha1 = -1;
+						alpha2 = -1;
+						beta1 = -1;
+						beta2 = -1;
+					}
 				}
 			}
 		}

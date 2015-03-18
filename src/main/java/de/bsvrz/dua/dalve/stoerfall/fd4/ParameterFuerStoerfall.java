@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -31,112 +31,103 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 // TODO: Auto-generated Javadoc
 /**
- * Hier sind alle Vergleichswerte (mit Hysterese) gespeichert, die zur Ermittlung
- * eines bestimmten Stoerfalls (<code>Stau</code>, <code>freier Verkehr</code>, ...)
- * ueber die lokale Stoerfallerkennung benoetigt werden 
- * 
+ * Hier sind alle Vergleichswerte (mit Hysterese) gespeichert, die zur Ermittlung eines bestimmten
+ * Stoerfalls (<code>Stau</code>, <code>freier Verkehr</code>, ...) ueber die lokale
+ * Stoerfallerkennung benoetigt werden
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class ParameterFuerStoerfall
-extends AllgemeinerDatenContainer{
-	
-	/** die Stoerfallsituation, deren Vergleichswerte hier  gespeichert werden (sollen). */
+public class ParameterFuerStoerfall extends AllgemeinerDatenContainer {
+
+	/** die Stoerfallsituation, deren Vergleichswerte hier gespeichert werden (sollen). */
 	private StoerfallSituation situation = null;
-	
+
 	/** Absoluter Wert für den Vergleich mit VKfzStörfall. */
 	private double Vgrenz = -4;
-	
+
 	/** Hysteresewert für Vgrenz (VGrenz +/- VgrenzHysterese). */
 	private double VgrenzHysterese = -4;
-	
+
 	/** Faktor für den Vergleich von KKfzStörfallG mid K0. */
 	private double fk = -1;
-	
+
 	/** Hysteresewert für fk(fk +/- fkHysterese). */
 	private double fkHysterese = -1;
-	
+
 	/** Faktor für den Vergleich von VKfzStörfallG mid V0. */
 	private double fv = -1;
-	
+
 	/** Hysteresewert für fv(fv +/- fkHysterese). */
 	private double fvHysterese = -1;
-	
+
 	/**
 	 * der Faktor <code>fp</code>.
 	 */
 	private double fp = -1;
-	
+
 	/**
 	 * der Faktor <code>fa</code>.
 	 */
 	private double fa = -1;
-	
-	
+
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param situation die Stoerfallsituation, deren Vergleichswerte hier
-	 * gespeichert werden (sollen)
+	 * @param situation
+	 *            die Stoerfallsituation, deren Vergleichswerte hier gespeichert werden (sollen)
 	 */
-	protected ParameterFuerStoerfall(final StoerfallSituation situation){
+	protected ParameterFuerStoerfall(final StoerfallSituation situation) {
 		this.situation = situation;
 	}
-	
-	
+
 	/**
 	 * Speisst dieses Objekt.
 	 *
-	 * @param datum ein DAV-Datum der Attributgruppe
-	 * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
+	 * @param datum
+	 *            ein DAV-Datum der Attributgruppe
+	 *            <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
 	 */
-	protected final void importiere(final Data datum){
-		if(datum != null){
-			this.fa = datum.getScaledValue("fa").doubleValue();
-			this.fp = datum.getScaledValue("fp").doubleValue();
-			this.fk = datum.getScaledValue("fk").doubleValue();
-			this.fkHysterese = datum.getScaledValue("fkHysterese").doubleValue();
-			this.fv = datum.getScaledValue("fv").doubleValue();
-			this.fvHysterese = datum.getScaledValue("fvHysterese").doubleValue();
-			this.Vgrenz = datum.getUnscaledValue("Vgrenz").longValue();		
-			this.VgrenzHysterese = datum.getUnscaledValue("VgrenzHysterese").longValue();
-		}else{
-			this.Vgrenz = -4;
-			this.VgrenzHysterese = -4;
-			this.fk = -1;
-			this.fkHysterese = -1;
-			this.fv = -1;
-			this.fvHysterese = -1;
-			this.fa = -1;
-			this.fp = -1;
+	protected final void importiere(final Data datum) {
+		if (datum != null) {
+			fa = datum.getScaledValue("fa").doubleValue();
+			fp = datum.getScaledValue("fp").doubleValue();
+			fk = datum.getScaledValue("fk").doubleValue();
+			fkHysterese = datum.getScaledValue("fkHysterese").doubleValue();
+			fv = datum.getScaledValue("fv").doubleValue();
+			fvHysterese = datum.getScaledValue("fvHysterese").doubleValue();
+			Vgrenz = datum.getUnscaledValue("Vgrenz").longValue();
+			VgrenzHysterese = datum.getUnscaledValue("VgrenzHysterese").longValue();
+		} else {
+			Vgrenz = -4;
+			VgrenzHysterese = -4;
+			fk = -1;
+			fkHysterese = -1;
+			fv = -1;
+			fvHysterese = -1;
+			fa = -1;
+			fp = -1;
 		}
 	}
 
-	
 	/**
 	 * Erfragt, ob dieses Objekt bereits mit Parametern initialisiert wurde.
 	 *
 	 * @return ob dieses Objekt bereits mit Parametern initialisiert wurde
 	 */
-	protected final boolean isInitialisiert(){
-		return this.Vgrenz != -4 && this.VgrenzHysterese != -4 &&
-			   this.fk != -1 &&	this.fkHysterese != -1 &&
-			   this.fv != -1 && this.fvHysterese != -1 &&
-			   this.fa != -1 &&	this.fp != -1;
+	protected final boolean isInitialisiert() {
+		return (Vgrenz != -4) && (VgrenzHysterese != -4) && (fk != -1) && (fkHysterese != -1)
+				&& (fv != -1) && (fvHysterese != -1) && (fa != -1) && (fp != -1);
 	}
-	
 
 	/**
-	 * Erfragt die Stoerfallsituation, deren Vergleichswerte hier 
-	 * gespeichert werden (sollen).
+	 * Erfragt die Stoerfallsituation, deren Vergleichswerte hier gespeichert werden (sollen).
 	 *
-	 * @return die Stoerfallsituation, deren Vergleichswerte hier
-	 * gespeichert werden (sollen)
+	 * @return die Stoerfallsituation, deren Vergleichswerte hier gespeichert werden (sollen)
 	 */
 	protected final StoerfallSituation getSituation() {
 		return situation;
 	}
-
 
 	/**
 	 * Erfragt absoluter Wert für den Vergleich mit VKfzStörfall.
@@ -147,7 +138,6 @@ extends AllgemeinerDatenContainer{
 		return Vgrenz;
 	}
 
-
 	/**
 	 * Erfragt Hysteresewert für Vgrenz (VGrenz +/- VgrenzHysterese).
 	 *
@@ -157,26 +147,23 @@ extends AllgemeinerDatenContainer{
 		return VgrenzHysterese;
 	}
 
-	
 	/**
 	 * Erfragt den Faktor <code>fa</code>.
-	 * 
+	 *
 	 * @return der Faktor <code>fa</code>
 	 **/
 	protected final double getFa() {
 		return fa;
 	}
 
-
 	/**
 	 * Erfragt den Faktor <code>fp</code>.
-	 * 
+	 *
 	 * @return der Faktor <code>fp</code>
 	 **/
 	protected final double getFp() {
 		return fp;
 	}
-	
 
 	/**
 	 * Erfragt Faktor für den Vergleich von KKfzStörfallG mid K0.
@@ -187,7 +174,6 @@ extends AllgemeinerDatenContainer{
 		return fk;
 	}
 
-
 	/**
 	 * Erfragt Hysteresewert für fk(fk +/- fkHysterese).
 	 *
@@ -197,7 +183,6 @@ extends AllgemeinerDatenContainer{
 		return fkHysterese;
 	}
 
-
 	/**
 	 * Erfragt Faktor für den Vergleich von VKfzStörfallG mid V0.
 	 *
@@ -206,7 +191,6 @@ extends AllgemeinerDatenContainer{
 	protected final double getFv() {
 		return fv;
 	}
-
 
 	/**
 	 * Erfragt Hysteresewert für fv(fv +/- fkHysterese).

@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -27,21 +27,21 @@ package de.bsvrz.dua.dalve.prognose;
 
 // TODO: Auto-generated Javadoc
 /**
- * Indiziert, dass die Berechnung eines Prognosewertes nicht moeglich ist,
- * da die Parameter nicht vollstaendig oder nicht sinnvoll sind.
+ * Indiziert, dass die Berechnung eines Prognosewertes nicht moeglich ist, da die Parameter nicht
+ * vollstaendig oder nicht sinnvoll sind.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class PrognoseParameterException
-extends Exception {
+public class PrognoseParameterException extends Exception {
 
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param nachricht eine Nachricht, die die Ausnahme illustriert
+	 * @param nachricht
+	 *            eine Nachricht, die die Ausnahme illustriert
 	 */
-	public PrognoseParameterException(final String nachricht){
+	public PrognoseParameterException(final String nachricht) {
 		super(nachricht);
 	}
-	
+
 }

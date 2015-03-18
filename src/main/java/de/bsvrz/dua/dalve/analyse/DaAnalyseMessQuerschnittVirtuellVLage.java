@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -48,31 +48,29 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 // TODO: Auto-generated Javadoc
 /**
- * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der
- * Analysewerte eines virtuellen Messquerschnitts notwendig sind gespeichert.
- * Wenn die Werte für ein bestimmtes Intervall bereit stehen (oder eine Timeout
- * abgelaufen ist), wird eine Berechnung durchgefuehrt und der Wert publiziert.
- * <br>
+ * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte eines virtuellen
+ * Messquerschnitts notwendig sind gespeichert. Wenn die Werte für ein bestimmtes Intervall bereit
+ * stehen (oder eine Timeout abgelaufen ist), wird eine Berechnung durchgefuehrt und der Wert
+ * publiziert. <br>
  * <b>Achtung: Verfahren auf Basis der Konfigurationsdaten aus Attributgruppe
  * <code>atg.messQuerschnittVirtuellVLage</code>.</b><br>
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
-public class DaAnalyseMessQuerschnittVirtuellVLage extends
-		DaAnalyseMessQuerschnitt {
+public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschnitt {
 
 	/**
-	 * Mapt alle hier betrachteten Messquerschnitte auf das letzte von ihnen
-	 * empfangene Analysedatum.
+	 * Mapt alle hier betrachteten Messquerschnitte auf das letzte von ihnen empfangene
+	 * Analysedatum.
 	 */
-	private Map<SystemObject, ResultData> aktuelleMQAnalysen = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> aktuelleMQAnalysen = new HashMap<SystemObject, ResultData>();
 
 	/**
 	 * Alle Anteile des VMQ.
 	 */
-	private Map<SystemObject, Double> mqAnteilsListe = new HashMap<SystemObject, Double>();
+	private final Map<SystemObject, Double> mqAnteilsListe = new HashMap<SystemObject, Double>();
 
 	/**
 	 * der aufgeloesste virtuelle Messquerschnitt.
@@ -90,166 +88,155 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	private ErfassungsIntervallDauerMQ mqT = null;
 
 	/**
-	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurueck.
-	 * Nach dieser Initialisierung ist das Objekt auf alle Daten (seiner
-	 * assoziierten Messquerschnitte) angemeldet und analysiert ggf. Daten
-	 * 
+	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurueck. Nach dieser
+	 * Initialisierung ist das Objekt auf alle Daten (seiner assoziierten Messquerschnitte)
+	 * angemeldet und analysiert ggf. Daten
+	 *
 	 * @param analyseModul
 	 *            Verbindung zum Analysemodul (zum Publizieren)
 	 * @param messQuerschnittVirtuell
 	 *            der virtuelle Messquerschnitt
 	 * @return die initialisierte Instanz dieses Objekts
 	 * @throws DUAInitialisierungsException
-	 *             wenn die Konfigurationsdaten des virtuellen MQs nicht
-	 *             vollstaendig ausgelesen werden konnte
+	 *             wenn die Konfigurationsdaten des virtuellen MQs nicht vollstaendig ausgelesen
+	 *             werden konnte
 	 */
-	public DaAnalyseMessQuerschnittVirtuellVLage initialisiere(
-			MqAnalyseModul analyseModul, SystemObject messQuerschnittVirtuell)
-			throws DUAInitialisierungsException {
+	@Override
+	public DaAnalyseMessQuerschnittVirtuellVLage initialisiere(final MqAnalyseModul analyseModul,
+			final SystemObject messQuerschnittVirtuell) throws DUAInitialisierungsException {
 		if (mqAnalyse == null) {
 			mqAnalyse = analyseModul;
 		}
 
-		this.mqT = ErfassungsIntervallDauerMQ.getInstanz(mqAnalyse.getDav(),
-				messQuerschnittVirtuell);
+		mqT = ErfassungsIntervallDauerMQ.getInstanz(mqAnalyse.getDav(), messQuerschnittVirtuell);
 
-		if (this.mqT == null) {
+		if (mqT == null) {
 			/**
 			 * TODO: RuntimeException wieder rein: throw new
-			 * RuntimeException("Erfassungsintervalldauer von VMQ " +
-			 * messQuerschnittVirtuell + " kann nicht ermittelt werden.");
+			 * RuntimeException("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell +
+			 * " kann nicht ermittelt werden.");
 			 */
 			Debug.getLogger().warning(
-					"Erfassungsintervalldauer von VMQ "
-							+ messQuerschnittVirtuell
+					"Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell
 							+ " kann nicht ermittelt werden.");
 			return null;
 		}
 
-		this.messQuerschnitt = messQuerschnittVirtuell;
-		this.mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
+		messQuerschnitt = messQuerschnittVirtuell;
+		mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
 
-		if (this.mqv.getAtgMessQuerschnittVirtuellVLage() == null) {
-			throw new RuntimeException("Keine MQ-Bestandteile an VMQ "
-					+ this.messQuerschnitt + " angegeben.");
+		if (mqv.getAtgMessQuerschnittVirtuellVLage() == null) {
+			throw new RuntimeException("Keine MQ-Bestandteile an VMQ " + messQuerschnitt
+					+ " angegeben.");
 		}
 
-		if (this.mqv.getAtgMessQuerschnittVirtuellVLage()
-				.getMessQuerSchnittBestandTeile().length == 0) {
+		if (mqv.getAtgMessQuerschnittVirtuellVLage().getMessQuerSchnittBestandTeile().length == 0) {
 			Debug.getLogger().warning(
-					"Am virtuellen MQ " + this.messQuerschnitt
-							+ " sind keine MQ referenziert.");
+					"Am virtuellen MQ " + messQuerschnitt + " sind keine MQ referenziert.");
 			return null;
 		} else {
-			for (AtgMessQuerschnittVirtuellVLage.AtlMessQuerSchnittBestandTeil bestandteil : this.mqv
-					.getAtgMessQuerschnittVirtuellVLage()
-					.getMessQuerSchnittBestandTeile()) {
-				this.aktuelleMQAnalysen.put(bestandteil.getMQReferenz(), null);
-				this.mqAnteilsListe.put(bestandteil.getMQReferenz(),
-						bestandteil.getAnteil());
+			for (final AtgMessQuerschnittVirtuellVLage.AtlMessQuerSchnittBestandTeil bestandteil : mqv
+					.getAtgMessQuerschnittVirtuellVLage().getMessQuerSchnittBestandTeile()) {
+				aktuelleMQAnalysen.put(bestandteil.getMQReferenz(), null);
+				mqAnteilsListe.put(bestandteil.getMQReferenz(), bestandteil.getAnteil());
 			}
 
-			if (this.mqv.getAtgMessQuerschnittVirtuellVLage()
-					.getMessQuerschnittGeschwindigkeit() != null) {
-				this.geschwMQ = this.mqv.getAtgMessQuerschnittVirtuellVLage()
+			if (mqv.getAtgMessQuerschnittVirtuellVLage().getMessQuerschnittGeschwindigkeit() != null) {
+				geschwMQ = mqv.getAtgMessQuerschnittVirtuellVLage()
 						.getMessQuerschnittGeschwindigkeit();
-				if (!this.mqAnteilsListe.keySet().contains(this.geschwMQ)) {
-					this.aktuelleMQAnalysen.put(this.geschwMQ, null);
+				if (!mqAnteilsListe.keySet().contains(geschwMQ)) {
+					aktuelleMQAnalysen.put(geschwMQ, null);
 				}
 			}
 		}
 
-		this.parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(mqAnalyse
-				.getDav(), messQuerschnitt);
+		parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(mqAnalyse.getDav(), messQuerschnitt);
 
 		mqAnalyse.getDav().subscribeReceiver(
 				this,
-				this.aktuelleMQAnalysen.keySet(),
+				aktuelleMQAnalysen.keySet(),
 				new DataDescription(mqAnalyse.getDav().getDataModel()
-						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"),
-						mqAnalyse.getDav().getDataModel().getAspect(
-								"asp.analyse")),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), mqAnalyse.getDav()
+						.getDataModel().getAspect("asp.analyse")), ReceiveOptions.normal(),
+				ReceiverRole.receiver());
 
 		return this;
 	}
 
 	/**
-	 * Dieser Methode sollten alle aktuellen Daten fuer alle mit diesem
-	 * virtuellen Messquerschnitt assoziierten MQ uebergeben werden. Ggf. wird
-	 * dadurch dann eine Berechnung der Analysewerte dieses Messquerschnittes
-	 * ausgeloest.
-	 * 
+	 * Dieser Methode sollten alle aktuellen Daten fuer alle mit diesem virtuellen Messquerschnitt
+	 * assoziierten MQ uebergeben werden. Ggf. wird dadurch dann eine Berechnung der Analysewerte
+	 * dieses Messquerschnittes ausgeloest.
+	 *
 	 * @param triggerDatum
 	 *            ein Analyse-Datum eines assoziierten Messquerschnitts
 	 * @return ein Analysedatum fuer diesen virtuellen Messquerschnitt, wenn das
-	 *         <code>triggerDatum</code> eine Berechnung ausgeloest hat, oder
-	 *         <code>null</code> sonst
+	 *         <code>triggerDatum</code> eine Berechnung ausgeloest hat, oder <code>null</code>
+	 *         sonst
 	 */
 	@Override
-	public ResultData trigger(ResultData triggerDatum) {
+	public ResultData trigger(final ResultData triggerDatum) {
 		ResultData ergebnis = null;
-		this.aktuelleMQAnalysen.put(triggerDatum.getObject(), triggerDatum);
+		aktuelleMQAnalysen.put(triggerDatum.getObject(), triggerDatum);
 
-		if (this.isKeineDaten()) {
-			ergebnis = new ResultData(this.messQuerschnitt,
-					MqAnalyseModul.pubBeschreibung, triggerDatum.getDataTime(),
-					null);
+		if (isKeineDaten()) {
+			ergebnis = new ResultData(messQuerschnitt, MqAnalyseModul.pubBeschreibung,
+					triggerDatum.getDataTime(), null);
 		} else {
 			if (triggerDatum.getData() != null) {
-				if (this.isAlleDatenVollstaendig()) {
-					ergebnis = this.getErgebnisAufBasisAktuellerDaten();
+				if (isAlleDatenVollstaendig()) {
+					ergebnis = getErgebnisAufBasisAktuellerDaten();
 				}
 			}
 		}
-		
+
 		return ergebnis;
 	}
 
 	/**
-	 * Ermittelt, ob dieser virtuelle Messquerschnitt zur Zeit auf
-	 * <code>keine Daten</code> stehen sollte.<br>
-	 * Dies ist dann der Fall, wenn fuer mindestens einen assoziierten
-	 * Messquerschnitt keine Nutzdaten zur Verfuegung stehen.
-	 * 
-	 * @return ob dieser virtuelle Messquerschnitt zur Zeit auf
-	 *         <code>keine Daten</code> stehen sollte
+	 * Ermittelt, ob dieser virtuelle Messquerschnitt zur Zeit auf <code>keine Daten</code> stehen
+	 * sollte.<br>
+	 * Dies ist dann der Fall, wenn fuer mindestens einen assoziierten Messquerschnitt keine
+	 * Nutzdaten zur Verfuegung stehen.
+	 *
+	 * @return ob dieser virtuelle Messquerschnitt zur Zeit auf <code>keine Daten</code> stehen
+	 *         sollte
 	 */
 	private boolean isKeineDaten() {
-		for (SystemObject mq : this.aktuelleMQAnalysen.keySet()) {
-			ResultData aktuellesMQDatum = this.aktuelleMQAnalysen.get(mq);
-			if (aktuellesMQDatum == null || aktuellesMQDatum.getData() == null) {
+		for (final SystemObject mq : aktuelleMQAnalysen.keySet()) {
+			final ResultData aktuellesMQDatum = aktuelleMQAnalysen.get(mq);
+			if ((aktuellesMQDatum == null) || (aktuellesMQDatum.getData() == null)) {
 				return true;
 			}
 		}
 
-		return this.mqT.getT() == ErfassungsIntervallDauerMQ.NICHT_EINHEITLICH;
+		return mqT.getT() == ErfassungsIntervallDauerMQ.NICHT_EINHEITLICH;
 	}
 
 	/**
-	 * Erfragt, ob von den MQ, die an diesem virtuellen MQ erfasst sind, alle
-	 * ein Datum mit Nutzdaten geliefert haben, dessen Zeitstempel spaeter als
-	 * der des letzten hier errechneten Analysedatums ist.
-	 * 
+	 * Erfragt, ob von den MQ, die an diesem virtuellen MQ erfasst sind, alle ein Datum mit
+	 * Nutzdaten geliefert haben, dessen Zeitstempel spaeter als der des letzten hier errechneten
+	 * Analysedatums ist.
+	 *
 	 * @return ob alle Daten zur Berechnung eines neuen Intervalls da sind
 	 */
 	protected final boolean isAlleDatenVollstaendig() {
 		boolean alleDatenVollstaendig = true;
 
-		long letzteBerechnungsZeit = this.letztesErgebnis == null ? -1
-				: this.letztesErgebnis.getDataTime();
+		final long letzteBerechnungsZeit = letztesErgebnis == null ? -1 : letztesErgebnis
+				.getDataTime();
 
-		SortedSet<Long> letzteEingetroffeneZeitStempel = new TreeSet<Long>();
+		final SortedSet<Long> letzteEingetroffeneZeitStempel = new TreeSet<Long>();
 
-		for (SystemObject mq : this.aktuelleMQAnalysen.keySet()) {
-			ResultData result = this.aktuelleMQAnalysen.get(mq);
-			if (result == null || result.getData() == null) {
+		for (final SystemObject mq : aktuelleMQAnalysen.keySet()) {
+			final ResultData result = aktuelleMQAnalysen.get(mq);
+			if ((result == null) || (result.getData() == null)) {
 				alleDatenVollstaendig = false;
 				break;
 			} else {
 				letzteEingetroffeneZeitStempel.add(result.getDataTime());
-				if (result.getDataTime() <= letzteBerechnungsZeit
-						|| letzteEingetroffeneZeitStempel.size() > 1) {
+				if ((result.getDataTime() <= letzteBerechnungsZeit)
+						|| (letzteEingetroffeneZeitStempel.size() > 1)) {
 					alleDatenVollstaendig = false;
 					break;
 				}
@@ -260,93 +247,80 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	}
 
 	/**
-	 * Diese Methode geht davon aus, dass keine weiteren Werte zur Berechnung
-	 * des Analysedatums eintreffen werden und berechnet mit allen im Moment
-	 * gepufferten Daten das Analysedatum.
-	 * 
+	 * Diese Methode geht davon aus, dass keine weiteren Werte zur Berechnung des Analysedatums
+	 * eintreffen werden und berechnet mit allen im Moment gepufferten Daten das Analysedatum.
+	 *
 	 * @return ein Analysedatum
 	 */
 	private ResultData getErgebnisAufBasisAktuellerDaten() {
 		ResultData ergebnis = null;
 
-		Data analyseDatum = mqAnalyse.getDav().createData(
+		final Data analyseDatum = mqAnalyse.getDav().createData(
 				MqAnalyseModul.pubBeschreibung.getAttributeGroup());
 
 		/**
-		 * Ermittle Werte fuer <code>VKfz, VLkw, VPkw</code> und
-		 * <code>VgKfz</code> via Ersetzung
+		 * Ermittle Werte fuer <code>VKfz, VLkw, VPkw</code> und <code>VgKfz</code> via Ersetzung
 		 */
-		ResultData ersetzung = this.aktuelleMQAnalysen.get(this.geschwMQ);
+		final ResultData ersetzung = aktuelleMQAnalysen.get(geschwMQ);
 
-		for (String attName : new String[] { "VKfz", "VLkw", "VPkw", "VgKfz" }) {
-			if (ersetzung != null && ersetzung.getData() != null) {
+		for (final String attName : new String[] { "VKfz", "VLkw", "VPkw", "VgKfz" }) {
+			if ((ersetzung != null) && (ersetzung.getData() != null)) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-						.kopiereInhaltNachModifiziereIndex(analyseDatum);
+				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
-				Debug
-						.getLogger()
-						.error(
-								"Es konnte kein Ersetzungsdatum fuer " + this.messQuerschnitt + //$NON-NLS-1$
-										" im Attribut " + attName
-										+ " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$					
-				MesswertUnskaliert mw = new MesswertUnskaliert(attName);
-				mw
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				Debug.getLogger().error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
+						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$
+				final MesswertUnskaliert mw = new MesswertUnskaliert(attName);
+				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			}
 		}
 
 		/**
-		 * Setze Rest (<code>B, BMax, SKfz</code> und <code>VDelta</code>)
-		 * auf <code>nicht ermittelbar/fehlerhaft</code>
+		 * Setze Rest (<code>B, BMax, SKfz</code> und <code>VDelta</code>) auf
+		 * <code>nicht ermittelbar/fehlerhaft</code>
 		 */
-		for (String attName : new String[] { "B", "BMax", "SKfz", "VDelta" }) {
-			MesswertUnskaliert mw = new MesswertUnskaliert(attName);
-			mw
-					.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		for (final String attName : new String[] { "B", "BMax", "SKfz", "VDelta" }) {
+			final MesswertUnskaliert mw = new MesswertUnskaliert(attName);
+			mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 		}
 
 		/**
 		 * Ermittle Werte für <code>QKfz, QLkw</code> und <code>QPkw</code>
 		 */
-		for (String attName : new String[] { "QKfz", "QLkw", "QPkw" }) {
-			this.setBilanzDatum(analyseDatum, attName);
+		for (final String attName : new String[] { "QKfz", "QLkw", "QPkw" }) {
+			setBilanzDatum(analyseDatum, attName);
 		}
 
 		/**
-		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und
-		 * <code>KB</code>
+		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
 		 */
-		this.berechneLkwAnteil(analyseDatum);
-		this.berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
-		this.berechneDichte(analyseDatum, "Lkw"); //$NON-NLS-1$
-		this.berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
-		this.berechneBemessungsVerkehrsstaerke(analyseDatum);
-		this.berechneBemessungsdichte(analyseDatum);
+		berechneLkwAnteil(analyseDatum);
+		berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
+		berechneDichte(analyseDatum, "Lkw"); //$NON-NLS-1$
+		berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
+		berechneBemessungsVerkehrsstaerke(analyseDatum);
+		berechneBemessungsdichte(analyseDatum);
 
-		ResultData aktuellesReferenzDatum = this.getAktuellesReferenzDatum();
-		if (aktuellesReferenzDatum != null
-				&& aktuellesReferenzDatum.getData() != null) {
-			ergebnis = new ResultData(this.messQuerschnitt,
-					MqAnalyseModul.pubBeschreibung, aktuellesReferenzDatum
-							.getDataTime(), analyseDatum);
+		final ResultData aktuellesReferenzDatum = getAktuellesReferenzDatum();
+		if ((aktuellesReferenzDatum != null) && (aktuellesReferenzDatum.getData() != null)) {
+			ergebnis = new ResultData(messQuerschnitt, MqAnalyseModul.pubBeschreibung,
+					aktuellesReferenzDatum.getDataTime(), analyseDatum);
 		} else {
 			/**
 			 * Notbremse
 			 */
-			ergebnis = new ResultData(this.messQuerschnitt,
-					MqAnalyseModul.pubBeschreibung, System.currentTimeMillis(),
-					null);
+			ergebnis = new ResultData(messQuerschnitt, MqAnalyseModul.pubBeschreibung,
+					System.currentTimeMillis(), null);
 		}
 
 		return ergebnis;
 	}
 
 	/**
-	 * Publiziert eine Analysedatum (so nicht <code>null</code> uebergeben
-	 * wurde).
-	 * 
+	 * Publiziert eine Analysedatum (so nicht <code>null</code> uebergeben wurde).
+	 *
 	 * @param ergebnis
 	 *            ein neu berechntes Analysedatum (oder <code>null</code>)
 	 */
@@ -356,22 +330,20 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 			/**
 			 * nur echt neue Daten versenden
 			 */
-			if (this.letztesErgebnis == null
-					|| this.letztesErgebnis.getDataTime() < ergebnis
-							.getDataTime()) {
+			if ((letztesErgebnis == null)
+					|| (letztesErgebnis.getDataTime() < ergebnis.getDataTime())) {
 				ResultData publikationsDatum = null;
 
 				if (ergebnis.getData() == null) {
 					/**
-					 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf
-					 * "keine Daten" steht. Dies ist der Fall,<br>
-					 * 1. wenn noch nie ein Datum für diesen MQ berechnet
-					 * (versendet) wurde, oder<br>
-					 * 2. wenn das letzte für diesen MQ berechnete (versendete)
-					 * Datum keine Daten hatte.
+					 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf "keine Daten" steht.
+					 * Dies ist der Fall,<br>
+					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder<br>
+					 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten
+					 * hatte.
 					 */
-					boolean aktuellKeineDaten = this.letztesErgebnis == null
-							|| this.letztesErgebnis.getData() == null;
+					final boolean aktuellKeineDaten = (letztesErgebnis == null)
+							|| (letztesErgebnis.getData() == null);
 
 					if (!aktuellKeineDaten) {
 						publikationsDatum = ergebnis;
@@ -381,7 +353,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 				}
 
 				if (publikationsDatum != null) {
-					this.letztesErgebnis = ergebnis;
+					letztesErgebnis = ergebnis;
 					mqAnalyse.sendeDaten(publikationsDatum);
 				}
 			}
@@ -392,11 +364,11 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(ResultData[] resultate) {
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if (resultat != null) {
-					this.publiziere(this.trigger(resultat));
+					publiziere(trigger(resultat));
 				}
 			}
 		}
@@ -407,33 +379,32 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	 */
 	@Override
 	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der virtuelle MQ " + this.messQuerschnitt + //$NON-NLS-1$
+		Debug.getLogger().warning("Der virtuelle MQ " + messQuerschnitt + //$NON-NLS-1$
 				" wird nicht mehr analysiert"); //$NON-NLS-1$
 	}
 
 	/**
-	 * *************************************************************************
-	 * * Berechnungs-Methoden * *
+	 * ************************************************************************* *
+	 * Berechnungs-Methoden * *
 	 * ************************************************************************.
 	 *
 	 * @return the aktuelles referenz datum
 	 */
 
 	/**
-	 * Erfragt das aktuelle Referenzdatum. Das ist das Datum, dessen Zeitstempel
-	 * und Intervall mit dem des Analysedatums identisch ist, dass auf Basis der
-	 * aktuellen Daten produziert werden kann
-	 * 
+	 * Erfragt das aktuelle Referenzdatum. Das ist das Datum, dessen Zeitstempel und Intervall mit
+	 * dem des Analysedatums identisch ist, dass auf Basis der aktuellen Daten produziert werden
+	 * kann
+	 *
 	 * @return das aktuelle Referenzdatum, oder <code>null</code>
 	 */
 	private ResultData getAktuellesReferenzDatum() {
 		ResultData ergebnis = null;
 
-		for (ResultData aktuellesDatum : this.aktuelleMQAnalysen.values()) {
-			if (aktuellesDatum != null && aktuellesDatum.getData() != null) {
+		for (final ResultData aktuellesDatum : aktuelleMQAnalysen.values()) {
+			if ((aktuellesDatum != null) && (aktuellesDatum.getData() != null)) {
 				/**
-				 * Dieses Datum wird zur Berechnung des Ausgangsdatums
-				 * herangezogen
+				 * Dieses Datum wird zur Berechnung des Ausgangsdatums herangezogen
 				 */
 				ergebnis = aktuellesDatum;
 			}
@@ -443,21 +414,19 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 	}
 
 	/**
-	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den
-	 * Attributen <code>QKfz, QLkw</code> und <code>QPkw</code>.
-	 * 
+	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den Attributen
+	 * <code>QKfz, QLkw</code> und <code>QPkw</code>.
+	 *
 	 * @param analyseDatum
 	 *            das zu modifizierende Datum.
 	 * @param attName
-	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt
-	 *            werden soll
+	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
 	 */
-	private void setBilanzDatum(Data analyseDatum, String attName) {
-		List<QWert> qWerte = new ArrayList<QWert>();
+	private void setBilanzDatum(final Data analyseDatum, final String attName) {
+		final List<QWert> qWerte = new ArrayList<QWert>();
 
-		for (SystemObject mq : this.mqAnteilsListe.keySet()) {
-			qWerte.add(new QWert(this.aktuelleMQAnalysen.get(mq), attName,
-					this.mqAnteilsListe.get(mq)));
+		for (final SystemObject mq : mqAnteilsListe.keySet()) {
+			qWerte.add(new QWert(aktuelleMQAnalysen.get(mq), attName, mqAnteilsListe.get(mq)));
 		}
 
 		QWert qQ = null;
@@ -466,9 +435,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 		}
 
 		MesswertUnskaliert mw = new MesswertUnskaliert(attName);
-		if (qQ == null || !qQ.isExportierbarNach(analyseDatum)) {
-			mw
-					.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		if ((qQ == null) || !qQ.isExportierbarNach(analyseDatum)) {
+			mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		} else {
 			mw = qQ.getWert();
 		}

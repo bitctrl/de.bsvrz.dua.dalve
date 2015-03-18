@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -55,15 +55,14 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 // TODO: Auto-generated Javadoc
 /**
- * Ueber dieses Objekt werden die Prognosedaten fuer <b>einen</b> Fahrstreifen
- * oder einen Messquerschnitt erstellt/publiziert bzw. deren Erstellung
- * verwaltet
- * 
+ * Ueber dieses Objekt werden die Prognosedaten fuer <b>einen</b> Fahrstreifen oder einen
+ * Messquerschnitt erstellt/publiziert bzw. deren Erstellung verwaltet
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  */
-public abstract class AbstraktPrognoseObjekt implements
-		ClientReceiverInterface, ClientSenderInterface {
+public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
+		ClientSenderInterface {
 
 	/** Verbindung zum Datenverteiler. */
 	private static ClientDavInterface DAV = null;
@@ -73,7 +72,10 @@ public abstract class AbstraktPrognoseObjekt implements
 	 */
 	private AtgPrognoseParameter parameter = null;
 
-	/** Das Objekt, fuer das Prognosedaten und geglaettete Daten erstellt werden sollen (Fahrstreifen oder Messquerschnitt). */
+	/**
+	 * Das Objekt, fuer das Prognosedaten und geglaettete Daten erstellt werden sollen (Fahrstreifen
+	 * oder Messquerschnitt).
+	 */
 	private SystemObject prognoseObjekt = null;
 
 	/** Publikationsbeschreibung der geglaetteten Daten. */
@@ -92,12 +94,12 @@ public abstract class AbstraktPrognoseObjekt implements
 	private boolean sendeGeglaetteteDaten = false;
 
 	/** Fuer jedes zu berechnende Attribut (des Zieldatums) ein Prognoseobjekt. */
-	private Set<DavAttributPrognoseObjekt> attributePuffer = new HashSet<DavAttributPrognoseObjekt>();
+	private final Set<DavAttributPrognoseObjekt> attributePuffer = new HashSet<DavAttributPrognoseObjekt>();
 
 	/**
-	 * Initialisiert dieses Objekt. Nach Beendigung dieser Methode empfängt und
-	 * publiziert dieses Objekt Daten
-	 * 
+	 * Initialisiert dieses Objekt. Nach Beendigung dieser Methode empfängt und publiziert dieses
+	 * Objekt Daten
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param prognoseObjekt
@@ -105,9 +107,8 @@ public abstract class AbstraktPrognoseObjekt implements
 	 * @throws DUAInitialisierungsException
 	 *             wenn die Sendeanmeldung fehlschlaegt
 	 */
-	public final void initialisiere(final ClientDavInterface dav,
-			final SystemObject prognoseObjekt)
-			throws DUAInitialisierungsException {
+	public final void initialisiere(final ClientDavInterface dav, final SystemObject prognoseObjekt)
+					throws DUAInitialisierungsException {
 		if (DAV == null) {
 			DAV = dav;
 		}
@@ -116,59 +117,56 @@ public abstract class AbstraktPrognoseObjekt implements
 		/**
 		 * Auf Parameter anmelden
 		 */
-		this.parameter = new AtgPrognoseParameter(DAV, prognoseObjekt, this
-				.getPrognoseTyp());
+		parameter = new AtgPrognoseParameter(DAV, prognoseObjekt, getPrognoseTyp());
 
 		/**
 		 * Alle Prognoseattribute initialisieren
 		 */
-		for (PrognoseAttribut attribut : PrognoseAttribut.getInstanzen()) {
-			DavAttributPrognoseObjekt attributPrognose = new DavAttributPrognoseObjekt(
-					prognoseObjekt, attribut, this.getPrognoseTyp());
-			this.parameter.addListener(attributPrognose, attribut);
-			this.attributePuffer.add(attributPrognose);
+		for (final PrognoseAttribut attribut : PrognoseAttribut.getInstanzen()) {
+			final DavAttributPrognoseObjekt attributPrognose = new DavAttributPrognoseObjekt(
+					prognoseObjekt, attribut, getPrognoseTyp());
+			parameter.addListener(attributPrognose, attribut);
+			attributePuffer.add(attributPrognose);
 		}
 
 		/**
 		 * Sendeanmeldungen fuer Prognosewerte und geglaetttete Werte
 		 */
-		this.pubBeschreibungPrognose = new DataDescription(DatenaufbereitungLVE
-				.getPubAtgPrognose(prognoseObjekt), this.getPrognoseTyp()
-				.getAspekt());
-		this.pubBeschreibungGlatt = new DataDescription(DatenaufbereitungLVE
-				.getPubAtgGlatt(prognoseObjekt), this.getPrognoseTyp()
-				.getAspekt());
+		pubBeschreibungPrognose = new DataDescription(
+				DatenaufbereitungLVE.getPubAtgPrognose(prognoseObjekt), getPrognoseTyp()
+						.getAspekt());
+		pubBeschreibungGlatt = new DataDescription(
+				DatenaufbereitungLVE.getPubAtgGlatt(prognoseObjekt), getPrognoseTyp().getAspekt());
 		try {
-			DAV.subscribeSender(this, prognoseObjekt,
-					this.pubBeschreibungPrognose, SenderRole.source());
-			DAV.subscribeSender(this, prognoseObjekt,
-					this.pubBeschreibungGlatt, SenderRole.source());
-		} catch (OneSubscriptionPerSendData e) {
+			DAV.subscribeSender(this, prognoseObjekt, pubBeschreibungPrognose, SenderRole.source());
+			DAV.subscribeSender(this, prognoseObjekt, pubBeschreibungGlatt, SenderRole.source());
+		} catch (final OneSubscriptionPerSendData e) {
 			throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 		}
 
 		/**
 		 * Impliziter Start des Objektes: Anmeldung auf Daten
 		 */
-		DAV.subscribeReceiver(this, prognoseObjekt, new DataDescription(
-				DatenaufbereitungLVE.getAnalyseAtg(prognoseObjekt), DAV
-						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		DAV.subscribeReceiver(this, prognoseObjekt,
+				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(prognoseObjekt), DAV
+				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions
+						.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if (resultat != null) {
 					boolean datenSenden = true;
 					Data glaettungNutzdaten = null;
 					Data prognoseNutzdaten = null;
 
 					try {
-						for (DavAttributPrognoseObjekt attribut : this.attributePuffer) {
+						for (final DavAttributPrognoseObjekt attribut : attributePuffer) {
 							attribut.aktualisiere(resultat);
 						}
 
@@ -178,37 +176,27 @@ public abstract class AbstraktPrognoseObjekt implements
 							/**
 							 * Baue geglaetteten Ergebniswert zusammen:
 							 */
-							glaettungNutzdaten = DAV
-									.createData(DatenaufbereitungLVE
-											.getPubAtgGlatt(prognoseObjekt));
-							for (DavAttributPrognoseObjekt attribut : this.attributePuffer) {
-								attribut
-										.exportiereDatenGlatt(glaettungNutzdaten);
+							glaettungNutzdaten = DAV.createData(DatenaufbereitungLVE
+									.getPubAtgGlatt(prognoseObjekt));
+							for (final DavAttributPrognoseObjekt attribut : attributePuffer) {
+								attribut.exportiereDatenGlatt(glaettungNutzdaten);
 							}
-							this.fuegeKBPHinzu(glaettungNutzdaten, false,
-									this.attributePuffer);
+							fuegeKBPHinzu(glaettungNutzdaten, false, attributePuffer);
 
 							/**
 							 * Baue Prognosewert zusammen:
 							 */
-							prognoseNutzdaten = DAV
-									.createData(DatenaufbereitungLVE
-											.getPubAtgPrognose(this.prognoseObjekt));
-							for (DavAttributPrognoseObjekt attribut : this.attributePuffer) {
-								attribut
-										.exportiereDatenPrognose(prognoseNutzdaten);
+							prognoseNutzdaten = DAV.createData(DatenaufbereitungLVE
+									.getPubAtgPrognose(prognoseObjekt));
+							for (final DavAttributPrognoseObjekt attribut : attributePuffer) {
+								attribut.exportiereDatenPrognose(prognoseNutzdaten);
 							}
-							this.fuegeKBPHinzu(prognoseNutzdaten, true,
-									this.attributePuffer);
+							fuegeKBPHinzu(prognoseNutzdaten, true, attributePuffer);
 
-							if (this.prognoseObjekt
-									.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
-								long T = resultat.getData()
-										.getTimeValue("T").getMillis(); //$NON-NLS-1$
-								glaettungNutzdaten
-										.getTimeValue("T").setMillis(T); //$NON-NLS-1$
-								prognoseNutzdaten
-										.getTimeValue("T").setMillis(T); //$NON-NLS-1$
+							if (prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
+								final long T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
+								glaettungNutzdaten.getTimeValue("T").setMillis(T); //$NON-NLS-1$
+								prognoseNutzdaten.getTimeValue("T").setMillis(T); //$NON-NLS-1$
 							}
 
 						} else {
@@ -217,12 +205,9 @@ public abstract class AbstraktPrognoseObjekt implements
 							}
 							aktuellKeineDaten = true;
 						}
-					} catch (PrognoseParameterException e) {
-						Debug
-								.getLogger()
-								.warning(
-										"Prognosedaten koennen fuer " + this.prognoseObjekt //$NON-NLS-1$ 
-												+ " nicht berechnet werden:\n" + e.getMessage()); //$NON-NLS-1$
+					} catch (final PrognoseParameterException e) {
+						Debug.getLogger().warning("Prognosedaten koennen fuer " + prognoseObjekt //$NON-NLS-1$ 
+								+ " nicht berechnet werden:\n" + e.getMessage()); //$NON-NLS-1$
 						if (aktuellKeineDaten) {
 							datenSenden = false;
 						}
@@ -230,59 +215,42 @@ public abstract class AbstraktPrognoseObjekt implements
 					}
 
 					if (datenSenden) {
-						ResultData glaettungsDatum = new ResultData(
-								this.prognoseObjekt, this.pubBeschreibungGlatt,
-								resultat.getDataTime(), glaettungNutzdaten);
-						ResultData prognoseDatum = new ResultData(
-								this.prognoseObjekt,
-								this.pubBeschreibungPrognose, resultat
-										.getDataTime(), prognoseNutzdaten);
+						final ResultData glaettungsDatum = new ResultData(prognoseObjekt,
+								pubBeschreibungGlatt, resultat.getDataTime(), glaettungNutzdaten);
+						final ResultData prognoseDatum = new ResultData(prognoseObjekt,
+								pubBeschreibungPrognose, resultat.getDataTime(), prognoseNutzdaten);
 
 						try {
-							if (this.sendeGeglaetteteDaten) {
+							if (sendeGeglaetteteDaten) {
 								DAV.sendData(glaettungsDatum);
 							} else {
-								Debug
-										.getLogger()
-										.fine(
-												"Geglaettete Daten fuer " + this.prognoseObjekt + //$NON-NLS-1$
-														" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
+								Debug.getLogger().fine("Geglaettete Daten fuer " + prognoseObjekt + //$NON-NLS-1$
+										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
-						} catch (DataNotSubscribedException e) {
-							Debug
-									.getLogger()
-									.error(
-											"Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+						} catch (final DataNotSubscribedException e) {
+							Debug.getLogger()
+							.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
-						} catch (SendSubscriptionNotConfirmed e) {
-							Debug
-									.getLogger()
-									.error(
-											"Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+						} catch (final SendSubscriptionNotConfirmed e) {
+							Debug.getLogger()
+							.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 
 						try {
-							if (this.sendePrognoseDaten) {
+							if (sendePrognoseDaten) {
 								DAV.sendData(prognoseDatum);
 							} else {
-								Debug
-										.getLogger()
-										.fine(
-												"Prognosedaten fuer " + this.prognoseObjekt + //$NON-NLS-1$
-														" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$								
+								Debug.getLogger().fine("Prognosedaten fuer " + prognoseObjekt + //$NON-NLS-1$
+										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
-						} catch (DataNotSubscribedException e) {
-							Debug
-									.getLogger()
-									.error(
-											"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
+						} catch (final DataNotSubscribedException e) {
+							Debug.getLogger()
+							.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
-						} catch (SendSubscriptionNotConfirmed e) {
-							Debug
-									.getLogger()
-									.error(
-											"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
+						} catch (final SendSubscriptionNotConfirmed e) {
+							Debug.getLogger()
+							.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 					}
@@ -292,9 +260,9 @@ public abstract class AbstraktPrognoseObjekt implements
 	}
 
 	/**
-	 * Fuegt einem errechneten Prognosedatum bzw. einem geglaetteten Datum den
-	 * Wert <code>k(K)BP</code> bzw. <code>k(K)BG</code> hinzu
-	 * 
+	 * Fuegt einem errechneten Prognosedatum bzw. einem geglaetteten Datum den Wert
+	 * <code>k(K)BP</code> bzw. <code>k(K)BG</code> hinzu
+	 *
 	 * @param zielDatum
 	 *            ein veraenderbares Zieldatum der Attributgruppe
 	 * @param prognose
@@ -302,7 +270,7 @@ public abstract class AbstraktPrognoseObjekt implements
 	 * @param attributPuffer
 	 *            ungerundete Prognosewerte
 	 */
-	private final void fuegeKBPHinzu(Data zielDatum, final boolean prognose,
+	private final void fuegeKBPHinzu(final Data zielDatum, final boolean prognose,
 			final Set<DavAttributPrognoseObjekt> attributPuffer) {
 		DaMesswertUnskaliert qb = null;
 		double qBOrig = 0;
@@ -312,7 +280,7 @@ public abstract class AbstraktPrognoseObjekt implements
 		GWert gueteVKfz = null;
 		GWert guetekb = null;
 
-		for (DavAttributPrognoseObjekt attribut : attributPuffer) {
+		for (final DavAttributPrognoseObjekt attribut : attributPuffer) {
 			if (prognose) {
 				if (attribut.getAttribut().equals(PrognoseAttribut.QB)) {
 					// qBOrig = attribut.getZPOriginal();
@@ -334,53 +302,43 @@ public abstract class AbstraktPrognoseObjekt implements
 		}
 
 		if (prognose) {
-			qb = new DaMesswertUnskaliert(PrognoseAttribut.QB
-					.getAttributNamePrognose(this.prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)),
-					zielDatum);
-			vKfz = new DaMesswertUnskaliert(PrognoseAttribut.V_KFZ
-					.getAttributNamePrognose(this.prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)),
-					zielDatum);
-			kb = new MesswertUnskaliert(PrognoseAttribut.KB
-					.getAttributNamePrognose(this.prognoseObjekt
+			qb = new DaMesswertUnskaliert(
+					PrognoseAttribut.QB.getAttributNamePrognose(prognoseObjekt
+							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			vKfz = new DaMesswertUnskaliert(
+					PrognoseAttribut.V_KFZ.getAttributNamePrognose(prognoseObjekt
+							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			kb = new MesswertUnskaliert(PrognoseAttribut.KB.getAttributNamePrognose(prognoseObjekt
+					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			guetekb = new GWert(zielDatum,
+					PrognoseAttribut.QB.getAttributNamePrognose(prognoseObjekt
 							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			guetekb = new GWert(zielDatum, PrognoseAttribut.QB
-					.getAttributNamePrognose(this.prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			gueteVKfz = new GWert(zielDatum, PrognoseAttribut.V_KFZ
-					.getAttributNamePrognose(this.prognoseObjekt
+			gueteVKfz = new GWert(zielDatum,
+					PrognoseAttribut.V_KFZ.getAttributNamePrognose(prognoseObjekt
 							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
 		} else {
-			qb = new DaMesswertUnskaliert(PrognoseAttribut.QB
-					.getAttributNameGlatt(this.prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)),
-					zielDatum);
-			vKfz = new DaMesswertUnskaliert(PrognoseAttribut.V_KFZ
-					.getAttributNameGlatt(this.prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)),
-					zielDatum);
-			kb = new MesswertUnskaliert(PrognoseAttribut.KB
-					.getAttributNameGlatt(this.prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			guetekb = new GWert(zielDatum, PrognoseAttribut.QB
-					.getAttributNameGlatt(this.prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			gueteVKfz = new GWert(zielDatum, PrognoseAttribut.V_KFZ
-					.getAttributNameGlatt(this.prognoseObjekt
+			qb = new DaMesswertUnskaliert(PrognoseAttribut.QB.getAttributNameGlatt(prognoseObjekt
+					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			vKfz = new DaMesswertUnskaliert(
+					PrognoseAttribut.V_KFZ.getAttributNameGlatt(prognoseObjekt
+							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			kb = new MesswertUnskaliert(PrognoseAttribut.KB.getAttributNameGlatt(prognoseObjekt
+					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			guetekb = new GWert(zielDatum, PrognoseAttribut.QB.getAttributNameGlatt(prognoseObjekt
+					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			gueteVKfz = new GWert(zielDatum,
+					PrognoseAttribut.V_KFZ.getAttributNameGlatt(prognoseObjekt
 							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
 		}
 
 		kb.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		if (vKfz.getWertUnskaliert() > 0) {
 			if (qb.getWertUnskaliert() >= 0) {
-				kb.setWertUnskaliert(Math.round((double) qBOrig
-						/ (double) vKfzOrig));
-				if (DUAUtensilien.isWertInWerteBereich(zielDatum.getItem(
-						kb.getName()).getItem("Wert"), kb.getWertUnskaliert())) { //$NON-NLS-1$
+				kb.setWertUnskaliert(Math.round(qBOrig / vKfzOrig));
+				if (DUAUtensilien.isWertInWerteBereich(
+						zielDatum.getItem(kb.getName()).getItem("Wert"), kb.getWertUnskaliert())) { //$NON-NLS-1$
 					kb.setWertUnskaliert(kb.getWertUnskaliert());
-					kb.setInterpoliert(qb.isPlausibilisiert()
-							|| vKfz.isPlausibilisiert());
+					kb.setInterpoliert(qb.isPlausibilisiert() || vKfz.isPlausibilisiert());
 				}
 			}
 		}
@@ -388,9 +346,9 @@ public abstract class AbstraktPrognoseObjekt implements
 		GWert guete = GWert.getNichtErmittelbareGuete(gueteVKfz.getVerfahren());
 		try {
 			guete = GueteVerfahren.quotient(guetekb, gueteVKfz);
-		} catch (GueteException e) {
+		} catch (final GueteException e) {
 			Debug.getLogger().error("Guete von " + qb.getName() + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-					this.prognoseObjekt + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+					prognoseObjekt + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 
@@ -402,22 +360,23 @@ public abstract class AbstraktPrognoseObjekt implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
-		if (dataDescription.getAttributeGroup().equals(
-				this.pubBeschreibungGlatt.getAttributeGroup())) {
-			this.sendeGeglaetteteDaten = state == ClientSenderInterface.START_SENDING;
+	@Override
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
+			final byte state) {
+		if (dataDescription.getAttributeGroup().equals(pubBeschreibungGlatt.getAttributeGroup())) {
+			sendeGeglaetteteDaten = state == ClientSenderInterface.START_SENDING;
 		} else if (dataDescription.getAttributeGroup().equals(
-				this.pubBeschreibungPrognose.getAttributeGroup())) {
-			this.sendePrognoseDaten = state == ClientSenderInterface.START_SENDING;
+				pubBeschreibungPrognose.getAttributeGroup())) {
+			sendePrognoseDaten = state == ClientSenderInterface.START_SENDING;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return true;
 	}
 
@@ -428,9 +387,9 @@ public abstract class AbstraktPrognoseObjekt implements
 	 */
 
 	/**
-	 * Erfragt den Typ dieses Prognoseobjektes (über diesen ist definiert,
-	 * welche Parameter-Attributgruppen zur Anwendung kommen)
-	 * 
+	 * Erfragt den Typ dieses Prognoseobjektes (über diesen ist definiert, welche
+	 * Parameter-Attributgruppen zur Anwendung kommen)
+	 *
 	 * @return der Typ dieses Prognoseobjektes
 	 */
 	protected abstract PrognoseTyp getPrognoseTyp();

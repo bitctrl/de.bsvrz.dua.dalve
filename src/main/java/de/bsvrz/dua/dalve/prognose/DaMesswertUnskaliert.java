@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -30,36 +30,35 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
 // TODO: Auto-generated Javadoc
 /**
- * Funktioniert wie die Superklasse (plus einige nur für Datenaufbereitung 
- * notwendige Eigenschaften).
+ * Funktioniert wie die Superklasse (plus einige nur für Datenaufbereitung notwendige
+ * Eigenschaften).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class DaMesswertUnskaliert
-extends MesswertUnskaliert{
+public class DaMesswertUnskaliert extends MesswertUnskaliert {
 
-	
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param attName der Attributname dieses Messwertes
-	 * @param datum das Datum aus dem der Messwert ausgelesen werden soll
+	 * @param attName
+	 *            der Attributname dieses Messwertes
+	 * @param datum
+	 *            das Datum aus dem der Messwert ausgelesen werden soll
 	 */
-	public DaMesswertUnskaliert(final String attName, final Data datum){
+	public DaMesswertUnskaliert(final String attName, final Data datum) {
 		super(attName, datum);
 	}
-	
-	
+
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param attName der Attributname dieses Messwertes
+	 * @param attName
+	 *            der Attributname dieses Messwertes
 	 */
-	public DaMesswertUnskaliert(final String attName){
+	public DaMesswertUnskaliert(final String attName) {
 		super(attName);
 	}
-	
-		
+
 	/**
 	 * Erfragt, ob bei diesem Wert<br>
 	 * Interpoliert UND/ODER<br>
@@ -67,14 +66,11 @@ extends MesswertUnskaliert{
 	 * WertMin UND/ODER<br>
 	 * WertMaxLogisch UND/ODER<br>
 	 * WertMinLogisch gesetzt ist
-	 *  
+	 * 
 	 * @return ob dieser Wert schon plausibilisiert wurde
 	 */
-	public final boolean isPlausibilisiert(){
-		return this.isInterpoliert() ||
-			   this.isFormalMax() || 
-			   this.isFormalMin() ||
-			   this.isLogischMax() ||
-			   this.isLogischMin();
+	public final boolean isPlausibilisiert() {
+		return isInterpoliert() || isFormalMax() || isFormalMin() || isLogischMax()
+				|| isLogischMin();
 	}
 }

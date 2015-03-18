@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -143,15 +143,15 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 					final int situation = Integer.parseInt(ZEILE[17 + offset]);
 
 					DUAUtensilien
-							.getAttributDatum("T", datensatz).asTimeValue().setMillis(INTERVALL); //$NON-NLS-1$
+					.getAttributDatum("T", datensatz).asTimeValue().setMillis(INTERVALL); //$NON-NLS-1$
 					DUAUtensilien
-							.getAttributDatum("Situation", datensatz).asUnscaledValue().set(situation); //$NON-NLS-1$
+					.getAttributDatum("Situation", datensatz).asUnscaledValue().set(situation); //$NON-NLS-1$
 					DUAUtensilien
-							.getAttributDatum("Horizont", datensatz).asTimeValue().setMillis(0); //$NON-NLS-1$
+					.getAttributDatum("Horizont", datensatz).asTimeValue().setMillis(0); //$NON-NLS-1$
 					DUAUtensilien
-							.getAttributDatum("Güte.Index", datensatz).asUnscaledValue().set(1); //$NON-NLS-1$
+					.getAttributDatum("Güte.Index", datensatz).asUnscaledValue().set(1); //$NON-NLS-1$
 					DUAUtensilien
-							.getAttributDatum("Güte.Verfahren", datensatz).asUnscaledValue().set(0); //$NON-NLS-1$
+					.getAttributDatum("Güte.Verfahren", datensatz).asUnscaledValue().set(0); //$NON-NLS-1$
 
 				} catch (final ArrayIndexOutOfBoundsException ex) {
 					datensatz = null;

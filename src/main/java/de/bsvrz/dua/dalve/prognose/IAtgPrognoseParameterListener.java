@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -36,8 +36,9 @@ public interface IAtgPrognoseParameterListener {
 	/**
 	 * Aktualisiert die Parameter .
 	 *
-	 * @param parameterSatzFuerAttribut parameterSatz
+	 * @param parameterSatzFuerAttribut
+	 *            parameterSatz
 	 */
 	public void aktualisiereParameter(final PrognoseAttributParameter parameterSatzFuerAttribut);
-	
+
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -30,12 +30,12 @@ import java.util.LinkedList;
 
 // TODO: Auto-generated Javadoc
 /**
- * Ringpuffer fuer aktuelle und zurueckliegende Werte des Stoerfallindikators
- * <code>VKDiffKfz</code>.<br>
+ * Ringpuffer fuer aktuelle und zurueckliegende Werte des Stoerfallindikators <code>VKDiffKfz</code>
+ * .<br>
  * <b>Achtung:</b> nicht synchronisierter Puffer!
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 class RingPuffer {
@@ -48,21 +48,21 @@ class RingPuffer {
 	/**
 	 * Ringpuffer mit den zeitlich aktuellsten Daten.
 	 */
-	private LinkedList<VKDiffWert> ringPuffer = new LinkedList<VKDiffWert>();
+	private final LinkedList<VKDiffWert> ringPuffer = new LinkedList<VKDiffWert>();
 
 	/**
-	 * Aktualisiert diesen Puffer mit neuen Daten. Alte Daten werden dabei ggf. 
-	 * aus dem Puffer geloescht
-	 * 
+	 * Aktualisiert diesen Puffer mit neuen Daten. Alte Daten werden dabei ggf. aus dem Puffer
+	 * geloescht
+	 *
 	 * @param wert
 	 *            ein aktuelles Datum.
 	 */
-	void put(VKDiffWert wert) {
-		this.ringPuffer.addFirst(wert);
-		final long letzteErlaubteDatenzeit = wert.getZeitStempel() - this.zeitSpanne;
-		for (int i = this.ringPuffer.size() - 2; i > -1; i--) {
-			if (this.ringPuffer.get(i).getZeitStempel() < letzteErlaubteDatenzeit) {
-				this.ringPuffer.removeLast();
+	void put(final VKDiffWert wert) {
+		ringPuffer.addFirst(wert);
+		final long letzteErlaubteDatenzeit = wert.getZeitStempel() - zeitSpanne;
+		for (int i = ringPuffer.size() - 2; i > -1; i--) {
+			if (ringPuffer.get(i).getZeitStempel() < letzteErlaubteDatenzeit) {
+				ringPuffer.removeLast();
 			} else {
 				break;
 			}
@@ -71,38 +71,39 @@ class RingPuffer {
 
 	/**
 	 * Setzt die Zeitspanne, die im Puffer verarbeitet werden soll.
-	 * 
-	 * @param zeitSpanne die Zeitspanne, die im Puffer verarbeitet werden soll.
+	 *
+	 * @param zeitSpanne
+	 *            die Zeitspanne, die im Puffer verarbeitet werden soll.
 	 */
-	void setGroesse(long zeitSpanne) {
+	void setGroesse(final long zeitSpanne) {
 		this.zeitSpanne = zeitSpanne;
 	}
 
 	/**
 	 * Erfragt das im Puffer stehende Datum fuer den uebergebenen Zeitstempel.
-	 * 
+	 *
 	 * @param zeitStempel
 	 *            ein Zeitstempel
 	 * @return das im Puffer stehende Datum fuer den uebergebenen Zeitstempel.
 	 */
-	VKDiffWert getDatumFuerZeitpunkt(long zeitStempel) {
+	VKDiffWert getDatumFuerZeitpunkt(final long zeitStempel) {
 		VKDiffWert wert = VKDiffWert.getLeer(zeitStempel);
 
-		if(!this.ringPuffer.isEmpty()) {
-			final VKDiffWert letzter = this.ringPuffer.getLast();
+		if (!ringPuffer.isEmpty()) {
+			final VKDiffWert letzter = ringPuffer.getLast();
 			final long diffZumLetzten = Math.abs(zeitStempel - letzter.getZeitStempel());
-			
-			if(this.ringPuffer.size() > 1){
-				final VKDiffWert vorLetzer = this.ringPuffer.get(this.ringPuffer.size() - 2);
+
+			if (ringPuffer.size() > 1) {
+				final VKDiffWert vorLetzer = ringPuffer.get(ringPuffer.size() - 2);
 				final long diffZumVorLetzten = Math.abs(zeitStempel - vorLetzer.getZeitStempel());
-				
-				if(diffZumLetzten > diffZumVorLetzten && diffZumVorLetzten <= this.zeitSpanne) {
+
+				if ((diffZumLetzten > diffZumVorLetzten) && (diffZumVorLetzten <= zeitSpanne)) {
 					wert = vorLetzer;
-				}else if(diffZumLetzten <= diffZumVorLetzten && diffZumLetzten <= this.zeitSpanne){
+				} else if ((diffZumLetzten <= diffZumVorLetzten) && (diffZumLetzten <= zeitSpanne)) {
 					wert = letzter;
 				}
-			}else{
-				if(diffZumLetzten <= this.zeitSpanne) {
+			} else {
+				if (diffZumLetzten <= zeitSpanne) {
 					wert = letzter;
 				}
 			}

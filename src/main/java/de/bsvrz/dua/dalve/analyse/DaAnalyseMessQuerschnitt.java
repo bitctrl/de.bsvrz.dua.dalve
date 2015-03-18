@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -152,7 +152,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), mqAnalyse.getDav()
 						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -299,7 +299,9 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		return ergebnis;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.bsvrz.dav.daf.main.ClientReceiverInterface#update(de.bsvrz.dav.daf.main.ResultData[])
 	 */
 	@Override
@@ -335,12 +337,14 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	}
 
 	/**
-	 * *************************************************************************
-	 * * Berechnungs-Methoden * *
+	 * ************************************************************************* *
+	 * Berechnungs-Methoden * *
 	 * ************************************************************************.
 	 *
-	 * @param analyseDatum the analyse datum
-	 * @param attName the att name
+	 * @param analyseDatum
+	 *            the analyse datum
+	 * @param attName
+	 *            the att name
 	 */
 
 	/**
@@ -505,7 +509,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							} catch (final GueteException e) {
 								Debug.getLogger().error(
 										"Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$
-										" nicht berechenbar in " + analyseDatum, e);
+												" nicht berechenbar in " + analyseDatum, e);
 								e.printStackTrace();
 							}
 						}
@@ -681,7 +685,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						if (qKfz.isFehlerhaftBzwImplausibel() || vKfz.isFehlerhaftBzwImplausibel()
 								|| sKfz.isFehlerhaftBzwImplausibel()) {
 							SKfzAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						} else if ((qKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 								|| (vKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
@@ -719,7 +723,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							} catch (final GueteException e) {
 								gueteBerechenbar = false;
 								Debug.getLogger()
-								.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+										.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 						}
@@ -748,17 +752,17 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 												.getCode());
 									} catch (final GueteException e) {
 										Debug.getLogger()
-										.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+												.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 										e.printStackTrace();
 									}
 								}
 							} else {
 								SKfzAnalyse
-								.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+										.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							}
 						} else {
 							SKfzAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 						}
 					}
 				}
@@ -1142,7 +1146,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							w = parameter.getWichtung()[i];
 						} else {
 							VDeltaAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						}
 						final ResultData fsResultI = aktuelleFSAnalysen.get(mq.getFahrStreifen()
@@ -1157,7 +1161,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						if (vKfzI.isFehlerhaftBzwImplausibel()
 								|| vKfzIPlus1.isFehlerhaftBzwImplausibel()) {
 							VDeltaAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						} else if ((vKfzI.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 								|| (vKfzIPlus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
@@ -1187,7 +1191,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						} else if (!DUAUtensilien.isWertInWerteBereich(
 								analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)) { //$NON-NLS-1$//$NON-NLS-2$
 							VDeltaAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 						} else {
 							VDeltaAnalyse.setWertUnskaliert(VDeltaWert);
 							VDeltaAnalyse.setInterpoliert(interpoliert);

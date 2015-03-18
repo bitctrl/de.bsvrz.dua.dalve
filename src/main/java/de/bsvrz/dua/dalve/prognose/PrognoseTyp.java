@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -39,13 +39,13 @@ import de.bsvrz.dav.daf.main.config.AttributeGroup;
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public class PrognoseTyp {
-	
+
 	/** Prognosewerte folgen den Messwerten sehr schnell, geringe Glättung. */
 	public static PrognoseTyp FLINK = null;
-	
+
 	/** Prognosewerte folgen den Messwerten normal, normale Glättung. */
 	public static PrognoseTyp NORMAL = null;
-	
+
 	/** Prognosewerte folgen den Messwerten sehr langsam, starke Glättung. */
 	public static PrognoseTyp TRAEGE = null;
 
@@ -54,71 +54,69 @@ public class PrognoseTyp {
 
 	/** Parameterattributgruppe fuer Fahrstreifen. */
 	private AttributeGroup atgFahrStreifen = null;
-	
+
 	/** Parameterattributgruppe fuer Messquerschnitte. */
 	private AttributeGroup atgMessQuerschnitt = null;
-	
-	
+
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param name <code>Flink</code>, <code>Normal</code> oder <code>Träge</code>
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param name
+	 *            <code>Flink</code>, <code>Normal</code> oder <code>Träge</code>
 	 */
-	private PrognoseTyp(final ClientDavInterface dav,
-						final String name){
-		this.aspekt = dav.getDataModel().getAspect("asp.prognose" + name); //$NON-NLS-1$
-		this.atgFahrStreifen = dav.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Fs");  //$NON-NLS-1$//$NON-NLS-2$
-		this.atgMessQuerschnitt = dav.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Mq");  //$NON-NLS-1$//$NON-NLS-2$
+	private PrognoseTyp(final ClientDavInterface dav, final String name) {
+		aspekt = dav.getDataModel().getAspect("asp.prognose" + name); //$NON-NLS-1$
+		atgFahrStreifen = dav.getDataModel().getAttributeGroup(
+				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Fs"); //$NON-NLS-1$//$NON-NLS-2$
+		atgMessQuerschnitt = dav.getDataModel().getAttributeGroup(
+				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognose" + name + "Mq"); //$NON-NLS-1$//$NON-NLS-2$
 	}
-	
-	
+
 	/**
 	 * Initialisiert alle statischen Objekte dieses Typs.
 	 *
-	 * @param dav Verbindung zum Datenverteiler
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
 	 */
-	public static final void initialisiere(final ClientDavInterface dav){
-		if(FLINK == null){
+	public static final void initialisiere(final ClientDavInterface dav) {
+		if (FLINK == null) {
 			FLINK = new PrognoseTyp(dav, "Flink"); //$NON-NLS-1$
 			NORMAL = new PrognoseTyp(dav, "Normal"); //$NON-NLS-1$
 			TRAEGE = new PrognoseTyp(dav, "Träge"); //$NON-NLS-1$
 		}
 	}
 
-	
 	/**
 	 * Erfragt den Aspekt, unter dem Daten dieses Typs publiziert werden sollen.
 	 *
 	 * @return der Aspekt, unter dem Daten dieses Typs publiziert werden sollen
 	 */
-	public final Aspect getAspekt(){
-		return this.aspekt;
-	}
-	
-	
-	/**
-	 * Erfragt die Parameterattributgruppe dieses Prognosetyps für einen
-	 * Fahrstreifen oder einen Messquerschnitt.
-	 *
-	 * @param fuerFahrStreifen ob die Parameterattributgruppe für einen Fahrstreifen
-	 * <code>true</code> oder einen Messquerschnitt <code>false</code> benötigt wird 
-	 * @return die Parameterattributgruppe dieses Prognosetyps für einen
-	 * Fahrstreifen oder einen Messquerschnitt
-	 */
-	public final AttributeGroup getParameterAtg(final boolean fuerFahrStreifen){
-		return fuerFahrStreifen?this.atgFahrStreifen:this.atgMessQuerschnitt;
+	public final Aspect getAspekt() {
+		return aspekt;
 	}
 
+	/**
+	 * Erfragt die Parameterattributgruppe dieses Prognosetyps für einen Fahrstreifen oder einen
+	 * Messquerschnitt.
+	 *
+	 * @param fuerFahrStreifen
+	 *            ob die Parameterattributgruppe für einen Fahrstreifen <code>true</code> oder einen
+	 *            Messquerschnitt <code>false</code> benötigt wird
+	 * @return die Parameterattributgruppe dieses Prognosetyps für einen Fahrstreifen oder einen
+	 *         Messquerschnitt
+	 */
+	public final AttributeGroup getParameterAtg(final boolean fuerFahrStreifen) {
+		return fuerFahrStreifen ? atgFahrStreifen : atgMessQuerschnitt;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return this.aspekt.getPid().substring("asp.prognose".length());
+		return aspekt.getPid().substring("asp.prognose".length());
 	}
-	
+
 }

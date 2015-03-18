@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -44,13 +44,13 @@ public class DatenaufbereitungLVETest {
 
 	/** Verbindungsdaten. */
 	public static final String[] CON_DATA = new String[] { "-datenverteiler=localhost:8083", //$NON-NLS-1$
-			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=passwd" }; //$NON-NLS-1$
+		"-benutzer=Tester", //$NON-NLS-1$
+	"-authentifizierung=passwd" }; //$NON-NLS-1$
 
 	/** Verbindungsdaten. */
 	public static final String[] CON_DATA_APP = new String[] { CON_DATA[0], CON_DATA[1],
-			CON_DATA[2], "-debugLevelStdErrText=ERROR", "-debugLevelFileText=OFF",
-			"-KonfigurationsBereichsPid=kb.duaTestObjekte2" };
+		CON_DATA[2], "-debugLevelStdErrText=ERROR", "-debugLevelFileText=OFF",
+	"-KonfigurationsBereichsPid=kb.duaTestObjekte2" };
 
 	/** Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden. */
 	// protected static final String TEST_DATEN_VERZ =
@@ -103,9 +103,9 @@ public class DatenaufbereitungLVETest {
 
 	protected static final String TEST_DATEN_VERZ_VIRTUELL = "../testDaten/mqVirtuell/"; //$NON-NLS-1$
 
-	/** Logger und Loggerargument  Pfadangabe mit Argument: -debugFilePath=[Pfad]. */
+	/** Logger und Loggerargument Pfadangabe mit Argument: -debugFilePath=[Pfad]. */
 	private final String[] argumente = new String[] { "-debugLevelFileText=ALL" }; //$NON-NLS-1$
-	
+
 	/** The al logger. */
 	private final ArgumentList alLogger = new ArgumentList(argumente);
 
@@ -115,7 +115,8 @@ public class DatenaufbereitungLVETest {
 	/**
 	 * Vorbereitungen.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -125,7 +126,8 @@ public class DatenaufbereitungLVETest {
 	/**
 	 * Test Analysewerte.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void testAnalyse() throws Exception {
@@ -137,7 +139,8 @@ public class DatenaufbereitungLVETest {
 	/**
 	 * Test Prognosewerte.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void testPrognose() throws Exception {

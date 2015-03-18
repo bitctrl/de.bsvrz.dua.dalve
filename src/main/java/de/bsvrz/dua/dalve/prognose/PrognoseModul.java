@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -33,10 +33,10 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 
 // TODO: Auto-generated Javadoc
 /**
- * Modul, das die Berechnung sämtlicher Werte startet, 
- * die unter den Attributgruppen <code>atg.verkehrsDatenKurzZeitTrendExtraPolationFs</code>
- * und <code>atg.verkehrsDatenKurzZeitGeglättetFs</code> veröffentlicht werden
- * 
+ * Modul, das die Berechnung sämtlicher Werte startet, die unter den Attributgruppen
+ * <code>atg.verkehrsDatenKurzZeitTrendExtraPolationFs</code> und
+ * <code>atg.verkehrsDatenKurzZeitGeglättetFs</code> veröffentlicht werden
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
@@ -46,19 +46,21 @@ public class PrognoseModul {
 	 * Initialisiert alle Klassen die zur Berechnung der geglaetteten und der Prognosewerte
 	 * notwendig sind.
 	 *
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekte Menge der Fahrstreifen und Messquerschnitte, die betrachtet werden sollen
-	 * @throws DUAInitialisierungsException wird weitergereicht
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekte
+	 *            Menge der Fahrstreifen und Messquerschnitte, die betrachtet werden sollen
+	 * @throws DUAInitialisierungsException
+	 *             wird weitergereicht
 	 */
 	public final void initialisiere(final ClientDavInterface dav,
-			final Collection<SystemObject> objekte)
-			throws DUAInitialisierungsException {
+			final Collection<SystemObject> objekte) throws DUAInitialisierungsException {
 		PrognoseTyp.initialisiere(dav);
 
 		/**
-		 * (I) SFI nach Verfahren MARZ 
+		 * (I) SFI nach Verfahren MARZ
 		 */
-		for (SystemObject obj : objekte) {
+		for (final SystemObject obj : objekte) {
 			new PrognoseObjektFlink().initialisiere(dav, obj);
 			new PrognoseObjektNormal().initialisiere(dav, obj);
 			new PrognoseObjektTraege().initialisiere(dav, obj);

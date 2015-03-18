@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -47,11 +47,11 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 // TODO: Auto-generated Javadoc
 /**
- * Stellt die virtuelle Erfassungsintervalldauer <code>T</code> eines MQ auf
- * Basis seiner Fahrstreifen zur Verfuegung.
- * 
+ * Stellt die virtuelle Erfassungsintervalldauer <code>T</code> eines MQ auf Basis seiner
+ * Fahrstreifen zur Verfuegung.
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
@@ -60,7 +60,7 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 	 * Platzhalter fuer noch nicht ermittelbare Erfassungsintervalldauer.
 	 */
 	public static final long NOCH_NICHT_ERMITTELBAR = -1;
-	
+
 	/**
 	 * Platzhalter fuer nicht einheitliche Erfassungsintervalldauern.
 	 */
@@ -83,7 +83,7 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler.
 	 * @param mq
@@ -91,52 +91,47 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 	 * @throws InvalidArgumentException
 	 *             wenn die Konfiguration des MQ nicht ausgelesen werden konnte.
 	 */
-	private ErfassungsIntervallDauerMQ(ClientDavInterface dav, SystemObject mq)
+	private ErfassungsIntervallDauerMQ(final ClientDavInterface dav, final SystemObject mq)
 			throws InvalidArgumentException {
-		MessQuerschnittAllgemein mqa = MessQuerschnittAllgemein.getInstanz(mq);
+		final MessQuerschnittAllgemein mqa = MessQuerschnittAllgemein.getInstanz(mq);
 
 		if (mqa == null) {
-			throw new InvalidArgumentException(
-					"Die Konfigurationdaten des allgemeinen MQ " + mq
-							+ " konnten nicht ausgelesen werden.");
+			throw new InvalidArgumentException("Die Konfigurationdaten des allgemeinen MQ " + mq
+					+ " konnten nicht ausgelesen werden.");
 		} else {
-			DataDescription dd = new DataDescription(dav.getDataModel()
-					.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
-					.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+			final DataDescription dd = new DataDescription(dav.getDataModel().getAttributeGroup(
+					DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel().getAspect(
+					DUAKonstanten.ASP_ANALYSE));
 
-			if (mqa.getFahrStreifen() == null
-					|| mqa.getFahrStreifen().isEmpty()) {
-				throw new InvalidArgumentException("Der MQ " + mq
-						+ " besitzt keine Fahrstreifen");
+			if ((mqa.getFahrStreifen() == null) || mqa.getFahrStreifen().isEmpty()) {
+				throw new InvalidArgumentException("Der MQ " + mq + " besitzt keine Fahrstreifen");
 			} else {
-				this.letztesDatumProFahrstreifen = new HashMap<SystemObject, ResultData>();
-				List<SystemObject> fsListe = new ArrayList<SystemObject>();
+				letztesDatumProFahrstreifen = new HashMap<SystemObject, ResultData>();
+				final List<SystemObject> fsListe = new ArrayList<SystemObject>();
 
-				for (FahrStreifen fs : mqa.getFahrStreifen()) {
+				for (final FahrStreifen fs : mqa.getFahrStreifen()) {
 					fsListe.add(fs.getSystemObject());
-					this.letztesDatumProFahrstreifen.put(fs.getSystemObject(),
-							null);
+					letztesDatumProFahrstreifen.put(fs.getSystemObject(), null);
 				}
 
-				dav.subscribeReceiver(this, fsListe
-						.toArray(new SystemObject[0]), dd, ReceiveOptions
-						.normal(), ReceiverRole.receiver());
+				dav.subscribeReceiver(this, fsListe.toArray(new SystemObject[0]), dd,
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 			}
 		}
 	}
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler.
 	 * @param mq
 	 *            der Messquerschnitt.
-	 * @return eine statische Instanz dieser Klasse, oder <code>null</code>,
-	 *         wenn diese nicht ermittelt werden konnte
+	 * @return eine statische Instanz dieser Klasse, oder <code>null</code>, wenn diese nicht
+	 *         ermittelt werden konnte
 	 */
-	public static ErfassungsIntervallDauerMQ getInstanz(ClientDavInterface dav,
-			SystemObject mq) {
+	public static ErfassungsIntervallDauerMQ getInstanz(final ClientDavInterface dav,
+			final SystemObject mq) {
 		ErfassungsIntervallDauerMQ instanz = null;
 
 		synchronized (instanzen) {
@@ -145,10 +140,10 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 				try {
 					instanz = new ErfassungsIntervallDauerMQ(dav, mq);
 					instanzen.put(mq, instanz);
-				} catch (InvalidArgumentException e) {
+				} catch (final InvalidArgumentException e) {
 					Debug.getLogger().error(
 							"Erfassungsintervalldauer von " + mq
-									+ " kann nicht ueberwacht werden.\nGrund: "	+ e.getMessage());
+							+ " kann nicht ueberwacht werden.\nGrund: " + e.getMessage());
 				}
 			}
 		}
@@ -157,50 +152,47 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 	}
 
 	/**
-	 * Erfragt die aktuelle virtuelle Erfassungsintervalldauer <code>T</code>
-	 * dieses MQ.
-	 * 
-	 * @return die aktuelle virtuelle Erfassungsintervalldauer <code>T</code>
-	 *         dieses MQ.
+	 * Erfragt die aktuelle virtuelle Erfassungsintervalldauer <code>T</code> dieses MQ.
+	 *
+	 * @return die aktuelle virtuelle Erfassungsintervalldauer <code>T</code> dieses MQ.
 	 */
 	public long getT() {
-		return this.erfassungsIntervallDauer;
+		return erfassungsIntervallDauer;
 	}
 
 	/**
-	 * Bestimmt die virtuelle Erfassungsintervalldauer dieses MQ auf Basis der
-	 * letzen eingetroffenen Fahrstreifendaten.
+	 * Bestimmt die virtuelle Erfassungsintervalldauer dieses MQ auf Basis der letzen eingetroffenen
+	 * Fahrstreifendaten.
 	 */
 	private void versucheNeuBerechnung() {
-		SortedSet<Long> intervallDauern = new TreeSet<Long>();
+		final SortedSet<Long> intervallDauern = new TreeSet<Long>();
 
-		for (SystemObject mq : this.letztesDatumProFahrstreifen.keySet()) {
-			ResultData letztesDatum = this.letztesDatumProFahrstreifen.get(mq);
-			if (letztesDatum != null && letztesDatum.getData() != null) {
-				intervallDauern.add(letztesDatum.getData().getTimeValue("T")
-						.getMillis());
+		for (final SystemObject mq : letztesDatumProFahrstreifen.keySet()) {
+			final ResultData letztesDatum = letztesDatumProFahrstreifen.get(mq);
+			if ((letztesDatum != null) && (letztesDatum.getData() != null)) {
+				intervallDauern.add(letztesDatum.getData().getTimeValue("T").getMillis());
 			}
 		}
 
 		if (intervallDauern.size() == 0) {
-			this.erfassungsIntervallDauer = NOCH_NICHT_ERMITTELBAR;
+			erfassungsIntervallDauer = NOCH_NICHT_ERMITTELBAR;
 		} else if (intervallDauern.size() == 1) {
-			this.erfassungsIntervallDauer = intervallDauern.first();
+			erfassungsIntervallDauer = intervallDauern.first();
 		} else {
-			this.erfassungsIntervallDauer = NICHT_EINHEITLICH;
+			erfassungsIntervallDauer = NICHT_EINHEITLICH;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] results) {
+	@Override
+	public void update(final ResultData[] results) {
 		if (results != null) {
-			for (ResultData result : results) {
+			for (final ResultData result : results) {
 				if (result != null) {
-					this.letztesDatumProFahrstreifen.put(result.getObject(),
-							result);
-					this.versucheNeuBerechnung();
+					letztesDatumProFahrstreifen.put(result.getObject(), result);
+					versucheNeuBerechnung();
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -33,10 +33,10 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
 // TODO: Auto-generated Javadoc
 /**
- * Wert wie er von Stoerfallindikator VKDiffKfz benoetigt wird. 
- * 
+ * Wert wie er von Stoerfallindikator VKDiffKfz benoetigt wird.
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 class VKDiffWert {
@@ -58,23 +58,27 @@ class VKDiffWert {
 
 	/**
 	 * Standardkonstruktor fuer Datensatz ohne Nutzdaten.
-	 * 
-	 * @param zeitStempel der Zeitstempel des Messwerts.
+	 *
+	 * @param zeitStempel
+	 *            der Zeitstempel des Messwerts.
 	 */
-	private VKDiffWert(long zeitStempel) {
+	private VKDiffWert(final long zeitStempel) {
 		assert (zeitStempel >= 0);
 		this.zeitStempel = zeitStempel;
 	}
 
 	/**
 	 * Standardkonstruktor.
-	 * 
-	 * @param wert der Messwert.
-	 * @param zeitStempel der Zeitstempel des Messwerts.
-	 * @param intervallDauer die Erfassungsintervalldauer des Messwerts. 
+	 *
+	 * @param wert
+	 *            der Messwert.
+	 * @param zeitStempel
+	 *            der Zeitstempel des Messwerts.
+	 * @param intervallDauer
+	 *            die Erfassungsintervalldauer des Messwerts.
 	 */
-	VKDiffWert(MesswertUnskaliert wert, long zeitStempel, long intervallDauer) {
-		assert (wert != null && zeitStempel >= 0 && intervallDauer >= 0);
+	VKDiffWert(final MesswertUnskaliert wert, final long zeitStempel, final long intervallDauer) {
+		assert ((wert != null) && (zeitStempel >= 0) && (intervallDauer >= 0));
 		this.wert = wert;
 		this.zeitStempel = zeitStempel;
 		this.intervallDauer = intervallDauer;
@@ -82,44 +86,44 @@ class VKDiffWert {
 
 	/**
 	 * Erfragt einen Wert, der keine Nutzdaten enthaelt.
-	 * 
-	 * @param zeitStempel der Zeitstempel.
+	 *
+	 * @param zeitStempel
+	 *            der Zeitstempel.
 	 * @return einen Wert, der keine Nutzdaten enthaelt.
 	 */
-	static VKDiffWert getLeer(long zeitStempel) {
+	static VKDiffWert getLeer(final long zeitStempel) {
 		return new VKDiffWert(zeitStempel);
 	}
 
 	/**
 	 * Erfragt den Messwert.
-	 *  
-	 * @return der Messwert oder <code>Double.NaN</code>, wenn kein Nutzdatum vorliegt,
-	 * oder dieses < 0 ist.
+	 * 
+	 * @return der Messwert oder <code>Double.NaN</code>, wenn kein Nutzdatum vorliegt, oder dieses
+	 *         < 0 ist.
 	 */
 	double getWert() {
-		if (this.wert == null || this.wert.getWertUnskaliert() < 0) {
+		if ((wert == null) || (wert.getWertUnskaliert() < 0)) {
 			return Double.NaN;
 		}
-		return this.wert.getWertUnskaliert();
+		return wert.getWertUnskaliert();
 	}
 
 	/**
 	 * Erfragt den Guete-Wert.
-	 *  
+	 * 
 	 * @return der Guete-Wert.
 	 */
 	GWert getGWert() {
-		if (this.wert == null) {
+		if (wert == null) {
 			return GWert.getNichtErmittelbareGuete(GueteVerfahren.STANDARD);
 		}
-		return new GWert(this.wert.getGueteIndex(), GueteVerfahren
-				.getZustand(this.wert.getVerfahren()), this.wert
-				.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR);
+		return new GWert(wert.getGueteIndex(), GueteVerfahren.getZustand(wert.getVerfahren()),
+				wert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR);
 	}
 
 	/**
 	 * Erfragt den Zeitstempel des Messwerts.
-	 *  
+	 * 
 	 * @return der Zeitstempel des Messwerts.
 	 */
 	long getZeitStempel() {
@@ -128,7 +132,7 @@ class VKDiffWert {
 
 	/**
 	 * Erfragt die Erfassungsintervalldauer des Messwerts.
-	 *  
+	 * 
 	 * @return die Erfassungsintervalldauer des Messwerts.
 	 */
 	long getIntervallDauer() {
@@ -137,10 +141,10 @@ class VKDiffWert {
 
 	/**
 	 * Erfragt, ob dieses Objekt keinen Wert besitzt.
-	 * 
+	 *
 	 * @return ob dieses Objekt keinen Wert besitzt.
 	 */
 	boolean isLeer() {
-		return this.intervallDauer < 0;
+		return intervallDauer < 0;
 	}
 }

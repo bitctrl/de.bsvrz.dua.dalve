@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -40,11 +40,10 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 // TODO: Auto-generated Javadoc
 /**
- * Von diesem Objekt aus wird die Berechnung der einzelnen Stoerfallindikatoren
- * gestartet.
- * 
+ * Von diesem Objekt aus wird die Berechnung der einzelnen Stoerfallindikatoren gestartet.
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class StoerfallModul {
@@ -52,19 +51,20 @@ public class StoerfallModul {
 	/**
 	 * Initialisiert alle Stoerfallindikatoren.
 	 *
-	 * @param dav            Verbindung zum Datenverteiler
-	 * @param objekte            Menge der Fahrstreifen und Messquerschnitte, die betrachtet
-	 *            werden sollen
-	 * @throws DUAInitialisierungsException             wird weitergereicht
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekte
+	 *            Menge der Fahrstreifen und Messquerschnitte, die betrachtet werden sollen
+	 * @throws DUAInitialisierungsException
+	 *             wird weitergereicht
 	 */
 	public final void initialisiere(final ClientDavInterface dav,
-			final Collection<SystemObject> objekte)
-			throws DUAInitialisierungsException {
+			final Collection<SystemObject> objekte) throws DUAInitialisierungsException {
 
 		/**
 		 * (I) SFI nach Verfahren MARZ
 		 */
-		for (SystemObject obj : objekte) {
+		for (final SystemObject obj : objekte) {
 			if (obj.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)
 					|| obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 				new MarzStoerfallIndikator().initialisiere(dav, obj);
@@ -74,7 +74,7 @@ public class StoerfallModul {
 		/**
 		 * (II) SFI nach Verfahren NRW
 		 */
-		for (SystemObject obj : objekte) {
+		for (final SystemObject obj : objekte) {
 			if (obj.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
 				new NrwStoerfallIndikatorFs().initialisiere(dav, obj);
 			} else if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
@@ -85,7 +85,7 @@ public class StoerfallModul {
 		/**
 		 * (III) SFI nach Verfahren RDS
 		 */
-		for (SystemObject obj : objekte) {
+		for (final SystemObject obj : objekte) {
 			if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 				new RdsStoerfallIndikator().initialisiere(dav, obj);
 			}
@@ -94,7 +94,7 @@ public class StoerfallModul {
 		/**
 		 * (IV) SFI nach Verfahren Fundamentaldiagramm
 		 */
-		for (SystemObject obj : objekte) {
+		for (final SystemObject obj : objekte) {
 			if (obj.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 				new FdStoerfallIndikator().initialisiere(dav, obj);
 			}
@@ -103,7 +103,7 @@ public class StoerfallModul {
 		/**
 		 * (V) SFI nach Verfahren VKDiffKfz
 		 */
-		for (SystemObject obj : objekte) {
+		for (final SystemObject obj : objekte) {
 			if (obj.isOfType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT)) {
 				new VKDiffKfzStoerfallIndikator().initialisiere(dav, obj);
 			}

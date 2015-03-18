@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -49,17 +49,16 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 // TODO: Auto-generated Javadoc
 /**
- * Modul in dem die Analyse der einzelnen Messquerschnitte (auch virtuell) angeschoben 
- * wird. Für jeden betrachteten MQ und VMQ wird ein Objekt angelegt, dass auf die Daten
- * der assoziierten Objekte (Fahrstreifen oder MQs) lauscht und ggf. über diese Klasse
- * ein Analysedatum publiziert
- *  
- * @author BitCtrl Systems GmbH, Thierfelder
+ * Modul in dem die Analyse der einzelnen Messquerschnitte (auch virtuell) angeschoben wird. Für
+ * jeden betrachteten MQ und VMQ wird ein Objekt angelegt, dass auf die Daten der assoziierten
+ * Objekte (Fahrstreifen oder MQs) lauscht und ggf. über diese Klasse ein Analysedatum publiziert
  * 
+ * @author BitCtrl Systems GmbH, Thierfelder
+ *
  * @version $Id$
  */
 public class MqAnalyseModul {
-		
+
 	/**
 	 * Datenbeschreibung zum Publizieren von MQ-Analyse-Daten.
 	 */
@@ -69,59 +68,54 @@ public class MqAnalyseModul {
 	 * Datensender.
 	 */
 	private DAVSendeAnmeldungsVerwaltung sender = null;
-	
+
 	/**
 	 * Datenverteiler-Verbindung.
 	 */
 	private ClientDavInterface dav = null;
-	
-	
+
 	/**
 	 * Initialisiert dieses Modul.<br>
-	 * <b>Achtung:</b> Es wird hier davon ausgegangen, dass die statische
-	 * Klasse <code>DuaVerkehrsNetz</code> bereits initialisiert wurde
-	 * 
-	 * @param verwaltung eine Verbindung zum Verwaltungsmodul
-	 * @throws DUAInitialisierungsException wenn die Initialisierung wenigstens 
-	 * eines Messquerschnittes fehlschlägt
+	 * <b>Achtung:</b> Es wird hier davon ausgegangen, dass die statische Klasse
+	 * <code>DuaVerkehrsNetz</code> bereits initialisiert wurde
+	 *
+	 * @param verwaltung
+	 *            eine Verbindung zum Verwaltungsmodul
+	 * @throws DUAInitialisierungsException
+	 *             wenn die Initialisierung wenigstens eines Messquerschnittes fehlschlägt
 	 */
 	public final void initialisiere(final IVerwaltung verwaltung)
 			throws DUAInitialisierungsException {
-		this.dav = verwaltung.getVerbindung();
+		dav = verwaltung.getVerbindung();
 
-		Collection<SystemObject> messQuerschnitteGesamt = new HashSet<SystemObject>();
-		Collection<SystemObject> messQuerschnitte = new HashSet<SystemObject>();
-		Collection<SystemObject> messQuerschnitteVirtuellVLage = new HashSet<SystemObject>();
-		Collection<SystemObject> messQuerschnitteVirtuellStandard = new HashSet<SystemObject>();
+		final Collection<SystemObject> messQuerschnitteGesamt = new HashSet<SystemObject>();
+		final Collection<SystemObject> messQuerschnitte = new HashSet<SystemObject>();
+		final Collection<SystemObject> messQuerschnitteVirtuellVLage = new HashSet<SystemObject>();
+		final Collection<SystemObject> messQuerschnitteVirtuellStandard = new HashSet<SystemObject>();
 
 		/**
 		 * Ermittle alle Messquerschnitte, die in dieser SWE betrachtet werden sollen
 		 */
-		for (MessQuerschnitt mq : MessQuerschnitt.getInstanzen()) {
-			messQuerschnitte.addAll(DUAUtensilien.getBasisInstanzen(mq
-					.getSystemObject(), verwaltung.getVerbindung(), verwaltung
-					.getKonfigurationsBereiche()));
+		for (final MessQuerschnitt mq : MessQuerschnitt.getInstanzen()) {
+			messQuerschnitte.addAll(DUAUtensilien.getBasisInstanzen(mq.getSystemObject(),
+					verwaltung.getVerbindung(), verwaltung.getKonfigurationsBereiche()));
 		}
 
 		/**
 		 * Ermittle alle virtuellen Messquerschnitte, die in dieser SWE betrachtet werden sollen
 		 */
-		for (MessQuerschnittVirtuell mqv : MessQuerschnittVirtuell
-				.getInstanzen()) {
+		for (final MessQuerschnittVirtuell mqv : MessQuerschnittVirtuell.getInstanzen()) {
 			if (mqv.getBerechnungsVorschrift() == BerechnungsVorschrift.AUF_BASIS_VON_ATG_MQ_VIRTUELL_STANDARD) {
-				messQuerschnitteVirtuellStandard.addAll(DUAUtensilien
-						.getBasisInstanzen(mqv.getSystemObject(), verwaltung
-								.getVerbindung(), verwaltung
-								.getKonfigurationsBereiche()));
+				messQuerschnitteVirtuellStandard.addAll(DUAUtensilien.getBasisInstanzen(
+						mqv.getSystemObject(), verwaltung.getVerbindung(),
+						verwaltung.getKonfigurationsBereiche()));
 			} else if (mqv.getBerechnungsVorschrift() == BerechnungsVorschrift.AUF_BASIS_VON_ATG_MQ_VIRTUELL_V_LAGE) {
-				messQuerschnitteVirtuellVLage.addAll(DUAUtensilien
-						.getBasisInstanzen(mqv.getSystemObject(), verwaltung
-								.getVerbindung(), verwaltung
-								.getKonfigurationsBereiche()));
+				messQuerschnitteVirtuellVLage.addAll(DUAUtensilien.getBasisInstanzen(
+						mqv.getSystemObject(), verwaltung.getVerbindung(),
+						verwaltung.getKonfigurationsBereiche()));
 			} else {
-				throw new DUAInitialisierungsException(
-						"Keine Berechnungsvorschrift fuer VMQ " + mqv.getPid()
-								+ " angegeben");
+				throw new DUAInitialisierungsException("Keine Berechnungsvorschrift fuer VMQ "
+						+ mqv.getPid() + " angegeben");
 			}
 		}
 		messQuerschnitteGesamt.addAll(messQuerschnitte);
@@ -129,7 +123,7 @@ public class MqAnalyseModul {
 		messQuerschnitteGesamt.addAll(messQuerschnitteVirtuellStandard);
 
 		String configLog = "Betrachtete Messquerschnitte:"; //$NON-NLS-1$
-		for (SystemObject mq : messQuerschnitteGesamt) {
+		for (final SystemObject mq : messQuerschnitteGesamt) {
 			configLog += "\n" + mq; //$NON-NLS-1$
 		}
 		Debug.getLogger().config(configLog + "\n---"); //$NON-NLS-1$
@@ -137,53 +131,30 @@ public class MqAnalyseModul {
 		/**
 		 * Publikationsbeschreibung für Analysewerte von allgemeinen MQs
 		 */
-		this.sender = new DAVSendeAnmeldungsVerwaltung(verwaltung
-				.getVerbindung(), SenderRole.source());
-		pubBeschreibung = new DataDescription(verwaltung.getVerbindung()
-				.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), verwaltung
-				.getVerbindung().getDataModel().getAspect(
-						DUAKonstanten.ASP_ANALYSE));
+		sender = new DAVSendeAnmeldungsVerwaltung(verwaltung.getVerbindung(), SenderRole.source());
+		pubBeschreibung = new DataDescription(verwaltung.getVerbindung().getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), verwaltung.getVerbindung()
+				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
-		Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
-		for (SystemObject mq : messQuerschnitteGesamt) {
+		final Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		for (final SystemObject mq : messQuerschnitteGesamt) {
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(mq, pubBeschreibung));
-			} catch (IllegalArgumentException e) {
-				throw new DUAInitialisierungsException(Constants.EMPTY_STRING,
-						e);
+			} catch (final IllegalArgumentException e) {
+				throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 			}
 		}
-		this.sender.modifiziereObjektAnmeldung(anmeldungen);
+		sender.modifiziereObjektAnmeldung(anmeldungen);
 
 		/**
 		 * Initialisiere jetzt alle Messquerschnitte
 		 */
-		for (SystemObject mq : messQuerschnitte) {
+		for (final SystemObject mq : messQuerschnitte) {
 			if (new DaAnalyseMessQuerschnitt().initialisiere(this, mq) == null) {
 				try {
-					anmeldungen.remove(new DAVObjektAnmeldung(mq,
-							pubBeschreibung));
-				} catch (IllegalArgumentException e) {
-					throw new DUAInitialisierungsException(
-							Constants.EMPTY_STRING, e);
-				}
-			}
-		}
-
-		/**
-		 * Initialisiere jetzt alle virtuellen Messquerschnitte (nach der alten
-		 * Methode)
-		 */
-		for (SystemObject mqv : messQuerschnitteVirtuellStandard) {
-			if (new DaAnalyseMessQuerschnittVirtuellStandard().initialisiere(
-					this, mqv) == null) {
-				try {
-					anmeldungen.remove(new DAVObjektAnmeldung(mqv,
-							pubBeschreibung));
-				} catch (IllegalArgumentException e) {
-					throw new DUAInitialisierungsException(
-							Constants.EMPTY_STRING, e);
+					anmeldungen.remove(new DAVObjektAnmeldung(mq, pubBeschreibung));
+				} catch (final IllegalArgumentException e) {
+					throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 				}
 			}
 		}
@@ -191,38 +162,49 @@ public class MqAnalyseModul {
 		/**
 		 * Initialisiere jetzt alle virtuellen Messquerschnitte (nach der alten Methode)
 		 */
-		for (SystemObject mqv : messQuerschnitteVirtuellVLage) {
-			if (new DaAnalyseMessQuerschnittVirtuellVLage().initialisiere(
-					this, mqv) == null) {
+		for (final SystemObject mqv : messQuerschnitteVirtuellStandard) {
+			if (new DaAnalyseMessQuerschnittVirtuellStandard().initialisiere(this, mqv) == null) {
 				try {
-					anmeldungen.remove(new DAVObjektAnmeldung(mqv,
-							pubBeschreibung));
-				} catch (IllegalArgumentException e) {
-					throw new DUAInitialisierungsException(
-							Constants.EMPTY_STRING, e);
+					anmeldungen.remove(new DAVObjektAnmeldung(mqv, pubBeschreibung));
+				} catch (final IllegalArgumentException e) {
+					throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
 				}
 			}
 		}
 
-		this.sender.modifiziereObjektAnmeldung(anmeldungen);
+		/**
+		 * Initialisiere jetzt alle virtuellen Messquerschnitte (nach der alten Methode)
+		 */
+		for (final SystemObject mqv : messQuerschnitteVirtuellVLage) {
+			if (new DaAnalyseMessQuerschnittVirtuellVLage().initialisiere(this, mqv) == null) {
+				try {
+					anmeldungen.remove(new DAVObjektAnmeldung(mqv, pubBeschreibung));
+				} catch (final IllegalArgumentException e) {
+					throw new DUAInitialisierungsException(Constants.EMPTY_STRING, e);
+				}
+			}
+		}
+
+		sender.modifiziereObjektAnmeldung(anmeldungen);
 	}
 
 	/**
 	 * Sendet ein Analysedatum an den Datenverteiler.
-	 * 
-	 * @param resultat ein Analysedatum 
+	 *
+	 * @param resultat
+	 *            ein Analysedatum
 	 */
 	public final void sendeDaten(final ResultData resultat) {
-		this.sender.sende(resultat);
+		sender.sende(resultat);
 	}
 
 	/**
 	 * Erfragt die Verbindung zum Datenverteiler.
-	 * 
+	 *
 	 * @return die Verbindung zum Datenverteiler
 	 */
 	public final ClientDavInterface getDav() {
-		return this.dav;
+		return dav;
 	}
 
 }

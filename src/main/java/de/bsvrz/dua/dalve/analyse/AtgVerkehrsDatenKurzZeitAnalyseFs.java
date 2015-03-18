@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -37,15 +37,14 @@ import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 
 // TODO: Auto-generated Javadoc
 /**
- * Korrespondiert mit der Attributgruppe
- * <code>atg.verkehrsDatenKurzZeitAnalyseFs</code>.
- * 
+ * Korrespondiert mit der Attributgruppe <code>atg.verkehrsDatenKurzZeitAnalyseFs</code>.
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
-public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
-		AllgemeinerDatenContainer implements ClientReceiverInterface {
+public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer implements
+		ClientReceiverInterface {
 
 	/**
 	 * <code>kKfz.Grenz</code>.
@@ -99,32 +98,31 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param fs
 	 *            ein Systemobjekt eines Fahrstreifens
 	 */
-	public AtgVerkehrsDatenKurzZeitAnalyseFs(final ClientDavInterface dav,
-			final SystemObject fs) {
+	public AtgVerkehrsDatenKurzZeitAnalyseFs(final ClientDavInterface dav, final SystemObject fs) {
 		if (dav == null) {
-			throw new NullPointerException(
-					"Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException("Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
 		}
 		if (fs == null) {
-			throw new NullPointerException(
-					"Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException("Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
 		}
-		dav.subscribeReceiver(this, fs, new DataDescription(
-				dav.getDataModel().getAttributeGroup(
+		dav.subscribeReceiver(
+				this,
+				fs,
+				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitAnalyseFs"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Erfragt <code>kKfz.Grenz</code>.
-	 * 
+	 *
 	 * @return <code>kKfz.Grenz</code>
 	 */
 	public final long getKKfzGrenz() {
@@ -133,7 +131,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>kKfz.Max</code>.
-	 * 
+	 *
 	 * @return <code>kKfz.Max</code>
 	 */
 	public final long getKKfzMax() {
@@ -142,7 +140,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>kLkw.Grenz</code>.
-	 * 
+	 *
 	 * @return <code>kLkw.Grenz</code>
 	 */
 	public final long getKLkwGrenz() {
@@ -151,7 +149,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>kLkw.Max</code>.
-	 * 
+	 *
 	 * @return <code>kLkw.Max</code>
 	 */
 	public final long getKLkwMax() {
@@ -160,7 +158,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>kPkw.Grenz</code>.
-	 * 
+	 *
 	 * @return <code>kPkw.Grenz</code>
 	 */
 	public final long getKPkwGrenz() {
@@ -169,7 +167,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>kPkw.Max</code>.
-	 * 
+	 *
 	 * @return <code>kPkw.Max</code>
 	 */
 	public final long getKPkwMax() {
@@ -178,7 +176,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>kB.Grenz</code>.
-	 * 
+	 *
 	 * @return <code>kB.Grenz</code>
 	 */
 	public final long getKBGrenz() {
@@ -187,7 +185,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>kB.Max</code>.
-	 * 
+	 *
 	 * @return <code>kB.Max</code>
 	 */
 	public final long getKBMax() {
@@ -196,7 +194,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>fl.k1</code>.
-	 * 
+	 *
 	 * @return <code>fl.k1</code>
 	 */
 	public final double getFlk1() {
@@ -205,7 +203,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt <code>fl.k2</code>.
-	 * 
+	 *
 	 * @return <code>fl.k2</code>
 	 */
 	public final double getFlk2() {
@@ -214,55 +212,44 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 
 	/**
 	 * Erfragt, ob dieses Objekt bereits Parameter emfangen hat.
-	 * 
+	 *
 	 * @return ob dieses Objekt bereits Parameter emfangen hat
 	 */
 	public final boolean isInitialisiert() {
-		return this.flk1 != -4;
+		return flk1 != -4;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
-				if (resultat != null && resultat.getData() != null) {
+			for (final ResultData resultat : resultate) {
+				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
-						this.flk1 = resultat
-								.getData()
-								.getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.flk2 = resultat
-								.getData()
-								.getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						flk1 = resultat.getData().getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						flk2 = resultat.getData().getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kBGrenz = resultat
-								.getData()
+						kBGrenz = resultat.getData()
 								.getItem("kB").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kBMax = resultat
-								.getData()
+						kBMax = resultat.getData()
 								.getItem("kB").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kKfzGrenz = resultat
-								.getData()
+						kKfzGrenz = resultat.getData()
 								.getItem("kKfz").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kKfzMax = resultat
-								.getData()
+						kKfzMax = resultat.getData()
 								.getItem("kKfz").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kLkwGrenz = resultat
-								.getData()
+						kLkwGrenz = resultat.getData()
 								.getItem("kLkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kLkwMax = resultat
-								.getData()
+						kLkwMax = resultat.getData()
 								.getItem("kLkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kPkwGrenz = resultat
-								.getData()
+						kPkwGrenz = resultat.getData()
 								.getItem("kPkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kPkwMax = resultat
-								.getData()
-								.getItem("kPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$					
+						kPkwMax = resultat.getData()
+								.getItem("kPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 			}

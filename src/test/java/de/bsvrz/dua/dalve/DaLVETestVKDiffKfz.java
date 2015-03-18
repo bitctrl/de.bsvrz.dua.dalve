@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -64,8 +64,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  *
  * @version $Id$
  */
-public class DaLVETestVKDiffKfz implements ClientSenderInterface,
-		ClientReceiverInterface {
+public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiverInterface {
 
 	/**
 	 * Datenverteiler-Verbindung.
@@ -80,7 +79,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 	/**
 	 * Ueberpruefte Instanz der Datenaufbereitung LVE.
 	 */
-	private DatenaufbereitungLVE testInstanz = DatenaufbereitungLVE.getInstance();
+	private final DatenaufbereitungLVE testInstanz = DatenaufbereitungLVE.getInstance();
 
 	/**
 	 * Vorbereitungen.
@@ -90,14 +89,13 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.dav = DAVTest.getDav(DatenaufbereitungLVETest.CON_DATA.clone());
+		dav = DAVTest.getDav(DatenaufbereitungLVETest.CON_DATA.clone());
 
 		/**
 		 * Start einer Instanz der Testapplikation
 		 */
-//		this.testInstanz = new DatenaufbereitungLVE();
-		StandardApplicationRunner.run(testInstanz,
-				DatenaufbereitungLVETest.CON_DATA_APP);
+		// this.testInstanz = new DatenaufbereitungLVE();
+		StandardApplicationRunner.run(testInstanz, DatenaufbereitungLVETest.CON_DATA_APP);
 	}
 
 	/**
@@ -108,74 +106,70 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 	 */
 	@Test
 	public void testVKDiffKfz() throws Exception {
-		SystemObject fs1 = this.dav.getDataModel().getObject("fs.1"); //$NON-NLS-1$
-		SystemObject fs2 = this.dav.getDataModel().getObject("fs.2"); //$NON-NLS-1$
-		SystemObject fs3 = this.dav.getDataModel().getObject("fs.3"); //$NON-NLS-1$
+		final SystemObject fs1 = dav.getDataModel().getObject("fs.1"); //$NON-NLS-1$
+		final SystemObject fs2 = dav.getDataModel().getObject("fs.2"); //$NON-NLS-1$
+		final SystemObject fs3 = dav.getDataModel().getObject("fs.3"); //$NON-NLS-1$
 
-		SystemObject mq1 = this.dav.getDataModel().getObject("mq1"); //$NON-NLS-1$
-		SystemObject mq2 = this.dav.getDataModel().getObject("mq2"); //$NON-NLS-1$
+		final SystemObject mq1 = dav.getDataModel().getObject("mq1"); //$NON-NLS-1$
+		final SystemObject mq2 = dav.getDataModel().getObject("mq2"); //$NON-NLS-1$
 
-		SystemObject abschnitt = dav.getDataModel().getObject("abschnitt");
+		final SystemObject abschnitt = dav.getDataModel().getObject("abschnitt");
 
 		/**
 		 * Parametrieren
 		 */
-		DataDescription ddParaAbschnitt = new DataDescription(dav
-				.getDataModel().getAttributeGroup(
-						"atg.lokaleStörfallErkennungVKDiffKfz"), dav
-				.getDataModel().getAspect("asp.parameterVorgabe"));
-		DataDescription ddParaMQ = new DataDescription(dav.getDataModel()
-				.getAttributeGroup("atg.fundamentalDiagramm"), dav
-				.getDataModel().getAspect("asp.parameterVorgabe"));
-		dav.subscribeSender(this, abschnitt, ddParaAbschnitt, SenderRole
-				.sender());
-		dav.subscribeSender(this, new SystemObject[] { mq1, mq2 }, ddParaMQ,
-				SenderRole.sender());
+		final DataDescription ddParaAbschnitt = new DataDescription(dav.getDataModel()
+				.getAttributeGroup("atg.lokaleStörfallErkennungVKDiffKfz"), dav.getDataModel()
+				.getAspect("asp.parameterVorgabe"));
+		final DataDescription ddParaMQ = new DataDescription(dav.getDataModel().getAttributeGroup(
+				"atg.fundamentalDiagramm"), dav.getDataModel().getAspect("asp.parameterVorgabe"));
+		dav.subscribeSender(this, abschnitt, ddParaAbschnitt, SenderRole.sender());
+		dav.subscribeSender(this, new SystemObject[] { mq1, mq2 }, ddParaMQ, SenderRole.sender());
 		try {
 			Thread.sleep(2000L);
-		} catch (InterruptedException ex) {
+		} catch (final InterruptedException ex) {
 			ex.printStackTrace();
 		}
 
-		Parameter parameter = new Parameter(
-				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter");
-		Data data = dav.createData(ddParaAbschnitt.getAttributeGroup());
-		data.getItem("VKDiffKfz").getUnscaledValue("Ein").set(Long.parseLong(parameter.get("VKDiffEin")));
-		data.getItem("VKDiffKfz").getUnscaledValue("Aus").set(Long.parseLong(parameter.get("VKDiffAus")));
-		data.getItem("QKfzDiff").getUnscaledValue("Ein").set(Long.parseLong(parameter.get("QKfzDiffEin")));
-		data.getItem("QKfzDiff").getUnscaledValue("Aus").set(Long.parseLong(parameter.get("QKfzDiffAus")));
+		final Parameter parameter = new Parameter(DatenaufbereitungLVETest.TEST_DATEN_VERZ
+				+ "Parameter");
+		final Data data = dav.createData(ddParaAbschnitt.getAttributeGroup());
+		data.getItem("VKDiffKfz").getUnscaledValue("Ein")
+		.set(Long.parseLong(parameter.get("VKDiffEin")));
+		data.getItem("VKDiffKfz").getUnscaledValue("Aus")
+		.set(Long.parseLong(parameter.get("VKDiffAus")));
+		data.getItem("QKfzDiff").getUnscaledValue("Ein")
+		.set(Long.parseLong(parameter.get("QKfzDiffEin")));
+		data.getItem("QKfzDiff").getUnscaledValue("Aus")
+		.set(Long.parseLong(parameter.get("QKfzDiffAus")));
 		data.getUnscaledValue("tReise").set(15);
-		dav.sendData(new ResultData(abschnitt, ddParaAbschnitt, System
-				.currentTimeMillis(), data));
+		dav.sendData(new ResultData(abschnitt, ddParaAbschnitt, System.currentTimeMillis(), data));
 
-		Data data1 = dav.createData(ddParaMQ.getAttributeGroup());
+		final Data data1 = dav.createData(ddParaMQ.getAttributeGroup());
 		data1.getUnscaledValue("Q0").set(Long.parseLong(parameter.get("Q0(1)")));
 		data1.getUnscaledValue("K0").set(Long.parseLong(parameter.get("K0(1)")));
 		data1.getUnscaledValue("V0").set(Long.parseLong(parameter.get("V0(1)")));
 		data1.getUnscaledValue("VFrei").set(Long.parseLong(parameter.get("VFrei(1)")));
-		dav.sendData(new ResultData(mq1, ddParaMQ, System.currentTimeMillis(),
-				data1));
+		dav.sendData(new ResultData(mq1, ddParaMQ, System.currentTimeMillis(), data1));
 
-		Data data2 = dav.createData(ddParaMQ.getAttributeGroup());
+		final Data data2 = dav.createData(ddParaMQ.getAttributeGroup());
 		data2.getUnscaledValue("Q0").set(Long.parseLong(parameter.get("Q0(2)")));
 		data2.getUnscaledValue("K0").set(Long.parseLong(parameter.get("K0(2)")));
 		data2.getUnscaledValue("V0").set(Long.parseLong(parameter.get("V0(2)")));
 		data2.getUnscaledValue("VFrei").set(Long.parseLong(parameter.get("VFrei(2)")));
-		dav.sendData(new ResultData(mq2, ddParaMQ, System.currentTimeMillis(),
-				data2));
+		dav.sendData(new ResultData(mq2, ddParaMQ, System.currentTimeMillis(), data2));
 
 		try {
 			Thread.sleep(2000L);
-		} catch (InterruptedException ex) {
+		} catch (final InterruptedException ex) {
 			ex.printStackTrace();
 		}
 
 		/**
 		 * Importiere Fahrstreifen-Parameter
 		 */
-		ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav,
-				new SystemObject[] { fs1, fs2, fs3 },
-				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		final ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav, new SystemObject[] {
+				fs1, fs2, fs3 }, DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImport.importiereParameterAnalyse(1);
 		paraImport.importiereParameterAnalyse(2);
 		paraImport.importiereParameterAnalyse(3);
@@ -183,30 +177,29 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 		/**
 		 * Importiere MQ-Parameter
 		 */
-		ParaAnaProgImportMQAlsFS paraImportMQ = new ParaAnaProgImportMQAlsFS(
-				dav, new SystemObject[] { mq1, mq2 },
-				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		final ParaAnaProgImportMQAlsFS paraImportMQ = new ParaAnaProgImportMQAlsFS(dav,
+				new SystemObject[] { mq1, mq2 }, DatenaufbereitungLVETest.TEST_DATEN_VERZ
+				+ "Parameter"); //$NON-NLS-1$
 		paraImportMQ.importiereParameterAnalyse(1);
 		paraImportMQ.importiereParameterAnalyse(2);
 
 		/**
 		 * Anmeldung zum Senden der Fahrstreifen/MQ-Daten
 		 */
-		DataDescription ddKzdSend = new DataDescription(this.dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KZD), this.dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
-		this.dav.subscribeSender(this, new SystemObject[] { fs1, fs2, fs3 },
-				ddKzdSend, SenderRole.source());
+		final DataDescription ddKzdSend = new DataDescription(dav.getDataModel().getAttributeGroup(
+				DUAKonstanten.ATG_KZD), dav.getDataModel().getAspect(
+						DUAKonstanten.ASP_MESSWERTERSETZUNG));
+		dav.subscribeSender(this, new SystemObject[] { fs1, fs2, fs3 }, ddKzdSend,
+				SenderRole.source());
 
 		/**
 		 * Anmeldung zum Empfang der Stoerfallsituation
 		 */
-		DataDescription ddVkDiffKfz = new DataDescription(this.dav
-				.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_STOERFALL_ZUSTAND), this.dav
-				.getDataModel().getAspect("asp.störfallVerfahrenVKDiffKfz"));
-		this.dav.subscribeReceiver(this, new SystemObject[] { abschnitt },
-				ddVkDiffKfz, ReceiveOptions.normal(), ReceiverRole.receiver());
+		final DataDescription ddVkDiffKfz = new DataDescription(dav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav.getDataModel()
+				.getAspect("asp.störfallVerfahrenVKDiffKfz"));
+		dav.subscribeReceiver(this, new SystemObject[] { abschnitt }, ddVkDiffKfz,
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		Data zeileFS1;
 		Data zeileFS2;
@@ -216,11 +209,11 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 
 		int csvIndex = 2;
 
-		CSVImporter prognoseDatei = new CSVImporter(
-				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Prognose");
+		final CSVImporter prognoseDatei = new CSVImporter(DatenaufbereitungLVETest.TEST_DATEN_VERZ
+				+ "Prognose");
 		prognoseDatei.getNaechsteZeile();
 
-		TestFahrstreifenImporter importFS = new TestFahrstreifenImporter(dav,
+		final TestFahrstreifenImporter importFS = new TestFahrstreifenImporter(dav,
 				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Messwerters_LVE"); //$NON-NLS-1$
 		importFS.importNaechsteZeile();
 
@@ -228,46 +221,44 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 			zeileFS2 = importFS.getDatensatz(2);
 			zeileFS3 = importFS.getDatensatz(3);
 
-			ResultData resultat1 = new ResultData(fs1, ddKzdSend, aktZeit,
-					zeileFS1);
-			ResultData resultat2 = new ResultData(fs2, ddKzdSend, aktZeit,
-					zeileFS2);
-			ResultData resultat3 = new ResultData(fs3, ddKzdSend, aktZeit,
-					zeileFS3);
+			final ResultData resultat1 = new ResultData(fs1, ddKzdSend, aktZeit, zeileFS1);
+			final ResultData resultat2 = new ResultData(fs2, ddKzdSend, aktZeit, zeileFS2);
+			final ResultData resultat3 = new ResultData(fs3, ddKzdSend, aktZeit, zeileFS3);
 
 			System.out
 					.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 
 			synchronized (dav) {
-				this.dav.sendData(resultat1);
-				this.dav.sendData(resultat2);
-				this.dav.sendData(resultat3);
+				dav.sendData(resultat1);
+				dav.sendData(resultat2);
+				dav.sendData(resultat3);
 
 				dav.wait();
 			}
 
-			String[] soll = prognoseDatei.getNaechsteZeile();
-			double sollVkDiff = Double.parseDouble(soll[0].replaceAll(",", "."));
-			double istVkDiff = VKDiffKfzStoerfallIndikator.getTestVkDiffKfz();
-			String debug = "(Soll/Ist) --> VKDiffKfz = " +
-			DUAUtensilien.runde(sollVkDiff, 5) + "/" +
-			DUAUtensilien.runde(istVkDiff, 5) +
-			", Situation: " + soll[1].toLowerCase() + "/"	+ this.aktuellerStoerfallzustand.toLowerCase();
+			final String[] soll = prognoseDatei.getNaechsteZeile();
+			final double sollVkDiff = Double.parseDouble(soll[0].replaceAll(",", "."));
+			final double istVkDiff = VKDiffKfzStoerfallIndikator.getTestVkDiffKfz();
+			final String debug = "(Soll/Ist) --> VKDiffKfz = " + DUAUtensilien.runde(sollVkDiff, 5)
+					+ "/" + DUAUtensilien.runde(istVkDiff, 5) + ", Situation: "
+					+ soll[1].toLowerCase() + "/" + aktuellerStoerfallzustand.toLowerCase();
 
 			System.out.println(debug);
-			Assert.assertEquals("VKDiffKfz-Fehler: " + debug, DUAUtensilien.runde(sollVkDiff, 5), DUAUtensilien.runde(istVkDiff, 5));
-			Assert.assertEquals("Stoerfall-Fehler: " + debug, soll[1].toLowerCase(), this.aktuellerStoerfallzustand.toLowerCase());
+			Assert.assertEquals("VKDiffKfz-Fehler: " + debug, DUAUtensilien.runde(sollVkDiff, 5),
+					DUAUtensilien.runde(istVkDiff, 5));
+			Assert.assertEquals("Stoerfall-Fehler: " + debug, soll[1].toLowerCase(),
+					aktuellerStoerfallzustand.toLowerCase());
 
 			/**
 			 * Lese bei Importer und Prüfer den nächsten Datensatz ein
 			 */
 			importFS.importNaechsteZeile();
 
-//			try {
-//				Thread.sleep(1000L);
-//			} catch (InterruptedException ex) {
-//				ex.printStackTrace();
-//			}
+			// try {
+			// Thread.sleep(1000L);
+			// } catch (InterruptedException ex) {
+			// ex.printStackTrace();
+			// }
 
 			/**
 			 * Setze neue Prüfzeit
@@ -279,12 +270,13 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if (resultat.getData() != null) {
-					this.aktuellerStoerfallzustand = resultat.getData()
-							.getItem("Situation").asTextValue().getText();
+					aktuellerStoerfallzustand = resultat.getData().getItem("Situation")
+							.asTextValue().getText();
 					synchronized (dav) {
 						dav.notify();
 					}
@@ -296,15 +288,17 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
+			final byte state) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 
@@ -320,7 +314,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 		/**
 		 * Inhalt.
 		 */
-		private Map<String, String> map = new HashMap<String, String>();
+		private final Map<String, String> map = new HashMap<String, String>();
 
 		/**
 		 * Standardkonstruktor.
@@ -330,11 +324,11 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 		 * @throws Exception
 		 *             wird weitergereicht.
 		 */
-		Parameter(String dateiName) throws Exception {
+		Parameter(final String dateiName) throws Exception {
 			super(new File(dateiName + ".csv"));
-			String[] zeile = this.getNaechsteZeile();
-			while ((zeile = this.getNaechsteZeile())!= null) {
-				this.map.put(zeile[0], zeile[1]);
+			String[] zeile = getNaechsteZeile();
+			while ((zeile = getNaechsteZeile()) != null) {
+				map.put(zeile[0], zeile[1]);
 			}
 		}
 
@@ -345,8 +339,8 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface,
 		 *            der Schluessel
 		 * @return der Wert eines Schluessels.
 		 */
-		String get(String key) {
-			return this.map.get(key);
+		String get(final String key) {
+			return map.get(key);
 		}
 
 	}

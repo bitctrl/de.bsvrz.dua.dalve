@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -34,14 +34,14 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
 // TODO: Auto-generated Javadoc
 /**
- * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer ein
- * Attribut eines Fahrstreifens bzw. eines Messquerschnittes durch
- * 
+ * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer ein Attribut eines
+ * Fahrstreifens bzw. eines Messquerschnittes durch
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  */
-public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
-		implements IAtgPrognoseParameterListener {
+public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt implements
+IAtgPrognoseParameterListener {
 
 	/** der Prognosetyp. */
 	private PrognoseTyp typ = null;
@@ -70,47 +70,45 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param prognoseObjekt            das Objekt, das hier betrachtet wird
-	 * @param attribut            das Attribut, das hier betrachtet wird
-	 * @param typ            der Prognosetyp
+	 * @param prognoseObjekt
+	 *            das Objekt, das hier betrachtet wird
+	 * @param attribut
+	 *            das Attribut, das hier betrachtet wird
+	 * @param typ
+	 *            der Prognosetyp
 	 */
 	public DavAttributPrognoseObjekt(final SystemObject prognoseObjekt,
 			final PrognoseAttribut attribut, final PrognoseTyp typ) {
 		this.prognoseObjekt = prognoseObjekt;
 		this.attribut = attribut;
 		this.typ = typ;
-		this.vAttribut = attribut.equals(PrognoseAttribut.V_KFZ)
+		vAttribut = attribut.equals(PrognoseAttribut.V_KFZ)
 				|| attribut.equals(PrognoseAttribut.V_LKW)
 				|| attribut.equals(PrognoseAttribut.V_PKW);
-		this.attributNameP = this.attribut
-				.getAttributNamePrognose(this.prognoseObjekt
-						.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
-		this.attributNameG = this.attribut
-				.getAttributNameGlatt(this.prognoseObjekt
-						.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
-		this.attributNameQuelle = this.attribut.getAttributName(prognoseObjekt
+		attributNameP = this.attribut.getAttributNamePrognose(this.prognoseObjekt
+				.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
+		attributNameG = this.attribut.getAttributNameGlatt(this.prognoseObjekt
+				.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
+		attributNameQuelle = this.attribut.getAttributName(prognoseObjekt
 				.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
 	}
 
 	/**
 	 * Aktualisiert die Daten dieses Prognoseobjektes mit empfangenen Daten.
 	 *
-	 * @param resultat            ein empfangenes Analysedatum
-	 * @throws PrognoseParameterException             wenn die Parameter noch nicht gesetzte wurden
+	 * @param resultat
+	 *            ein empfangenes Analysedatum
+	 * @throws PrognoseParameterException
+	 *             wenn die Parameter noch nicht gesetzte wurden
 	 */
-	public final void aktualisiere(ResultData resultat)
-			throws PrognoseParameterException {
+	public final void aktualisiere(final ResultData resultat) throws PrognoseParameterException {
 
 		if (resultat.getData() != null) {
-			this.aktuellesDatum = new DaMesswertUnskaliert(attributNameQuelle,
-					resultat.getData());
-			long ZAktuell = resultat.getData().getItem(attributNameQuelle)
+			aktuellesDatum = new DaMesswertUnskaliert(attributNameQuelle, resultat.getData());
+			final long ZAktuell = resultat.getData().getItem(attributNameQuelle)
 					.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
-			Data davDatum = resultat.getData().getItem(attributNameQuelle)
-					.getItem("Wert");
-			boolean implausibel = resultat
-					.getData()
-					.getItem(attributNameQuelle)
+			final Data davDatum = resultat.getData().getItem(attributNameQuelle).getItem("Wert");
+			final boolean implausibel = resultat.getData().getItem(attributNameQuelle)
 					.getItem("Status"). //$NON-NLS-1$
 					getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -118,24 +116,20 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 			 * Messintervallen ohne Fahrzeugdetektion?
 			 */
 			boolean keineVerkehrsStaerke = false;
-			if (this.vAttribut) {
+			if (vAttribut) {
 
 				/**
 				 * Aenderung nach Email vom 14.4.2008:
-				 * 
-				 * hier ist wirklich der Fall gemeint, dass im aktuellen
-				 * Intervall kein Fahrzeug gefahren ist (qKfz = 0) dann sollen
-				 * die geglätteten Geschwindigkeitswerte des Vorgängerintervalls
-				 * übernommen werden.
+				 *
+				 * hier ist wirklich der Fall gemeint, dass im aktuellen Intervall kein Fahrzeug
+				 * gefahren ist (qKfz = 0) dann sollen die geglätteten Geschwindigkeitswerte des
+				 * Vorgängerintervalls übernommen werden.
 				 */
-				if (this.prognoseObjekt
-						.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
-					keineVerkehrsStaerke = resultat
-							.getData()
+				if (prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
+					keineVerkehrsStaerke = resultat.getData()
 							.getItem("qKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
 				} else {
-					keineVerkehrsStaerke = resultat
-							.getData()
+					keineVerkehrsStaerke = resultat.getData()
 							.getItem("QKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
 				}
 
@@ -145,10 +139,10 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 				// == 0; //$NON-NLS-1$
 			}
 
-			this.berechneGlaettungsParameterUndStart(ZAktuell, implausibel,
-					keineVerkehrsStaerke, davDatum);
+			berechneGlaettungsParameterUndStart(ZAktuell, implausibel, keineVerkehrsStaerke,
+					davDatum);
 		} else {
-			this.aktuellesDatum = null;
+			aktuellesDatum = null;
 		}
 	}
 
@@ -162,43 +156,39 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 	}
 
 	/**
-	 * Exportiert die letzten hier errechneten geglaetteten Werte in das
-	 * uebergebene Zieldatum.
+	 * Exportiert die letzten hier errechneten geglaetteten Werte in das uebergebene Zieldatum.
 	 *
-	 * @param zielDatum            ein veraenderbares Zieldatum der Attributgruppe
+	 * @param zielDatum
+	 *            ein veraenderbares Zieldatum der Attributgruppe
 	 *            <code>atg.verkehrsDatenKurzZeitGeglättetFs</code>
 	 */
-	public final void exportiereDatenGlatt(Data zielDatum) {
-		MesswertUnskaliert exportWert = new MesswertUnskaliert(
-				this.attributNameG);
+	public final void exportiereDatenGlatt(final Data zielDatum) {
+		final MesswertUnskaliert exportWert = new MesswertUnskaliert(attributNameG);
 
-		exportWert.setWertUnskaliert(this.getZG());
-		exportWert.setNichtErfasst(this.aktuellesDatum.isNichtErfasst());
-		exportWert.setInterpoliert(this.aktuellesDatum.isPlausibilisiert());
-		exportWert.getGueteIndex().setWert(
-				this.aktuellesDatum.getGueteIndex().getWert());
-		exportWert.setVerfahren(this.aktuellesDatum.getVerfahren());
+		exportWert.setWertUnskaliert(getZG());
+		exportWert.setNichtErfasst(aktuellesDatum.isNichtErfasst());
+		exportWert.setInterpoliert(aktuellesDatum.isPlausibilisiert());
+		exportWert.getGueteIndex().setWert(aktuellesDatum.getGueteIndex().getWert());
+		exportWert.setVerfahren(aktuellesDatum.getVerfahren());
 
 		exportWert.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
 
 	/**
-	 * Exportiert die letzten hier errechneten Prognosewerte in das uebergebene
-	 * Zieldatum.
+	 * Exportiert die letzten hier errechneten Prognosewerte in das uebergebene Zieldatum.
 	 *
-	 * @param zielDatum            ein veraenderbares Zieldatum der Attributgruppe
+	 * @param zielDatum
+	 *            ein veraenderbares Zieldatum der Attributgruppe
 	 *            <code>atg.verkehrsDatenKurzZeitTrendExtraPolationFs</code>
 	 */
-	public final void exportiereDatenPrognose(Data zielDatum) {
-		MesswertUnskaliert exportWert = new MesswertUnskaliert(
-				this.attributNameP);
+	public final void exportiereDatenPrognose(final Data zielDatum) {
+		final MesswertUnskaliert exportWert = new MesswertUnskaliert(attributNameP);
 
-		exportWert.setWertUnskaliert(this.getZP());
-		exportWert.setNichtErfasst(this.aktuellesDatum.isNichtErfasst());
-		exportWert.setInterpoliert(this.aktuellesDatum.isPlausibilisiert());
-		exportWert.getGueteIndex().setWert(
-				this.aktuellesDatum.getGueteIndex().getWert());
-		exportWert.setVerfahren(this.aktuellesDatum.getVerfahren());
+		exportWert.setWertUnskaliert(getZP());
+		exportWert.setNichtErfasst(aktuellesDatum.isNichtErfasst());
+		exportWert.setInterpoliert(aktuellesDatum.isPlausibilisiert());
+		exportWert.getGueteIndex().setWert(aktuellesDatum.getGueteIndex().getWert());
+		exportWert.setVerfahren(aktuellesDatum.getVerfahren());
 
 		exportWert.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
@@ -206,13 +196,13 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereParameter(
-			PrognoseAttributParameter parameterSatzFuerAttribut) {
-		this.ZAltInit = parameterSatzFuerAttribut.getStart();
-		this.alpha1 = parameterSatzFuerAttribut.getAlpha1();
-		this.alpha2 = parameterSatzFuerAttribut.getAlpha2();
-		this.beta1 = parameterSatzFuerAttribut.getBeta1();
-		this.beta2 = parameterSatzFuerAttribut.getBeta2();
+	@Override
+	public void aktualisiereParameter(final PrognoseAttributParameter parameterSatzFuerAttribut) {
+		ZAltInit = parameterSatzFuerAttribut.getStart();
+		alpha1 = parameterSatzFuerAttribut.getAlpha1();
+		alpha2 = parameterSatzFuerAttribut.getAlpha2();
+		beta1 = parameterSatzFuerAttribut.getBeta1();
+		beta2 = parameterSatzFuerAttribut.getBeta2();
 	}
 
 	/**
@@ -220,8 +210,7 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 	 */
 	@Override
 	public String toString() {
-		return this.prognoseObjekt.getPid() + ", " + this.attribut + ", "
-				+ this.typ;
+		return prognoseObjekt.getPid() + ", " + attribut + ", " + typ;
 	}
 
 }

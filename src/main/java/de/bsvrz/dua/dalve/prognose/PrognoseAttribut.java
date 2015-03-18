@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -30,8 +30,8 @@ import java.util.Set;
 
 // TODO: Auto-generated Javadoc
 /**
- * Container fuer Attribute die zur Messwertprognose herangezogen werden (jeweils 
- * fuer Fahrstreifen bzw. Messquerschnitte):<br>
+ * Container fuer Attribute die zur Messwertprognose herangezogen werden (jeweils fuer Fahrstreifen
+ * bzw. Messquerschnitte):<br>
  * <code>qKfz</code> bzw. <code>QKfz</code>,<br>
  * <code>qLkw</code> bzw. <code>QLkw</code>,<br>
  * <code>qPkw</code> bzw. <code>QPkw</code>,<br>
@@ -44,12 +44,12 @@ import java.util.Set;
  * <code>kPkw</code> bzw. <code>KPkw</code>,<br>
  * <code>qB</code> bzw. <code>QB</code> und<br>
  * <code>kB</code> bzw. <code>KB</code>
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class PrognoseAttribut {
-	
+
 	/** Wertebereich. */
 	private static Set<PrognoseAttribut> WERTE_BEREICH = new HashSet<PrognoseAttribut>();
 
@@ -62,37 +62,37 @@ public class PrognoseAttribut {
 	 * Attribut <code>qLkw</code> bzw. <code>QLkw</code>
 	 */
 	public static final PrognoseAttribut Q_LKW = new PrognoseAttribut("qLkw", "QLkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>qPkw</code> bzw. <code>QPkw</code>
 	 */
 	public static final PrognoseAttribut Q_PKW = new PrognoseAttribut("qPkw", "QPkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>vKfz</code> bzw. <code>VKfz</code>
 	 */
 	public static final PrognoseAttribut V_KFZ = new PrognoseAttribut("vKfz", "VKfz"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>vLkw</code> bzw. <code>VLkw</code>
 	 */
 	public static final PrognoseAttribut V_LKW = new PrognoseAttribut("vLkw", "VLkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>vPkw</code> bzw. <code>VPkw</code>
 	 */
 	public static final PrognoseAttribut V_PKW = new PrognoseAttribut("vPkw", "VPkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>aLkw</code> bzw. <code>ALkw</code>
 	 */
 	public static final PrognoseAttribut A_LKW = new PrognoseAttribut("aLkw", "ALkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>kKfz</code> bzw. <code>KKfz</code>
 	 */
 	public static final PrognoseAttribut K_KFZ = new PrognoseAttribut("kKfz", "KKfz"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>kLkw</code> bzw. <code>KLkw</code>
 	 */
@@ -102,12 +102,12 @@ public class PrognoseAttribut {
 	 * Attribut <code>kPkw</code> bzw. <code>KPkw</code>
 	 */
 	public static final PrognoseAttribut K_PKW = new PrognoseAttribut("kPkw", "KPkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>qB</code> bzw. <code>QB</code>
 	 */
 	public static final PrognoseAttribut QB = new PrognoseAttribut("qB", "QB"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * Attribut <code>kB</code> bzw. <code>BK</code>
 	 */
@@ -137,125 +137,121 @@ public class PrognoseAttribut {
 	/** Startwert für die Glättung (MQ). */
 	private String mqStart = null;
 
-	/** Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsstärke-Attribut (FS). */
+	/**
+	 * Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsstärke-Attribut
+	 * (FS).
+	 */
 	private String qAnalogon = null;
 
-	/** Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsstärke-Attribut (MQ). */
+	/**
+	 * Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsstärke-Attribut
+	 * (MQ).
+	 */
 	private String QAnalogon = null;
-	
-	
-	
+
 	/**
 	 * Standardkonstruktor.
 	 *
-	 * @param nameFS der Attributname bei Fahrstreifendaten z.B.
-	 * <code>qKfz</code> oder <code>vKfz</code>
-	 * @param nameMQ der Attributname bei Messquerschnittdaten z.B.
-	 * <code>QKfz</code> oder <code>VKfz</code>
+	 * @param nameFS
+	 *            der Attributname bei Fahrstreifendaten z.B. <code>qKfz</code> oder
+	 *            <code>vKfz</code>
+	 * @param nameMQ
+	 *            der Attributname bei Messquerschnittdaten z.B. <code>QKfz</code> oder
+	 *            <code>VKfz</code>
 	 */
-	private PrognoseAttribut(final String nameFS,
-							 final String nameMQ){
+	private PrognoseAttribut(final String nameFS, final String nameMQ) {
 		this.nameFS = nameFS;
 		this.nameMQ = nameMQ;
-		this.nameFSGlatt = nameFS + "G"; //$NON-NLS-1$
-		this.nameMQGlatt = nameMQ + "G"; //$NON-NLS-1$
-		this.nameFSPrognose = nameFS + "P"; //$NON-NLS-1$
-		this.nameMQPrognose = nameMQ + "P"; //$NON-NLS-1$
-		this.fsStart = nameFS + "Start"; //$NON-NLS-1$
-		this.mqStart = nameMQ + "Start"; //$NON-NLS-1$
-		if(this.nameFS.toLowerCase().equals("vkfz")){ //$NON-NLS-1$
-			this.qAnalogon = "qKfz"; //$NON-NLS-1$
-			this.QAnalogon = "QKfz"; //$NON-NLS-1$
-		}else
-		if(this.nameFS.toLowerCase().equals("vlkw")){ //$NON-NLS-1$
-			this.qAnalogon = "qLkw"; //$NON-NLS-1$
-			this.QAnalogon = "QLkw"; //$NON-NLS-1$
-		}else
-		if(this.nameFS.toLowerCase().equals("vpkw")){ //$NON-NLS-1$
-			this.qAnalogon = "qPkw"; //$NON-NLS-1$
-			this.QAnalogon = "QPkw"; //$NON-NLS-1$
-		}
+		nameFSGlatt = nameFS + "G"; //$NON-NLS-1$
+		nameMQGlatt = nameMQ + "G"; //$NON-NLS-1$
+		nameFSPrognose = nameFS + "P"; //$NON-NLS-1$
+		nameMQPrognose = nameMQ + "P"; //$NON-NLS-1$
+		fsStart = nameFS + "Start"; //$NON-NLS-1$
+		mqStart = nameMQ + "Start"; //$NON-NLS-1$
+		if (this.nameFS.toLowerCase().equals("vkfz")) { //$NON-NLS-1$
+			qAnalogon = "qKfz"; //$NON-NLS-1$
+			QAnalogon = "QKfz"; //$NON-NLS-1$
+		} else if (this.nameFS.toLowerCase().equals("vlkw")) { //$NON-NLS-1$
+				qAnalogon = "qLkw"; //$NON-NLS-1$
+				QAnalogon = "QLkw"; //$NON-NLS-1$
+			} else if (this.nameFS.toLowerCase().equals("vpkw")) { //$NON-NLS-1$
+					qAnalogon = "qPkw"; //$NON-NLS-1$
+					QAnalogon = "QPkw"; //$NON-NLS-1$
+				}
 		WERTE_BEREICH.add(this);
 	}
-	
-	
+
 	/**
-	 * Erfragt, so es sich bei diesem Attribut um ein Geschwindigkeitsattribut handelt,
-	 * den Namen des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsstärke-Attributs.
+	 * Erfragt, so es sich bei diesem Attribut um ein Geschwindigkeitsattribut handelt, den Namen
+	 * des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsstärke-Attributs.
 	 *
-	 * @param fuerFahrStreifen das Objekt, fuer den der Name dieses
-	 * Attributs erfragt wird
+	 * @param fuerFahrStreifen
+	 *            das Objekt, fuer den der Name dieses Attributs erfragt wird
 	 * @return the q attribut analogon
 	 */
-	public final String getQAttributAnalogon(final boolean fuerFahrStreifen){
-		return fuerFahrStreifen?this.qAnalogon:this.QAnalogon;
+	public final String getQAttributAnalogon(final boolean fuerFahrStreifen) {
+		return fuerFahrStreifen ? qAnalogon : QAnalogon;
 	}
-	
 
 	/**
 	 * Erfragt den Namen dieses Attributs fuer geglaettete Werte.
 	 *
-	 * @param fuerFahrStreifen das Objekt, fuer den der Name dieses
-	 * Attributs erfragt wird
+	 * @param fuerFahrStreifen
+	 *            das Objekt, fuer den der Name dieses Attributs erfragt wird
 	 * @return der Name dieses Attributs fuer geglaettete Werte
 	 */
-	public final String getAttributNameGlatt(final boolean fuerFahrStreifen){
-		return fuerFahrStreifen?this.nameFSGlatt:this.nameMQGlatt;
+	public final String getAttributNameGlatt(final boolean fuerFahrStreifen) {
+		return fuerFahrStreifen ? nameFSGlatt : nameMQGlatt;
 	}
-
 
 	/**
 	 * Erfragt den Namen dieses Attributs fuer Prognosewerte.
 	 *
-	 * @param fuerFahrStreifen das Objekt, fuer den der Name dieses
-	 * Attributs erfragt wird
+	 * @param fuerFahrStreifen
+	 *            das Objekt, fuer den der Name dieses Attributs erfragt wird
 	 * @return der Name dieses Attributs fuer Prognosewerte
 	 */
-	public final String getAttributNamePrognose(final boolean fuerFahrStreifen){
-		return fuerFahrStreifen?this.nameFSPrognose:this.nameMQPrognose;
+	public final String getAttributNamePrognose(final boolean fuerFahrStreifen) {
+		return fuerFahrStreifen ? nameFSPrognose : nameMQPrognose;
 	}
 
-	
 	/**
 	 * Erfragt den Namen dieses Attributs.
 	 *
-	 * @param fuerFahrStreifen das Objekt, fuer den der Name dieses
-	 * Attributs erfragt wird
+	 * @param fuerFahrStreifen
+	 *            das Objekt, fuer den der Name dieses Attributs erfragt wird
 	 * @return der Name dieses Attributs
 	 */
-	public String getAttributName(final boolean fuerFahrStreifen){
-		return fuerFahrStreifen?this.nameFS:this.nameMQ;
+	public String getAttributName(final boolean fuerFahrStreifen) {
+		return fuerFahrStreifen ? nameFS : nameMQ;
 	}
-	
-	
+
 	/**
 	 * Erfragt den Namen des Startwertes dieses Attributs.
 	 *
-	 * @param fuerFahrStreifen das Objekt, fuer den der Name des Startwertes
-	 * dieses Attributs erfragt wird
+	 * @param fuerFahrStreifen
+	 *            das Objekt, fuer den der Name des Startwertes dieses Attributs erfragt wird
 	 * @return der Name des Startwertes dieses Attributs
 	 */
-	public String getParameterStart(final boolean fuerFahrStreifen){
-		return fuerFahrStreifen?this.fsStart:this.mqStart;
+	public String getParameterStart(final boolean fuerFahrStreifen) {
+		return fuerFahrStreifen ? fsStart : mqStart;
 	}
-	
-		
+
 	/**
 	 * Erfragt alle statischen Instanzen dieser Klasse.
 	 *
 	 * @return alle statischen Instanzen dieser Klasse
 	 */
-	public static final Set<PrognoseAttribut> getInstanzen(){
+	public static final Set<PrognoseAttribut> getInstanzen() {
 		return WERTE_BEREICH;
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return this.nameFS + ", " + this.nameMQ;
+		return nameFS + ", " + nameMQ;
 	}
-	
+
 }
