@@ -50,6 +50,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/** MARZ-Situation <code>freier Verkehr</code>. */
 	private static final StoerfallSituation Z1 = StoerfallSituation.FREIER_VERKEHR;
 
@@ -201,11 +203,11 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			 * Konsitenz-Check
 			 */
 			if (!((v1 > 0) && (v1 < v2))) {
-				Debug.getLogger().warning("Fehlerhafte Parameter (0 < v1 < v2) empfangen fuer " + //$NON-NLS-1$
+				LOGGER.warning("Fehlerhafte Parameter (0 < v1 < v2) empfangen fuer " + //$NON-NLS-1$
 						objekt + ": v1 = " + v1 + ", v2 = " + v2); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if (!((k1 > 0) && (k1 < k2))) {
-				Debug.getLogger().warning("Fehlerhafte Parameter (0 < k1 < k2) empfangen fuer " + //$NON-NLS-1$
+				LOGGER.warning("Fehlerhafte Parameter (0 < k1 < k2) empfangen fuer " + //$NON-NLS-1$
 						objekt + ": k1 = " + k1 + ", k2 = " + k2); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		} else {

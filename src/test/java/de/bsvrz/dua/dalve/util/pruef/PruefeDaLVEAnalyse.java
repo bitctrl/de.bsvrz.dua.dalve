@@ -49,7 +49,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 
 	/** Logger. */
-	protected Debug LOGGER = Debug.getLogger();
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/** Datenverteilerverbindung. */
 	private ClientDavInterface dav = null;
@@ -268,7 +268,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 	/**
 	 * Logger
 	 */
-	protected Debug LOGGER = Debug.getLogger();
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Aufrufende Klasse

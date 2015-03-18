@@ -62,6 +62,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/** Datenbeschreibung zur Publikation der Fahrstreifen-Analysedaten. */
 	protected static DataDescription PUB_BESCHREIBUNG = null;
 
@@ -238,7 +240,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 						aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
 						aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 					} catch (final GueteException e) {
-						Debug.getLogger().error(
+						LOGGER.error(
 								"Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 						e.printStackTrace();
 					}
@@ -261,8 +263,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 								aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
 								aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 							} catch (final GueteException e) {
-								Debug.getLogger()
-										.error("Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+								LOGGER.error(
+										"Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 
@@ -325,7 +327,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 					qB.setWertUnskaliert(qBWert);
 
 					GWert gueteGesamt = GWert.getNichtErmittelbareGuete(GueteVerfahren
-									.getZustand(qB.getVerfahren()));
+							.getZustand(qB.getVerfahren()));
 
 					final GWert qPkwGuete = new GWert(analyseDatum, "qPkw"); //$NON-NLS-1$
 					gueteGesamt = qPkwGuete;
@@ -347,7 +349,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 						qB.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 					} else {
 						GWert guetefL = GWert.getNichtErmittelbareGuete(GueteVerfahren
-										.getZustand(qB.getVerfahren()));
+								.getZustand(qB.getVerfahren()));
 
 						double fL = 0;
 						if (vPkw.getWertUnskaliert() > vLkw.getWertUnskaliert()) {
@@ -358,8 +360,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 							try {
 								guetefL = GueteVerfahren.differenz(vPkwGuete, vLkwGuete);
 							} catch (final GueteException e) {
-								Debug.getLogger()
-										.error("Guete von fL (qB) konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
+								LOGGER.error(
+										"Guete von fL (qB) konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 						} else {
@@ -373,7 +375,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 							qB.setWertUnskaliert(qBWert);
 
 							GWert gueteGesamt = GWert.getNichtErmittelbareGuete(GueteVerfahren
-											.getZustand(qB.getVerfahren()));
+									.getZustand(qB.getVerfahren()));
 							try {
 								final GWert qPkwGuete = new GWert(analyseDatum, "qPkw"); //$NON-NLS-1$
 								final GWert qLkwGuete = new GWert(analyseDatum, "qLkw"); //$NON-NLS-1$
@@ -383,8 +385,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 								gueteGesamt = GueteVerfahren.summe(qPkwGuete,
 										GueteVerfahren.produkt(qLkwGuete, guetefL));
 							} catch (final GueteException e) {
-								Debug.getLogger()
-										.error("Guete von qB konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
+								LOGGER.error(
+										"Guete von qB konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 
@@ -399,67 +401,6 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 				}
 			}
 
-			// if(vPkw.isFehlerhaftBzwImplausibel() ||
-			// vLkw.isFehlerhaftBzwImplausibel() ||
-			// qPkw.isFehlerhaftBzwImplausibel() ||
-			// qLkw.isFehlerhaftBzwImplausibel()){
-			// qB.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-			// qB.getGueteIndex().setWert(0);
-			// }else{
-			// if(vPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
-			// qPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
-			// vLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR ||
-			// qLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR){
-			// qB.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
-			// }else{
-			// GWert guetefL =
-			// GWert.getNichtErmittelbareGuete(GueteVerfahren.getZustand(qB.getVerfahren()));
-			//
-			// double fL = 0;
-			// if(vPkw.getWertUnskaliert() > vLkw.getWertUnskaliert()){
-			// fL = k1 + k2 * (vPkw.getWertUnskaliert() - vLkw.getWertUnskaliert());
-			// interpoliert |= vPkw.isPlausibilisiert() || vLkw.isPlausibilisiert();
-			//						GWert vPkwGuete = new GWert(analyseDatum, "vPkw"); //$NON-NLS-1$
-			//						GWert vLkwGuete = new GWert(analyseDatum, "vLkw"); //$NON-NLS-1$
-			// try {
-			// guetefL = GueteVerfahren.differenz(vPkwGuete, vLkwGuete);
-			// } catch (GueteException e) {
-			//							Debug.getLogger().error("Guete von fL (qB) konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
-			// e.printStackTrace();
-			// }
-			// }else{
-			// fL = k1;
-			// }
-			// long qBWert = Math.round((double)qPkw.getWertUnskaliert() + fL *
-			// (double)qLkw.getWertUnskaliert());
-			//
-			//					if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("qB").getItem("Wert"), qBWert)){ //$NON-NLS-1$ //$NON-NLS-2$
-			// qB.setWertUnskaliert(qBWert);
-			//
-			// GWert gueteGesamt =
-			// GWert.getNichtErmittelbareGuete(GueteVerfahren.getZustand(qB.getVerfahren()));
-			// try {
-			//							GWert qPkwGuete = new GWert(analyseDatum, "qPkw"); //$NON-NLS-1$
-			//							GWert qLkwGuete = new GWert(analyseDatum, "qLkw"); //$NON-NLS-1$
-			//
-			// //gueteGesamt = GueteVerfahren.summe(qPkwGuete, GueteVerfahren.gewichte(qLkwGuete,
-			// fL));
-			// gueteGesamt = GueteVerfahren.summe(qPkwGuete, GueteVerfahren.produkt(qLkwGuete,
-			// guetefL));
-			// } catch (GueteException e) {
-			//							Debug.getLogger().error("Guete von qB konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
-			// e.printStackTrace();
-			// }
-			//
-			// qB.getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());
-			// qB.setInterpoliert(qPkw.isPlausibilisiert() || qLkw.isPlausibilisiert() ||
-			// interpoliert);
-			// }else{
-			// qB.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-			// qB.getGueteIndex().setWert(0);
-			// }
-			// }
-			// }
 		} else {
 			qB.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			qB.getGueteIndex().setWert(0);
@@ -559,7 +500,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 							zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 							zielK.setVerfahren(kGuete.getVerfahren().getCode());
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
+							LOGGER.error(
 									"Guete-Index fuer kB nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
@@ -709,7 +650,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 								zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 								zielK.setVerfahren(kGuete.getVerfahren().getCode());
 							} catch (final GueteException e) {
-								Debug.getLogger().error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
+								LOGGER.error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
 										" nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}

@@ -66,6 +66,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Attributgruppe unter der die geglaetteten Werte publiziert werden (FS).
 	 */
@@ -320,13 +322,13 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		for (final SystemObject obj : objekte) {
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
-		Debug.getLogger().config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		LOGGER.config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		infoStr = Constants.EMPTY_STRING;
 		for (final SystemObject obj : messQuerschnitte) {
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
-		Debug.getLogger().config("---\nBetrachtete Messquerschnitte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		LOGGER.config("---\nBetrachtete Messquerschnitte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		fsAnalyseModul = new FsAnalyseModul();
 		fsAnalyseModul.setPublikation(true);

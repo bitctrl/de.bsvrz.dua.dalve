@@ -56,7 +56,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	public static final boolean prStoerfall = false;
 
 	/** Logger. */
-	protected Debug LOGGER;
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/** Datenverteilerverbindung. */
 	private final ClientDavInterface dav;
@@ -124,7 +124,6 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		 * Initialisiere Logger
 		 */
 		Debug.init("DatenaufbereitungLVEPrognose", alLogger); //$NON-NLS-1$
-		LOGGER = Debug.getLogger();
 
 		/*
 		 * Meldet Sender für KZD unter dem Aspekt Analyse an

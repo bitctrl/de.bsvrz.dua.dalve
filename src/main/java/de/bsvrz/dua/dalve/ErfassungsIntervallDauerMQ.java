@@ -56,6 +56,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Platzhalter fuer noch nicht ermittelbare Erfassungsintervalldauer.
 	 */
@@ -141,7 +143,7 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 					instanz = new ErfassungsIntervallDauerMQ(dav, mq);
 					instanzen.put(mq, instanz);
 				} catch (final InvalidArgumentException e) {
-					Debug.getLogger().error(
+					LOGGER.error(
 							"Erfassungsintervalldauer von " + mq
 							+ " kann nicht ueberwacht werden.\nGrund: " + e.getMessage());
 				}

@@ -49,6 +49,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class QWert {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Der Wert.
 	 */
@@ -184,7 +186,7 @@ public class QWert {
 						.abs(summand.getAnteil())));
 			} catch (final GueteException e) {
 				e.printStackTrace();
-				Debug.getLogger().error(
+				LOGGER.error(
 						"Guete konnte nicht gewichtet werden:\nGuete: "
 								+ new GWert(summand.getWert().getGueteIndex(), GueteVerfahren
 										.getZustand(summand.getWert().getVerfahren()), false)
@@ -207,7 +209,7 @@ public class QWert {
 			for (final GWert guete : gueteListe) {
 				gsum += guete + "\n";
 			}
-			Debug.getLogger().error(
+			LOGGER.error(
 					"Guete-Summe konnte nicht ermittelt werden.\n***Summanden***\n" + gsum);
 		}
 
@@ -268,7 +270,7 @@ public class QWert {
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (final GueteException e) {
 					e.printStackTrace();
-					Debug.getLogger()
+					LOGGER
 					.error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
 							"\n***Summand2***\n" + summand2.getWert()); //$NON-NLS-1$
 				}
@@ -334,7 +336,7 @@ public class QWert {
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (final GueteException e) {
 					e.printStackTrace();
-					Debug.getLogger()
+					LOGGER
 					.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
 							"\n***Subtrahend***\n" + subtrahend.getWert());
 				}

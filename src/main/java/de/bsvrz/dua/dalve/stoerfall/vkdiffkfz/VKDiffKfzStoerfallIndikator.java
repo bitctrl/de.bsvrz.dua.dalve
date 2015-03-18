@@ -64,6 +64,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Letzter von irgend einer Instanz dieser Klasse errechneter Wert <code>VKDiffKfz</code>. Nur
 	 * fuer Testzwecke.
@@ -202,7 +204,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				von = konfigData.getReferenceValue("vonMessQuerschnitt").getSystemObject();
 			} else {
 				abmelden();
-				Debug.getLogger()
+				LOGGER
 				.warning(
 						"Stoerfallindikator VKDiffKfz kann fuer "
 								+ objekt
@@ -214,7 +216,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				bis = konfigData.getReferenceValue("bisMessQuerschnitt").getSystemObject();
 			} else {
 				abmelden();
-				Debug.getLogger()
+				LOGGER
 				.warning(
 						"Stoerfallindikator VKDiffKfz kann fuer "
 								+ objekt
@@ -223,7 +225,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			}
 		} else {
 			abmelden();
-			Debug.getLogger()
+			LOGGER
 			.warning(
 					"Stoerfallindikator VKDiffKfz kann fuer "
 							+ objekt
@@ -244,11 +246,11 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			final SystemObject stsObjektVon = DatenaufbereitungLVE.getStraﬂenTeilSegment(von);
 			if (stsObjektVon != null) {
 				fdObjektVon = stsObjektVon;
-				Debug.getLogger().info(
+				LOGGER.info(
 						"Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
 								+ stsObjektVon + " verwendet");
 			} else {
-				Debug.getLogger()
+				LOGGER
 				.warning(
 						"Fuer "
 								+ objekt
@@ -290,11 +292,11 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			final SystemObject stsObjektBis = DatenaufbereitungLVE.getStraﬂenTeilSegment(bis);
 			if (stsObjektBis != null) {
 				fdObjektBis = stsObjektBis;
-				Debug.getLogger().info(
+				LOGGER.info(
 						"Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
 								+ stsObjektBis + " verwendet");
 			} else {
-				Debug.getLogger()
+				LOGGER
 				.warning(
 						"Fuer "
 								+ objekt
@@ -454,7 +456,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 										GueteVerfahren.exp(vKfzAtGuete, 2.0),
 										GueteVerfahren.exp(kKfzAtGuete, 2.0)), 0.5));
 					} catch (final GueteException ex) {
-						Debug.getLogger().error(
+						LOGGER.error(
 								"Guete von VKDiffKfz fuer " + objekt
 										+ " konnte nicht bestimmt werden. Grund:\n"
 										+ ex.getMessage());
@@ -483,7 +485,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 							try {
 								situationsGuete = GueteVerfahren.summe(vKDiffKfzGuete, qKfzEGuete);
 							} catch (final GueteException ex) {
-								Debug.getLogger().error(
+								LOGGER.error(
 										"Guete von Stoerfallindikator VKDiffKfz fuer " + objekt
 												+ " konnte nicht bestimmt werden. Grund:\n"
 												+ ex.getMessage());

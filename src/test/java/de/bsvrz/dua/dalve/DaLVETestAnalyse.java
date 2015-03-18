@@ -48,7 +48,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DaLVETestAnalyse implements ClientSenderInterface {
 
 	/** The logger. */
-	protected Debug LOGGER;
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/** The dav. */
 	private final ClientDavInterface dav;
@@ -101,7 +101,6 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		 * Initialisiere Logger
 		 */
 		Debug.init("DatenaufbereitungLVEAnalyse", alLogger); //$NON-NLS-1$
-		LOGGER = Debug.getLogger();
 
 		/*
 		 * Meldet Sender für KZD unter dem Aspekt Messwertersetzung an
@@ -114,7 +113,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 
 		DD_KZD_SEND = new DataDescription(this.dav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_KZD), this.dav.getDataModel().getAspect(
-				DUAKonstanten.ASP_MESSWERTERSETZUNG));
+						DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
 		this.dav.subscribeSender(this, new SystemObject[] { FS1, FS2, FS3 }, DD_KZD_SEND,
 				SenderRole.source());

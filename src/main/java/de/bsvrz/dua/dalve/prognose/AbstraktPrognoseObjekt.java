@@ -64,6 +64,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 		ClientSenderInterface {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/** Verbindung zum Datenverteiler. */
 	private static ClientDavInterface DAV = null;
 
@@ -206,7 +208,7 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 							aktuellKeineDaten = true;
 						}
 					} catch (final PrognoseParameterException e) {
-						Debug.getLogger().warning("Prognosedaten koennen fuer " + prognoseObjekt //$NON-NLS-1$ 
+						LOGGER.warning("Prognosedaten koennen fuer " + prognoseObjekt //$NON-NLS-1$ 
 								+ " nicht berechnet werden:\n" + e.getMessage()); //$NON-NLS-1$
 						if (aktuellKeineDaten) {
 							datenSenden = false;
@@ -224,15 +226,15 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 							if (sendeGeglaetteteDaten) {
 								DAV.sendData(glaettungsDatum);
 							} else {
-								Debug.getLogger().fine("Geglaettete Daten fuer " + prognoseObjekt + //$NON-NLS-1$
+								LOGGER.fine("Geglaettete Daten fuer " + prognoseObjekt + //$NON-NLS-1$
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
 						} catch (final DataNotSubscribedException e) {
-							Debug.getLogger()
+							LOGGER
 							.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						} catch (final SendSubscriptionNotConfirmed e) {
-							Debug.getLogger()
+							LOGGER
 							.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
@@ -241,15 +243,15 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 							if (sendePrognoseDaten) {
 								DAV.sendData(prognoseDatum);
 							} else {
-								Debug.getLogger().fine("Prognosedaten fuer " + prognoseObjekt + //$NON-NLS-1$
+								LOGGER.fine("Prognosedaten fuer " + prognoseObjekt + //$NON-NLS-1$
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
 						} catch (final DataNotSubscribedException e) {
-							Debug.getLogger()
+							LOGGER
 							.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						} catch (final SendSubscriptionNotConfirmed e) {
-							Debug.getLogger()
+							LOGGER
 							.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
@@ -347,7 +349,7 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 		try {
 			guete = GueteVerfahren.quotient(guetekb, gueteVKfz);
 		} catch (final GueteException e) {
-			Debug.getLogger().error("Guete von " + qb.getName() + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+			LOGGER.error("Guete von " + qb.getName() + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 					prognoseObjekt + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 			e.printStackTrace();
 		}

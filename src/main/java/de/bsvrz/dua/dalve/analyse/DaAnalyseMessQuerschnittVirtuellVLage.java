@@ -61,6 +61,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschnitt {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Mapt alle hier betrachteten Messquerschnitte auf das letzte von ihnen empfangene
 	 * Analysedatum.
@@ -116,9 +118,9 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 			 * RuntimeException("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell +
 			 * " kann nicht ermittelt werden.");
 			 */
-			Debug.getLogger().warning(
+			LOGGER.warning(
 					"Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell
-							+ " kann nicht ermittelt werden.");
+					+ " kann nicht ermittelt werden.");
 			return null;
 		}
 
@@ -131,7 +133,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		}
 
 		if (mqv.getAtgMessQuerschnittVirtuellVLage().getMessQuerSchnittBestandTeile().length == 0) {
-			Debug.getLogger().warning(
+			LOGGER.warning(
 					"Am virtuellen MQ " + messQuerschnitt + " sind keine MQ referenziert.");
 			return null;
 		} else {
@@ -158,7 +160,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), mqAnalyse.getDav()
 						.getDataModel().getAspect("asp.analyse")), ReceiveOptions.normal(),
-				ReceiverRole.receiver());
+						ReceiverRole.receiver());
 
 		return this;
 	}
@@ -266,9 +268,9 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		for (final String attName : new String[] { "VKfz", "VLkw", "VPkw", "VgKfz" }) {
 			if ((ersetzung != null) && (ersetzung.getData() != null)) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-				.kopiereInhaltNachModifiziereIndex(analyseDatum);
+						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
-				Debug.getLogger().error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
+				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$
 				final MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
@@ -372,15 +374,6 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 				}
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der virtuelle MQ " + messQuerschnitt + //$NON-NLS-1$
-				" wird nicht mehr analysiert"); //$NON-NLS-1$
 	}
 
 	/**

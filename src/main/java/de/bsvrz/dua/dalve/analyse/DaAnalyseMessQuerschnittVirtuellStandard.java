@@ -64,6 +64,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuerschnitt implements
 		IObjektWeckerListener {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Informiert dieses Objekt darüber, dass das Timeout für die Berechnung der Analysedaten
 	 * abgelaufen ist.
@@ -203,17 +205,10 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 
 		boolean nichtBetrachtet = false;
 		if (mqAufHauptfahrbahn.size() == 0) {
-			Debug.getLogger().warning("Auf der Hauptfahrbahn des " + //$NON-NLS-1$
+			LOGGER.warning("Auf der Hauptfahrbahn des " + //$NON-NLS-1$
 					"virtuellen MQ " + messQuerschnittVirtuell + " sind keine MQ referenziert"); //$NON-NLS-1$
 			nichtBetrachtet = true;
 		}
-
-		// if (!mqAusfahrtErfasst || !mqEinfahrtErfasst) {
-		// Debug.getLogger()
-		//					.warning("Beim virtuellen MQ " + messQuerschnittVirtuell + //$NON-NLS-1$
-		//							" sind nicht Ein- UND Ausfahrt definiert (beide gleichzeitig)"); //$NON-NLS-1$
-		// nichtBetrachtet = true;
-		// }
 
 		if ((lage == null) || nichtBetrachtet) {
 			return null;
@@ -413,7 +408,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 				new MesswertUnskaliert(attName, ersetzung.getData())
 				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
-				Debug.getLogger().error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
+				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$
 				final MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
@@ -543,15 +538,6 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der virtuelle MQ " + messQuerschnitt + //$NON-NLS-1$
-				" wird nicht mehr analysiert"); //$NON-NLS-1$
-	}
-
-	/**
 	 * ************************************************************************* *
 	 * Berechnungs-Methoden * *
 	 * ************************************************************************.
@@ -657,7 +643,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	 *            the mq
 	 * @return the MQ data
 	 */
-	private final ResultData getMQData(final MessQuerschnitt mq) {
+	private ResultData getMQData(final MessQuerschnitt mq) {
 		ResultData rd = null;
 		if (mq != null) {
 			rd = aktuelleMQAnalysen.get(mq.getSystemObject());
@@ -674,7 +660,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	 * @param attName
 	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
 	 */
-	private final void setBilanzDatum(final Data analyseDatum, final String attName) {
+	private void setBilanzDatum(final Data analyseDatum, final String attName) {
 		QWert Q = null;
 
 		if (lage.equals(MessQuerschnittVirtuellLage.VOR)) {

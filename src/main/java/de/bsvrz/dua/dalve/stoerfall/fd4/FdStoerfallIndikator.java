@@ -56,6 +56,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 DatensatzUpdateListener {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Verkehrsmenge des Fundamentaldiagramms.
 	 */
@@ -125,14 +127,14 @@ DatensatzUpdateListener {
 			final PdFundamentalDiagramm fdAmSts = new PdFundamentalDiagramm(new StoerfallIndikator(
 					stsObjekt));
 			fdAmSts.addUpdateListener(this);
-			Debug.getLogger()
+			LOGGER
 					.info("Fuer "
 							+ objekt
 					+ " wird (falls versorgt) das Fundamentaldiagramm am Teilsegment "
 					+ stsObjekt
 							+ " verwendet. Falls nicht versorgt wird das Fundamentaldiagramm am MQ selbst verwendet");
 		} else {
-			Debug.getLogger()
+			LOGGER
 			.warning(
 					"Fuer "
 							+ objekt
@@ -188,7 +190,7 @@ DatensatzUpdateListener {
 					KKfzStoerfallG = prognoseDichteObj.getKKfzStoerfallGAktuell(
 							KKfzStoerfall.getWert(), KKfzStoerfall.isImplausibel());
 				} catch (final PrognoseParameterException e) {
-					Debug.getLogger().warning(e.getMessage());
+					LOGGER.warning(e.getMessage());
 				}
 
 				// System.out.println(KKfzStoerfallG);
@@ -205,7 +207,7 @@ DatensatzUpdateListener {
 				zustand.setSituation(stufe);
 				data = zustand.getData();
 			} else {
-				Debug.getLogger().warning(
+				LOGGER.warning(
 						"Keine gueltigen Parameter fuer Stoerfallprognose: " + objekt); //$NON-NLS-1$
 			}
 

@@ -64,6 +64,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Verbindung zum Analysemodul.
 	 */
@@ -138,7 +140,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		}
 
 		if (aktuelleFSAnalysen.keySet().isEmpty()) {
-			Debug.getLogger().warning("Der MQ " + messQuerschnitt + " hat keine Fahrstreifen"); //$NON-NLS-1$//$NON-NLS-2$
+			LOGGER.warning("Der MQ " + messQuerschnitt + " hat keine Fahrstreifen"); //$NON-NLS-1$//$NON-NLS-2$
 			return null;
 		}
 
@@ -328,15 +330,6 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der MQ " + messQuerschnitt + //$NON-NLS-1$
-				" wird nicht mehr analysiert"); //$NON-NLS-1$
-	}
-
-	/**
 	 * ************************************************************************* *
 	 * Berechnungs-Methoden * *
 	 * ************************************************************************.
@@ -410,7 +403,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 							qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 						} catch (final GueteException e) {
-							Debug.getLogger().error("Guete-Index fuer Q" + attName + //$NON-NLS-1$
+							LOGGER.error("Guete-Index fuer Q" + attName + //$NON-NLS-1$
 									" nicht berechenbar in " + analyseDatum, e);
 							e.printStackTrace();
 						}
@@ -477,7 +470,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 								new GWert(fsDaten.getData(), praefixKlein + attName)));
 					} catch (final GueteException e) {
 						gueteBerechenbar = false;
-						Debug.getLogger().error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$
+						LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$
 								" nicht berechenbar in " + analyseDatum, e);
 						e.printStackTrace();
 					}
@@ -507,7 +500,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 								qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 								qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 							} catch (final GueteException e) {
-								Debug.getLogger().error(
+								LOGGER.error(
 										"Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$
 												" nicht berechenbar in " + analyseDatum, e);
 								e.printStackTrace();
@@ -605,7 +598,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							BAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 							BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
+							LOGGER.error(
 									"Guete-Index fuer B nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
@@ -722,7 +715,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 																VKfzGuete), 2.0))), QKfzGuete));
 							} catch (final GueteException e) {
 								gueteBerechenbar = false;
-								Debug.getLogger()
+								LOGGER
 										.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
@@ -751,7 +744,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 										SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren()
 												.getCode());
 									} catch (final GueteException e) {
-										Debug.getLogger()
+										LOGGER
 												.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 										e.printStackTrace();
 									}
@@ -807,7 +800,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							new GWert(analyseDatum, "QKfz") //$NON-NLS-1$
 							);
 				} catch (final GueteException e) {
-					Debug.getLogger().error(
+					LOGGER.error(
 							"Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 					e.printStackTrace();
 				}
@@ -894,7 +887,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 									new GWert(analyseDatum, "V" + attName) //$NON-NLS-1$
 									);
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
+							LOGGER.error(
 									"Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
 							e.printStackTrace();
 						}
@@ -999,7 +992,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							QBGuete = GueteVerfahren.summe(QPkwGuete,
 									GueteVerfahren.gewichte(QLkwGuete, fL));
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
+							LOGGER.error(
 									"Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
@@ -1076,7 +1069,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 									new GWert(analyseDatum, "VKfz") //$NON-NLS-1$
 									);
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
+							LOGGER.error(
 									"Guete-Index fuer KB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
@@ -1104,7 +1097,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
-	private final void berechneVDifferenz(final Data analyseDatum) {
+	private void berechneVDifferenz(final Data analyseDatum) {
 		final MesswertUnskaliert VDeltaAnalyse = new MesswertUnskaliert("VDelta"); //$NON-NLS-1$
 
 		if (aktuelleFSAnalysen.size() <= 1) {
@@ -1178,7 +1171,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 												new GWert(fsResultIPlus1.getData(), "vKfz")), w)); //$NON-NLS-1$
 							} catch (final GueteException e) {
 								gueteBerechnen = false;
-								Debug.getLogger().error(
+								LOGGER.error(
 										"Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
@@ -1203,7 +1196,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 											guete.getIndexUnskaliert());
 									VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());
 								} catch (final GueteException e) {
-									Debug.getLogger().error(
+									LOGGER.error(
 											"Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
 									e.printStackTrace();
 								}
