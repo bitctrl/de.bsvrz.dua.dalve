@@ -44,7 +44,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Überprüfung der Prognosewerte und Störfallindikatoren.
  *
@@ -53,7 +52,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DaLVETestPrognose implements ClientSenderInterface {
 
 	/** The Constant prStoerfall. */
-	public static final boolean prStoerfall = false;
+	public static final boolean PR_STOERFALL = false;
 
 	/** Logger. */
 	private static final Debug LOGGER = Debug.getLogger();
@@ -133,11 +132,11 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 
 		DD_KZD_SEND_FS = new DataDescription(this.dav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_KURZZEIT_FS), this.dav.getDataModel().getAspect(
-				DUAKonstanten.ASP_ANALYSE));
+						DUAKonstanten.ASP_ANALYSE));
 
 		DD_KZD_SEND_MQ = new DataDescription(this.dav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_KURZZEIT_MQ), this.dav.getDataModel().getAspect(
-				DUAKonstanten.ASP_ANALYSE));
+						DUAKonstanten.ASP_ANALYSE));
 
 		this.dav.subscribeSender(this, FS1, DD_KZD_SEND_FS, SenderRole.sender());
 		this.dav.subscribeSender(this, MQ1, DD_KZD_SEND_MQ, SenderRole.sender());
@@ -206,16 +205,16 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		while ((zeileFS1 = importFS.getDatensatz(1)) != null) {
 			zeileMQ1 = importMQ.getDatensatz();
 
-			final ResultData resultat_FS = new ResultData(FS1, DD_KZD_SEND_FS, aktZeit, zeileFS1);
-			final ResultData resultat_MQ = new ResultData(MQ1, DD_KZD_SEND_MQ, aktZeit, zeileMQ1);
+			final ResultData resultatFS = new ResultData(FS1, DD_KZD_SEND_FS, aktZeit, zeileFS1);
+			final ResultData resultatMQ = new ResultData(MQ1, DD_KZD_SEND_MQ, aktZeit, zeileMQ1);
 
 			System.out
-					.println("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			.println("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 			LOGGER.info("Sende Analysedaten: FS|MQ 1 -> Zeile: " + csvIndex + " - Zeit: " + aktZeit);
 
 			synchronized (this) {
-				dav.sendData(resultat_FS);
-				dav.sendData(resultat_MQ);
+				dav.sendData(resultatFS);
+				dav.sendData(resultatMQ);
 
 				// Warte auf Prüfungsabschluss aller FS für diesen Datensatz
 				doWait();
@@ -293,7 +292,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.bsvrz.dav.daf.main.ClientSenderInterface#dataRequest(de.bsvrz.dav.daf.main.config.SystemObject
 	 * , de.bsvrz.dav.daf.main.DataDescription, byte)
@@ -307,7 +306,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.bsvrz.dav.daf.main.ClientSenderInterface#isRequestSupported(de.bsvrz.dav.daf.main.config
 	 * .SystemObject, de.bsvrz.dav.daf.main.DataDescription)

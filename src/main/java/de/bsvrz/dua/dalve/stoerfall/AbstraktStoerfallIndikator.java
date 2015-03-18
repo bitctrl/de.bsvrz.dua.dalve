@@ -45,14 +45,13 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Repräsentiert einen Stoerfallindikator.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public abstract class AbstraktStoerfallIndikator implements ClientReceiverInterface,
-		ClientSenderInterface {
+ClientSenderInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -101,7 +100,7 @@ public abstract class AbstraktStoerfallIndikator implements ClientReceiverInterf
 
 		pubBeschreibung = new DataDescription(dav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav.getDataModel().getAspect(
-				getPubAspektPid()));
+						getPubAspektPid()));
 		try {
 			dav.subscribeSender(this, objekt, pubBeschreibung, SenderRole.source());
 		} catch (final OneSubscriptionPerSendData e) {
@@ -171,7 +170,7 @@ public abstract class AbstraktStoerfallIndikator implements ClientReceiverInterf
 				if (resultat != null) {
 					if ((paraAtg != null)
 							&& (resultat.getDataDescription().getAttributeGroup().getId() == paraAtg
-									.getId())) {
+							.getId())) {
 						/**
 						 * Parameter empfangen
 						 */

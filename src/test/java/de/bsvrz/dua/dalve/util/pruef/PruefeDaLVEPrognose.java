@@ -41,7 +41,6 @@ import de.bsvrz.dua.dalve.util.TestErgebnisPrognoseImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Prüft (Vergleicht) Analyse-Datensätze der Fahrstreifen.
  *
@@ -187,7 +186,7 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 	 */
 	public PruefeDaLVEPrognose(final DaLVETestPrognose caller, final ClientDavInterface dav,
 			final SystemObject[] FS, final String csvQuelle, final boolean useAsserts)
-			throws Exception {
+					throws Exception {
 		this.dav = dav;
 		this.caller = caller;
 		useAssert = useAsserts;
@@ -404,7 +403,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	 * richtig."
 	 */
 	private final String[] attributNamenPraefixP = { "qB", //$NON-NLS-1$
-			"vKfz" }; //$NON-NLS-1$
+	"vKfz" }; //$NON-NLS-1$
 	/**
 	 * Attributpfade der ATG
 	 *
@@ -416,7 +415,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	 */
 	private final String[] attributNamenPraefixG = { "qB", //$NON-NLS-1$
 			"vKfz", //$NON-NLS-1$
-			"kB" }; //$NON-NLS-1$
+	"kB" }; //$NON-NLS-1$
 
 	/**
 	 * Die verwendeten Attributpfade der ATG

@@ -51,7 +51,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte eines
  * Messquerschnitts notwendig sind gespeichert. Jedes mit dem MQ assoziierte Fahrstreifendatum muss
@@ -154,7 +153,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), mqAnalyse.getDav()
 						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -303,7 +302,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.bsvrz.dav.daf.main.ClientReceiverInterface#update(de.bsvrz.dav.daf.main.ResultData[])
 	 */
 	@Override
@@ -500,9 +499,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 								qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 								qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 							} catch (final GueteException e) {
-								LOGGER.error(
-										"Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$
-												" nicht berechenbar in " + analyseDatum, e);
+								LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$
+										" nicht berechenbar in " + analyseDatum, e);
 								e.printStackTrace();
 							}
 						}
@@ -637,33 +635,35 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
 	private void berechneStandardabweichung(final Data analyseDatum) {
-		final MesswertUnskaliert SKfzAnalyse = new MesswertUnskaliert("SKfz"); //$NON-NLS-1$
+		final MesswertUnskaliert sKfzAnalyse = new MesswertUnskaliert("SKfz"); //$NON-NLS-1$
 
-		final MesswertUnskaliert QKfz = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
-		final GWert QKfzGuete = new GWert(analyseDatum, "QKfz"); //$NON-NLS-1$
+		final MesswertUnskaliert qKfzUnskaliert = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
+		final GWert qKfzGueteWert = new GWert(analyseDatum, "QKfz"); //$NON-NLS-1$
 
 		boolean interpoliert = false;
 		boolean gueteBerechenbar = true;
 
-		if (QKfz.isFehlerhaftBzwImplausibel()) {
-			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-		} else if (QKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
-			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+		if (qKfzUnskaliert.isFehlerhaftBzwImplausibel()) {
+			sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		} else if (qKfzUnskaliert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
+			sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		} else {
-			if (QKfz.getWertUnskaliert() > 1) {
+			if (qKfzUnskaliert.getWertUnskaliert() > 1) {
 				double sKfzWertOhneWurzel = 0;
 
-				final DaMesswertUnskaliert VKfz = new DaMesswertUnskaliert("VKfz", analyseDatum); //$NON-NLS-1$
-				if (VKfz.isFehlerhaftBzwImplausibel()) {
-					SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-				} else if (VKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
-					SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+				final DaMesswertUnskaliert vKfzUnskaliert = new DaMesswertUnskaliert(
+						"VKfz", analyseDatum); //$NON-NLS-1$
+				if (vKfzUnskaliert.isFehlerhaftBzwImplausibel()) {
+					sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				} else if (vKfzUnskaliert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
+					sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					final GWert VKfzGuete = new GWert(analyseDatum, "VKfz"); //$NON-NLS-1$
+					final GWert vKfzGueteWert = new GWert(analyseDatum, "VKfz"); //$NON-NLS-1$
 
-					interpoliert = VKfz.isInterpoliert() || QKfz.isInterpoliert();
+					interpoliert = vKfzUnskaliert.isInterpoliert()
+							|| qKfzUnskaliert.isInterpoliert();
 
-					final double VKfzWert = VKfz.getWertUnskaliert();
+					final double vKfzWertUnskaliert = vKfzUnskaliert.getWertUnskaliert();
 					final List<GWert> summanden = new ArrayList<GWert>();
 
 					int istNichtVorhanden = 0;
@@ -677,8 +677,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
 						if (qKfz.isFehlerhaftBzwImplausibel() || vKfz.isFehlerhaftBzwImplausibel()
 								|| sKfz.isFehlerhaftBzwImplausibel()) {
-							SKfzAnalyse
-									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							sKfzAnalyse
+							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						} else if ((qKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 								|| (vKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
@@ -696,8 +696,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							 * Berechnung
 							 */
 							sKfzWertOhneWurzel += ((qKfzWert * Math.pow(sKfzWert, 2.0)) + (qKfzWert * Math
-									.pow(vKfzWert - VKfzWert, 2.0)))
-									/ (QKfz.getWertUnskaliert() - 1.0);
+									.pow(vKfzWert - vKfzWertUnskaliert, 2.0)))
+									/ (qKfzUnskaliert.getWertUnskaliert() - 1.0);
 
 							/**
 							 * Guete
@@ -712,64 +712,65 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 												GueteVerfahren.exp(sKfzGuete, 2.0)), GueteVerfahren
 												.produkt(qKfzGuete, GueteVerfahren.exp(
 														GueteVerfahren.differenz(vKfzGuete,
-																VKfzGuete), 2.0))), QKfzGuete));
+																vKfzGueteWert), 2.0))),
+										qKfzGueteWert));
 							} catch (final GueteException e) {
 								gueteBerechenbar = false;
-								LOGGER
-										.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+								LOGGER.error(
+										"Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 						}
 					}
 
 					if (aktuelleFSAnalysenNutz.size() == istNichtVorhanden) {
-						SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
-					} else if (SKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT) {
+						sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+					} else if (sKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT) {
 						if (sKfzWertOhneWurzel >= 0) {
 							final long SKfz = Math.round(Math.sqrt(sKfzWertOhneWurzel));
 
 							if (DUAUtensilien.isWertInWerteBereich(analyseDatum
 									.getItem("SKfz").getItem("Wert"), SKfz)) { //$NON-NLS-1$ //$NON-NLS-2$
-								SKfzAnalyse.setWertUnskaliert(SKfz);
+								sKfzAnalyse.setWertUnskaliert(SKfz);
 								if (interpoliert) {
-									SKfzAnalyse.setInterpoliert(true);
+									sKfzAnalyse.setInterpoliert(true);
 								}
 								if (gueteBerechenbar) {
 									try {
 										final GWert gesamtGuete = GueteVerfahren.exp(GueteVerfahren
 												.summe(summanden.toArray(new GWert[0])), 0.5);
 
-										SKfzAnalyse.getGueteIndex().setWert(
+										sKfzAnalyse.getGueteIndex().setWert(
 												gesamtGuete.getIndexUnskaliert());
-										SKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren()
+										sKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren()
 												.getCode());
 									} catch (final GueteException e) {
-										LOGGER
-												.error("Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+										LOGGER.error(
+												"Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 										e.printStackTrace();
 									}
 								}
 							} else {
-								SKfzAnalyse
-										.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+								sKfzAnalyse
+								.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							}
 						} else {
-							SKfzAnalyse
-									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							sKfzAnalyse
+							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 						}
 					}
 				}
 			} else {
-				SKfzAnalyse.setWertUnskaliert(0);
-				SKfzAnalyse.setInterpoliert(QKfz.isInterpoliert());
+				sKfzAnalyse.setWertUnskaliert(0);
+				sKfzAnalyse.setInterpoliert(qKfzUnskaliert.isInterpoliert());
 			}
 		}
 
-		if (SKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT) {
-			SKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		if (sKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT) {
+			sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}
 
-		SKfzAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
+		sKfzAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	/**
@@ -779,44 +780,43 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
 	protected final void berechneLkwAnteil(final Data analyseDatum) {
-		final MesswertUnskaliert ALkwAnalyse = new MesswertUnskaliert("ALkw"); //$NON-NLS-1$
-		final MesswertUnskaliert QLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
-		final MesswertUnskaliert QKfz = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert aLkwAnalyse = new MesswertUnskaliert("ALkw"); //$NON-NLS-1$
+		final MesswertUnskaliert qLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert qKfz = new MesswertUnskaliert("QKfz", analyseDatum); //$NON-NLS-1$
 
-		if (QLkw.isFehlerhaftBzwImplausibel() || QKfz.isFehlerhaftBzwImplausibel()) {
-			ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-		} else if ((QLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
-				|| (QKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
-			ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+		if (qLkw.isFehlerhaftBzwImplausibel() || qKfz.isFehlerhaftBzwImplausibel()) {
+			aLkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		} else if ((qLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
+				|| (qKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
+			aLkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		} else {
-			GWert ALkwGuete = null;
-			final long ALkwWert = Math.round(((double) QLkw.getWertUnskaliert() / (double) QKfz
+			GWert aLkwGuete = null;
+			final long aLkwWert = Math.round(((double) qLkw.getWertUnskaliert() / (double) qKfz
 					.getWertUnskaliert()) * 100.0);
 
 			if (DUAUtensilien.isWertInWerteBereich(
-					analyseDatum.getItem("ALkw").getItem("Wert"), ALkwWert)) { //$NON-NLS-1$ //$NON-NLS-2$
+					analyseDatum.getItem("ALkw").getItem("Wert"), aLkwWert)) { //$NON-NLS-1$ //$NON-NLS-2$
 				try {
-					ALkwGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QLkw"), //$NON-NLS-1$
+					aLkwGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QLkw"), //$NON-NLS-1$
 							new GWert(analyseDatum, "QKfz") //$NON-NLS-1$
 							);
 				} catch (final GueteException e) {
-					LOGGER.error(
-							"Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 					e.printStackTrace();
 				}
 
-				ALkwAnalyse.setWertUnskaliert(ALkwWert);
-				ALkwAnalyse.setInterpoliert(QLkw.isInterpoliert() || QKfz.isInterpoliert());
-				if (ALkwGuete != null) {
-					ALkwAnalyse.getGueteIndex().setWert(ALkwGuete.getIndexUnskaliert());
-					ALkwAnalyse.setVerfahren(ALkwGuete.getVerfahren().getCode());
+				aLkwAnalyse.setWertUnskaliert(aLkwWert);
+				aLkwAnalyse.setInterpoliert(qLkw.isInterpoliert() || qKfz.isInterpoliert());
+				if (aLkwGuete != null) {
+					aLkwAnalyse.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
+					aLkwAnalyse.setVerfahren(aLkwGuete.getVerfahren().getCode());
 				}
 			} else {
-				ALkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				aLkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 		}
 
-		ALkwAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
+		aLkwAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	/**
@@ -828,15 +828,15 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 *            der Attributname des Verkehrswertes, der berechnet werden soll
 	 */
 	protected final void berechneDichte(final Data analyseDatum, final String attName) {
-		final MesswertUnskaliert KAnalyse = new MesswertUnskaliert("K" + attName); //$NON-NLS-1$
-		final MesswertUnskaliert Q = new MesswertUnskaliert("Q" + attName, analyseDatum); //$NON-NLS-1$
-		final MesswertUnskaliert V = new MesswertUnskaliert("V" + attName, analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert kAnalyse = new MesswertUnskaliert("K" + attName); //$NON-NLS-1$
+		final MesswertUnskaliert q = new MesswertUnskaliert("Q" + attName, analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert v = new MesswertUnskaliert("V" + attName, analyseDatum); //$NON-NLS-1$
 
-		if (Q.isFehlerhaftBzwImplausibel() || V.isFehlerhaftBzwImplausibel()) {
-			KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		if (q.isFehlerhaftBzwImplausibel() || v.isFehlerhaftBzwImplausibel()) {
+			kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		} else {
-			if ((V.getWertUnskaliert() == 0)
-					|| (V.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
+			if ((v.getWertUnskaliert() == 0)
+					|| (v.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 				if (parameter.isInitialisiert() && (letztesErgebnis != null)
 						&& (letztesErgebnis.getData() != null)) {
 					long grenz = -1;
@@ -856,39 +856,38 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 					final MesswertUnskaliert KTMinus1 = new MesswertUnskaliert(
 							"K" + attName, letztesErgebnis.getData()); //$NON-NLS-1$
 					if (KTMinus1.isFehlerhaftBzwImplausibel()) {
-						KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					} else if (KTMinus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
-						KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+						kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 					} else {
 						if (KTMinus1.getWertUnskaliert() < grenz) {
-							KAnalyse.setWertUnskaliert(0);
+							kAnalyse.setWertUnskaliert(0);
 						} else {
-							KAnalyse.setWertUnskaliert(max);
+							kAnalyse.setWertUnskaliert(max);
 						}
 					}
 				} else {
-					KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 
 			} else {
-				if (Q.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
-					KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+				if (q.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
+					kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					long KWert = Math.round((double) Q.getWertUnskaliert()
-							/ (double) V.getWertUnskaliert());
+					long kWert = Math.round((double) q.getWertUnskaliert()
+							/ (double) v.getWertUnskaliert());
 					if (DUAUtensilien.isWertInWerteBereich(analyseDatum
-							.getItem("K" + attName).getItem("Wert"), KWert)) { //$NON-NLS-1$//$NON-NLS-2$
-						final boolean interpoliert = Q.isInterpoliert() || V.isInterpoliert();
-						GWert KGuete = null;
+							.getItem("K" + attName).getItem("Wert"), kWert)) { //$NON-NLS-1$//$NON-NLS-2$
+						final boolean interpoliert = q.isInterpoliert() || v.isInterpoliert();
+						GWert kGuete = null;
 
 						try {
-							KGuete = GueteVerfahren.quotient(
+							kGuete = GueteVerfahren.quotient(
 									new GWert(analyseDatum, "Q" + attName), //$NON-NLS-1$
 									new GWert(analyseDatum, "V" + attName) //$NON-NLS-1$
 									);
 						} catch (final GueteException e) {
-							LOGGER.error(
-									"Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
+							LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
 							e.printStackTrace();
 						}
 
@@ -903,25 +902,25 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						}
 
 						if (!DatenaufbereitungLVE.getInstance().isIgnoreDichteMax()) {
-							if ((max > 0) && (KWert > max)) {
-								KWert = max;
+							if ((max > 0) && (kWert > max)) {
+								kWert = max;
 							}
 						}
 
-						KAnalyse.setWertUnskaliert(KWert);
-						KAnalyse.setInterpoliert(interpoliert);
-						if (KGuete != null) {
-							KAnalyse.getGueteIndex().setWert(KGuete.getIndexUnskaliert());
-							KAnalyse.setVerfahren(KGuete.getVerfahren().getCode());
+						kAnalyse.setWertUnskaliert(kWert);
+						kAnalyse.setInterpoliert(interpoliert);
+						if (kGuete != null) {
+							kAnalyse.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
+							kAnalyse.setVerfahren(kGuete.getVerfahren().getCode());
 						}
 					} else {
-						KAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					}
 				}
 			}
 		}
 
-		KAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
+		kAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	/**
@@ -932,89 +931,89 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
 	protected final void berechneBemessungsVerkehrsstaerke(final Data analyseDatum) {
-		final MesswertUnskaliert QBAnalyse = new MesswertUnskaliert("QB"); //$NON-NLS-1$
-		final MesswertUnskaliert VPkw = new MesswertUnskaliert("VPkw", analyseDatum); //$NON-NLS-1$
-		final MesswertUnskaliert VLkw = new MesswertUnskaliert("VLkw", analyseDatum); //$NON-NLS-1$
-		final MesswertUnskaliert QPkw = new MesswertUnskaliert("QPkw", analyseDatum); //$NON-NLS-1$
-		final MesswertUnskaliert QLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert qbAnalyse = new MesswertUnskaliert("QB"); //$NON-NLS-1$
+		final MesswertUnskaliert vPkw = new MesswertUnskaliert("VPkw", analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert vLkw = new MesswertUnskaliert("VLkw", analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert qPkw = new MesswertUnskaliert("QPkw", analyseDatum); //$NON-NLS-1$
+		final MesswertUnskaliert qLkw = new MesswertUnskaliert("QLkw", analyseDatum); //$NON-NLS-1$
 
-		if (VLkw.isFehlerhaftBzwImplausibel() || QLkw.isFehlerhaftBzwImplausibel()
-				|| (VLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
-				|| (QLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
-			if ((VPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
-					|| (QPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
-				QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+		if (vLkw.isFehlerhaftBzwImplausibel() || qLkw.isFehlerhaftBzwImplausibel()
+				|| (vLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
+				|| (qLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
+			if ((vPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
+					|| (qPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
+				qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 			} else {
-				long QBWert = DUAKonstanten.NICHT_ERMITTELBAR;
-				GWert QBGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
+				long qbWert = DUAKonstanten.NICHT_ERMITTELBAR;
+				GWert qbGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
 
-				QBWert = QPkw.getWertUnskaliert();
+				qbWert = qPkw.getWertUnskaliert();
 				if (DUAUtensilien.isWertInWerteBereich(
-						analyseDatum.getItem("QB").getItem("Wert"), QBWert)) { //$NON-NLS-1$//$NON-NLS-2$
-					QBGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
+						analyseDatum.getItem("QB").getItem("Wert"), qbWert)) { //$NON-NLS-1$//$NON-NLS-2$
+					qbGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
 
-					QBAnalyse.setWertUnskaliert(QBWert);
-					QBAnalyse.setInterpoliert(QPkw.isInterpoliert());
-					QBAnalyse.getGueteIndex().setWert(QBGuete.getIndexUnskaliert());
-					QBAnalyse.setVerfahren(QBGuete.getVerfahren().getCode());
+					qbAnalyse.setWertUnskaliert(qbWert);
+					qbAnalyse.setInterpoliert(qPkw.isInterpoliert());
+					qbAnalyse.getGueteIndex().setWert(qbGuete.getIndexUnskaliert());
+					qbAnalyse.setVerfahren(qbGuete.getVerfahren().getCode());
 				} else {
-					QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			}
 		} else {
-			if (VPkw.isFehlerhaftBzwImplausibel() || QPkw.isFehlerhaftBzwImplausibel()) {
-				QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-			} else if ((VPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
-					|| (QPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
-				QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+			if (vPkw.isFehlerhaftBzwImplausibel() || qPkw.isFehlerhaftBzwImplausibel()) {
+				qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			} else if ((vPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
+					|| (qPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
+				qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 			} else {
 				if (parameter.isInitialisiert()) {
 					final double k1 = parameter.getFlk1();
 					final double k2 = parameter.getFlk2();
 
 					double fL;
-					if (VPkw.getWertUnskaliert() <= VLkw.getWertUnskaliert()) {
+					if (vPkw.getWertUnskaliert() <= vLkw.getWertUnskaliert()) {
 						fL = k1;
 					} else {
-						fL = k1 + (k2 * (VPkw.getWertUnskaliert() - VLkw.getWertUnskaliert()));
+						fL = k1 + (k2 * (vPkw.getWertUnskaliert() - vLkw.getWertUnskaliert()));
 					}
 
-					long QBWert = DUAKonstanten.NICHT_ERMITTELBAR;
-					GWert QBGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
+					long qbWert = DUAKonstanten.NICHT_ERMITTELBAR;
+					GWert qbGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
 
-					QBWert = QPkw.getWertUnskaliert() + Math.round(fL * QLkw.getWertUnskaliert());
+					qbWert = qPkw.getWertUnskaliert() + Math.round(fL * qLkw.getWertUnskaliert());
 					if (DUAUtensilien.isWertInWerteBereich(
-							analyseDatum.getItem("QB").getItem("Wert"), QBWert)) { //$NON-NLS-1$//$NON-NLS-2$
-						final GWert QPkwGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
-						final GWert QLkwGuete = new GWert(analyseDatum, "QLkw"); //$NON-NLS-1$
+							analyseDatum.getItem("QB").getItem("Wert"), qbWert)) { //$NON-NLS-1$//$NON-NLS-2$
+						final GWert qPkwGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
+						final GWert qLkwGuete = new GWert(analyseDatum, "QLkw"); //$NON-NLS-1$
 
 						try {
-							QBGuete = GueteVerfahren.summe(QPkwGuete,
-									GueteVerfahren.gewichte(QLkwGuete, fL));
+							qbGuete = GueteVerfahren.summe(qPkwGuete,
+									GueteVerfahren.gewichte(qLkwGuete, fL));
 						} catch (final GueteException e) {
 							LOGGER.error(
 									"Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 
-						QBAnalyse.setWertUnskaliert(QBWert);
-						QBAnalyse.setInterpoliert(QPkw.isInterpoliert() || QLkw.isInterpoliert());
-						if (QBGuete != null) {
-							QBAnalyse.getGueteIndex().setWert(QBGuete.getIndexUnskaliert());
-							QBAnalyse.setVerfahren(QBGuete.getVerfahren().getCode());
+						qbAnalyse.setWertUnskaliert(qbWert);
+						qbAnalyse.setInterpoliert(qPkw.isInterpoliert() || qLkw.isInterpoliert());
+						if (qbGuete != null) {
+							qbAnalyse.getGueteIndex().setWert(qbGuete.getIndexUnskaliert());
+							qbAnalyse.setVerfahren(qbGuete.getVerfahren().getCode());
 						}
 					} else {
-						QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					}
 
 				} else {
-					QBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			}
 
 		}
 
-		QBAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
+		qbAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 	/**
@@ -1057,15 +1056,15 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				if (QB.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
 					KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					final long KBWert = Math.round((double) QB.getWertUnskaliert()
+					final long kbWert = Math.round((double) QB.getWertUnskaliert()
 							/ (double) VKfz.getWertUnskaliert());
 
 					if (DUAUtensilien.isWertInWerteBereich(
-							analyseDatum.getItem("KB").getItem("Wert"), KBWert)) { //$NON-NLS-1$//$NON-NLS-2$
+							analyseDatum.getItem("KB").getItem("Wert"), kbWert)) { //$NON-NLS-1$//$NON-NLS-2$
 						final boolean interpoliert = QB.isInterpoliert() || VKfz.isInterpoliert();
-						GWert KBGuete = null;
+						GWert kbGuete = null;
 						try {
-							KBGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QB"), //$NON-NLS-1$
+							kbGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QB"), //$NON-NLS-1$
 									new GWert(analyseDatum, "VKfz") //$NON-NLS-1$
 									);
 						} catch (final GueteException e) {
@@ -1074,11 +1073,11 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							e.printStackTrace();
 						}
 
-						KBAnalyse.setWertUnskaliert(KBWert);
+						KBAnalyse.setWertUnskaliert(kbWert);
 						KBAnalyse.setInterpoliert(interpoliert);
-						if (KBGuete != null) {
-							KBAnalyse.getGueteIndex().setWert(KBGuete.getIndexUnskaliert());
-							KBAnalyse.setVerfahren(KBGuete.getVerfahren().getCode());
+						if (kbGuete != null) {
+							KBAnalyse.getGueteIndex().setWert(kbGuete.getIndexUnskaliert());
+							KBAnalyse.setVerfahren(kbGuete.getVerfahren().getCode());
 						}
 					} else {
 						KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
@@ -1098,27 +1097,27 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
 	private void berechneVDifferenz(final Data analyseDatum) {
-		final MesswertUnskaliert VDeltaAnalyse = new MesswertUnskaliert("VDelta"); //$NON-NLS-1$
+		final MesswertUnskaliert vDeltaAnalyse = new MesswertUnskaliert("VDelta"); //$NON-NLS-1$
 
 		if (aktuelleFSAnalysen.size() <= 1) {
-			final DaMesswertUnskaliert VKfz = new DaMesswertUnskaliert("VKfz"); //$NON-NLS-1$
-			if (VKfz.isFehlerhaftBzwImplausibel()) {
-				VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-			} else if (VKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
-				VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+			final DaMesswertUnskaliert vKfz = new DaMesswertUnskaliert("VKfz"); //$NON-NLS-1$
+			if (vKfz.isFehlerhaftBzwImplausibel()) {
+				vDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			} else if (vKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
+				vDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 			} else {
 				/**
 				 * kopiere Wert
 				 */
-				VDeltaAnalyse.setWertUnskaliert(VKfz.getWertUnskaliert());
-				VDeltaAnalyse.setFormalMax(VKfz.isFormalMax());
-				VDeltaAnalyse.setFormalMin(VKfz.isFormalMin());
-				VDeltaAnalyse.setGueteIndex(VKfz.getGueteIndex());
-				VDeltaAnalyse.setVerfahren(VKfz.getVerfahren());
-				VDeltaAnalyse.setLogischMax(VKfz.isLogischMax());
-				VDeltaAnalyse.setLogischMin(VKfz.isLogischMin());
-				VDeltaAnalyse.setInterpoliert(VKfz.isInterpoliert());
-				VDeltaAnalyse.setNichtErfasst(VKfz.isNichtErfasst());
+				vDeltaAnalyse.setWertUnskaliert(vKfz.getWertUnskaliert());
+				vDeltaAnalyse.setFormalMax(vKfz.isFormalMax());
+				vDeltaAnalyse.setFormalMin(vKfz.isFormalMin());
+				vDeltaAnalyse.setGueteIndex(vKfz.getGueteIndex());
+				vDeltaAnalyse.setVerfahren(vKfz.getVerfahren());
+				vDeltaAnalyse.setLogischMax(vKfz.isLogischMax());
+				vDeltaAnalyse.setLogischMin(vKfz.isLogischMin());
+				vDeltaAnalyse.setInterpoliert(vKfz.isInterpoliert());
+				vDeltaAnalyse.setNichtErfasst(vKfz.isNichtErfasst());
 			}
 		} else {
 			boolean interpoliert = false;
@@ -1138,8 +1137,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						if (parameter.getWichtung().length > i) {
 							w = parameter.getWichtung()[i];
 						} else {
-							VDeltaAnalyse
-									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							vDeltaAnalyse
+							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						}
 						final ResultData fsResultI = aktuelleFSAnalysen.get(mq.getFahrStreifen()
@@ -1153,8 +1152,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
 						if (vKfzI.isFehlerhaftBzwImplausibel()
 								|| vKfzIPlus1.isFehlerhaftBzwImplausibel()) {
-							VDeltaAnalyse
-									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							vDeltaAnalyse
+							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						} else if ((vKfzI.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 								|| (vKfzIPlus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
@@ -1171,47 +1170,45 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 												new GWert(fsResultIPlus1.getData(), "vKfz")), w)); //$NON-NLS-1$
 							} catch (final GueteException e) {
 								gueteBerechnen = false;
-								LOGGER.error(
-										"Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+								LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
 								e.printStackTrace();
 							}
 						}
 					}
 
-					if (VDeltaAnalyse.getWertUnskaliert() != DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT) {
+					if (vDeltaAnalyse.getWertUnskaliert() != DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT) {
 						if (mq.getFahrStreifen().size() == istNichtVorhanden) {
-							VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+							vDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 						} else if (!DUAUtensilien.isWertInWerteBereich(
 								analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)) { //$NON-NLS-1$//$NON-NLS-2$
-							VDeltaAnalyse
-									.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							vDeltaAnalyse
+							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 						} else {
-							VDeltaAnalyse.setWertUnskaliert(VDeltaWert);
-							VDeltaAnalyse.setInterpoliert(interpoliert);
+							vDeltaAnalyse.setWertUnskaliert(VDeltaWert);
+							vDeltaAnalyse.setInterpoliert(interpoliert);
 							if (gueteBerechnen) {
 								try {
 									final GWert guete = GueteVerfahren.summe(gueteSummanden
 											.toArray(new GWert[0]));
-									VDeltaAnalyse.getGueteIndex().setWert(
+									vDeltaAnalyse.getGueteIndex().setWert(
 											guete.getIndexUnskaliert());
-									VDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());
+									vDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());
 								} catch (final GueteException e) {
-									LOGGER.error(
-											"Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
+									LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
 									e.printStackTrace();
 								}
 							}
 						}
 					}
 				} else {
-					VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					vDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			} else {
-				VDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				vDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 		}
 
-		VDeltaAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
+		vDeltaAnalyse.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
 }

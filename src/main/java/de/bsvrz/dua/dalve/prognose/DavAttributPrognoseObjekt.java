@@ -32,7 +32,6 @@ import de.bsvrz.dua.dalve.AbstraktAttributPrognoseObjekt;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
-// TODO: Auto-generated Javadoc
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer ein Attribut eines
  * Fahrstreifens bzw. eines Messquerschnittes durch
@@ -105,12 +104,12 @@ IAtgPrognoseParameterListener {
 
 		if (resultat.getData() != null) {
 			aktuellesDatum = new DaMesswertUnskaliert(attributNameQuelle, resultat.getData());
-			final long ZAktuell = resultat.getData().getItem(attributNameQuelle)
+			final long zAktuell = resultat.getData().getItem(attributNameQuelle)
 					.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 			final Data davDatum = resultat.getData().getItem(attributNameQuelle).getItem("Wert");
 			final boolean implausibel = resultat.getData().getItem(attributNameQuelle)
-					.getItem("Status"). //$NON-NLS-1$
-					getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
+					.getItem("Status")
+					.getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
 
 			/**
 			 * Messintervallen ohne Fahrzeugdetektion?
@@ -139,7 +138,7 @@ IAtgPrognoseParameterListener {
 				// == 0; //$NON-NLS-1$
 			}
 
-			berechneGlaettungsParameterUndStart(ZAktuell, implausibel, keineVerkehrsStaerke,
+			berechneGlaettungsParameterUndStart(zAktuell, implausibel, keineVerkehrsStaerke,
 					davDatum);
 		} else {
 			aktuellesDatum = null;

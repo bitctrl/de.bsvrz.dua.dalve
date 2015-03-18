@@ -30,7 +30,6 @@ import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
-// TODO: Auto-generated Javadoc
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer ein Messwertattribut
  * durch (analog SE-02.00.00.00.00-AFo-4.0, S. 135).<br>
@@ -140,7 +139,7 @@ public class AbstraktAttributPrognoseObjekt {
 				}
 			}
 
-			final double ZNeu = (alpha * ZAktuell) + ((1.0 - alpha) * ZAlt);
+			final double zNeu = (alpha * ZAktuell) + ((1.0 - alpha) * ZAlt);
 			double deltaZNeu;
 			if (ZPAlt == 0) {
 				/**
@@ -157,8 +156,8 @@ public class AbstraktAttributPrognoseObjekt {
 				ZPd = ZAktuell;
 			} else {
 				deltaZNeu = (beta * (ZAktuell - ZAlt)) + ((1 - beta) * deltaZAlt);
-				ZP = Math.round(ZNeu + deltaZNeu);
-				ZPd = ZNeu + deltaZNeu;
+				ZP = Math.round(zNeu + deltaZNeu);
+				ZPd = zNeu + deltaZNeu;
 			}
 
 			if (ZP < 0) {
@@ -181,14 +180,14 @@ public class AbstraktAttributPrognoseObjekt {
 				 * Geschwindigkeitsattribut ist oder wenn es eines ist und Fahrzeuge detektiert
 				 * wurden
 				 */
-				ZG = Math.round(ZNeu);
-				ZGd = ZNeu;
+				ZG = Math.round(zNeu);
+				ZGd = zNeu;
 			}
 
 			alphaAltBeiDeltaZNeuGleich0 = alpha;
 			betaAltBeiDeltaZNeuGleich0 = beta;
 
-			ZAlt = ZNeu;
+			ZAlt = zNeu;
 			deltaZAlt = deltaZNeu;
 			ZPAlt = ZP;
 		} else {
@@ -269,14 +268,14 @@ public class AbstraktAttributPrognoseObjekt {
 		if (Double.isNaN(ZAltInit)) {
 			subjekt = "ZAlt"; //$NON-NLS-1$
 		} else if (Double.isNaN(alpha1)) {
-				subjekt = "alpha1"; //$NON-NLS-1$
-			} else if (Double.isNaN(alpha2)) {
-					subjekt = "alpha2"; //$NON-NLS-1$
-				} else if (Double.isNaN(beta1)) {
-						subjekt = "beta1"; //$NON-NLS-1$
-					} else if (Double.isNaN(beta2)) {
-							subjekt = "beta2"; //$NON-NLS-1$
-						}
+			subjekt = "alpha1"; //$NON-NLS-1$
+		} else if (Double.isNaN(alpha2)) {
+			subjekt = "alpha2"; //$NON-NLS-1$
+		} else if (Double.isNaN(beta1)) {
+			subjekt = "beta1"; //$NON-NLS-1$
+		} else if (Double.isNaN(beta2)) {
+			subjekt = "beta2"; //$NON-NLS-1$
+		}
 
 		if (subjekt != null) {
 			throw new PrognoseParameterException("Der Parameter " + //$NON-NLS-1$

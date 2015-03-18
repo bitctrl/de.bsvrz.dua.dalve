@@ -38,7 +38,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
-// TODO: Auto-generated Javadoc
 /**
  * Stellt die aktuellen Informationen der Attributgruppe
  * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer einen bestimmten Messquerschnitt
@@ -70,7 +69,7 @@ public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements ClientRec
 
 		dav.subscribeReceiver(this, objekt, new DataDescription(dav.getDataModel()
 				.getAttributeGroup("atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions
 				.normal(), ReceiverRole.receiver());
 	}
 

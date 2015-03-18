@@ -54,7 +54,6 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.parameter.PdFundamentalDiagra
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Repraesentiert einen Stoerfallindikator nach Verfahren VKDiffKfz.
  *
@@ -204,33 +203,27 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				von = konfigData.getReferenceValue("vonMessQuerschnitt").getSystemObject();
 			} else {
 				abmelden();
-				LOGGER
-				.warning(
-						"Stoerfallindikator VKDiffKfz kann fuer "
-								+ objekt
-								+ " nicht ermittelt werden, "
-								+ "da kein Einfahrtsmessquerschnitt konfiguriert wurde (atg.straßenAbschnitt)");
+				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer "
+						+ objekt
+						+ " nicht ermittelt werden, "
+						+ "da kein Einfahrtsmessquerschnitt konfiguriert wurde (atg.straßenAbschnitt)");
 			}
 			if ((konfigData.getReferenceValue("bisMessQuerschnitt") != null)
 					&& (konfigData.getReferenceValue("bisMessQuerschnitt").getSystemObject() != null)) {
 				bis = konfigData.getReferenceValue("bisMessQuerschnitt").getSystemObject();
 			} else {
 				abmelden();
-				LOGGER
-				.warning(
-						"Stoerfallindikator VKDiffKfz kann fuer "
-								+ objekt
-								+ " nicht ermittelt werden, "
-								+ "da kein Ausfahrtsmessquerschnitt konfiguriert wurde (atg.straßenAbschnitt)");
+				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer "
+						+ objekt
+						+ " nicht ermittelt werden, "
+						+ "da kein Ausfahrtsmessquerschnitt konfiguriert wurde (atg.straßenAbschnitt)");
 			}
 		} else {
 			abmelden();
-			LOGGER
-			.warning(
-					"Stoerfallindikator VKDiffKfz kann fuer "
-							+ objekt
-							+ " nicht ermittelt werden, "
-							+ "da keine Ein- und Ausfahrtsmessquerschnitte konfiguriert wurden (atg.straßenAbschnitt)");
+			LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer "
+					+ objekt
+					+ " nicht ermittelt werden, "
+					+ "da keine Ein- und Ausfahrtsmessquerschnitte konfiguriert wurden (atg.straßenAbschnitt)");
 		}
 
 		if ((von != null) && (bis != null)) {
@@ -246,17 +239,14 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			final SystemObject stsObjektVon = DatenaufbereitungLVE.getStraßenTeilSegment(von);
 			if (stsObjektVon != null) {
 				fdObjektVon = stsObjektVon;
-				LOGGER.info(
-						"Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
-								+ stsObjektVon + " verwendet");
+				LOGGER.info("Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
+						+ stsObjektVon + " verwendet");
 			} else {
-				LOGGER
-				.warning(
-						"Fuer "
-								+ objekt
-								+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
-								+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
-								+ "dies konnte aber nicht ermittelt werden.");
+				LOGGER.warning("Fuer "
+						+ objekt
+						+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
+						+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
+						+ "dies konnte aber nicht ermittelt werden.");
 			}
 
 			final PdFundamentalDiagramm fdVon = new PdFundamentalDiagramm(new StoerfallIndikator(
@@ -292,17 +282,14 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			final SystemObject stsObjektBis = DatenaufbereitungLVE.getStraßenTeilSegment(bis);
 			if (stsObjektBis != null) {
 				fdObjektBis = stsObjektBis;
-				LOGGER.info(
-						"Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
-								+ stsObjektBis + " verwendet");
+				LOGGER.info("Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
+						+ stsObjektBis + " verwendet");
 			} else {
-				LOGGER
-				.warning(
-						"Fuer "
-								+ objekt
-								+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
-								+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
-								+ "dies konnte aber nicht ermittelt werden.");
+				LOGGER.warning("Fuer "
+						+ objekt
+						+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
+						+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
+						+ "dies konnte aber nicht ermittelt werden.");
 			}
 
 			final PdFundamentalDiagramm fdBis = new PdFundamentalDiagramm(new StoerfallIndikator(
@@ -451,21 +438,19 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 					try {
 						vKDiffKfzGuete = GueteVerfahren.differenz(GueteVerfahren.exp(GueteVerfahren
 								.summe(GueteVerfahren.exp(vKfzEtMinustReiseGuete, 2.0),
-												GueteVerfahren.exp(kKfzEtMinustReiseGuete, 2.0)), 0.5),
-								GueteVerfahren.exp(GueteVerfahren.summe(
-										GueteVerfahren.exp(vKfzAtGuete, 2.0),
-										GueteVerfahren.exp(kKfzAtGuete, 2.0)), 0.5));
+										GueteVerfahren.exp(kKfzEtMinustReiseGuete, 2.0)), 0.5),
+										GueteVerfahren.exp(GueteVerfahren.summe(
+												GueteVerfahren.exp(vKfzAtGuete, 2.0),
+												GueteVerfahren.exp(kKfzAtGuete, 2.0)), 0.5));
 					} catch (final GueteException ex) {
-						LOGGER.error(
-								"Guete von VKDiffKfz fuer " + objekt
-										+ " konnte nicht bestimmt werden. Grund:\n"
-										+ ex.getMessage());
+						LOGGER.error("Guete von VKDiffKfz fuer " + objekt
+								+ " konnte nicht bestimmt werden. Grund:\n" + ex.getMessage());
 					}
 
 					vKDiffKfz = Math.sqrt(Math.pow(vFreiEMinusVKfzEtMinustReise / vFreiE, 2.0)
 							+ Math.pow(kKfzEtMinustReise / (2 * k0E), 2.0))
-											- Math.sqrt(Math.pow(vFreiAMinusVKfzAt / vFreiA, 2.0)
-													+ Math.pow(kKfzAt / (2 * k0A), 2.0));
+							- Math.sqrt(Math.pow(vFreiAMinusVKfzAt / vFreiA, 2.0)
+									+ Math.pow(kKfzAt / (2 * k0A), 2.0));
 
 					if ((vKDiffEin >= 0) && (qKfzDiffEin >= 0) && (vKDiffAus >= 0)
 							&& (qKfzDiffAus >= 0) && (qKfzE >= 0)) {
@@ -485,10 +470,9 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 							try {
 								situationsGuete = GueteVerfahren.summe(vKDiffKfzGuete, qKfzEGuete);
 							} catch (final GueteException ex) {
-								LOGGER.error(
-										"Guete von Stoerfallindikator VKDiffKfz fuer " + objekt
-												+ " konnte nicht bestimmt werden. Grund:\n"
-												+ ex.getMessage());
+								LOGGER.error("Guete von Stoerfallindikator VKDiffKfz fuer "
+										+ objekt + " konnte nicht bestimmt werden. Grund:\n"
+										+ ex.getMessage());
 							}
 						}
 					} else {

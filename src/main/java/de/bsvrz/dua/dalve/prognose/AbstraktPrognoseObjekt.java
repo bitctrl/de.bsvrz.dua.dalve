@@ -53,7 +53,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Ueber dieses Objekt werden die Prognosedaten fuer <b>einen</b> Fahrstreifen oder einen
  * Messquerschnitt erstellt/publiziert bzw. deren Erstellung verwaltet
@@ -62,7 +61,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  */
 public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
-		ClientSenderInterface {
+ClientSenderInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -110,7 +109,7 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 	 *             wenn die Sendeanmeldung fehlschlaegt
 	 */
 	public final void initialisiere(final ClientDavInterface dav, final SystemObject prognoseObjekt)
-					throws DUAInitialisierungsException {
+			throws DUAInitialisierungsException {
 		if (DAV == null) {
 			DAV = dav;
 		}
@@ -136,7 +135,7 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 		 */
 		pubBeschreibungPrognose = new DataDescription(
 				DatenaufbereitungLVE.getPubAtgPrognose(prognoseObjekt), getPrognoseTyp()
-						.getAspekt());
+				.getAspekt());
 		pubBeschreibungGlatt = new DataDescription(
 				DatenaufbereitungLVE.getPubAtgGlatt(prognoseObjekt), getPrognoseTyp().getAspekt());
 		try {
@@ -151,7 +150,7 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 		 */
 		DAV.subscribeReceiver(this, prognoseObjekt,
 				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(prognoseObjekt), DAV
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions
+						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions
 						.normal(), ReceiverRole.receiver());
 	}
 
@@ -208,7 +207,7 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 							aktuellKeineDaten = true;
 						}
 					} catch (final PrognoseParameterException e) {
-						LOGGER.warning("Prognosedaten koennen fuer " + prognoseObjekt //$NON-NLS-1$ 
+						LOGGER.warning("Prognosedaten koennen fuer " + prognoseObjekt //$NON-NLS-1$
 								+ " nicht berechnet werden:\n" + e.getMessage()); //$NON-NLS-1$
 						if (aktuellKeineDaten) {
 							datenSenden = false;
@@ -230,12 +229,12 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
 						} catch (final DataNotSubscribedException e) {
-							LOGGER
-							.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+							LOGGER.error(
+									"Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						} catch (final SendSubscriptionNotConfirmed e) {
-							LOGGER
-							.error("Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+							LOGGER.error(
+									"Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 
@@ -247,12 +246,12 @@ public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
 						} catch (final DataNotSubscribedException e) {
-							LOGGER
-							.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
+							LOGGER.error(
+									"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						} catch (final SendSubscriptionNotConfirmed e) {
-							LOGGER
-							.error("Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
+							LOGGER.error(
+									"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
 							e.printStackTrace();
 						}
 					}

@@ -33,7 +33,6 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 
-// TODO: Auto-generated Javadoc
 /**
  * Automatisierter Test nach Prüfspezifikation für SWE Datenaufbereitung LVE.
  *
@@ -44,13 +43,13 @@ public class DatenaufbereitungLVETest {
 
 	/** Verbindungsdaten. */
 	public static final String[] CON_DATA = new String[] { "-datenverteiler=localhost:8083", //$NON-NLS-1$
-		"-benutzer=Tester", //$NON-NLS-1$
-	"-authentifizierung=passwd" }; //$NON-NLS-1$
+			"-benutzer=Tester", //$NON-NLS-1$
+			"-authentifizierung=passwd" }; //$NON-NLS-1$
 
 	/** Verbindungsdaten. */
 	public static final String[] CON_DATA_APP = new String[] { CON_DATA[0], CON_DATA[1],
-		CON_DATA[2], "-debugLevelStdErrText=ERROR", "-debugLevelFileText=OFF",
-	"-KonfigurationsBereichsPid=kb.duaTestObjekte2" };
+			CON_DATA[2], "-debugLevelStdErrText=ERROR", "-debugLevelFileText=OFF",
+			"-KonfigurationsBereichsPid=kb.duaTestObjekte2" };
 
 	/** Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden. */
 	// protected static final String TEST_DATEN_VERZ =

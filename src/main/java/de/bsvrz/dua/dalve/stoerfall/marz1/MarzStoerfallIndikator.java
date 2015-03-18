@@ -42,7 +42,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Repräsentiert einen Stoerfallindikator nach MARZ.
  *
@@ -101,7 +100,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		 */
 		dav.subscribeReceiver(this, objekt,
 				new DataDescription(DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
-						PrognoseTyp.NORMAL.getAspekt()), ReceiveOptions.normal(), ReceiverRole
+						PrognoseTyp.normal.getAspekt()), ReceiveOptions.normal(), ReceiverRole
 						.receiver());
 	}
 

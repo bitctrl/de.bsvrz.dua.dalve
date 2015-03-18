@@ -38,7 +38,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Instanzen dieser Klasse repräsentieren Q-Werte die entsprechend SE-02.00.00.00.00-AFo-4.0 (S.121)
  * additiv und subtraktiv miteinander verknüpft werden können.
@@ -186,11 +185,10 @@ public class QWert {
 						.abs(summand.getAnteil())));
 			} catch (final GueteException e) {
 				e.printStackTrace();
-				LOGGER.error(
-						"Guete konnte nicht gewichtet werden:\nGuete: "
-								+ new GWert(summand.getWert().getGueteIndex(), GueteVerfahren
-										.getZustand(summand.getWert().getVerfahren()), false)
-								+ "\nVorgesehenes Gewicht: " + Math.abs(summand.getAnteil()));
+				LOGGER.error("Guete konnte nicht gewichtet werden:\nGuete: "
+						+ new GWert(summand.getWert().getGueteIndex(), GueteVerfahren
+								.getZustand(summand.getWert().getVerfahren()), false)
+						+ "\nVorgesehenes Gewicht: " + Math.abs(summand.getAnteil()));
 			}
 
 		}
@@ -209,8 +207,7 @@ public class QWert {
 			for (final GWert guete : gueteListe) {
 				gsum += guete + "\n";
 			}
-			LOGGER.error(
-					"Guete-Summe konnte nicht ermittelt werden.\n***Summanden***\n" + gsum);
+			LOGGER.error("Guete-Summe konnte nicht ermittelt werden.\n***Summanden***\n" + gsum);
 		}
 
 		return ergebnis;
@@ -236,7 +233,7 @@ public class QWert {
 					|| summand2.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(summand1.getWert().getName());
 				ergebnis.getWert()
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((summand1.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (summand2.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 				ergebnis = new QWert(summand1.getWert().getName());
@@ -265,13 +262,12 @@ public class QWert {
 
 					final GWert gueteGesamt = GueteVerfahren.summe(
 							GueteVerfahren.gewichte(gueteSummand1, Math.abs(summand1.getAnteil())),
-									GueteVerfahren.gewichte(gueteSummand2, Math.abs(summand2.getAnteil())));
+							GueteVerfahren.gewichte(gueteSummand2, Math.abs(summand2.getAnteil())));
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (final GueteException e) {
 					e.printStackTrace();
-					LOGGER
-					.error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
+					LOGGER.error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" + summand1.getWert() + //$NON-NLS-1$
 							"\n***Summand2***\n" + summand2.getWert()); //$NON-NLS-1$
 				}
 			}
@@ -300,7 +296,7 @@ public class QWert {
 					|| subtrahend.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(minuend.getWert().getName());
 				ergebnis.getWert()
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((minuend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (subtrahend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 				ergebnis = new QWert(minuend.getWert().getName());
@@ -315,9 +311,9 @@ public class QWert {
 				ergebnis.getWert().setWertUnskaliert(Math.round(ergebnisSkaliert));
 
 				ergebnis.getWert()
-						.setInterpoliert(
-								minuend.getWert().isInterpoliert()
-										|| subtrahend.getWert().isInterpoliert());
+				.setInterpoliert(
+						minuend.getWert().isInterpoliert()
+						|| subtrahend.getWert().isInterpoliert());
 
 				/**
 				 * Gueteberechnung
@@ -331,13 +327,12 @@ public class QWert {
 
 					final GWert gueteGesamt = GueteVerfahren.differenz(GueteVerfahren.gewichte(
 							gueteSummand1, Math.abs(minuend.getAnteil())), GueteVerfahren.gewichte(
-							gueteSummand2, Math.abs(subtrahend.getAnteil())));
+									gueteSummand2, Math.abs(subtrahend.getAnteil())));
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (final GueteException e) {
 					e.printStackTrace();
-					LOGGER
-					.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
+					LOGGER.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" + minuend.getWert() + //$NON-NLS-1$
 							"\n***Subtrahend***\n" + subtrahend.getWert());
 				}
 			}

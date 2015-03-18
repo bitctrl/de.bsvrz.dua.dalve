@@ -45,7 +45,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittAllgemein;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Stellt die virtuelle Erfassungsintervalldauer <code>T</code> eines MQ auf Basis seiner
  * Fahrstreifen zur Verfuegung.
@@ -103,7 +102,7 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 		} else {
 			final DataDescription dd = new DataDescription(dav.getDataModel().getAttributeGroup(
 					DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel().getAspect(
-					DUAKonstanten.ASP_ANALYSE));
+							DUAKonstanten.ASP_ANALYSE));
 
 			if ((mqa.getFahrStreifen() == null) || mqa.getFahrStreifen().isEmpty()) {
 				throw new InvalidArgumentException("Der MQ " + mq + " besitzt keine Fahrstreifen");
@@ -143,8 +142,7 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 					instanz = new ErfassungsIntervallDauerMQ(dav, mq);
 					instanzen.put(mq, instanz);
 				} catch (final InvalidArgumentException e) {
-					LOGGER.error(
-							"Erfassungsintervalldauer von " + mq
+					LOGGER.error("Erfassungsintervalldauer von " + mq
 							+ " kann nicht ueberwacht werden.\nGrund: " + e.getMessage());
 				}
 			}

@@ -56,7 +56,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
-// TODO: Auto-generated Javadoc
 /**
  * Testet die Berechnung von <code>VKDiffKfz</code>.
  *
@@ -135,13 +134,13 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 				+ "Parameter");
 		final Data data = dav.createData(ddParaAbschnitt.getAttributeGroup());
 		data.getItem("VKDiffKfz").getUnscaledValue("Ein")
-		.set(Long.parseLong(parameter.get("VKDiffEin")));
+				.set(Long.parseLong(parameter.get("VKDiffEin")));
 		data.getItem("VKDiffKfz").getUnscaledValue("Aus")
-		.set(Long.parseLong(parameter.get("VKDiffAus")));
+				.set(Long.parseLong(parameter.get("VKDiffAus")));
 		data.getItem("QKfzDiff").getUnscaledValue("Ein")
-		.set(Long.parseLong(parameter.get("QKfzDiffEin")));
+				.set(Long.parseLong(parameter.get("QKfzDiffEin")));
 		data.getItem("QKfzDiff").getUnscaledValue("Aus")
-		.set(Long.parseLong(parameter.get("QKfzDiffAus")));
+				.set(Long.parseLong(parameter.get("QKfzDiffAus")));
 		data.getUnscaledValue("tReise").set(15);
 		dav.sendData(new ResultData(abschnitt, ddParaAbschnitt, System.currentTimeMillis(), data));
 
@@ -179,7 +178,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		 */
 		final ParaAnaProgImportMQAlsFS paraImportMQ = new ParaAnaProgImportMQAlsFS(dav,
 				new SystemObject[] { mq1, mq2 }, DatenaufbereitungLVETest.TEST_DATEN_VERZ
-				+ "Parameter"); //$NON-NLS-1$
+						+ "Parameter"); //$NON-NLS-1$
 		paraImportMQ.importiereParameterAnalyse(1);
 		paraImportMQ.importiereParameterAnalyse(2);
 
@@ -188,7 +187,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		 */
 		final DataDescription ddKzdSend = new DataDescription(dav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_KZD), dav.getDataModel().getAspect(
-						DUAKonstanten.ASP_MESSWERTERSETZUNG));
+				DUAKonstanten.ASP_MESSWERTERSETZUNG));
 		dav.subscribeSender(this, new SystemObject[] { fs1, fs2, fs3 }, ddKzdSend,
 				SenderRole.source());
 
@@ -226,7 +225,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 			final ResultData resultat3 = new ResultData(fs3, ddKzdSend, aktZeit, zeileFS3);
 
 			System.out
-					.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 
 			synchronized (dav) {
 				dav.sendData(resultat1);

@@ -40,7 +40,6 @@ import de.bsvrz.dua.dalve.util.TestErgebnisStoerfallImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Prüft (Vergleicht) Analyse-Datensätze der Fahrstreifen.
  *
@@ -244,7 +243,7 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 		}
 
 		if ((pruefungVstMARZfertig && pruefungVstNRWfertig && pruefungVstRDSfertig)
-				|| !DaLVETestPrognose.prStoerfall) {
+				|| !DaLVETestPrognose.PR_STOERFALL) {
 			// if((pruefungVstMARZfertig && pruefungVstNRWfertig) || !caller.prStoerfall) {
 			LOGGER.info("Alle Störfallindikatoren geprüft. Benachrichtige Hauptthread..."); //$NON-NLS-1$
 			caller.doNotify(DaLVETestPrognose.ID_PRUEFER_STOERFALL);

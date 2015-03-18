@@ -41,7 +41,6 @@ import de.bsvrz.dua.dalve.util.para.ParaAnaProgImportFS;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
-// TODO: Auto-generated Javadoc
 /**
  * Testet die Berechnung der virtuellen Messquerschnitte auf Basis der Attributgruppe
  * <code>atg.messQuerschnittVirtuellVLage</code>.
@@ -102,7 +101,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 
 		final DataDescription ddKzdSend = new DataDescription(dav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_KZD), dav.getDataModel().getAspect(
-				DUAKonstanten.ASP_MESSWERTERSETZUNG));
+						DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
 		dav.subscribeSender(this, new SystemObject[] { FS1, FS2, FS3 }, ddKzdSend,
 				SenderRole.source());
@@ -137,7 +136,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 			final ResultData resultat3 = new ResultData(FS3, ddKzdSend, aktZeit, zeileFS3);
 
 			System.out
-			.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+					.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 			dav.sendData(resultat1);
 			dav.sendData(resultat2);
 			dav.sendData(resultat3);

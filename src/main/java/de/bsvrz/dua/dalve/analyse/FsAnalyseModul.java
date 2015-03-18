@@ -51,7 +51,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Bekommt die messwertersetzten KZD der Fahrstreifen übergeben und produziert aus Diesen
  * Analysedaten nach den Vorgaben der AFo.<br>

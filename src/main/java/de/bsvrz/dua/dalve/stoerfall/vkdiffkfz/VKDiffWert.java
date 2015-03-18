@@ -31,7 +31,6 @@ import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
-// TODO: Auto-generated Javadoc
 /**
  * Wert wie er von Stoerfallindikator VKDiffKfz benoetigt wird.
  *
@@ -97,7 +96,7 @@ class VKDiffWert {
 
 	/**
 	 * Erfragt den Messwert.
-	 * 
+	 *
 	 * @return der Messwert oder <code>Double.NaN</code>, wenn kein Nutzdatum vorliegt, oder dieses
 	 *         < 0 ist.
 	 */
@@ -110,7 +109,7 @@ class VKDiffWert {
 
 	/**
 	 * Erfragt den Guete-Wert.
-	 * 
+	 *
 	 * @return der Guete-Wert.
 	 */
 	GWert getGWert() {
@@ -123,7 +122,7 @@ class VKDiffWert {
 
 	/**
 	 * Erfragt den Zeitstempel des Messwerts.
-	 * 
+	 *
 	 * @return der Zeitstempel des Messwerts.
 	 */
 	long getZeitStempel() {
@@ -132,7 +131,7 @@ class VKDiffWert {
 
 	/**
 	 * Erfragt die Erfassungsintervalldauer des Messwerts.
-	 * 
+	 *
 	 * @return die Erfassungsintervalldauer des Messwerts.
 	 */
 	long getIntervallDauer() {

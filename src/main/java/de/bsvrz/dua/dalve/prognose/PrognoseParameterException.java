@@ -25,7 +25,6 @@
  */
 package de.bsvrz.dua.dalve.prognose;
 
-// TODO: Auto-generated Javadoc
 /**
  * Indiziert, dass die Berechnung eines Prognosewertes nicht moeglich ist, da die Parameter nicht
  * vollstaendig oder nicht sinnvoll sind.

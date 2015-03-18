@@ -28,7 +28,6 @@ package de.bsvrz.dua.dalve.prognose;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 
-// TODO: Auto-generated Javadoc
 /**
  * Funktioniert wie die Superklasse (plus einige nur für Datenaufbereitung notwendige
  * Eigenschaften).
@@ -66,7 +65,7 @@ public class DaMesswertUnskaliert extends MesswertUnskaliert {
 	 * WertMin UND/ODER<br>
 	 * WertMaxLogisch UND/ODER<br>
 	 * WertMinLogisch gesetzt ist
-	 * 
+	 *
 	 * @return ob dieser Wert schon plausibilisiert wurde
 	 */
 	public final boolean isPlausibilisiert() {

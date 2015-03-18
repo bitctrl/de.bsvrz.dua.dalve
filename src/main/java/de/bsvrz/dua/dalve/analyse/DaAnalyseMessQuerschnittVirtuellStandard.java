@@ -48,7 +48,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.typen.MessQuerschnittVirtuellLage;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte eines virtuellen
  * Messquerschnitts notwendig sind gespeichert. Wenn die Werte für ein bestimmtes Intervall bereit
@@ -62,7 +61,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuerschnitt implements
-		IObjektWeckerListener {
+IObjektWeckerListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -145,7 +144,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	@Override
 	public DaAnalyseMessQuerschnittVirtuellStandard initialisiere(
 			final MqAnalyseModul analyseModul, final SystemObject messQuerschnittVirtuell)
-					throws DUAInitialisierungsException {
+			throws DUAInitialisierungsException {
 		if (mqAnalyse == null) {
 			mqAnalyse = analyseModul;
 		}
@@ -221,7 +220,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
 						mqAnalyse.getDav().getDataModel().getAspect("asp.analyse")), //$NON-NLS-1$
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -406,7 +405,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-				.kopiereInhaltNachModifiziereIndex(analyseDatum);
+						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -661,34 +660,34 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
 	 */
 	private void setBilanzDatum(final Data analyseDatum, final String attName) {
-		QWert Q = null;
+		QWert q = null;
 
 		if (lage.equals(MessQuerschnittVirtuellLage.VOR)) {
 			/**
 			 * 1. MQVor nicht direkt erfasst: Q(MQVor)=Q(MQMitte)+Q(MQAus). Wenn an MQMitte der
 			 * jeweilige Wert nicht vorhanden ist, gilt: Q(MQVor)=Q(MQNach)+Q(MQAus)-Q(MQEin).
 			 */
-			final QWert QMitte = new QWert(getMQData(mqv.getMQMitte()), attName);
-			final QWert QAus = new QWert(getMQData(mqv.getMQAusfahrt()), attName);
+			final QWert qMitte = new QWert(getMQData(mqv.getMQMitte()), attName);
+			final QWert qAus = new QWert(getMQData(mqv.getMQAusfahrt()), attName);
 
-			Q = QWert.summe(QMitte, QAus);
+			q = QWert.summe(qMitte, qAus);
 
-			if ((Q == null) || !Q.isExportierbarNach(analyseDatum) || !Q.isVerrechenbar()) {
-				final QWert QNach = new QWert(getMQData(mqv.getMQNach()), attName);
-				final QWert QEin = new QWert(getMQData(mqv.getMQEinfahrt()), attName);
+			if ((q == null) || !q.isExportierbarNach(analyseDatum) || !q.isVerrechenbar()) {
+				final QWert qNach = new QWert(getMQData(mqv.getMQNach()), attName);
+				final QWert qEin = new QWert(getMQData(mqv.getMQEinfahrt()), attName);
 
-				if (QNach.isVerrechenbar() && QEin.isVerrechenbar()) {
-					if ((Q == null) || !Q.isExportierbarNach(analyseDatum)) {
-						Q = QWert.differenz(QWert.summe(QNach, QAus), QEin);
+				if (qNach.isVerrechenbar() && qEin.isVerrechenbar()) {
+					if ((q == null) || !q.isExportierbarNach(analyseDatum)) {
+						q = QWert.differenz(QWert.summe(qNach, qAus), qEin);
 					} else {
 						/**
 						 * Also Q != null und Q ist exportierbar
 						 */
-						if (!Q.isVerrechenbar()) {
-							final QWert dummy = QWert.differenz(QWert.summe(QNach, QAus), QEin);
+						if (!q.isVerrechenbar()) {
+							final QWert dummy = QWert.differenz(QWert.summe(qNach, qAus), qEin);
 							if ((dummy != null) && dummy.isExportierbarNach(analyseDatum)
 									&& dummy.isVerrechenbar()) {
-								Q = dummy;
+								q = dummy;
 							}
 						}
 					}
@@ -699,27 +698,27 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 			 * 2. MQMitte nicht direkt erfasst: Q(MQMitte)=Q(MQVor)-Q(MQAus). Wenn an MQVor der
 			 * jeweilige Wert nicht vorhanden ist, gilt Q(MQMitte)=Q(MQNach)-Q(MQEin).
 			 */
-			final QWert QVor = new QWert(getMQData(mqv.getMQVor()), attName);
-			final QWert QAus = new QWert(getMQData(mqv.getMQAusfahrt()), attName);
+			final QWert qVor = new QWert(getMQData(mqv.getMQVor()), attName);
+			final QWert qAus = new QWert(getMQData(mqv.getMQAusfahrt()), attName);
 
-			Q = QWert.differenz(QVor, QAus);
+			q = QWert.differenz(qVor, qAus);
 
-			if ((Q == null) || !Q.isExportierbarNach(analyseDatum) || !Q.isVerrechenbar()) {
-				final QWert QNach = new QWert(getMQData(mqv.getMQNach()), attName);
-				final QWert QEin = new QWert(getMQData(mqv.getMQEinfahrt()), attName);
+			if ((q == null) || !q.isExportierbarNach(analyseDatum) || !q.isVerrechenbar()) {
+				final QWert qNach = new QWert(getMQData(mqv.getMQNach()), attName);
+				final QWert qEin = new QWert(getMQData(mqv.getMQEinfahrt()), attName);
 
-				if (QNach.isVerrechenbar() && QEin.isVerrechenbar()) {
-					if ((Q == null) || !Q.isExportierbarNach(analyseDatum)) {
-						Q = QWert.differenz(QNach, QEin);
+				if (qNach.isVerrechenbar() && qEin.isVerrechenbar()) {
+					if ((q == null) || !q.isExportierbarNach(analyseDatum)) {
+						q = QWert.differenz(qNach, qEin);
 					} else {
 						/**
 						 * Also Q != null und Q ist exportierbar
 						 */
-						if (!Q.isVerrechenbar()) {
-							final QWert dummy = QWert.differenz(QNach, QEin);
+						if (!q.isVerrechenbar()) {
+							final QWert dummy = QWert.differenz(qNach, qEin);
 							if ((dummy != null) && dummy.isExportierbarNach(analyseDatum)
 									&& dummy.isVerrechenbar()) {
-								Q = dummy;
+								q = dummy;
 							}
 						}
 					}
@@ -730,27 +729,27 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 			 * 3. MQNach nicht direkt erfasst Q(MQNach)=Q(MQMitte)+Q(MQEin). Wenn an MQMitte der
 			 * jeweilige Wert nicht vorhanden ist, gilt Q(MQNach)=Q(MQVor)+Q(MQEin)-Q(MQAus).
 			 */
-			final QWert QMitte = new QWert(getMQData(mqv.getMQMitte()), attName);
-			final QWert QEin = new QWert(getMQData(mqv.getMQEinfahrt()), attName);
+			final QWert qMitte = new QWert(getMQData(mqv.getMQMitte()), attName);
+			final QWert qEin = new QWert(getMQData(mqv.getMQEinfahrt()), attName);
 
-			Q = QWert.summe(QMitte, QEin);
+			q = QWert.summe(qMitte, qEin);
 
-			if ((Q == null) || !Q.isExportierbarNach(analyseDatum) || !Q.isVerrechenbar()) {
-				final QWert QVor = new QWert(getMQData(mqv.getMQVor()), attName);
-				final QWert QAus = new QWert(getMQData(mqv.getMQAusfahrt()), attName);
+			if ((q == null) || !q.isExportierbarNach(analyseDatum) || !q.isVerrechenbar()) {
+				final QWert qVor = new QWert(getMQData(mqv.getMQVor()), attName);
+				final QWert qAus = new QWert(getMQData(mqv.getMQAusfahrt()), attName);
 
-				if (QVor.isVerrechenbar() && QAus.isVerrechenbar()) {
-					if ((Q == null) || !Q.isExportierbarNach(analyseDatum)) {
-						Q = QWert.differenz(QWert.summe(QVor, QEin), QAus);
+				if (qVor.isVerrechenbar() && qAus.isVerrechenbar()) {
+					if ((q == null) || !q.isExportierbarNach(analyseDatum)) {
+						q = QWert.differenz(QWert.summe(qVor, qEin), qAus);
 					} else {
 						/**
 						 * Also Q != null und Q ist exportierbar
 						 */
-						if (!Q.isVerrechenbar()) {
-							final QWert dummy = QWert.differenz(QWert.summe(QVor, QEin), QAus);
+						if (!q.isVerrechenbar()) {
+							final QWert dummy = QWert.differenz(QWert.summe(qVor, qEin), qAus);
 							if ((dummy != null) && dummy.isExportierbarNach(analyseDatum)
 									&& dummy.isVerrechenbar()) {
-								Q = dummy;
+								q = dummy;
 							}
 						}
 					}
@@ -759,10 +758,10 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 		}
 
 		MesswertUnskaliert mw = new MesswertUnskaliert(attName);
-		if ((Q == null) || !Q.isExportierbarNach(analyseDatum)) {
+		if ((q == null) || !q.isExportierbarNach(analyseDatum)) {
 			mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		} else {
-			mw = Q.getWert();
+			mw = q.getWert();
 		}
 		mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}

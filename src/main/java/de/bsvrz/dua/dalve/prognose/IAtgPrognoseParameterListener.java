@@ -25,7 +25,6 @@
  */
 package de.bsvrz.dua.dalve.prognose;
 
-// TODO: Auto-generated Javadoc
 /**
  * Hört auf Veraenderungen der Prognoseparameter.
  *

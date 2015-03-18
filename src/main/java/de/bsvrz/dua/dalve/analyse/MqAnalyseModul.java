@@ -47,12 +47,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell.BerechnungsV
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Modul in dem die Analyse der einzelnen Messquerschnitte (auch virtuell) angeschoben wird. Für
  * jeden betrachteten MQ und VMQ wird ein Objekt angelegt, dass auf die Daten der assoziierten
  * Objekte (Fahrstreifen oder MQs) lauscht und ggf. über diese Klasse ein Analysedatum publiziert
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  * @version $Id$

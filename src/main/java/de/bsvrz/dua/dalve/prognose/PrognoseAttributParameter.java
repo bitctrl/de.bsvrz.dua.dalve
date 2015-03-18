@@ -28,7 +28,6 @@ package de.bsvrz.dua.dalve.prognose;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
-// TODO: Auto-generated Javadoc
 /**
  * Korrespondiert mit einem Parameter fuer ein bestimmtes Verkehrsattribut (also z.B.
  * <code>qKfz</code> (<code>QKfz</code>) oder <code>vLkw</code> (<code>VLkw</code>)) innerhalb der

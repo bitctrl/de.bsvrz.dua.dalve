@@ -38,7 +38,6 @@ import de.bsvrz.dua.dalve.stoerfall.vkdiffkfz.VKDiffKfzStoerfallIndikator;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
-// TODO: Auto-generated Javadoc
 /**
  * Von diesem Objekt aus wird die Berechnung der einzelnen Stoerfallindikatoren gestartet.
  *

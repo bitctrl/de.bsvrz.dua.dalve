@@ -31,7 +31,6 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Modul, das die Berechnung sämtlicher Werte startet, die unter den Attributgruppen
  * <code>atg.verkehrsDatenKurzZeitTrendExtraPolationFs</code> und

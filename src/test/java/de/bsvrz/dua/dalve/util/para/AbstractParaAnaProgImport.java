@@ -38,14 +38,13 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
-// TODO: Auto-generated Javadoc
 /**
  * Abstrakte Klasse zum Einlesen von Parametern aus der CSV-Datei innerhalb der Prüfspezifikation.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public abstract class AbstractParaAnaProgImport extends CSVImporter implements
-		ClientSenderInterface {
+ClientSenderInterface {
 
 	/** Verbindung zum Datenverteiler. */
 	protected static ClientDavInterface DAV = null;
@@ -153,12 +152,12 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 					final long l = Long.parseLong(wert);
 					// DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(l);
 					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue()
-							.set(l);
+					.set(l);
 				} catch (final NumberFormatException ex) {
 					final double d = Double.parseDouble(wert);
 					// DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(d);
 					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue()
-							.set(d);
+					.set(d);
 				}
 			}
 		}
@@ -242,12 +241,12 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 		final ResultData resultatNormal = new ResultData(obj, new DataDescription(
 				ATG_PrognoseNormal, DAV.getDataModel().getAspect(
 						DaVKonstanten.ASP_PARAMETER_VORGABE)), System.currentTimeMillis(),
-				parameterProgNorm);
+						parameterProgNorm);
 
 		final ResultData resultatTraege = new ResultData(obj, new DataDescription(
 				ATG_PrognoseTraege, DAV.getDataModel().getAspect(
 						DaVKonstanten.ASP_PARAMETER_VORGABE)), System.currentTimeMillis(),
-				parameterProgTraege);
+						parameterProgTraege);
 
 		DAV.sendData(resultatFlink);
 		DAV.sendData(resultatNormal);
@@ -300,16 +299,16 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 
 					if (!attPfadStoer.endsWith("Hysterese")) {
 						DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV2).asScaledValue()
-								.set(l);
+						.set(l);
 						if (!attPfadStoer.endsWith("3") && !attPfadStoer.endsWith("T")) {
 							DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV1)
-									.asScaledValue().set(l);
+							.asScaledValue().set(l);
 						}
 					}
 
 					if (isMQ) {
 						DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV3).asScaledValue()
-								.set(l);
+						.set(l);
 					}
 				} catch (final NumberFormatException ex) {
 
@@ -323,7 +322,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 					try {
 						final long l = Long.parseLong(wert);
 						DUAUtensilien.getAttributDatum(attPfadStoerFD, parameterFD).asScaledValue()
-								.set(l);
+						.set(l);
 					} catch (final NumberFormatException ex) {
 
 					}
@@ -368,7 +367,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 	/**
 	 * Erfragt den Attributpfad zu einem Analyse-Attribut, das in der CSV-Datei den übergebenen
 	 * Namen hat
-	 * 
+	 *
 	 * @param attributInCSVDatei
 	 *            Attributname innerhalb der CSV-Datei
 	 * @param index
@@ -381,7 +380,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 	/**
 	 * Erfragt den Attributpfad zu einem Prognose-Attribut, das in der CSV-Datei den übergebenen
 	 * Namen hat
-	 * 
+	 *
 	 *
 	 * @param attributInCSVDatei
 	 *            Attributname innerhalb der CSV-Datei
@@ -411,7 +410,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 	/**
 	 * Erfragt den Attributpfad zu einem Stoerfall-Attribut, das in der CSV-Datei den übergebenen
 	 * Namen hat
-	 * 
+	 *
 	 *
 	 * @param attributInCSVDatei
 	 *            Attributname innerhalb der CSV-Datei
@@ -450,7 +449,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter implements
 	/**
 	 * Erfragt den Attributpfad zu einem Fundamentaldiagramm-Attribut, das in der CSV-Datei den
 	 * übergebenen Namen hat
-	 * 
+	 *
 	 * @param attributInCSVDatei
 	 *            Attributname innerhalb der CSV-Datei
 	 * @param index

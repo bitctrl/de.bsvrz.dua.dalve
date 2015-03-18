@@ -35,7 +35,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 
-// TODO: Auto-generated Javadoc
 /**
  * Korrespondiert mit der Attributgruppe <code>atg.verkehrsDatenKurzZeitAnalyseFs</code>.
  *
@@ -44,7 +43,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
  * @version $Id$
  */
 public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer implements
-		ClientReceiverInterface {
+ClientReceiverInterface {
 
 	/**
 	 * <code>kKfz.Grenz</code>.
@@ -117,7 +116,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer
 				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitAnalyseFs"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

@@ -38,18 +38,13 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.DaLVETestAnalyse;
 import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
-import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Prüft (Vergleicht) Analyse-Datensätze der Fahrstreifen.
  *
  * @author Görlitz
  */
 public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
-
-	/** Logger. */
-	private static final Debug LOGGER = Debug.getLogger();
 
 	/** Datenverteilerverbindung. */
 	private ClientDavInterface dav = null;
@@ -264,11 +259,6 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 }
 
 class VergleicheDaLVEAnalyse extends Thread {
-
-	/**
-	 * Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Aufrufende Klasse

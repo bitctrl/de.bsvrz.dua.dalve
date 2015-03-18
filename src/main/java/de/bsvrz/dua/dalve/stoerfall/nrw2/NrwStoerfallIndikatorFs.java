@@ -41,7 +41,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Repräsentiert einen Stoerfallindikator nach Verfahren NRW (nur fuer Fahrstreifen).
  *
@@ -91,12 +90,12 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 		 */
 		dav.subscribeReceiver(this, objekt,
 				new DataDescription(DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
-						PrognoseTyp.NORMAL.getAspekt()), ReceiveOptions.normal(), ReceiverRole
+						PrognoseTyp.normal.getAspekt()), ReceiveOptions.normal(), ReceiverRole
 						.receiver());
 		dav.subscribeReceiver(this, this.objekt,
 				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(objekt), dav.getDataModel()
-				.getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions.normal(),
-				ReceiverRole.receiver());
+						.getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions.normal(),
+						ReceiverRole.receiver());
 	}
 
 	/**
@@ -250,9 +249,8 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 						objekt + ": v1 = " + v1 + ", v2 = " + v2); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if (!((k1 > 0) && (k1 < k2) && (k2 < k3))) {
-				LOGGER.warning(
-						"Fehlerhafte Parameter (0 < k1 < k2 < k3) empfangen fuer " + //$NON-NLS-1$
-								objekt + ": k1 = " + k1 + ", k2 = " + k2 + ", k3 = " + k3); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				LOGGER.warning("Fehlerhafte Parameter (0 < k1 < k2 < k3) empfangen fuer " + //$NON-NLS-1$
+						objekt + ": k1 = " + k1 + ", k2 = " + k2 + ", k3 = " + k3); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 			}
 			if (!((kT > 0) && (kT < k3))) {
 				LOGGER.warning("Fehlerhafte Parameter (0 < kT < k3) empfangen fuer " + //$NON-NLS-1$

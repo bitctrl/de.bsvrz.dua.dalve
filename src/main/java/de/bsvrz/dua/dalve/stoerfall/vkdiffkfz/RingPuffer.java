@@ -28,7 +28,6 @@ package de.bsvrz.dua.dalve.stoerfall.vkdiffkfz;
 
 import java.util.LinkedList;
 
-// TODO: Auto-generated Javadoc
 /**
  * Ringpuffer fuer aktuelle und zurueckliegende Werte des Stoerfallindikators <code>VKDiffKfz</code>
  * .<br>

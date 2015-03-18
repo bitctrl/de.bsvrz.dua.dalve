@@ -28,7 +28,6 @@ package de.bsvrz.dua.dalve.prognose;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO: Auto-generated Javadoc
 /**
  * Container fuer Attribute die zur Messwertprognose herangezogen werden (jeweils fuer Fahrstreifen
  * bzw. Messquerschnitte):<br>
@@ -46,12 +45,11 @@ import java.util.Set;
  * <code>kB</code> bzw. <code>KB</code>
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
  */
 public class PrognoseAttribut {
 
 	/** Wertebereich. */
-	private static Set<PrognoseAttribut> WERTE_BEREICH = new HashSet<PrognoseAttribut>();
+	private static final Set<PrognoseAttribut> WERTE_BEREICH = new HashSet<PrognoseAttribut>();
 
 	/**
 	 * Attribut <code>qKfz</code> bzw. <code>QKfz</code>
@@ -172,12 +170,12 @@ public class PrognoseAttribut {
 			qAnalogon = "qKfz"; //$NON-NLS-1$
 			QAnalogon = "QKfz"; //$NON-NLS-1$
 		} else if (this.nameFS.toLowerCase().equals("vlkw")) { //$NON-NLS-1$
-				qAnalogon = "qLkw"; //$NON-NLS-1$
-				QAnalogon = "QLkw"; //$NON-NLS-1$
-			} else if (this.nameFS.toLowerCase().equals("vpkw")) { //$NON-NLS-1$
-					qAnalogon = "qPkw"; //$NON-NLS-1$
-					QAnalogon = "QPkw"; //$NON-NLS-1$
-				}
+			qAnalogon = "qLkw"; //$NON-NLS-1$
+			QAnalogon = "QLkw"; //$NON-NLS-1$
+		} else if (this.nameFS.toLowerCase().equals("vpkw")) { //$NON-NLS-1$
+			qAnalogon = "qPkw"; //$NON-NLS-1$
+			QAnalogon = "QPkw"; //$NON-NLS-1$
+		}
 		WERTE_BEREICH.add(this);
 	}
 

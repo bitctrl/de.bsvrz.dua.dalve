@@ -25,7 +25,6 @@
  */
 package de.bsvrz.dua.dalve.prognose;
 
-// TODO: Auto-generated Javadoc
 /**
  * Ueber dieses Objekt werden die Prognosedaten fuer <b>einen</b> Fahrstreifen oder einen
  * Messquerschnitt erstellt/publiziert bzw. deren Erstellung verwaltet<br>
@@ -41,7 +40,7 @@ public class PrognoseObjektFlink extends AbstraktPrognoseObjekt {
 	 */
 	@Override
 	protected PrognoseTyp getPrognoseTyp() {
-		return PrognoseTyp.FLINK;
+		return PrognoseTyp.flink;
 	}
 
 }

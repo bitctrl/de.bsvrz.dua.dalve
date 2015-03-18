@@ -45,7 +45,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittAllgemein;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
-// TODO: Auto-generated Javadoc
 /**
  * Repräsentiert einen Stoerfallindikator nach Verfahren NRW (nur fuer Messquerschnitte).
  *

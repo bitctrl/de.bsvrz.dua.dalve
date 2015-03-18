@@ -47,14 +47,13 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.parameter.PdFundamentalDiagra
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * Repräsentiert einen Stoerfallindikator nach Verfahren Fundamentaldiagramm.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
-DatensatzUpdateListener {
+		DatensatzUpdateListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -127,20 +126,17 @@ DatensatzUpdateListener {
 			final PdFundamentalDiagramm fdAmSts = new PdFundamentalDiagramm(new StoerfallIndikator(
 					stsObjekt));
 			fdAmSts.addUpdateListener(this);
-			LOGGER
-					.info("Fuer "
-							+ objekt
+			LOGGER.info("Fuer "
+					+ objekt
 					+ " wird (falls versorgt) das Fundamentaldiagramm am Teilsegment "
 					+ stsObjekt
-							+ " verwendet. Falls nicht versorgt wird das Fundamentaldiagramm am MQ selbst verwendet");
+					+ " verwendet. Falls nicht versorgt wird das Fundamentaldiagramm am MQ selbst verwendet");
 		} else {
-			LOGGER
-			.warning(
-					"Fuer "
-							+ objekt
-							+ " wird nur das Fundamentaldiagramm am MQ selbst verwendet."
-							+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
-							+ "dies konnte aber nicht ermittelt werden.");
+			LOGGER.warning("Fuer "
+					+ objekt
+					+ " wird nur das Fundamentaldiagramm am MQ selbst verwendet."
+					+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
+					+ "dies konnte aber nicht ermittelt werden.");
 		}
 
 		final PdFundamentalDiagramm fdAmMQ = new PdFundamentalDiagramm(new StoerfallIndikator(
@@ -155,7 +151,7 @@ DatensatzUpdateListener {
 		 */
 		dav.subscribeReceiver(this, objekt,
 				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(this.objekt), dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions
+						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions
 						.normal(), ReceiverRole.receiver());
 	}
 
@@ -184,20 +180,20 @@ DatensatzUpdateListener {
 			if (alleParameterValide()) {
 				data = DAV.createData(pubBeschreibung.getAttributeGroup());
 
-				final AnalyseDichte KKfzStoerfall = getAnalyseDichte(resultat);
-				double KKfzStoerfallG = Double.NaN;
+				final AnalyseDichte kKfzStoerfall = getAnalyseDichte(resultat);
+				double kKfzStoerfallG = Double.NaN;
 				try {
-					KKfzStoerfallG = prognoseDichteObj.getKKfzStoerfallGAktuell(
-							KKfzStoerfall.getWert(), KKfzStoerfall.isImplausibel());
+					kKfzStoerfallG = prognoseDichteObj.getKKfzStoerfallGAktuell(
+							kKfzStoerfall.getWert(), kKfzStoerfall.isImplausibel());
 				} catch (final PrognoseParameterException e) {
 					LOGGER.warning(e.getMessage());
 				}
 
 				// System.out.println(KKfzStoerfallG);
-				if (!Double.isNaN(KKfzStoerfallG)) {
+				if (!Double.isNaN(kKfzStoerfallG)) {
 					stufe = StoerfallSituation.FREIER_VERKEHR;
-					stufe = berechneStufe(StoerfallSituation.ZAEHER_VERKEHR, KKfzStoerfallG, stufe);
-					stufe = berechneStufe(StoerfallSituation.STAU, KKfzStoerfallG, stufe);
+					stufe = berechneStufe(StoerfallSituation.ZAEHER_VERKEHR, kKfzStoerfallG, stufe);
+					stufe = berechneStufe(StoerfallSituation.STAU, kKfzStoerfallG, stufe);
 				}
 
 				final StoerfallZustand zustand = new StoerfallZustand(DAV);
@@ -207,8 +203,7 @@ DatensatzUpdateListener {
 				zustand.setSituation(stufe);
 				data = zustand.getData();
 			} else {
-				LOGGER.warning(
-						"Keine gueltigen Parameter fuer Stoerfallprognose: " + objekt); //$NON-NLS-1$
+				LOGGER.warning("Keine gueltigen Parameter fuer Stoerfallprognose: " + objekt); //$NON-NLS-1$
 			}
 
 			alterZustand = stufe;
@@ -327,15 +322,15 @@ DatensatzUpdateListener {
 			ergebnis = fvVergleichsErgebnis || vGrenzVergleichsErgebnis;
 		} else
 
-			if (fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen) {
-				ergebnis = fkVergleichsErgebnis;
-			} else if (fkVergleichMachen && !fvVergleichMachen && vGrenzVergleichMachen) {
-				ergebnis = fkVergleichsErgebnis || vGrenzVergleichsErgebnis;
-			} else if (fkVergleichMachen && fvVergleichMachen && !vGrenzVergleichMachen) {
-				ergebnis = fkVergleichsErgebnis && fvVergleichsErgebnis;
-			} else {
-				ergebnis = (fkVergleichsErgebnis && fvVergleichsErgebnis) || vGrenzVergleichsErgebnis;
-			}
+		if (fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen) {
+			ergebnis = fkVergleichsErgebnis;
+		} else if (fkVergleichMachen && !fvVergleichMachen && vGrenzVergleichMachen) {
+			ergebnis = fkVergleichsErgebnis || vGrenzVergleichsErgebnis;
+		} else if (fkVergleichMachen && fvVergleichMachen && !vGrenzVergleichMachen) {
+			ergebnis = fkVergleichsErgebnis && fvVergleichsErgebnis;
+		} else {
+			ergebnis = (fkVergleichsErgebnis && fvVergleichsErgebnis) || vGrenzVergleichsErgebnis;
+		}
 
 		return ergebnis;
 	}
@@ -394,36 +389,36 @@ DatensatzUpdateListener {
 	 * @return die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>
 	 */
 	private final AnalyseDichte getAnalyseDichte(final ResultData resultat) {
-		double KKfzStoerfall;
+		double kKfzStoerfall;
 		boolean implausibel = false;
 
-		final double QKfz = resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-		final boolean QKfzImpl = resultat.getData().getItem("QKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
+		final double qKfz = resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		final boolean qKfzImpl = resultat.getData().getItem("QKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
 				getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
-		final double VKfz = resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-		final double KKfz = resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-		final boolean KKfzImpl = resultat.getData().getItem("KKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
+		final double vKfz = resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		final double kKfz = resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		final boolean kKfzImpl = resultat.getData().getItem("KKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
 				getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
 
-		if (QKfz == 0) {
-			KKfzStoerfall = 0;
+		if (qKfz == 0) {
+			kKfzStoerfall = 0;
 		} else {
-			if ((VKfz == 0) || (VKfz == DUAKonstanten.NICHT_ERMITTELBAR)) {
-				KKfzStoerfall = K0;
-			} else if (VKfz >= (fa * V0)) {
-				KKfzStoerfall = KKfz;
-				implausibel = KKfzImpl;
+			if ((vKfz == 0) || (vKfz == DUAKonstanten.NICHT_ERMITTELBAR)) {
+				kKfzStoerfall = K0;
+			} else if (vKfz >= (fa * V0)) {
+				kKfzStoerfall = kKfz;
+				implausibel = kKfzImpl;
 			} else {
-				if (QKfz > 0) {
-					KKfzStoerfall = Math.min((K0 * Q0) / QKfz, 2.0 * K0);
-					implausibel = QKfzImpl;
+				if (qKfz > 0) {
+					kKfzStoerfall = Math.min((K0 * Q0) / qKfz, 2.0 * K0);
+					implausibel = qKfzImpl;
 				} else {
-					KKfzStoerfall = 2.0 * K0;
+					kKfzStoerfall = 2.0 * K0;
 				}
 			}
 		}
 
-		return new AnalyseDichte(KKfzStoerfall, implausibel);
+		return new AnalyseDichte(kKfzStoerfall, implausibel);
 	}
 
 	/**

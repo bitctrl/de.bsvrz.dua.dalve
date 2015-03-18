@@ -40,7 +40,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
-// TODO: Auto-generated Javadoc
 /**
  * Haelt für ein bestimmtes Objekt (Fahrstreifen oder Messquerschnitt) alle Parameter bereit die
  * sich auf die Messwertprognose beziehen. Dabei kann zwischen den Parametertypen <code>Flink</code>
@@ -83,8 +82,8 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 				objekt,
 				new DataDescription(typ.getParameterAtg(objekt
 						.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), dav.getDataModel().getAspect(
-						DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions.normal(), ReceiverRole
-						.receiver());
+								DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions.normal(), ReceiverRole
+								.receiver());
 	}
 
 	/**

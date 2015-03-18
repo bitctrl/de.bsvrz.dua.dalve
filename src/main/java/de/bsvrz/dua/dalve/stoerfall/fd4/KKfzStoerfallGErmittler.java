@@ -36,7 +36,6 @@ import de.bsvrz.dua.dalve.AbstraktAttributPrognoseObjekt;
 import de.bsvrz.dua.dalve.prognose.PrognoseParameterException;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
-// TODO: Auto-generated Javadoc
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer die Ermittlung des
  * Störfallindikators <code>Fundamentaldiagramm</code> fuer <code>KKfzStoerfall</code> durch und
@@ -46,7 +45,7 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  *
  */
 public class KKfzStoerfallGErmittler extends AbstraktAttributPrognoseObjekt implements
-		ClientReceiverInterface {
+ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
@@ -63,7 +62,7 @@ public class KKfzStoerfallGErmittler extends AbstraktAttributPrognoseObjekt impl
 				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

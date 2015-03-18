@@ -31,10 +31,9 @@ import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
-// TODO: Auto-generated Javadoc
 /**
  * Korrespondiert mit einem Datensatz der Attributgruppe <code>atg.störfallZustand</code>
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */

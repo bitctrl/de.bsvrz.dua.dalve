@@ -29,7 +29,6 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 
-// TODO: Auto-generated Javadoc
 /**
  * Prognosetyp:<br>
  * - <code>Flink<code><br>
@@ -41,13 +40,13 @@ import de.bsvrz.dav.daf.main.config.AttributeGroup;
 public class PrognoseTyp {
 
 	/** Prognosewerte folgen den Messwerten sehr schnell, geringe Glättung. */
-	public static PrognoseTyp FLINK = null;
+	public static PrognoseTyp flink = null;
 
 	/** Prognosewerte folgen den Messwerten normal, normale Glättung. */
-	public static PrognoseTyp NORMAL = null;
+	public static PrognoseTyp normal = null;
 
 	/** Prognosewerte folgen den Messwerten sehr langsam, starke Glättung. */
-	public static PrognoseTyp TRAEGE = null;
+	public static PrognoseTyp traege = null;
 
 	/** Der Aspekt. */
 	private Aspect aspekt = null;
@@ -81,10 +80,10 @@ public class PrognoseTyp {
 	 *            Verbindung zum Datenverteiler
 	 */
 	public static final void initialisiere(final ClientDavInterface dav) {
-		if (FLINK == null) {
-			FLINK = new PrognoseTyp(dav, "Flink"); //$NON-NLS-1$
-			NORMAL = new PrognoseTyp(dav, "Normal"); //$NON-NLS-1$
-			TRAEGE = new PrognoseTyp(dav, "Träge"); //$NON-NLS-1$
+		if (flink == null) {
+			flink = new PrognoseTyp(dav, "Flink"); //$NON-NLS-1$
+			normal = new PrognoseTyp(dav, "Normal"); //$NON-NLS-1$
+			traege = new PrognoseTyp(dav, "Träge"); //$NON-NLS-1$
 		}
 	}
 

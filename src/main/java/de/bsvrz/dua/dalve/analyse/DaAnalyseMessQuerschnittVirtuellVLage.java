@@ -46,7 +46,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.daten.AtgMessQuerschnittVirtuellVLage;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte eines virtuellen
  * Messquerschnitts notwendig sind gespeichert. Wenn die Werte für ein bestimmtes Intervall bereit
@@ -118,8 +117,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 			 * RuntimeException("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell +
 			 * " kann nicht ermittelt werden.");
 			 */
-			LOGGER.warning(
-					"Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell
+			LOGGER.warning("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell
 					+ " kann nicht ermittelt werden.");
 			return null;
 		}
@@ -133,8 +131,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		}
 
 		if (mqv.getAtgMessQuerschnittVirtuellVLage().getMessQuerSchnittBestandTeile().length == 0) {
-			LOGGER.warning(
-					"Am virtuellen MQ " + messQuerschnitt + " sind keine MQ referenziert.");
+			LOGGER.warning("Am virtuellen MQ " + messQuerschnitt + " sind keine MQ referenziert.");
 			return null;
 		} else {
 			for (final AtgMessQuerschnittVirtuellVLage.AtlMessQuerSchnittBestandTeil bestandteil : mqv
@@ -160,7 +157,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 				new DataDescription(mqAnalyse.getDav().getDataModel()
 						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), mqAnalyse.getDav()
 						.getDataModel().getAspect("asp.analyse")), ReceiveOptions.normal(),
-						ReceiverRole.receiver());
+				ReceiverRole.receiver());
 
 		return this;
 	}
@@ -268,7 +265,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		for (final String attName : new String[] { "VKfz", "VLkw", "VPkw", "VgKfz" }) {
 			if ((ersetzung != null) && (ersetzung.getData() != null)) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-						.kopiereInhaltNachModifiziereIndex(analyseDatum);
+				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$

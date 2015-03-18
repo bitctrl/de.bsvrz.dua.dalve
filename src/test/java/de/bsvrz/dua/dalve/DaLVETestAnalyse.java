@@ -41,14 +41,10 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DaLVETestAnalyse.
  */
 public class DaLVETestAnalyse implements ClientSenderInterface {
-
-	/** The logger. */
-	private static final Debug LOGGER = Debug.getLogger();
 
 	/** The dav. */
 	private final ClientDavInterface dav;

@@ -35,7 +35,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
-// TODO: Auto-generated Javadoc
 /**
  * Abstrakte Klasse zum Einlesen von Parametern aus der CSV-Datei innerhalb der Prüfspezifikation.
  *
@@ -143,12 +142,12 @@ public class ParaAnaProgImportMQAlsFS extends AbstractParaAnaProgImport {
 					final long l = Long.parseLong(wert);
 					// DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(l);
 					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue()
-							.set(l);
+					.set(l);
 				} catch (final NumberFormatException ex) {
 					final double d = Double.parseDouble(wert);
 					// DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(d);
 					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue()
-							.set(d);
+					.set(d);
 				}
 			}
 		}
@@ -165,7 +164,7 @@ public class ParaAnaProgImportMQAlsFS extends AbstractParaAnaProgImport {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.bsvrz.dua.dalve.util.para.AbstractParaAnaProgImport#getAnalyseAttributPfadVon(java.lang
 	 * .String, int)
@@ -221,7 +220,7 @@ public class ParaAnaProgImportMQAlsFS extends AbstractParaAnaProgImport {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.bsvrz.dua.dalve.util.para.AbstractParaAnaProgImport#setParaAnalyseWichtung(de.bsvrz.dav
 	 * .daf.main.Data)
@@ -233,7 +232,7 @@ public class ParaAnaProgImportMQAlsFS extends AbstractParaAnaProgImport {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.bsvrz.dua.dalve.util.para.AbstractParaAnaProgImport#setParameterResult(de.bsvrz.dav.daf
 	 * .main.Data, java.lang.String, java.lang.String)

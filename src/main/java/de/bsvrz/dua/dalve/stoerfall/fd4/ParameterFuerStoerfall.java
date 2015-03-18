@@ -29,7 +29,6 @@ import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
-// TODO: Auto-generated Javadoc
 /**
  * Hier sind alle Vergleichswerte (mit Hysterese) gespeichert, die zur Ermittlung eines bestimmten
  * Stoerfalls (<code>Stau</code>, <code>freier Verkehr</code>, ...) ueber die lokale
