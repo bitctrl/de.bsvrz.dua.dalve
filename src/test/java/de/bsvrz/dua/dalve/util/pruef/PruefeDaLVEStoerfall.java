@@ -25,7 +25,8 @@
  */
 package de.bsvrz.dua.dalve.util.pruef;
 
-import junit.framework.Assert;
+import org.junit.Assert;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -313,7 +314,7 @@ class VergleicheDaLVEStoerfall extends Thread {
 
 	/**
 	 * Initialisiert Prüferthread
-	 * 
+	 *
 	 * @param caller
 	 *            Aufrufende Klasse
 	 * @param id_SF
@@ -330,7 +331,7 @@ class VergleicheDaLVEStoerfall extends Thread {
 
 	/**
 	 * Vergleiche SOLL- und IST-Ergebnisdatensatz
-	 * 
+	 *
 	 * @param sollErgebnis
 	 *            SOLL-Datensatz
 	 * @param istErgebnis
@@ -368,7 +369,7 @@ class VergleicheDaLVEStoerfall extends Thread {
 	 */
 	private void doVergleich() {
 		final String csvDS = "[SF:" + stoerfallInidikator + "-Z:" + csvIndex + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		String loggerOut = csvDS + " Vergleichsergebnis:\n"; //$NON-NLS-1$ 
+		String loggerOut = csvDS + " Vergleichsergebnis:\n"; //$NON-NLS-1$
 
 		int sollWert;
 		int istWert;

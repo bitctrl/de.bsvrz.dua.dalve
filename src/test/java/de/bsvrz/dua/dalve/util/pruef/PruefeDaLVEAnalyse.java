@@ -25,7 +25,8 @@
  */
 package de.bsvrz.dua.dalve.util.pruef;
 
-import junit.framework.Assert;
+import org.junit.Assert;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -210,7 +211,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 			break;
 		}
 		case 4: {
-			System.out.println("Vergleich der Daten (MQ:Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$ 
+			System.out.println("Vergleich der Daten (MQ:Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$
 			pruefungMQfertig = true;
 			break;
 		}
@@ -230,7 +231,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 			// Pruefe Ergebnisdatensatz auf Zeitstempel
 			if (result.getObject().isOfType("typ.fahrStreifen")) {
 				if (/* result.getDataDescription().equals(DD_KZDFS_EMPF) && */
-						(result.getData() != null) && (result.getDataTime() == pruefZeit)) {
+				(result.getData() != null) && (result.getDataTime() == pruefZeit)) {
 
 					try {
 						// Ermittle FS und pruefe Daten
@@ -306,7 +307,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 			"kKfz", //$NON-NLS-1$
 			"kLkw", //$NON-NLS-1$
 			"kPkw", //$NON-NLS-1$
-			"qB", //$NON-NLS-1$							 
+			"qB", //$NON-NLS-1$
 			"kB" }; //$NON-NLS-1$
 
 	/**
@@ -324,7 +325,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 			"KKfz", //$NON-NLS-1$
 			"KLkw", //$NON-NLS-1$
 			"KPkw", //$NON-NLS-1$
-			"QB", //$NON-NLS-1$							 
+			"QB", //$NON-NLS-1$
 			"KB" }; //$NON-NLS-1$
 
 	/**
@@ -342,7 +343,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 
 	/**
 	 * Initialisiert Prüferthread
-	 * 
+	 *
 	 * @param caller
 	 *            Aufrufende Klasse
 	 * @param fsIndex
@@ -358,7 +359,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 
 	/**
 	 * Initialisiert Prüferthread
-	 * 
+	 *
 	 * @param caller
 	 *            Aufrufende Klasse
 	 * @param fsIndex
@@ -374,7 +375,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 
 	/**
 	 * Vergleiche SOLL- und IST-Ergebnisdatensatz
-	 * 
+	 *
 	 * @param sollErgebnis
 	 *            SOLL-Datensatz
 	 * @param istErgebnis

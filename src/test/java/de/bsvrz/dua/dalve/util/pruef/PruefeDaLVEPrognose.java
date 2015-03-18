@@ -25,7 +25,8 @@
  */
 package de.bsvrz.dua.dalve.util.pruef;
 
-import junit.framework.Assert;
+import org.junit.Assert;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -431,7 +432,7 @@ class VergleicheDaLVEPrognose extends Thread {
 
 	/**
 	 * Initialisiert Prüferthread
-	 * 
+	 *
 	 * @param caller
 	 *            Aufrufende Klasse
 	 * @param fsIndex
@@ -458,7 +459,7 @@ class VergleicheDaLVEPrognose extends Thread {
 
 	/**
 	 * Vergleiche SOLL- und IST-Ergebnisdatensatz
-	 * 
+	 *
 	 * @param sollErgebnis
 	 *            SOLL-Datensatz
 	 * @param istErgebnis
