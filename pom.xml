@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>de.bsvrz.dua</groupId>
-  <artifactId>de.bsvrz.dua.dalve</artifactId>
-  <version>1.5.0-SNAPSHOT</version>
-  
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.bsvrz.dua</groupId>
+	<artifactId>de.bsvrz.dua.dalve</artifactId>
+	<version>1.5.0-SNAPSHOT</version>
+
 	<name>Datenaufbereitung LVE (SWE 4.7)</name>
 	<url>http://www.bitctrl.de</url>
 
@@ -107,7 +108,7 @@
 							<finalName>${project.artifactId}</finalName>
 							<archive>
 								<manifest>
-									<addClasspath>true</addClasspath>
+									<addClasspath>false</addClasspath>
 									<classpathLayoutType>custom</classpathLayoutType>
 									<customClasspathLayout>
 										../${artifact.artifactId}/${artifact.artifactId}.${artifact.extension}
@@ -115,7 +116,11 @@
 									<mainClass>de.bsvrz.dua.dalve.DatenaufbereitungLVE</mainClass>
 								</manifest>
 								<manifestEntries>
-									<Class-Path>${project.artifactId}.jar</Class-Path>
+									<Class-Path>${project.artifactId}.jar
+										../de.bsvrz.dua.guete/de.bsvrz.dua.guete-runtime.jar
+										../de.bsvrz.sys.funclib.bitctrl/de.bsvrz.sys.funclib.bitctrl-runtime.jar
+										../de.bsvrz.dav.daf/de.bsvrz.dav.daf-runtime.jar
+									</Class-Path>
 								</manifestEntries>
 							</archive>
 							<excludes>
