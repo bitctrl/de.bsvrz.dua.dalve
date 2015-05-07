@@ -57,10 +57,10 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	private SystemObject objekt = null;
 
 	/** Menge aktueller Werte der Attributparameter. */
-	private final Map<PrognoseAttribut, PrognoseAttributParameter> einzelWerte = new HashMap<PrognoseAttribut, PrognoseAttributParameter>();
+	private final Map<PrognoseAttribut, PrognoseAttributParameter> einzelWerte = new HashMap<>();
 
 	/** Menge von Beobachtern einzelner Attributparameter. */
-	private final Map<PrognoseAttribut, Set<IAtgPrognoseParameterListener>> attributListener = new HashMap<PrognoseAttribut, Set<IAtgPrognoseParameterListener>>();
+	private final Map<PrognoseAttribut, Set<IAtgPrognoseParameterListener>> attributListener = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
@@ -100,7 +100,7 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		synchronized (this) {
 			Set<IAtgPrognoseParameterListener> beobachterMenge = attributListener.get(attribut);
 			if (beobachterMenge == null) {
-				beobachterMenge = new HashSet<IAtgPrognoseParameterListener>();
+				beobachterMenge = new HashSet<>();
 				attributListener.put(attribut, beobachterMenge);
 			}
 

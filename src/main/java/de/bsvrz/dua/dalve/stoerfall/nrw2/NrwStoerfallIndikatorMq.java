@@ -53,7 +53,7 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 
 	/** Mappt alle Fahrstreifen dieses Messquerschnitts auf deren letztes empfangenes Analysedatum. */
-	private final Map<SystemObject, ResultData> fsDaten = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> fsDaten = new HashMap<>();
 
 	/** Attributgruppe der Analysedaten von Fahrstreifen. */
 	private AttributeGroup fsAnalyseAtg = null;

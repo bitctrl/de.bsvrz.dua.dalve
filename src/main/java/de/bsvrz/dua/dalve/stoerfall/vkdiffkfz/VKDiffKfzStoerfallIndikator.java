@@ -58,8 +58,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Repraesentiert einen Stoerfallindikator nach Verfahren VKDiffKfz.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
@@ -194,34 +192,31 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			throws DUAInitialisierungsException {
 		super.initialisiere(dav, objekt);
 
-		final Data konfigData = objekt.getConfigurationData(dav.getDataModel().getAttributeGroup(
-				"atg.straßenAbschnitt"));
+		final Data konfigData = objekt
+				.getConfigurationData(dav.getDataModel().getAttributeGroup("atg.straßenAbschnitt"));
 
 		if (konfigData != null) {
-			if ((konfigData.getReferenceValue("vonMessQuerschnitt") != null)
-					&& (konfigData.getReferenceValue("vonMessQuerschnitt").getSystemObject() != null)) {
+			if ((konfigData.getReferenceValue("vonMessQuerschnitt") != null) && (konfigData
+					.getReferenceValue("vonMessQuerschnitt").getSystemObject() != null)) {
 				von = konfigData.getReferenceValue("vonMessQuerschnitt").getSystemObject();
 			} else {
 				abmelden();
-				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer "
-						+ objekt
+				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer " + objekt
 						+ " nicht ermittelt werden, "
 						+ "da kein Einfahrtsmessquerschnitt konfiguriert wurde (atg.straßenAbschnitt)");
 			}
-			if ((konfigData.getReferenceValue("bisMessQuerschnitt") != null)
-					&& (konfigData.getReferenceValue("bisMessQuerschnitt").getSystemObject() != null)) {
+			if ((konfigData.getReferenceValue("bisMessQuerschnitt") != null) && (konfigData
+					.getReferenceValue("bisMessQuerschnitt").getSystemObject() != null)) {
 				bis = konfigData.getReferenceValue("bisMessQuerschnitt").getSystemObject();
 			} else {
 				abmelden();
-				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer "
-						+ objekt
+				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer " + objekt
 						+ " nicht ermittelt werden, "
 						+ "da kein Ausfahrtsmessquerschnitt konfiguriert wurde (atg.straßenAbschnitt)");
 			}
 		} else {
 			abmelden();
-			LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer "
-					+ objekt
+			LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer " + objekt
 					+ " nicht ermittelt werden, "
 					+ "da keine Ein- und Ausfahrtsmessquerschnitte konfiguriert wurden (atg.straßenAbschnitt)");
 		}
@@ -230,10 +225,11 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			vonT = ErfassungsIntervallDauerMQ.getInstanz(dav, von);
 			bisT = ErfassungsIntervallDauerMQ.getInstanz(dav, bis);
 
-			dav.subscribeReceiver(this, new SystemObject[] { von, bis }, new DataDescription(dav
-					.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-					.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions.normal(),
-					ReceiverRole.receiver());
+			dav.subscribeReceiver(this, new SystemObject[] { von, bis },
+					new DataDescription(
+							dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+							dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+					ReceiveOptions.normal(), ReceiverRole.receiver());
 
 			SystemObject fdObjektVon = von;
 			final SystemObject stsObjektVon = DatenaufbereitungLVE.getStraßenTeilSegment(von);
@@ -242,15 +238,14 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				LOGGER.info("Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
 						+ stsObjektVon + " verwendet");
 			} else {
-				LOGGER.warning("Fuer "
-						+ objekt
-						+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
-						+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
-						+ "dies konnte aber nicht ermittelt werden.");
+				LOGGER.warning(
+						"Fuer " + objekt + " wird das Fundamentaldiagramm am MQ selbst verwendet."
+								+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
+								+ "dies konnte aber nicht ermittelt werden.");
 			}
 
-			final PdFundamentalDiagramm fdVon = new PdFundamentalDiagramm(new StoerfallIndikator(
-					fdObjektVon));
+			final PdFundamentalDiagramm fdVon = new PdFundamentalDiagramm(
+					new StoerfallIndikator(fdObjektVon));
 			fdVon.addUpdateListener(new DatensatzUpdateListener() {
 
 				@Override
@@ -285,15 +280,14 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				LOGGER.info("Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
 						+ stsObjektBis + " verwendet");
 			} else {
-				LOGGER.warning("Fuer "
-						+ objekt
-						+ " wird das Fundamentaldiagramm am MQ selbst verwendet."
-						+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
-						+ "dies konnte aber nicht ermittelt werden.");
+				LOGGER.warning(
+						"Fuer " + objekt + " wird das Fundamentaldiagramm am MQ selbst verwendet."
+								+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
+								+ "dies konnte aber nicht ermittelt werden.");
 			}
 
-			final PdFundamentalDiagramm fdBis = new PdFundamentalDiagramm(new StoerfallIndikator(
-					fdObjektBis));
+			final PdFundamentalDiagramm fdBis = new PdFundamentalDiagramm(
+					new StoerfallIndikator(fdObjektBis));
 			fdBis.addUpdateListener(new DatensatzUpdateListener() {
 
 				@Override
@@ -348,8 +342,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 						.longValue();
 
 				final long tReiseDummy = parameter.getData().getItem("tReise").asUnscaledValue()
-						.longValue()
-						* Constants.MILLIS_PER_SECOND;
+						.longValue() * Constants.MILLIS_PER_SECOND;
 				if (tReiseDummy >= 0) {
 					tReise = tReiseDummy;
 				} else {
@@ -397,15 +390,15 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				final double qKfzE = qKfzEAktuell.getWert();
 				final GWert qKfzEGuete = qKfzEAktuell.getGWert();
 
-				final double vKfzEtMinustReise = vKfzEPuffer.getDatumFuerZeitpunkt(
-						resultat.getDataTime() - tReise).getWert();
-				final GWert vKfzEtMinustReiseGuete = vKfzEPuffer.getDatumFuerZeitpunkt(
-						resultat.getDataTime() - tReise).getGWert();
+				final double vKfzEtMinustReise = vKfzEPuffer
+						.getDatumFuerZeitpunkt(resultat.getDataTime() - tReise).getWert();
+				final GWert vKfzEtMinustReiseGuete = vKfzEPuffer
+						.getDatumFuerZeitpunkt(resultat.getDataTime() - tReise).getGWert();
 
-				final double kKfzEtMinustReise = kKfzEPuffer.getDatumFuerZeitpunkt(
-						resultat.getDataTime() - tReise).getWert();
-				final GWert kKfzEtMinustReiseGuete = kKfzEPuffer.getDatumFuerZeitpunkt(
-						resultat.getDataTime() - tReise).getGWert();
+				final double kKfzEtMinustReise = kKfzEPuffer
+						.getDatumFuerZeitpunkt(resultat.getDataTime() - tReise).getWert();
+				final GWert kKfzEtMinustReiseGuete = kKfzEPuffer
+						.getDatumFuerZeitpunkt(resultat.getDataTime() - tReise).getGWert();
 
 				final double vKfzAt = vKfzAAktuell.getWert();
 				final GWert vKfzAtGuete = vKfzAAktuell.getGWert();
@@ -436,19 +429,26 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 					GWert vKDiffKfzGuete = GWert.getNichtErmittelbareGuete(GueteVerfahren.STANDARD);
 					try {
-						vKDiffKfzGuete = GueteVerfahren.differenz(GueteVerfahren.exp(GueteVerfahren
-								.summe(GueteVerfahren.exp(vKfzEtMinustReiseGuete, 2.0),
-										GueteVerfahren.exp(kKfzEtMinustReiseGuete, 2.0)), 0.5),
-										GueteVerfahren.exp(GueteVerfahren.summe(
-												GueteVerfahren.exp(vKfzAtGuete, 2.0),
-												GueteVerfahren.exp(kKfzAtGuete, 2.0)), 0.5));
+						vKDiffKfzGuete = GueteVerfahren
+								.differenz(
+										GueteVerfahren.exp(
+												GueteVerfahren.summe(
+														GueteVerfahren.exp(vKfzEtMinustReiseGuete,
+																2.0),
+												GueteVerfahren.exp(kKfzEtMinustReiseGuete, 2.0)),
+								0.5),
+								GueteVerfahren.exp(
+										GueteVerfahren.summe(GueteVerfahren.exp(vKfzAtGuete, 2.0),
+												GueteVerfahren.exp(kKfzAtGuete, 2.0)),
+										0.5));
 					} catch (final GueteException ex) {
 						LOGGER.error("Guete von VKDiffKfz fuer " + objekt
 								+ " konnte nicht bestimmt werden. Grund:\n" + ex.getMessage());
 					}
 
-					vKDiffKfz = Math.sqrt(Math.pow(vFreiEMinusVKfzEtMinustReise / vFreiE, 2.0)
-							+ Math.pow(kKfzEtMinustReise / (2 * k0E), 2.0))
+					vKDiffKfz = Math
+							.sqrt(Math.pow(vFreiEMinusVKfzEtMinustReise / vFreiE, 2.0)
+									+ Math.pow(kKfzEtMinustReise / (2 * k0E), 2.0))
 							- Math.sqrt(Math.pow(vFreiAMinusVKfzAt / vFreiA, 2.0)
 									+ Math.pow(kKfzAt / (2 * k0A), 2.0));
 
@@ -470,8 +470,8 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 							try {
 								situationsGuete = GueteVerfahren.summe(vKDiffKfzGuete, qKfzEGuete);
 							} catch (final GueteException ex) {
-								LOGGER.error("Guete von Stoerfallindikator VKDiffKfz fuer "
-										+ objekt + " konnte nicht bestimmt werden. Grund:\n"
+								LOGGER.error("Guete von Stoerfallindikator VKDiffKfz fuer " + objekt
+										+ " konnte nicht bestimmt werden. Grund:\n"
 										+ ex.getMessage());
 							}
 						}
@@ -553,12 +553,10 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				} else {
 					qKfzEAktuell = new VKDiffWert(new MesswertUnskaliert("QKfz", result.getData()),
 							result.getDataTime(), bisT.getT());
-					vKfzEPuffer.put(new VKDiffWert(
-							new MesswertUnskaliert("VKfz", result.getData()), result.getDataTime(),
-							bisT.getT()));
-					kKfzEPuffer.put(new VKDiffWert(
-							new MesswertUnskaliert("KKfz", result.getData()), result.getDataTime(),
-							bisT.getT()));
+					vKfzEPuffer.put(new VKDiffWert(new MesswertUnskaliert("VKfz", result.getData()),
+							result.getDataTime(), bisT.getT()));
+					kKfzEPuffer.put(new VKDiffWert(new MesswertUnskaliert("KKfz", result.getData()),
+							result.getDataTime(), bisT.getT()));
 				}
 			} else {
 				/**

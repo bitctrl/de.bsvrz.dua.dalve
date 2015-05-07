@@ -50,8 +50,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Fahrstreifen zur Verfuegung.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
 
@@ -70,7 +68,7 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 	/**
 	 * Alle statischen Instanzen dieser Klasse.
 	 */
-	private static Map<SystemObject, ErfassungsIntervallDauerMQ> instanzen = new HashMap<SystemObject, ErfassungsIntervallDauerMQ>();
+	private static Map<SystemObject, ErfassungsIntervallDauerMQ> instanzen = new HashMap<>();
 
 	/**
 	 * Das jeweils letzte Datum pro Fahrstreifen.
@@ -100,15 +98,15 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 			throw new InvalidArgumentException("Die Konfigurationdaten des allgemeinen MQ " + mq
 					+ " konnten nicht ausgelesen werden.");
 		} else {
-			final DataDescription dd = new DataDescription(dav.getDataModel().getAttributeGroup(
-					DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel().getAspect(
-							DUAKonstanten.ASP_ANALYSE));
+			final DataDescription dd = new DataDescription(
+					dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+					dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 			if ((mqa.getFahrStreifen() == null) || mqa.getFahrStreifen().isEmpty()) {
 				throw new InvalidArgumentException("Der MQ " + mq + " besitzt keine Fahrstreifen");
 			} else {
-				letztesDatumProFahrstreifen = new HashMap<SystemObject, ResultData>();
-				final List<SystemObject> fsListe = new ArrayList<SystemObject>();
+				letztesDatumProFahrstreifen = new HashMap<>();
+				final List<SystemObject> fsListe = new ArrayList<>();
 
 				for (final FahrStreifen fs : mqa.getFahrStreifen()) {
 					fsListe.add(fs.getSystemObject());
@@ -165,7 +163,7 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 	 * Fahrstreifendaten.
 	 */
 	private void versucheNeuBerechnung() {
-		final SortedSet<Long> intervallDauern = new TreeSet<Long>();
+		final SortedSet<Long> intervallDauern = new TreeSet<>();
 
 		for (final SystemObject mq : letztesDatumProFahrstreifen.keySet()) {
 			final ResultData letztesDatum = letztesDatumProFahrstreifen.get(mq);

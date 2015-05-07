@@ -55,8 +55,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * <code>atg.messQuerschnittVirtuellVLage</code>.</b><br>
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschnitt {
 
@@ -66,12 +64,12 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 	 * Mapt alle hier betrachteten Messquerschnitte auf das letzte von ihnen empfangene
 	 * Analysedatum.
 	 */
-	private final Map<SystemObject, ResultData> aktuelleMQAnalysen = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> aktuelleMQAnalysen = new HashMap<>();
 
 	/**
 	 * Alle Anteile des VMQ.
 	 */
-	private final Map<SystemObject, Double> mqAnteilsListe = new HashMap<SystemObject, Double>();
+	private final Map<SystemObject, Double> mqAnteilsListe = new HashMap<>();
 
 	/**
 	 * der aufgeloesste virtuelle Messquerschnitt.
@@ -113,8 +111,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 
 		if (mqT == null) {
 			/**
-			 * TODO: RuntimeException wieder rein: throw new
-			 * RuntimeException("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell +
+			 * TODO: RuntimeException wieder rein: throw new RuntimeException(
+			 * "Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell +
 			 * " kann nicht ermittelt werden.");
 			 */
 			LOGGER.warning("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell
@@ -126,8 +124,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		mqv = MessQuerschnittVirtuell.getInstanz(messQuerschnitt);
 
 		if (mqv.getAtgMessQuerschnittVirtuellVLage() == null) {
-			throw new RuntimeException("Keine MQ-Bestandteile an VMQ " + messQuerschnitt
-					+ " angegeben.");
+			throw new RuntimeException(
+					"Keine MQ-Bestandteile an VMQ " + messQuerschnitt + " angegeben.");
 		}
 
 		if (mqv.getAtgMessQuerschnittVirtuellVLage().getMessQuerSchnittBestandTeile().length == 0) {
@@ -140,7 +138,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 				mqAnteilsListe.put(bestandteil.getMQReferenz(), bestandteil.getAnteil());
 			}
 
-			if (mqv.getAtgMessQuerschnittVirtuellVLage().getMessQuerschnittGeschwindigkeit() != null) {
+			if (mqv.getAtgMessQuerschnittVirtuellVLage()
+					.getMessQuerschnittGeschwindigkeit() != null) {
 				geschwMQ = mqv.getAtgMessQuerschnittVirtuellVLage()
 						.getMessQuerschnittGeschwindigkeit();
 				if (!mqAnteilsListe.keySet().contains(geschwMQ)) {
@@ -151,13 +150,12 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 
 		parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(mqAnalyse.getDav(), messQuerschnitt);
 
-		mqAnalyse.getDav().subscribeReceiver(
-				this,
-				aktuelleMQAnalysen.keySet(),
-				new DataDescription(mqAnalyse.getDav().getDataModel()
-						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), mqAnalyse.getDav()
-						.getDataModel().getAspect("asp.analyse")), ReceiveOptions.normal(),
-				ReceiverRole.receiver());
+		mqAnalyse.getDav().subscribeReceiver(this, aktuelleMQAnalysen.keySet(),
+				new DataDescription(
+						mqAnalyse.getDav().getDataModel()
+								.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"),
+						mqAnalyse.getDav().getDataModel().getAspect("asp.analyse")),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -222,10 +220,10 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 	protected final boolean isAlleDatenVollstaendig() {
 		boolean alleDatenVollstaendig = true;
 
-		final long letzteBerechnungsZeit = letztesErgebnis == null ? -1 : letztesErgebnis
-				.getDataTime();
+		final long letzteBerechnungsZeit = letztesErgebnis == null ? -1
+				: letztesErgebnis.getDataTime();
 
-		final SortedSet<Long> letzteEingetroffeneZeitStempel = new TreeSet<Long>();
+		final SortedSet<Long> letzteEingetroffeneZeitStempel = new TreeSet<>();
 
 		for (final SystemObject mq : aktuelleMQAnalysen.keySet()) {
 			final ResultData result = aktuelleMQAnalysen.get(mq);
@@ -254,18 +252,18 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 	private ResultData getErgebnisAufBasisAktuellerDaten() {
 		ResultData ergebnis = null;
 
-		final Data analyseDatum = mqAnalyse.getDav().createData(
-				MqAnalyseModul.pubBeschreibung.getAttributeGroup());
+		final Data analyseDatum = mqAnalyse.getDav()
+				.createData(MqAnalyseModul.pubBeschreibung.getAttributeGroup());
 
 		/**
 		 * Ermittle Werte fuer <code>VKfz, VLkw, VPkw</code> und <code>VgKfz</code> via Ersetzung
 		 */
-		final ResultData ersetzung = aktuelleMQAnalysen.get(geschwMQ);
+				final ResultData ersetzung = aktuelleMQAnalysen.get(geschwMQ);
 
 		for (final String attName : new String[] { "VKfz", "VLkw", "VPkw", "VgKfz" }) {
 			if ((ersetzung != null) && (ersetzung.getData() != null)) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-				.kopiereInhaltNachModifiziereIndex(analyseDatum);
+						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$
@@ -337,7 +335,8 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 					/**
 					 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf "keine Daten" steht.
 					 * Dies ist der Fall,<br>
-					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder<br>
+					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder
+					 * <br>
 					 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten
 					 * hatte.
 					 */
@@ -413,7 +412,7 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
 	 */
 	private void setBilanzDatum(final Data analyseDatum, final String attName) {
-		final List<QWert> qWerte = new ArrayList<QWert>();
+		final List<QWert> qWerte = new ArrayList<>();
 
 		for (final SystemObject mq : mqAnteilsListe.keySet()) {
 			qWerte.add(new QWert(aktuelleMQAnalysen.get(mq), attName, mqAnteilsListe.get(mq)));

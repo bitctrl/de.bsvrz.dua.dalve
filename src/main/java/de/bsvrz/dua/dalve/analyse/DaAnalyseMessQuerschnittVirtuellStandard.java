@@ -57,11 +57,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * <code>atg.messQuerschnittVirtuellStandard</code>.</b><br>
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuerschnitt
-		implements IObjektWeckerListener {
+implements IObjektWeckerListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -75,12 +73,12 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	 * Mapt alle hier betrachteten Messquerschnitte auf das letzte von ihnen empfangene
 	 * Analysedatum.
 	 */
-	private final Map<SystemObject, ResultData> aktuelleMQAnalysen = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> aktuelleMQAnalysen = new HashMap<>();
 
 	/**
 	 * Alle MQ, die auf der Hauptfahrbahn liegen.
 	 */
-	private final Collection<SystemObject> mqAufHauptfahrbahn = new HashSet<SystemObject>();
+	private final Collection<SystemObject> mqAufHauptfahrbahn = new HashSet<>();
 
 	/**
 	 * der aufgelößte virtuelle Messquerschnitt.
@@ -216,9 +214,9 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 		mqAnalyse.getDav().subscribeReceiver(this, aktuelleMQAnalysen.keySet(),
 				new DataDescription(
 						mqAnalyse.getDav().getDataModel()
-								.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
+						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
 						mqAnalyse.getDav().getDataModel().getAspect("asp.analyse")), //$NON-NLS-1$
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -404,7 +402,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-				.kopiereInhaltNachModifiziereIndex(analyseDatum);
+						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$

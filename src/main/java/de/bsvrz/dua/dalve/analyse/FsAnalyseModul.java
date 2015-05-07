@@ -67,10 +67,10 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	protected static DataDescription PUB_BESCHREIBUNG = null;
 
 	/** Mapt jeden Fahrstreifen auf seine aktuellen Analyse-Parameter. */
-	private final Map<SystemObject, AtgVerkehrsDatenKurzZeitAnalyseFs> parameter = new HashMap<SystemObject, AtgVerkehrsDatenKurzZeitAnalyseFs>();
+	private final Map<SystemObject, AtgVerkehrsDatenKurzZeitAnalyseFs> parameter = new HashMap<>();
 
 	/** Mapt jeden Fahrstreifen auf seinen letzten Analysedatensatz. */
-	private final Map<SystemObject, ResultData> fsAufDatenPuffer = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> fsAufDatenPuffer = new HashMap<>();
 
 	/**
 	 * {@inheritDoc}
@@ -89,7 +89,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		/**
 		 * Publikations- und Parameteranmeldungen durchfuehren
 		 */
-		final Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		final Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<>();
 		for (final SystemObject fsObj : dieVerwaltung.getSystemObjekte()) {
 			parameter.put(fsObj,
 					new AtgVerkehrsDatenKurzZeitAnalyseFs(dieVerwaltung.getVerbindung(), fsObj));

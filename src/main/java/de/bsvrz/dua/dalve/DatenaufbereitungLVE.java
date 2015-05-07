@@ -60,8 +60,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * weitergereicht
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 
@@ -125,7 +123,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 			return analyseAtgMQ;
 		} else {
 			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
-					+ " existiert keine Attributgruppe fuer Analysedaten.");
+			+ " existiert keine Attributgruppe fuer Analysedaten.");
 		}
 	}
 
@@ -152,7 +150,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 			return pubAtgGlattMQ;
 		} else {
 			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
-					+ " existiert keine Attributgruppe fuer geglaettete Werte.");
+			+ " existiert keine Attributgruppe fuer geglaettete Werte.");
 		}
 	}
 
@@ -170,7 +168,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 			return pubAtgPrognoseMQ;
 		} else {
 			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
-					+ " existiert keine Attributgruppe fuer Prognosewerte.");
+			+ " existiert keine Attributgruppe fuer Prognosewerte.");
 		}
 	}
 
@@ -186,45 +184,49 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		SystemObject stsGesucht = null;
 
 		if (mq.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
-			final Data mqData = mq.getConfigurationData(dDav.getDataModel().getAttributeGroup(
-					"atg.punktLiegtAufLinienObjekt"));
+			final Data mqData = mq.getConfigurationData(
+					dDav.getDataModel().getAttributeGroup("atg.punktLiegtAufLinienObjekt"));
 			if (mqData != null) {
 				if (mqData.getReferenceValue("LinienReferenz") != null) {
 					final SystemObject strassenSegment = mqData.getReferenceValue("LinienReferenz")
 							.getSystemObject();
-					final double offset = mqData.getUnscaledValue("Offset").longValue() >= 0 ? mqData
-							.getScaledValue("Offset").doubleValue() : -1.0;
-					if ((strassenSegment != null) && strassenSegment.isOfType("typ.straﬂenSegment")
-							&& (offset >= 0)) {
-						final Data ssData = strassenSegment.getConfigurationData(dDav
-								.getDataModel().getAttributeGroup("atg.bestehtAusLinienObjekten"));
-						if (ssData != null) {
-							double gesamtLaenge = 0;
-							for (int i = 0; i < ssData.getArray("LinienReferenz").getLength(); i++) {
-								if (ssData.getReferenceArray("LinienReferenz").getReferenceValue(i) != null) {
-									final SystemObject sts = ssData
-											.getReferenceArray("LinienReferenz")
-											.getReferenceValue(i).getSystemObject();
-									if ((sts != null) && sts.isOfType("typ.straﬂenTeilSegment")) {
-										final Data stsData = sts.getConfigurationData(dDav
-														.getDataModel().getAttributeGroup("atg.linie"));
-										if (stsData != null) {
-											final double laenge = stsData.getUnscaledValue("L‰nge")
-													.longValue() >= 0 ? stsData.getScaledValue(
-																	"L‰nge").doubleValue() : -1.0;
-											if (laenge >= 0) {
-												gesamtLaenge += laenge;
+					final double offset = mqData.getUnscaledValue("Offset").longValue() >= 0
+							? mqData.getScaledValue("Offset").doubleValue() : -1.0;
+							if ((strassenSegment != null) && strassenSegment.isOfType("typ.straﬂenSegment")
+									&& (offset >= 0)) {
+								final Data ssData = strassenSegment.getConfigurationData(dDav.getDataModel()
+								.getAttributeGroup("atg.bestehtAusLinienObjekten"));
+								if (ssData != null) {
+									double gesamtLaenge = 0;
+									for (int i = 0; i < ssData.getArray("LinienReferenz")
+									.getLength(); i++) {
+										if (ssData.getReferenceArray("LinienReferenz")
+										.getReferenceValue(i) != null) {
+											final SystemObject sts = ssData
+													.getReferenceArray("LinienReferenz")
+													.getReferenceValue(i).getSystemObject();
+											if ((sts != null) && sts.isOfType("typ.straﬂenTeilSegment")) {
+												final Data stsData = sts.getConfigurationData(
+												dDav.getDataModel().getAttributeGroup("atg.linie"));
+												if (stsData != null) {
+													final double laenge = stsData.getUnscaledValue("L‰nge")
+															.longValue() >= 0
+															? stsData.getScaledValue("L‰nge")
+																	.doubleValue()
+															: -1.0;
+																	if (laenge >= 0) {
+																		gesamtLaenge += laenge;
+																	}
+												}
+												if (gesamtLaenge >= offset) {
+													stsGesucht = sts;
+													break;
+												}
 											}
-										}
-										if (gesamtLaenge >= offset) {
-											stsGesucht = sts;
-											break;
 										}
 									}
 								}
 							}
-						}
-					}
 				}
 			}
 		}
@@ -283,15 +285,15 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		ObjektFactory.getInstanz().setVerbindung(getVerbindung());
 
 		dDav = getVerbindung();
-		pubAtgPrognoseFS = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_TRENT_FS);
-		pubAtgGlattFS = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_FS);
+		pubAtgPrognoseFS = dDav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_TRENT_FS);
+		pubAtgGlattFS = dDav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_FS);
 		analyseAtgFS = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
-		pubAtgPrognoseMQ = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_TRENT_MQ);
-		pubAtgGlattMQ = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_MQ);
+		pubAtgPrognoseMQ = dDav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_TRENT_MQ);
+		pubAtgGlattMQ = dDav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_MQ);
 		analyseAtgMQ = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
 
 		/**
@@ -302,18 +304,18 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		/**
 		 * Ermittle nur die Fahrstreifen, Messquerschnitte und Straﬂenabschnitte
 		 */
-		final Collection<SystemObject> fahrStreifen = DUAUtensilien.getBasisInstanzen(verbindung
-				.getDataModel().getType(DUAKonstanten.TYP_FAHRSTREIFEN), verbindung,
+		final Collection<SystemObject> fahrStreifen = DUAUtensilien.getBasisInstanzen(
+				verbindung.getDataModel().getType(DUAKonstanten.TYP_FAHRSTREIFEN), verbindung,
 				getKonfigurationsBereiche());
 		final Collection<SystemObject> messQuerschnitte = DUAUtensilien.getBasisInstanzen(
 				verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ_ALLGEMEIN), verbindung,
 				getKonfigurationsBereiche());
-		final Collection<SystemObject> abschnitte = DUAUtensilien.getBasisInstanzen(verbindung
-				.getDataModel().getType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT), verbindung,
+		final Collection<SystemObject> abschnitte = DUAUtensilien.getBasisInstanzen(
+				verbindung.getDataModel().getType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT), verbindung,
 				getKonfigurationsBereiche());
 		objekte = fahrStreifen.toArray(new SystemObject[0]);
 
-		final Collection<SystemObject> lveObjekte = new HashSet<SystemObject>();
+		final Collection<SystemObject> lveObjekte = new HashSet<>();
 		lveObjekte.addAll(fahrStreifen);
 		lveObjekte.addAll(messQuerschnitte);
 
@@ -337,18 +339,16 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 
 		new PrognoseModul().initialisiere(verbindung, lveObjekte);
 
-		final Collection<SystemObject> stoerfallObjekte = new HashSet<SystemObject>();
+		final Collection<SystemObject> stoerfallObjekte = new HashSet<>();
 		stoerfallObjekte.addAll(lveObjekte);
 		stoerfallObjekte.addAll(abschnitte);
 		new StoerfallModul().initialisiere(verbindung, stoerfallObjekte);
 
-		verbindung.subscribeReceiver(
-				this,
-				objekte,
-				new DataDescription(verbindung.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_KZD), verbindung.getDataModel().getAspect(
-								DUAKonstanten.ASP_MESSWERTERSETZUNG)), ReceiveOptions.normal(),
-								ReceiverRole.receiver());
+		verbindung.subscribeReceiver(this, objekte,
+				new DataDescription(
+						verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+						verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

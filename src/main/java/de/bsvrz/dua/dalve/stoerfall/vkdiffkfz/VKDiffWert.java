@@ -35,8 +35,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
  * Wert wie er von Stoerfallindikator VKDiffKfz benoetigt wird.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 class VKDiffWert {
 

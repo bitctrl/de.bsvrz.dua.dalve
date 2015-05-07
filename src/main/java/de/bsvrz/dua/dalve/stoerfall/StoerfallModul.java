@@ -42,8 +42,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Von diesem Objekt aus wird die Berechnung der einzelnen Stoerfallindikatoren gestartet.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class StoerfallModul {
 

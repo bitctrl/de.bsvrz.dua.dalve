@@ -40,11 +40,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
  * Korrespondiert mit der Attributgruppe <code>atg.verkehrsDatenKurzZeitAnalyseMq</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public class AtgVerkehrsDatenKurzZeitAnalyseMq extends AllgemeinerDatenContainer implements
-ClientReceiverInterface {
+public class AtgVerkehrsDatenKurzZeitAnalyseMq extends AllgemeinerDatenContainer
+		implements ClientReceiverInterface {
 
 	/**
 	 * <code>KKfz.Grenz</code>.
@@ -116,13 +114,11 @@ ClientReceiverInterface {
 		if (mq == null) {
 			throw new NullPointerException("Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
 		}
-		dav.subscribeReceiver(
-				this,
-				mq,
-				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
+		dav.subscribeReceiver(this, mq,
+				new DataDescription(
+						dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -262,25 +258,25 @@ ClientReceiverInterface {
 						flk1 = resultat.getData().getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						flk2 = resultat.getData().getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kBGrenz = resultat.getData()
-								.getItem("KB").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						kBMax = resultat.getData()
-								.getItem("KB").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						kBGrenz = resultat.getData().getItem("KB").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
+						kBMax = resultat.getData().getItem("KB").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
 
-						kKfzGrenz = resultat.getData()
-								.getItem("KKfz").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						kKfzMax = resultat.getData()
-								.getItem("KKfz").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						kKfzGrenz = resultat.getData().getItem("KKfz").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
+						kKfzMax = resultat.getData().getItem("KKfz").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
 
-						kLkwGrenz = resultat.getData()
-								.getItem("KLkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						kLkwMax = resultat.getData()
-								.getItem("KLkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						kLkwGrenz = resultat.getData().getItem("KLkw").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
+						kLkwMax = resultat.getData().getItem("KLkw").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
 
-						kPkwGrenz = resultat.getData()
-								.getItem("KPkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						kPkwMax = resultat.getData()
-								.getItem("KPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						kPkwGrenz = resultat.getData().getItem("KPkw").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
+						kPkwMax = resultat.getData().getItem("KPkw").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
+								.longValue();
 
 						final Array array = resultat.getData().getArray("wichtung"); //$NON-NLS-1$
 						if (array.getLength() > 0) {

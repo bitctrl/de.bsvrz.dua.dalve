@@ -43,8 +43,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * additiv und subtraktiv miteinander verknüpft werden können.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class QWert {
 
@@ -162,7 +160,7 @@ public class QWert {
 		ergebnis.getWert().setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 
 		double ergebnisSkaliertBisJetzt = 0;
-		final List<GWert> gueteListe = new ArrayList<GWert>();
+		final List<GWert> gueteListe = new ArrayList<>();
 		boolean interpoliert = false;
 
 		for (final QWert summand : summanden) {
@@ -181,19 +179,19 @@ public class QWert {
 
 			try {
 				gueteListe
-						.add(GueteVerfahren
-								.gewichte(
-										new GWert(summand.getWert().getGueteIndex(),
-												GueteVerfahren.getZustand(
-														summand.getWert().getVerfahren()),
+				.add(GueteVerfahren
+						.gewichte(
+								new GWert(summand.getWert().getGueteIndex(),
+										GueteVerfahren.getZustand(
+												summand.getWert().getVerfahren()),
 												false),
-										Math.abs(summand.getAnteil())));
+												Math.abs(summand.getAnteil())));
 			} catch (final GueteException e) {
 				e.printStackTrace();
 				LOGGER.error("Guete konnte nicht gewichtet werden:\nGuete: "
 						+ new GWert(summand.getWert().getGueteIndex(),
 								GueteVerfahren.getZustand(summand.getWert().getVerfahren()), false)
-								+ "\nVorgesehenes Gewicht: " + Math.abs(summand.getAnteil()));
+						+ "\nVorgesehenes Gewicht: " + Math.abs(summand.getAnteil()));
 			}
 
 		}
@@ -238,7 +236,7 @@ public class QWert {
 					|| summand2.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(summand1.getWert().getName());
 				ergebnis.getWert()
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((summand1.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (summand2.getWert()
 							.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
@@ -274,8 +272,7 @@ public class QWert {
 				} catch (final GueteException e) {
 					e.printStackTrace();
 					LOGGER.error("Guete-Summe konnte nicht ermittelt werden.\n***Summand1***\n" //$NON-NLS-1$
-							+ summand1.getWert() +
-							"\n***Summand2***\n" + summand2.getWert());
+							+ summand1.getWert() + "\n***Summand2***\n" + summand2.getWert());
 				}
 			}
 		}
@@ -303,7 +300,7 @@ public class QWert {
 					|| subtrahend.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(minuend.getWert().getName());
 				ergebnis.getWert()
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((minuend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (subtrahend.getWert()
 							.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
@@ -340,8 +337,7 @@ public class QWert {
 				} catch (final GueteException e) {
 					e.printStackTrace();
 					LOGGER.error("Guete-Differenz konnte nicht ermittelt werden.\n***Minuend***\n" //$NON-NLS-1$
-							+ minuend.getWert() +
-							"\n***Subtrahend***\n" + subtrahend.getWert());
+							+ minuend.getWert() + "\n***Subtrahend***\n" + subtrahend.getWert());
 				}
 			}
 		}

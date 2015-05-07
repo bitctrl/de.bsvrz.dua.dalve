@@ -46,8 +46,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * <code>atg.messQuerschnittVirtuellVLage</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 
@@ -99,9 +97,9 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 		FS2 = dav.getDataModel().getObject("fs.2"); //$NON-NLS-1$
 		FS3 = dav.getDataModel().getObject("fs.3"); //$NON-NLS-1$
 
-		final DataDescription ddKzdSend = new DataDescription(dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KZD), dav.getDataModel().getAspect(
-						DUAKonstanten.ASP_MESSWERTERSETZUNG));
+		final DataDescription ddKzdSend = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+				dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
 		dav.subscribeSender(this, new SystemObject[] { FS1, FS2, FS3 }, ddKzdSend,
 				SenderRole.source());
@@ -109,8 +107,9 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 		/*
 		 * Importiere Parameter
 		 */
-		final ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav, new SystemObject[] {
-				FS1, FS2, FS3 }, DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		final ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav,
+				new SystemObject[] { FS1, FS2, FS3 },
+				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImport.importiereParameterAnalyse(1);
 		paraImport.importiereParameterAnalyse(2);
 		paraImport.importiereParameterAnalyse(3);
@@ -135,8 +134,8 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 			final ResultData resultat2 = new ResultData(FS2, ddKzdSend, aktZeit, zeileFS2);
 			final ResultData resultat3 = new ResultData(FS3, ddKzdSend, aktZeit, zeileFS3);
 
-			System.out
-					.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println(
+					"Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 			dav.sendData(resultat1);
 			dav.sendData(resultat2);
 			dav.sendData(resultat3);

@@ -58,8 +58,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Berechnung von Analysewerten auszulösen.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
@@ -88,12 +86,12 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	/**
 	 * Mapt alle hier betrachteten Fahrstreifen auf das letzte von ihnen empfangene Analysedatum.
 	 */
-	private final Map<SystemObject, ResultData> aktuelleFSAnalysen = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> aktuelleFSAnalysen = new HashMap<>();
 
 	/**
 	 * Alle aktuellen Fahrstreifenanalysen mit Nutzdaten.
 	 */
-	private final Map<SystemObject, ResultData> aktuelleFSAnalysenNutz = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> aktuelleFSAnalysenNutz = new HashMap<>();
 
 	/**
 	 * Tracker fuer die Erfassungsintervalldauer des MQ.
@@ -147,13 +145,12 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		 * Anmeldung auf Parameter und alle Daten der assoziierten Messquerschnitte
 		 */
 		parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(mqAnalyse.getDav(), messQuerschnitt1);
-		mqAnalyse.getDav().subscribeReceiver(
-				this,
-				aktuelleFSAnalysen.keySet(),
-				new DataDescription(mqAnalyse.getDav().getDataModel()
-						.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), mqAnalyse.getDav()
-						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+		mqAnalyse.getDav().subscribeReceiver(this, aktuelleFSAnalysen.keySet(),
+				new DataDescription(
+						mqAnalyse.getDav().getDataModel()
+								.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+						mqAnalyse.getDav().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -227,8 +224,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
 		if (berechne) {
 			final long datenZeit = zeitStempel;
-			final Data analyseDatum = mqAnalyse.getDav().createData(
-					MqAnalyseModul.pubBeschreibung.getAttributeGroup());
+			final Data analyseDatum = mqAnalyse.getDav()
+					.createData(MqAnalyseModul.pubBeschreibung.getAttributeGroup());
 
 			if (mqT.getT() != ErfassungsIntervallDauerMQ.NICHT_EINHEITLICH) {
 
@@ -354,7 +351,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		final boolean gueteBerechenbar = true;
 
 		long summe = 0;
-		final ArrayList<GWert> gueteWerte = new ArrayList<GWert>();
+		final ArrayList<GWert> gueteWerte = new ArrayList<>();
 		/**
 		 * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar gekennzeichnet,
 		 * so geht sie nicht in die jeweilige Berechnung des Zielwerts ein. Sind alle der bei der
@@ -363,8 +360,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		 */
 		int istNichtVorhanden = 0;
 		for (final ResultData fsDaten : aktuelleFSAnalysenNutz.values()) {
-			final MesswertUnskaliert fsWert = new MesswertUnskaliert(
-					"q" + attName, fsDaten.getData()); //$NON-NLS-1$
+			final MesswertUnskaliert fsWert = new MesswertUnskaliert("q" + attName, //$NON-NLS-1$
+					fsDaten.getData());
 
 			if (fsWert.isNichtErfasst()) {
 				qAnalyse.setNichtErfasst(true);
@@ -397,8 +394,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 					}
 					if (gueteBerechenbar) {
 						try {
-							final GWert gesamtGuete = GueteVerfahren.summe(gueteWerte
-									.toArray(new GWert[0]));
+							final GWert gesamtGuete = GueteVerfahren
+									.summe(gueteWerte.toArray(new GWert[0]));
 							qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 							qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 						} catch (final GueteException e) {
@@ -444,12 +441,12 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 			boolean gueteBerechenbar = true;
 			long summeQV = 0;
 			long summeQ = 0;
-			final ArrayList<GWert> gueteProdukte = new ArrayList<GWert>();
+			final ArrayList<GWert> gueteProdukte = new ArrayList<>();
 
 			int istNichtVorhanden = 0;
 			for (final ResultData fsDaten : aktuelleFSAnalysenNutz.values()) {
-				final MesswertUnskaliert q = new MesswertUnskaliert(
-						"q" + attName, fsDaten.getData()); //$NON-NLS-1$
+				final MesswertUnskaliert q = new MesswertUnskaliert("q" + attName, //$NON-NLS-1$
+						fsDaten.getData());
 				final MesswertUnskaliert v = new MesswertUnskaliert(praefixKlein + attName,
 						fsDaten.getData());
 
@@ -464,9 +461,9 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 					summeQV += q.getWertUnskaliert() * v.getWertUnskaliert();
 					summeQ += q.getWertUnskaliert();
 					try {
-						gueteProdukte.add(GueteVerfahren.produkt(new GWert(fsDaten.getData(),
-								"q" + attName), //$NON-NLS-1$
-								new GWert(fsDaten.getData(), praefixKlein + attName)));
+						gueteProdukte.add(
+								GueteVerfahren.produkt(new GWert(fsDaten.getData(), "q" + attName), //$NON-NLS-1$
+										new GWert(fsDaten.getData(), praefixKlein + attName)));
 					} catch (final GueteException e) {
 						gueteBerechenbar = false;
 						LOGGER.error("Guete-Index fuer " + praefixGross + attName + //$NON-NLS-1$
@@ -484,7 +481,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				} else {
 					final long ergebnis = Math.round((double) summeQV / (double) summeQ);
 					if (DUAUtensilien.isWertInWerteBereich(
-							analyseDatum.getItem(praefixGross + attName).getItem("Wert"), ergebnis)) { //$NON-NLS-1$
+							analyseDatum.getItem(praefixGross + attName).getItem("Wert"), //$NON-NLS-1$
+							ergebnis)) {
 						qAnalyse.setWertUnskaliert(ergebnis);
 						if (interpoliert) {
 							qAnalyse.setInterpoliert(true);
@@ -494,7 +492,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 								final GWert gesamtGuete = GueteVerfahren.quotient(
 										GueteVerfahren.summe(gueteProdukte.toArray(new GWert[0])),
 										new GWert(analyseDatum, "Q" + attName) //$NON-NLS-1$
-										);
+								);
 
 								qAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 								qAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
@@ -540,7 +538,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		long BMax = DUAKonstanten.NICHT_ERMITTELBAR;
 		GWert gueteBMax = null;
 		double bSumme = 0;
-		final ArrayList<GWert> gueteWerte = new ArrayList<GWert>();
+		final ArrayList<GWert> gueteWerte = new ArrayList<>();
 
 		int istNichtVorhanden = 0;
 		for (final ResultData fsDatum : aktuelleFSAnalysenNutz.values()) {
@@ -583,21 +581,21 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				 * B setzen
 				 */
 				final long bB = Math.round(bSumme / aktuelleFSAnalysenNutz.keySet().size());
-				if (DUAUtensilien.isWertInWerteBereich(
-						analyseDatum.getItem("B").getItem("Wert"), bB)) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("B").getItem("Wert"), //$NON-NLS-1$ //$NON-NLS-2$
+						bB)) {
 					BAnalyse.setWertUnskaliert(bB);
 					if (interpoliert) {
 						BAnalyse.setInterpoliert(true);
 					}
 					if (gueteBerechenbar) {
 						try {
-							final GWert gesamtGuete = GueteVerfahren.summe(gueteWerte
-									.toArray(new GWert[0]));
+							final GWert gesamtGuete = GueteVerfahren
+									.summe(gueteWerte.toArray(new GWert[0]));
 							BAnalyse.getGueteIndex().setWert(gesamtGuete.getIndexUnskaliert());
 							BAnalyse.setVerfahren(gesamtGuete.getVerfahren().getCode());
 						} catch (final GueteException e) {
-							LOGGER.error(
-									"Guete-Index fuer B nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							LOGGER.error("Guete-Index fuer B nicht berechenbar in " + analyseDatum, //$NON-NLS-1$
+									e);
 							e.printStackTrace();
 						}
 					}
@@ -608,8 +606,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				/**
 				 * BMax setzen
 				 */
-				if (DUAUtensilien.isWertInWerteBereich(
-						analyseDatum.getItem("BMax").getItem("Wert"), BMax)) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("BMax").getItem("Wert"), //$NON-NLS-1$ //$NON-NLS-2$
+						BMax)) {
 					BMaxAnalyse.setWertUnskaliert(BMax);
 					if (interpoliert) {
 						BMaxAnalyse.setInterpoliert(true);
@@ -651,8 +649,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 			if (qKfzUnskaliert.getWertUnskaliert() > 1) {
 				double sKfzWertOhneWurzel = 0;
 
-				final DaMesswertUnskaliert vKfzUnskaliert = new DaMesswertUnskaliert(
-						"VKfz", analyseDatum); //$NON-NLS-1$
+				final DaMesswertUnskaliert vKfzUnskaliert = new DaMesswertUnskaliert("VKfz", //$NON-NLS-1$
+						analyseDatum);
 				if (vKfzUnskaliert.isFehlerhaftBzwImplausibel()) {
 					sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				} else if (vKfzUnskaliert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
@@ -664,21 +662,21 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							|| qKfzUnskaliert.isInterpoliert();
 
 					final double vKfzWertUnskaliert = vKfzUnskaliert.getWertUnskaliert();
-					final List<GWert> summanden = new ArrayList<GWert>();
+					final List<GWert> summanden = new ArrayList<>();
 
 					int istNichtVorhanden = 0;
 					for (final ResultData fsDatum : aktuelleFSAnalysenNutz.values()) {
-						final DaMesswertUnskaliert qKfz = new DaMesswertUnskaliert(
-								"qKfz", fsDatum.getData()); //$NON-NLS-1$
-						final DaMesswertUnskaliert sKfz = new DaMesswertUnskaliert(
-								"sKfz", fsDatum.getData()); //$NON-NLS-1$
-						final DaMesswertUnskaliert vKfz = new DaMesswertUnskaliert(
-								"vKfz", fsDatum.getData()); //$NON-NLS-1$
+						final DaMesswertUnskaliert qKfz = new DaMesswertUnskaliert("qKfz", //$NON-NLS-1$
+								fsDatum.getData());
+						final DaMesswertUnskaliert sKfz = new DaMesswertUnskaliert("sKfz", //$NON-NLS-1$
+								fsDatum.getData());
+						final DaMesswertUnskaliert vKfz = new DaMesswertUnskaliert("vKfz", //$NON-NLS-1$
+								fsDatum.getData());
 
 						if (qKfz.isFehlerhaftBzwImplausibel() || vKfz.isFehlerhaftBzwImplausibel()
 								|| sKfz.isFehlerhaftBzwImplausibel()) {
-							sKfzAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							sKfzAnalyse.setWertUnskaliert(
+									DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						} else if ((qKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 								|| (vKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
@@ -695,29 +693,30 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							/**
 							 * Berechnung
 							 */
-							sKfzWertOhneWurzel += ((qKfzWert * Math.pow(sKfzWert, 2.0)) + (qKfzWert * Math
-									.pow(vKfzWert - vKfzWertUnskaliert, 2.0)))
+							sKfzWertOhneWurzel += ((qKfzWert * Math.pow(sKfzWert, 2.0))
+									+ (qKfzWert * Math.pow(vKfzWert - vKfzWertUnskaliert, 2.0)))
 									/ (qKfzUnskaliert.getWertUnskaliert() - 1.0);
 
 							/**
 							 * Guete
 							 */
-							final GWert qKfzGuete = new GWert(fsDatum.getData(), "qKfz"); //$NON-NLS-1$
+									final GWert qKfzGuete = new GWert(fsDatum.getData(), "qKfz"); //$NON-NLS-1$
 							final GWert sKfzGuete = new GWert(fsDatum.getData(), "sKfz"); //$NON-NLS-1$
 							final GWert vKfzGuete = new GWert(fsDatum.getData(), "vKfz"); //$NON-NLS-1$
 
 							try {
-								summanden.add(GueteVerfahren.quotient(GueteVerfahren.summe(
+								summanden.add(GueteVerfahren.quotient(
+										GueteVerfahren.summe(
+												GueteVerfahren.produkt(qKfzGuete,
+														GueteVerfahren.exp(sKfzGuete, 2.0)),
 										GueteVerfahren.produkt(qKfzGuete,
-												GueteVerfahren.exp(sKfzGuete, 2.0)), GueteVerfahren
-												.produkt(qKfzGuete, GueteVerfahren.exp(
-														GueteVerfahren.differenz(vKfzGuete,
-																vKfzGueteWert), 2.0))),
-										qKfzGueteWert));
+												GueteVerfahren.exp(GueteVerfahren.differenz(
+														vKfzGuete, vKfzGueteWert), 2.0))),
+																qKfzGueteWert));
 							} catch (final GueteException e) {
 								gueteBerechenbar = false;
-								LOGGER.error(
-										"Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+								LOGGER.error("Guete-Index fuer SKfz nicht berechenbar in " //$NON-NLS-1$
+										+ analyseDatum, e);
 								e.printStackTrace();
 							}
 						}
@@ -725,12 +724,13 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 
 					if (aktuelleFSAnalysenNutz.size() == istNichtVorhanden) {
 						sKfzAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
-					} else if (sKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT) {
+					} else
+						if (sKfzAnalyse.getWertUnskaliert() == DUAKonstanten.MESSWERT_UNBEKANNT) {
 						if (sKfzWertOhneWurzel >= 0) {
 							final long SKfz = Math.round(Math.sqrt(sKfzWertOhneWurzel));
 
-							if (DUAUtensilien.isWertInWerteBereich(analyseDatum
-									.getItem("SKfz").getItem("Wert"), SKfz)) { //$NON-NLS-1$ //$NON-NLS-2$
+							if (DUAUtensilien.isWertInWerteBereich(
+									analyseDatum.getItem("SKfz").getItem("Wert"), SKfz)) { //$NON-NLS-1$ //$NON-NLS-2$
 								sKfzAnalyse.setWertUnskaliert(SKfz);
 								if (interpoliert) {
 									sKfzAnalyse.setInterpoliert(true);
@@ -740,23 +740,23 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 										final GWert gesamtGuete = GueteVerfahren.exp(GueteVerfahren
 												.summe(summanden.toArray(new GWert[0])), 0.5);
 
-										sKfzAnalyse.getGueteIndex().setWert(
-												gesamtGuete.getIndexUnskaliert());
-										sKfzAnalyse.setVerfahren(gesamtGuete.getVerfahren()
-												.getCode());
+										sKfzAnalyse.getGueteIndex()
+												.setWert(gesamtGuete.getIndexUnskaliert());
+										sKfzAnalyse
+												.setVerfahren(gesamtGuete.getVerfahren().getCode());
 									} catch (final GueteException e) {
-										LOGGER.error(
-												"Guete-Index fuer SKfz nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+										LOGGER.error("Guete-Index fuer SKfz nicht berechenbar in " //$NON-NLS-1$
+												+ analyseDatum, e);
 										e.printStackTrace();
 									}
 								}
 							} else {
-								sKfzAnalyse
-								.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+								sKfzAnalyse.setWertUnskaliert(
+										DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							}
 						} else {
-							sKfzAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							sKfzAnalyse.setWertUnskaliert(
+									DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 						}
 					}
 				}
@@ -791,15 +791,16 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 			aLkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		} else {
 			GWert aLkwGuete = null;
-			final long aLkwWert = Math.round(((double) qLkw.getWertUnskaliert() / (double) qKfz
-					.getWertUnskaliert()) * 100.0);
+			final long aLkwWert = Math
+					.round(((double) qLkw.getWertUnskaliert() / (double) qKfz.getWertUnskaliert())
+							* 100.0);
 
-			if (DUAUtensilien.isWertInWerteBereich(
-					analyseDatum.getItem("ALkw").getItem("Wert"), aLkwWert)) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("ALkw").getItem("Wert"), //$NON-NLS-1$ //$NON-NLS-2$
+					aLkwWert)) {
 				try {
 					aLkwGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QLkw"), //$NON-NLS-1$
 							new GWert(analyseDatum, "QKfz") //$NON-NLS-1$
-							);
+					);
 				} catch (final GueteException e) {
 					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
 					e.printStackTrace();
@@ -853,8 +854,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						max = parameter.getKPkwMax();
 					}
 
-					final MesswertUnskaliert KTMinus1 = new MesswertUnskaliert(
-							"K" + attName, letztesErgebnis.getData()); //$NON-NLS-1$
+					final MesswertUnskaliert KTMinus1 = new MesswertUnskaliert("K" + attName, //$NON-NLS-1$
+							letztesErgebnis.getData());
 					if (KTMinus1.isFehlerhaftBzwImplausibel()) {
 						kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					} else if (KTMinus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
@@ -874,18 +875,17 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				if (q.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
 					kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					long kWert = Math.round((double) q.getWertUnskaliert()
-							/ (double) v.getWertUnskaliert());
-					if (DUAUtensilien.isWertInWerteBereich(analyseDatum
-							.getItem("K" + attName).getItem("Wert"), kWert)) { //$NON-NLS-1$//$NON-NLS-2$
+					long kWert = Math
+							.round((double) q.getWertUnskaliert() / (double) v.getWertUnskaliert());
+					if (DUAUtensilien.isWertInWerteBereich(
+							analyseDatum.getItem("K" + attName).getItem("Wert"), kWert)) { //$NON-NLS-1$//$NON-NLS-2$
 						final boolean interpoliert = q.isInterpoliert() || v.isInterpoliert();
 						GWert kGuete = null;
 
 						try {
-							kGuete = GueteVerfahren.quotient(
-									new GWert(analyseDatum, "Q" + attName), //$NON-NLS-1$
+							kGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "Q" + attName), //$NON-NLS-1$
 									new GWert(analyseDatum, "V" + attName) //$NON-NLS-1$
-									);
+							);
 						} catch (final GueteException e) {
 							LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e); //$NON-NLS-1$ //$NON-NLS-2$
 							e.printStackTrace();
@@ -948,8 +948,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				GWert qbGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
 
 				qbWert = qPkw.getWertUnskaliert();
-				if (DUAUtensilien.isWertInWerteBereich(
-						analyseDatum.getItem("QB").getItem("Wert"), qbWert)) { //$NON-NLS-1$//$NON-NLS-2$
+				if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("QB").getItem("Wert"), //$NON-NLS-1$//$NON-NLS-2$
+						qbWert)) {
 					qbGuete = new GWert(analyseDatum, "QPkw"); //$NON-NLS-1$
 
 					qbAnalyse.setWertUnskaliert(qbWert);
@@ -991,8 +991,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 							qbGuete = GueteVerfahren.summe(qPkwGuete,
 									GueteVerfahren.gewichte(qLkwGuete, fL));
 						} catch (final GueteException e) {
-							LOGGER.error(
-									"Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							LOGGER.error("Guete-Index fuer QB nicht berechenbar in " + analyseDatum, //$NON-NLS-1$
+									e);
 							e.printStackTrace();
 						}
 
@@ -1036,8 +1036,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				if (parameter.isInitialisiert() && (letztesErgebnis != null)
 						&& (letztesErgebnis.getData() != null)) {
 
-					final MesswertUnskaliert KBTMinus1 = new MesswertUnskaliert(
-							"KB", letztesErgebnis.getData()); //$NON-NLS-1$
+					final MesswertUnskaliert KBTMinus1 = new MesswertUnskaliert("KB", //$NON-NLS-1$
+							letztesErgebnis.getData());
 					if (KBTMinus1.getWertUnskaliert() >= 0) {
 						if (KBTMinus1.getWertUnskaliert() >= parameter.getKBGrenz()) {
 							KBAnalyse.setWertUnskaliert(parameter.getKBMax());
@@ -1056,8 +1056,8 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				if (QB.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
 					KBAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					final long kbWert = Math.round((double) QB.getWertUnskaliert()
-							/ (double) VKfz.getWertUnskaliert());
+					final long kbWert = Math.round(
+							(double) QB.getWertUnskaliert() / (double) VKfz.getWertUnskaliert());
 
 					if (DUAUtensilien.isWertInWerteBereich(
 							analyseDatum.getItem("KB").getItem("Wert"), kbWert)) { //$NON-NLS-1$//$NON-NLS-2$
@@ -1066,10 +1066,10 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						try {
 							kbGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QB"), //$NON-NLS-1$
 									new GWert(analyseDatum, "VKfz") //$NON-NLS-1$
-									);
+							);
 						} catch (final GueteException e) {
-							LOGGER.error(
-									"Guete-Index fuer KB nicht berechenbar in " + analyseDatum, e); //$NON-NLS-1$
+							LOGGER.error("Guete-Index fuer KB nicht berechenbar in " + analyseDatum, //$NON-NLS-1$
+									e);
 							e.printStackTrace();
 						}
 
@@ -1124,7 +1124,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 			boolean gueteBerechnen = true;
 
 			long VDeltaWert = 0;
-			final List<GWert> gueteSummanden = new ArrayList<GWert>();
+			final List<GWert> gueteSummanden = new ArrayList<>();
 
 			if ((aktuelleFSAnalysen.keySet().size() == aktuelleFSAnalysenNutz.keySet().size())
 					&& parameter.isInitialisiert()) {
@@ -1137,37 +1137,37 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						if (parameter.getWichtung().length > i) {
 							w = parameter.getWichtung()[i];
 						} else {
-							vDeltaAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							vDeltaAnalyse.setWertUnskaliert(
+									DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						}
-						final ResultData fsResultI = aktuelleFSAnalysen.get(mq.getFahrStreifen()
-								.get(i).getSystemObject());
-						final ResultData fsResultIPlus1 = aktuelleFSAnalysen.get(mq
-								.getFahrStreifen().get(i + 1).getSystemObject());
-						final MesswertUnskaliert vKfzI = new MesswertUnskaliert(
-								"vKfz", fsResultI.getData()); //$NON-NLS-1$
-						final MesswertUnskaliert vKfzIPlus1 = new MesswertUnskaliert(
-								"vKfz", fsResultIPlus1.getData()); //$NON-NLS-1$
+						final ResultData fsResultI = aktuelleFSAnalysen
+								.get(mq.getFahrStreifen().get(i).getSystemObject());
+						final ResultData fsResultIPlus1 = aktuelleFSAnalysen
+								.get(mq.getFahrStreifen().get(i + 1).getSystemObject());
+						final MesswertUnskaliert vKfzI = new MesswertUnskaliert("vKfz", //$NON-NLS-1$
+								fsResultI.getData());
+						final MesswertUnskaliert vKfzIPlus1 = new MesswertUnskaliert("vKfz", //$NON-NLS-1$
+								fsResultIPlus1.getData());
 
 						if (vKfzI.isFehlerhaftBzwImplausibel()
 								|| vKfzIPlus1.isFehlerhaftBzwImplausibel()) {
-							vDeltaAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							vDeltaAnalyse.setWertUnskaliert(
+									DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 							break;
 						} else if ((vKfzI.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
-								|| (vKfzIPlus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
+								|| (vKfzIPlus1
+										.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 							istNichtVorhanden++;
 						} else {
 							interpoliert = vKfzI.isInterpoliert() || vKfzIPlus1.isInterpoliert();
-							VDeltaWert += w
-									* Math.abs(vKfzI.getWertUnskaliert()
-											- vKfzIPlus1.getWertUnskaliert());
+							VDeltaWert += w * Math.abs(
+									vKfzI.getWertUnskaliert() - vKfzIPlus1.getWertUnskaliert());
 
 							try {
-								gueteSummanden.add(GueteVerfahren.gewichte(GueteVerfahren
-										.differenz(new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
-												new GWert(fsResultIPlus1.getData(), "vKfz")), w)); //$NON-NLS-1$
+								gueteSummanden.add(GueteVerfahren.gewichte(GueteVerfahren.differenz(
+										new GWert(fsResultI.getData(), "vKfz"), //$NON-NLS-1$
+										new GWert(fsResultIPlus1.getData(), "vKfz")), w)); //$NON-NLS-1$
 							} catch (final GueteException e) {
 								gueteBerechnen = false;
 								LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$
@@ -1176,22 +1176,23 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 						}
 					}
 
-					if (vDeltaAnalyse.getWertUnskaliert() != DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT) {
+					if (vDeltaAnalyse
+							.getWertUnskaliert() != DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT) {
 						if (mq.getFahrStreifen().size() == istNichtVorhanden) {
 							vDeltaAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 						} else if (!DUAUtensilien.isWertInWerteBereich(
 								analyseDatum.getItem("VDelta").getItem("Wert"), VDeltaWert)) { //$NON-NLS-1$//$NON-NLS-2$
-							vDeltaAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+							vDeltaAnalyse.setWertUnskaliert(
+									DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 						} else {
 							vDeltaAnalyse.setWertUnskaliert(VDeltaWert);
 							vDeltaAnalyse.setInterpoliert(interpoliert);
 							if (gueteBerechnen) {
 								try {
-									final GWert guete = GueteVerfahren.summe(gueteSummanden
-											.toArray(new GWert[0]));
-									vDeltaAnalyse.getGueteIndex().setWert(
-											guete.getIndexUnskaliert());
+									final GWert guete = GueteVerfahren
+											.summe(gueteSummanden.toArray(new GWert[0]));
+									vDeltaAnalyse.getGueteIndex()
+											.setWert(guete.getIndexUnskaliert());
 									vDeltaAnalyse.setVerfahren(guete.getVerfahren().getCode());
 								} catch (final GueteException e) {
 									LOGGER.error("Guete-Index fuer VDelta nicht berechenbar", e); //$NON-NLS-1$

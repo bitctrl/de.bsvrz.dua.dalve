@@ -34,8 +34,6 @@ import java.util.LinkedList;
  * <b>Achtung:</b> nicht synchronisierter Puffer!
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 class RingPuffer {
 
@@ -47,7 +45,7 @@ class RingPuffer {
 	/**
 	 * Ringpuffer mit den zeitlich aktuellsten Daten.
 	 */
-	private final LinkedList<VKDiffWert> ringPuffer = new LinkedList<VKDiffWert>();
+	private final LinkedList<VKDiffWert> ringPuffer = new LinkedList<>();
 
 	/**
 	 * Aktualisiert diesen Puffer mit neuen Daten. Alte Daten werden dabei ggf. aus dem Puffer
@@ -98,7 +96,8 @@ class RingPuffer {
 
 				if ((diffZumLetzten > diffZumVorLetzten) && (diffZumVorLetzten <= zeitSpanne)) {
 					wert = vorLetzer;
-				} else if ((diffZumLetzten <= diffZumVorLetzten) && (diffZumLetzten <= zeitSpanne)) {
+				} else
+					if ((diffZumLetzten <= diffZumVorLetzten) && (diffZumLetzten <= zeitSpanne)) {
 					wert = letzter;
 				}
 			} else {

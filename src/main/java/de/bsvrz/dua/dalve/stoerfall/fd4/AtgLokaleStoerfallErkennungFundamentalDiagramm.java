@@ -49,7 +49,7 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements ClientReceiverInterface {
 
 	/** Mappt eine Stoerfallsituation auf ihre Parameter. */
-	private final Map<StoerfallSituation, ParameterFuerStoerfall> parameter = new HashMap<StoerfallSituation, ParameterFuerStoerfall>();
+	private final Map<StoerfallSituation, ParameterFuerStoerfall> parameter = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.

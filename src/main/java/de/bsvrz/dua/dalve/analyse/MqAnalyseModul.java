@@ -53,8 +53,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Objekte (Fahrstreifen oder MQs) lauscht und ggf. über diese Klasse ein Analysedatum publiziert
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class MqAnalyseModul {
 
@@ -89,10 +87,10 @@ public class MqAnalyseModul {
 			throws DUAInitialisierungsException {
 		dav = verwaltung.getVerbindung();
 
-		final Collection<SystemObject> messQuerschnitteGesamt = new HashSet<SystemObject>();
-		final Collection<SystemObject> messQuerschnitte = new HashSet<SystemObject>();
-		final Collection<SystemObject> messQuerschnitteVirtuellVLage = new HashSet<SystemObject>();
-		final Collection<SystemObject> messQuerschnitteVirtuellStandard = new HashSet<SystemObject>();
+		final Collection<SystemObject> messQuerschnitteGesamt = new HashSet<>();
+		final Collection<SystemObject> messQuerschnitte = new HashSet<>();
+		final Collection<SystemObject> messQuerschnitteVirtuellVLage = new HashSet<>();
+		final Collection<SystemObject> messQuerschnitteVirtuellStandard = new HashSet<>();
 
 		/**
 		 * Ermittle alle Messquerschnitte, die in dieser SWE betrachtet werden sollen
@@ -110,13 +108,14 @@ public class MqAnalyseModul {
 				messQuerschnitteVirtuellStandard.addAll(DUAUtensilien.getBasisInstanzen(
 						mqv.getSystemObject(), verwaltung.getVerbindung(),
 						verwaltung.getKonfigurationsBereiche()));
-			} else if (mqv.getBerechnungsVorschrift() == BerechnungsVorschrift.AUF_BASIS_VON_ATG_MQ_VIRTUELL_V_LAGE) {
+			} else if (mqv
+					.getBerechnungsVorschrift() == BerechnungsVorschrift.AUF_BASIS_VON_ATG_MQ_VIRTUELL_V_LAGE) {
 				messQuerschnitteVirtuellVLage.addAll(DUAUtensilien.getBasisInstanzen(
 						mqv.getSystemObject(), verwaltung.getVerbindung(),
 						verwaltung.getKonfigurationsBereiche()));
 			} else {
-				throw new DUAInitialisierungsException("Keine Berechnungsvorschrift fuer VMQ "
-						+ mqv.getPid() + " angegeben");
+				throw new DUAInitialisierungsException(
+						"Keine Berechnungsvorschrift fuer VMQ " + mqv.getPid() + " angegeben");
 			}
 		}
 		messQuerschnitteGesamt.addAll(messQuerschnitte);
@@ -133,11 +132,12 @@ public class MqAnalyseModul {
 		 * Publikationsbeschreibung für Analysewerte von allgemeinen MQs
 		 */
 		sender = new DAVSendeAnmeldungsVerwaltung(verwaltung.getVerbindung(), SenderRole.source());
-		pubBeschreibung = new DataDescription(verwaltung.getVerbindung().getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), verwaltung.getVerbindung()
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+		pubBeschreibung = new DataDescription(
+				verwaltung.getVerbindung().getDataModel()
+						.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				verwaltung.getVerbindung().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
-		final Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		final Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<>();
 		for (final SystemObject mq : messQuerschnitteGesamt) {
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(mq, pubBeschreibung));

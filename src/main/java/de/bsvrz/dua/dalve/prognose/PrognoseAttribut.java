@@ -49,7 +49,7 @@ import java.util.Set;
 public class PrognoseAttribut {
 
 	/** Wertebereich. */
-	private static final Set<PrognoseAttribut> WERTE_BEREICH = new HashSet<PrognoseAttribut>();
+	private static final Set<PrognoseAttribut> WERTE_BEREICH = new HashSet<>();
 
 	/**
 	 * Attribut <code>qKfz</code> bzw. <code>QKfz</code>

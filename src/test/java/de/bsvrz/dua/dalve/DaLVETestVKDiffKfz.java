@@ -60,8 +60,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * Testet die Berechnung von <code>VKDiffKfz</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiverInterface {
 
@@ -117,11 +115,12 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		/**
 		 * Parametrieren
 		 */
-		final DataDescription ddParaAbschnitt = new DataDescription(dav.getDataModel()
-				.getAttributeGroup("atg.lokaleStörfallErkennungVKDiffKfz"), dav.getDataModel()
-				.getAspect("asp.parameterVorgabe"));
-		final DataDescription ddParaMQ = new DataDescription(dav.getDataModel().getAttributeGroup(
-				"atg.fundamentalDiagramm"), dav.getDataModel().getAspect("asp.parameterVorgabe"));
+		final DataDescription ddParaAbschnitt = new DataDescription(
+				dav.getDataModel().getAttributeGroup("atg.lokaleStörfallErkennungVKDiffKfz"),
+				dav.getDataModel().getAspect("asp.parameterVorgabe"));
+		final DataDescription ddParaMQ = new DataDescription(
+				dav.getDataModel().getAttributeGroup("atg.fundamentalDiagramm"),
+				dav.getDataModel().getAspect("asp.parameterVorgabe"));
 		dav.subscribeSender(this, abschnitt, ddParaAbschnitt, SenderRole.sender());
 		dav.subscribeSender(this, new SystemObject[] { mq1, mq2 }, ddParaMQ, SenderRole.sender());
 		try {
@@ -130,8 +129,8 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 			ex.printStackTrace();
 		}
 
-		final Parameter parameter = new Parameter(DatenaufbereitungLVETest.TEST_DATEN_VERZ
-				+ "Parameter");
+		final Parameter parameter = new Parameter(
+				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter");
 		final Data data = dav.createData(ddParaAbschnitt.getAttributeGroup());
 		data.getItem("VKDiffKfz").getUnscaledValue("Ein")
 				.set(Long.parseLong(parameter.get("VKDiffEin")));
@@ -167,8 +166,9 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		/**
 		 * Importiere Fahrstreifen-Parameter
 		 */
-		final ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav, new SystemObject[] {
-				fs1, fs2, fs3 }, DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
+		final ParaAnaProgImportFS paraImport = new ParaAnaProgImportFS(dav,
+				new SystemObject[] { fs1, fs2, fs3 },
+				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImport.importiereParameterAnalyse(1);
 		paraImport.importiereParameterAnalyse(2);
 		paraImport.importiereParameterAnalyse(3);
@@ -177,26 +177,26 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		 * Importiere MQ-Parameter
 		 */
 		final ParaAnaProgImportMQAlsFS paraImportMQ = new ParaAnaProgImportMQAlsFS(dav,
-				new SystemObject[] { mq1, mq2 }, DatenaufbereitungLVETest.TEST_DATEN_VERZ
-						+ "Parameter"); //$NON-NLS-1$
+				new SystemObject[] { mq1, mq2 },
+				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter"); //$NON-NLS-1$
 		paraImportMQ.importiereParameterAnalyse(1);
 		paraImportMQ.importiereParameterAnalyse(2);
 
 		/**
 		 * Anmeldung zum Senden der Fahrstreifen/MQ-Daten
 		 */
-		final DataDescription ddKzdSend = new DataDescription(dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KZD), dav.getDataModel().getAspect(
-				DUAKonstanten.ASP_MESSWERTERSETZUNG));
+		final DataDescription ddKzdSend = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+				dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 		dav.subscribeSender(this, new SystemObject[] { fs1, fs2, fs3 }, ddKzdSend,
 				SenderRole.source());
 
 		/**
 		 * Anmeldung zum Empfang der Stoerfallsituation
 		 */
-		final DataDescription ddVkDiffKfz = new DataDescription(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav.getDataModel()
-				.getAspect("asp.störfallVerfahrenVKDiffKfz"));
+		final DataDescription ddVkDiffKfz = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
+				dav.getDataModel().getAspect("asp.störfallVerfahrenVKDiffKfz"));
 		dav.subscribeReceiver(this, new SystemObject[] { abschnitt }, ddVkDiffKfz,
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 
@@ -208,8 +208,8 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 
 		int csvIndex = 2;
 
-		final CSVImporter prognoseDatei = new CSVImporter(DatenaufbereitungLVETest.TEST_DATEN_VERZ
-				+ "Prognose");
+		final CSVImporter prognoseDatei = new CSVImporter(
+				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Prognose");
 		prognoseDatei.getNaechsteZeile();
 
 		final TestFahrstreifenImporter importFS = new TestFahrstreifenImporter(dav,
@@ -224,8 +224,8 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 			final ResultData resultat2 = new ResultData(fs2, ddKzdSend, aktZeit, zeileFS2);
 			final ResultData resultat3 = new ResultData(fs3, ddKzdSend, aktZeit, zeileFS3);
 
-			System.out
-			.println("Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println(
+					"Sende Daten: FS 1-3 -> Zeile: " + (csvIndex++) + " - Zeit: " + aktZeit); //$NON-NLS-1$ //$NON-NLS-2$
 
 			synchronized (dav) {
 				dav.sendData(resultat1);
@@ -305,15 +305,13 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 	 * Parameter.
 	 *
 	 * @author BitCtrl Systems GmbH, Thierfelder
-	 *
-	 * @version $Id$
 	 */
 	private class Parameter extends CSVImporter {
 
 		/**
 		 * Inhalt.
 		 */
-		private final Map<String, String> map = new HashMap<String, String>();
+		private final Map<String, String> map = new HashMap<>();
 
 		/**
 		 * Standardkonstruktor.
