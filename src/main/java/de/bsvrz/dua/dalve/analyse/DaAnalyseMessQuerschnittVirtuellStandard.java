@@ -60,8 +60,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  * @version $Id$
  */
-public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuerschnitt implements
-IObjektWeckerListener {
+public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuerschnitt
+		implements IObjektWeckerListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -142,9 +142,8 @@ IObjektWeckerListener {
 	 *             werden konnte
 	 */
 	@Override
-	public DaAnalyseMessQuerschnittVirtuellStandard initialisiere(
-			final MqAnalyseModul analyseModul, final SystemObject messQuerschnittVirtuell)
-			throws DUAInitialisierungsException {
+	public DaAnalyseMessQuerschnittVirtuellStandard initialisiere(final MqAnalyseModul analyseModul,
+			final SystemObject messQuerschnittVirtuell) throws DUAInitialisierungsException {
 		if (mqAnalyse == null) {
 			mqAnalyse = analyseModul;
 		}
@@ -155,8 +154,8 @@ IObjektWeckerListener {
 
 		mqT = ErfassungsIntervallDauerMQ.getInstanz(mqAnalyse.getDav(), messQuerschnittVirtuell);
 		if (mqT == null) {
-			throw new RuntimeException("Erfassungsintervalldauer von VMQ "
-					+ messQuerschnittVirtuell + " kann nicht ermittelt werden.");
+			throw new RuntimeException("Erfassungsintervalldauer von VMQ " + messQuerschnittVirtuell
+					+ " kann nicht ermittelt werden.");
 		}
 
 		messQuerschnitt = messQuerschnittVirtuell;
@@ -214,13 +213,12 @@ IObjektWeckerListener {
 		}
 
 		parameter = new AtgVerkehrsDatenKurzZeitAnalyseMq(mqAnalyse.getDav(), messQuerschnitt);
-		mqAnalyse.getDav().subscribeReceiver(
-				this,
-				aktuelleMQAnalysen.keySet(),
-				new DataDescription(mqAnalyse.getDav().getDataModel()
-						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
+		mqAnalyse.getDav().subscribeReceiver(this, aktuelleMQAnalysen.keySet(),
+				new DataDescription(
+						mqAnalyse.getDav().getDataModel()
+								.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
 						mqAnalyse.getDav().getDataModel().getAspect("asp.analyse")), //$NON-NLS-1$
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -323,8 +321,8 @@ IObjektWeckerListener {
 	protected final boolean isAlleDatenVollstaendig() {
 		boolean alleDatenVollstaendig = true;
 
-		final long letzteBerechnungsZeit = letztesErgebnis == null ? -1 : letztesErgebnis
-				.getDataTime();
+		final long letzteBerechnungsZeit = letztesErgebnis == null ? -1
+				: letztesErgebnis.getDataTime();
 
 		if (messQuerschnitt.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
 			System.out.println("Voll: " + new Date(letzteBerechnungsZeit));
@@ -352,7 +350,8 @@ IObjektWeckerListener {
 			final ResultData mitteData = getMQData(mqv.getMQMitte());
 			alleDatenVollstaendig &= (mitteData != null) && (mitteData.getData() != null)
 					&& (mitteData.getDataTime() > letzteBerechnungsZeit);
-			if ((mitteData != null) && messQuerschnitt.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
+			if ((mitteData != null)
+					&& messQuerschnitt.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
 				System.out.println("MITTE: " + new Date(mitteData.getDataTime()));
 			}
 
@@ -391,8 +390,8 @@ IObjektWeckerListener {
 
 		WECKER.setWecker(this, ObjektWecker.AUS);
 
-		final Data analyseDatum = mqAnalyse.getDav().createData(
-				MqAnalyseModul.pubBeschreibung.getAttributeGroup());
+		final Data analyseDatum = mqAnalyse.getDav()
+				.createData(MqAnalyseModul.pubBeschreibung.getAttributeGroup());
 
 		/**
 		 * Ermittle Werte für <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
@@ -405,7 +404,7 @@ IObjektWeckerListener {
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-						.kopiereInhaltNachModifiziereIndex(analyseDatum);
+				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -456,7 +455,7 @@ IObjektWeckerListener {
 	public void alarm() {
 		final ResultData resultat = getErgebnisAufBasisAktuellerDaten();
 
-		assert (resultat != null);
+		assert(resultat != null);
 
 		if (messQuerschnitt.getPid().equals("mq.MQ_61.240_HFB_NO_NACH")) {
 			System.out.println("alarm: " + new Date(resultat.getDataTime()));
@@ -489,7 +488,8 @@ IObjektWeckerListener {
 					/**
 					 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf "keine Daten" steht.
 					 * Dies ist der Fall,<br>
-					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder<br>
+					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder
+					 * <br>
 					 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten
 					 * hatte.
 					 */
@@ -779,8 +779,8 @@ IObjektWeckerListener {
 		boolean ergebnis = false;
 
 		if ((datum != null) && (datum.getData() != null)) {
-			final long letzterAnalyseZeitStempel = letztesErgebnis == null ? -1 : letztesErgebnis
-					.getDataTime();
+			final long letzterAnalyseZeitStempel = letztesErgebnis == null ? -1
+					: letztesErgebnis.getDataTime();
 			ergebnis = datum.getDataTime() > letzterAnalyseZeitStempel;
 		}
 
@@ -788,7 +788,7 @@ IObjektWeckerListener {
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte >= 0
+	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte &gt;= 0
 	 * hat).
 	 *
 	 * @param datum
