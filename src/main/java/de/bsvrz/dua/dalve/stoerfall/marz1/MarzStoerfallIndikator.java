@@ -63,16 +63,16 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	/** MARZ-Situation <code>Stau</code>. */
 	private static final StoerfallSituation Z4 = StoerfallSituation.STAU;
 
-	/** Grenzgeschwindigkeit 1 (0<v1<v2). */
+	/** Grenzgeschwindigkeit 1 (0 &lt; v1 &lt; v2). */
 	private long v1 = -4;
 
-	/** Grenzgeschwindigkeit 2 (0<v1<v2). */
+	/** Grenzgeschwindigkeit 2 (0 &lt; v1 &lt; v2). */
 	private long v2 = -4;
 
-	/** Grenzfahrzeugdichte 2 (0<k1<k2). */
+	/** Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2). */
 	private long k1 = -4;
 
-	/** Grenzfahrzeugdichte 2 (0<k1<k2). */
+	/** Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2). */
 	private long k2 = -4;
 
 	/** letzter errechneter Störfallzustand. */
@@ -100,8 +100,8 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		 */
 		dav.subscribeReceiver(this, objekt,
 				new DataDescription(DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
-						PrognoseTyp.normal.getAspekt()), ReceiveOptions.normal(), ReceiverRole
-						.receiver());
+						PrognoseTyp.normal.getAspekt()),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -132,9 +132,12 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		Data data = null;
 
 		if (resultat.getData() != null) {
-			final String attrV = objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "vKfzG" : "VKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
-			final String attrK = objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kKfzG" : "KKfzG"; //$NON-NLS-1$ //$NON-NLS-2$
-			//String attrK = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kBG" : "KBG"; //$NON-NLS-1$ //$NON-NLS-2$
+			final String attrV = objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "vKfzG" //$NON-NLS-1$
+					: "VKfzG"; //$NON-NLS-1$
+			final String attrK = objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kKfzG" //$NON-NLS-1$
+					: "KKfzG"; //$NON-NLS-1$
+			// String attrK = this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN) ? "kBG" : "KBG";
+			// //$NON-NLS-1$ //$NON-NLS-2$
 
 			final long v = resultat.getData().getItem(attrV).getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 			final long k = resultat.getData().getItem(attrK).getUnscaledValue("Wert").longValue(); //$NON-NLS-1$

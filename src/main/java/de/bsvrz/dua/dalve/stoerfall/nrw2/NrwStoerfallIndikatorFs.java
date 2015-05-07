@@ -50,22 +50,22 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
-	/** Grenzgeschwindigkeit 1 (0<v1<v2). */
+	/** Grenzgeschwindigkeit 1 (0 &lt; v1 &lt; v2). */
 	protected long v1 = -4;
 
-	/** Grenzgeschwindigkeit 2 (0<v1<v2). */
+	/** Grenzgeschwindigkeit 2 (0 &lt; v1 &lt; v2). */
 	protected long v2 = -4;
 
-	/** Grenzfahrzeugdichte 1 (0<k1<k2<K3 UND 0<kT<k3). */
+	/** Grenzfahrzeugdichte 1 (0 &lt; k1 &lt; k2 &lt; K3 UND 0 &lt; kT &lt; k3). */
 	protected long k1 = -4;
 
-	/** Grenzfahrzeugdichte 2 (0<k1<k2<K3 UND 0<kT<k3). */
+	/** Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2 &lt; K3 UND 0 &lt; kT &lt; k3). */
 	protected long k2 = -4;
 
-	/** Grenzfahrzeugdichte 2 (0<k1<k2<K3 UND 0<kT<k3). */
+	/** Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2 &lt; K3 UND 0 &lt; kT &lt; k3). */
 	protected long k3 = -4;
 
-	/** Grenzfahrzeugdichte 2 (0<k1<k2<K3 UND 0<kT<k3). */
+	/** Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2 &lt; K3 UND 0 &lt; kT &lt; k3). */
 	protected long kT = -4;
 
 	/** letzter empfangener Analysedatensatz. */
@@ -90,12 +90,12 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 		 */
 		dav.subscribeReceiver(this, objekt,
 				new DataDescription(DatenaufbereitungLVE.getPubAtgGlatt(this.objekt),
-						PrognoseTyp.normal.getAspekt()), ReceiveOptions.normal(), ReceiverRole
-						.receiver());
+						PrognoseTyp.normal.getAspekt()),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, this.objekt,
-				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(objekt), dav.getDataModel()
-						.getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions.normal(),
-						ReceiverRole.receiver());
+				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(objekt),
+						dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -135,15 +135,15 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 
 				if ((v1 >= 0) && (v2 >= 0) && (k1 >= 0) && (k2 >= 0) && (k3 >= 0) && (kT >= 0)) {
 
-					final long qKfzGNormal = geglaettetDatensatz.getData()
-							.getItem("qKfzG").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-					final long vKfz = analyseDatensatz.getData()
-							.getItem("vKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+					final long qKfzGNormal = geglaettetDatensatz.getData().getItem("qKfzG") //$NON-NLS-1$
+							.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
+					final long vKfz = analyseDatensatz.getData().getItem("vKfz") //$NON-NLS-1$
+							.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 
 					if ((qKfzGNormal >= 0) && (vKfz > 0)) {
 						final double kvst = (double) qKfzGNormal / (double) vKfz;
-						double vvst = analyseDatensatz.getData()
-								.getItem("vgKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						double vvst = analyseDatensatz.getData().getItem("vgKfz") //$NON-NLS-1$
+								.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 						if (vvst < 0) {
 							vvst = vKfz;
 						}

@@ -31,14 +31,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 /**
  * Korrespondiert mit einem Parameter fuer ein bestimmtes Verkehrsattribut (also z.B.
  * <code>qKfz</code> (<code>QKfz</code>) oder <code>vLkw</code> (<code>VLkw</code>)) innerhalb der
- * Attributgruppen:<br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkFs<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalFs<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeFs<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkMq<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeMq<code>
- *
+ * Attributgruppen:
+ * <ul>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkFs</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalFs</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeFs</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkMq</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeMq</code></li>
+ * </ul>
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
@@ -85,14 +87,14 @@ public class PrognoseAttributParameter {
 	 */
 	public final void setDaten(final Data datum, final boolean fuerFahrStreifen) {
 		start = datum.getUnscaledValue(attribut.getParameterStart(fuerFahrStreifen)).longValue();
-		alpha1 = datum.getItem(attribut.getAttributName(fuerFahrStreifen))
-				.getScaledValue("alpha1").doubleValue(); //$NON-NLS-1$
-		alpha2 = datum.getItem(attribut.getAttributName(fuerFahrStreifen))
-				.getScaledValue("alpha2").doubleValue(); //$NON-NLS-1$
-		beta1 = datum.getItem(attribut.getAttributName(fuerFahrStreifen))
-				.getScaledValue("beta1").doubleValue(); //$NON-NLS-1$
-		beta2 = datum.getItem(attribut.getAttributName(fuerFahrStreifen))
-				.getScaledValue("beta2").doubleValue(); //$NON-NLS-1$
+		alpha1 = datum.getItem(attribut.getAttributName(fuerFahrStreifen)).getScaledValue("alpha1") //$NON-NLS-1$
+				.doubleValue();
+		alpha2 = datum.getItem(attribut.getAttributName(fuerFahrStreifen)).getScaledValue("alpha2") //$NON-NLS-1$
+				.doubleValue();
+		beta1 = datum.getItem(attribut.getAttributName(fuerFahrStreifen)).getScaledValue("beta1") //$NON-NLS-1$
+				.doubleValue();
+		beta2 = datum.getItem(attribut.getAttributName(fuerFahrStreifen)).getScaledValue("beta2") //$NON-NLS-1$
+				.doubleValue();
 	}
 
 	/**

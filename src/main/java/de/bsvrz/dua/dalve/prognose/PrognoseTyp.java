@@ -30,10 +30,13 @@ import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 
 /**
- * Prognosetyp:<br>
- * - <code>Flink<code><br>
- * - <code>Normal<code><br>
- * - <code>Träge<code>.
+ * Prognosetyp:
+ * <ul>
+ * <li><code>Flink</code></li>
+ * <li><code>Normal</code></li>
+ * <li><code>Träge</code></li>
+ * </ul>
+ * .
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */

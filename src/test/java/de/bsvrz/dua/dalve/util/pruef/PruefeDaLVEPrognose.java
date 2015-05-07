@@ -195,24 +195,24 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		/*
 		 * Empfängeranmeldung für Prognose und geglättete Werte
 		 */
-		final AttributeGroup atgFSPrognose = this.dav.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitTrendExtraPolationFs");
-		final AttributeGroup atgFSGeglaettet = this.dav.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitGeglättetFs");
+		final AttributeGroup atgFSPrognose = this.dav.getDataModel()
+				.getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationFs");
+		final AttributeGroup atgFSGeglaettet = this.dav.getDataModel()
+				.getAttributeGroup("atg.verkehrsDatenKurzZeitGeglättetFs");
 
-		DD_KZDFS_PF_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect(
-				"asp.prognoseFlink"));
-		DD_KZDFS_PN_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect(
-				"asp.prognoseNormal"));
-		DD_KZDFS_PT_EMPF = new DataDescription(atgFSPrognose, this.dav.getDataModel().getAspect(
-				"asp.prognoseTräge"));
+		DD_KZDFS_PF_EMPF = new DataDescription(atgFSPrognose,
+				this.dav.getDataModel().getAspect("asp.prognoseFlink"));
+		DD_KZDFS_PN_EMPF = new DataDescription(atgFSPrognose,
+				this.dav.getDataModel().getAspect("asp.prognoseNormal"));
+		DD_KZDFS_PT_EMPF = new DataDescription(atgFSPrognose,
+				this.dav.getDataModel().getAspect("asp.prognoseTräge"));
 
-		DD_KZDFS_GF_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect(
-				"asp.prognoseFlink"));
-		DD_KZDFS_GN_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect(
-				"asp.prognoseNormal"));
-		DD_KZDFS_GT_EMPF = new DataDescription(atgFSGeglaettet, this.dav.getDataModel().getAspect(
-				"asp.prognoseTräge"));
+		DD_KZDFS_GF_EMPF = new DataDescription(atgFSGeglaettet,
+				this.dav.getDataModel().getAspect("asp.prognoseFlink"));
+		DD_KZDFS_GN_EMPF = new DataDescription(atgFSGeglaettet,
+				this.dav.getDataModel().getAspect("asp.prognoseNormal"));
+		DD_KZDFS_GT_EMPF = new DataDescription(atgFSGeglaettet,
+				this.dav.getDataModel().getAspect("asp.prognoseTräge"));
 
 		dav.subscribeReceiver(this, FS, DD_KZDFS_PF_EMPF, ReceiveOptions.normal(),
 				ReceiverRole.receiver());
@@ -297,7 +297,8 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		}
 		}
 		if (pruefungFS1PFlinkFertig && pruefungFS1PNormalFertig && pruefungFS1PTraegeFertig
-				&& pruefungFS1GFlinkFertig && pruefungFS1GNormalFertig && pruefungFS1GTraegeFertig) {
+				&& pruefungFS1GFlinkFertig && pruefungFS1GNormalFertig
+				&& pruefungFS1GTraegeFertig) {
 			LOGGER.info("Alle Prognosedaten geprüft. Benachrichtige Hauptthread...");
 			caller.doNotify(DaLVETestPrognose.ID_PRUEFER_PROGNOSE);
 		}
@@ -430,12 +431,12 @@ class VergleicheDaLVEPrognose extends Thread {
 	private String attPraefix;
 
 	/**
-	 * Initialisiert Prüferthread
+	 * Initialisiert Prüferthread.
 	 *
 	 * @param caller
 	 *            Aufrufende Klasse
-	 * @param fsIndex
-	 *            Zu prüfender Fahrstreifen
+	 * @param mode
+	 *            der Prüfmodus
 	 */
 	public VergleicheDaLVEPrognose(final PruefeDaLVEPrognose caller, final int mode) {
 		this.caller = caller;
@@ -512,7 +513,8 @@ class VergleicheDaLVEPrognose extends Thread {
 						.asUnscaledValue().intValue();
 				if ((sollWert >= (istWert - caller.ergebnisWertToleranz))
 						&& (sollWert <= (istWert + caller.ergebnisWertToleranz))) {
-					loggerOut += "OK : " + attributPfad + " -> " + sollWert + " (SOLL) == (IST) " + istWert + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					loggerOut += "OK : " + attributPfad + " -> " + sollWert + " (SOLL) == (IST) " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							+ istWert + "\n"; //$NON-NLS-1$
 					System.out.println("PROG: " + sollWert + "==" + istWert + " (" + attributPfad
 							+ " --> " + caller.getModusText(mode) + ")");
 				} else {

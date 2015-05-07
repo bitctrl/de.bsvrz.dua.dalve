@@ -52,8 +52,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
-		DatensatzUpdateListener {
+public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
+		implements DatensatzUpdateListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -123,24 +123,21 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 
 		final SystemObject stsObjekt = DatenaufbereitungLVE.getStraßenTeilSegment(objekt);
 		if (stsObjekt != null) {
-			final PdFundamentalDiagramm fdAmSts = new PdFundamentalDiagramm(new StoerfallIndikator(
-					stsObjekt));
+			final PdFundamentalDiagramm fdAmSts = new PdFundamentalDiagramm(
+					new StoerfallIndikator(stsObjekt));
 			fdAmSts.addUpdateListener(this);
-			LOGGER.info("Fuer "
-					+ objekt
-					+ " wird (falls versorgt) das Fundamentaldiagramm am Teilsegment "
-					+ stsObjekt
+			LOGGER.info("Fuer " + objekt
+					+ " wird (falls versorgt) das Fundamentaldiagramm am Teilsegment " + stsObjekt
 					+ " verwendet. Falls nicht versorgt wird das Fundamentaldiagramm am MQ selbst verwendet");
 		} else {
-			LOGGER.warning("Fuer "
-					+ objekt
-					+ " wird nur das Fundamentaldiagramm am MQ selbst verwendet."
-					+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
-					+ "dies konnte aber nicht ermittelt werden.");
+			LOGGER.warning(
+					"Fuer " + objekt + " wird nur das Fundamentaldiagramm am MQ selbst verwendet."
+							+ " Eigentlich sollte das Fundamentaldiagramm vom assoziierten Strassenteilsegment uebernommen werden, "
+							+ "dies konnte aber nicht ermittelt werden.");
 		}
 
-		final PdFundamentalDiagramm fdAmMQ = new PdFundamentalDiagramm(new StoerfallIndikator(
-				objekt));
+		final PdFundamentalDiagramm fdAmMQ = new PdFundamentalDiagramm(
+				new StoerfallIndikator(objekt));
 		fdAmMQ.addUpdateListener(this);
 
 		prognoseDichteObj = new KKfzStoerfallGErmittler(dav, objekt);
@@ -150,9 +147,9 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 		 * Anmeldung auf Daten (hier Analysedaten)
 		 */
 		dav.subscribeReceiver(this, objekt,
-				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(this.objekt), dav
-						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions
-						.normal(), ReceiverRole.receiver());
+				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(this.objekt),
+						dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -257,22 +254,22 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 				/**
 				 * Ausschalthysterese
 				 */
-				fkVergleichsErgebnis = KKfzStoerfallG > ((parameter.getFk() - parameter
-						.getFkHysterese()) * K0);
-				fvVergleichsErgebnis = VKfzStoerfallG < ((parameter.getFv() + parameter
-						.getFvHysterese()) * V0);
-				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter.getVgrenz() + parameter
-						.getVgrenzHysterese());
+				fkVergleichsErgebnis = KKfzStoerfallG > ((parameter.getFk()
+						- parameter.getFkHysterese()) * K0);
+				fvVergleichsErgebnis = VKfzStoerfallG < ((parameter.getFv()
+						+ parameter.getFvHysterese()) * V0);
+				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter.getVgrenz()
+						+ parameter.getVgrenzHysterese());
 			} else {
 				/**
 				 * Einschalthysterese
 				 */
-				fkVergleichsErgebnis = KKfzStoerfallG > ((parameter.getFk() + parameter
-						.getFkHysterese()) * K0);
-				fvVergleichsErgebnis = VKfzStoerfallG < ((parameter.getFv() - parameter
-						.getFvHysterese()) * V0);
-				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter.getVgrenz() - parameter
-						.getVgrenzHysterese());
+				fkVergleichsErgebnis = KKfzStoerfallG > ((parameter.getFk()
+						+ parameter.getFkHysterese()) * K0);
+				fvVergleichsErgebnis = VKfzStoerfallG < ((parameter.getFv()
+						- parameter.getFvHysterese()) * V0);
+				vGrenzVergleichsErgebnis = VKfzStoerfallG < (parameter.getVgrenz()
+						- parameter.getVgrenzHysterese());
 			}
 
 			if (getErgebnisAusBoolscherFormel(fkVergleichMachen, fvVergleichMachen,
@@ -288,7 +285,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 	/**
 	 * Berechnet die boolesche Formel:<br>
 	 * <code>
-	 * ergebnis := fkVergleichsErgebnis & fvVergleichsErgebnis | vGrenzVergleichsErgebnis
+	 * ergebnis := fkVergleichsErgebnis &amp; fvVergleichsErgebnis | vGrenzVergleichsErgebnis
 	 * </code><br>
 	 * wobei jeweils nur die Teile in der Formel verbleiben, die als "zu machen" uebergeben wurden.
 	 *
@@ -322,15 +319,15 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 			ergebnis = fvVergleichsErgebnis || vGrenzVergleichsErgebnis;
 		} else
 
-		if (fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen) {
-			ergebnis = fkVergleichsErgebnis;
-		} else if (fkVergleichMachen && !fvVergleichMachen && vGrenzVergleichMachen) {
-			ergebnis = fkVergleichsErgebnis || vGrenzVergleichsErgebnis;
-		} else if (fkVergleichMachen && fvVergleichMachen && !vGrenzVergleichMachen) {
-			ergebnis = fkVergleichsErgebnis && fvVergleichsErgebnis;
-		} else {
-			ergebnis = (fkVergleichsErgebnis && fvVergleichsErgebnis) || vGrenzVergleichsErgebnis;
-		}
+			if (fkVergleichMachen && !fvVergleichMachen && !vGrenzVergleichMachen) {
+				ergebnis = fkVergleichsErgebnis;
+			} else if (fkVergleichMachen && !fvVergleichMachen && vGrenzVergleichMachen) {
+				ergebnis = fkVergleichsErgebnis || vGrenzVergleichsErgebnis;
+			} else if (fkVergleichMachen && fvVergleichMachen && !vGrenzVergleichMachen) {
+				ergebnis = fkVergleichsErgebnis && fvVergleichsErgebnis;
+			} else {
+				ergebnis = (fkVergleichsErgebnis && fvVergleichsErgebnis) || vGrenzVergleichsErgebnis;
+			}
 
 		return ergebnis;
 	}
@@ -394,11 +391,13 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 
 		final double qKfz = resultat.getData().getItem("QKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 		final boolean qKfzImpl = resultat.getData().getItem("QKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
-				getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
+				getItem("MessWertErsetzung").getUnscaledValue("Implausibel") //$NON-NLS-1$ //$NON-NLS-2$
+				.intValue() == DUAKonstanten.JA;
 		final double vKfz = resultat.getData().getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 		final double kKfz = resultat.getData().getItem("KKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 		final boolean kKfzImpl = resultat.getData().getItem("KKfz").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
-				getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
+				getItem("MessWertErsetzung").getUnscaledValue("Implausibel") //$NON-NLS-1$ //$NON-NLS-2$
+				.intValue() == DUAKonstanten.JA;
 
 		if (qKfz == 0) {
 			kKfzStoerfall = 0;

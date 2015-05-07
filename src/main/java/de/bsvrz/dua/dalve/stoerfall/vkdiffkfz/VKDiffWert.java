@@ -62,7 +62,7 @@ class VKDiffWert {
 	 *            der Zeitstempel des Messwerts.
 	 */
 	private VKDiffWert(final long zeitStempel) {
-		assert (zeitStempel >= 0);
+		assert(zeitStempel >= 0);
 		this.zeitStempel = zeitStempel;
 	}
 
@@ -77,7 +77,7 @@ class VKDiffWert {
 	 *            die Erfassungsintervalldauer des Messwerts.
 	 */
 	VKDiffWert(final MesswertUnskaliert wert, final long zeitStempel, final long intervallDauer) {
-		assert ((wert != null) && (zeitStempel >= 0) && (intervallDauer >= 0));
+		assert((wert != null) && (zeitStempel >= 0) && (intervallDauer >= 0));
 		this.wert = wert;
 		this.zeitStempel = zeitStempel;
 		this.intervallDauer = intervallDauer;
@@ -98,7 +98,7 @@ class VKDiffWert {
 	 * Erfragt den Messwert.
 	 *
 	 * @return der Messwert oder <code>Double.NaN</code>, wenn kein Nutzdatum vorliegt, oder dieses
-	 *         < 0 ist.
+	 *         &lt; 0 ist.
 	 */
 	double getWert() {
 		if ((wert == null) || (wert.getWertUnskaliert() < 0)) {
