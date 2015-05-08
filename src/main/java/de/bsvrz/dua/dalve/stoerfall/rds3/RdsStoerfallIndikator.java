@@ -54,7 +54,7 @@ public class RdsStoerfallIndikator extends NrwStoerfallIndikatorMq {
 	protected long VST6Hysterese = -4;
 
 	/** letzter empfangener Analysedatensatz. */
-	protected ResultData analyseDatensatz = null;
+	private final ResultData analyseDatensatz = null;
 
 	/** letzter empfangener geglaetteter Datensatz. */
 	protected ResultData geglaettetDatensatz = null;
