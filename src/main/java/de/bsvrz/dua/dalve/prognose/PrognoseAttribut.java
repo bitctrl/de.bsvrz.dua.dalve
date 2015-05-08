@@ -244,9 +244,6 @@ public class PrognoseAttribut {
 		return WERTE_BEREICH;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return nameFS + ", " + nameMQ;

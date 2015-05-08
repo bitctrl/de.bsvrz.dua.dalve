@@ -77,8 +77,8 @@ public class StoerfallZustand {
 	 *         <code>atg.störfallZustand</code>
 	 */
 	public final Data getData() {
-		final Data datenSatz = DAV.createData(DAV.getDataModel().getAttributeGroup(
-				"atg.störfallZustand")); //$NON-NLS-1$
+		final Data datenSatz = DAV
+				.createData(DAV.getDataModel().getAttributeGroup("atg.störfallZustand")); //$NON-NLS-1$
 
 		datenSatz.getTimeValue("T").setMillis(T); //$NON-NLS-1$
 		datenSatz.getUnscaledValue("Situation").set(situation.getCode()); //$NON-NLS-1$
@@ -139,9 +139,6 @@ public class StoerfallZustand {
 		this.T = T;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "T: " + T + //$NON-NLS-1$

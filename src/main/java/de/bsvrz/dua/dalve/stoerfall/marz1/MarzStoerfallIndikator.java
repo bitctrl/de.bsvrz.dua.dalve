@@ -83,9 +83,6 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	private ErfassungsIntervallDauerMQ erf = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -104,17 +101,11 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.verkehrsLageVerfahren1"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenMARZ"; //$NON-NLS-1$
@@ -122,7 +113,7 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 	/**
 	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten analog MARZ 2004
-	 * (siehe 2.3.2.1.4 Verkehrssituationsuebersicht)
+	 * (siehe 2.3.2.1.4 Verkehrssituationsuebersicht).
 	 *
 	 * @param resultat
 	 *            ein empfangenes geglaettes Datum mit Nutzdaten
@@ -190,9 +181,6 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		sendeErgebnis(ergebnis);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(final ResultData parameter) {
 		if (parameter.getData() != null) {

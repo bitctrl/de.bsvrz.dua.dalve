@@ -330,9 +330,6 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] results) {
 		for (final ResultData result : results) {
@@ -404,7 +401,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	 * richtig."
 	 */
 	private final String[] attributNamenPraefixP = { "qB", //$NON-NLS-1$
-	"vKfz" }; //$NON-NLS-1$
+			"vKfz" }; //$NON-NLS-1$
 	/**
 	 * Attributpfade der ATG
 	 *
@@ -416,7 +413,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	 */
 	private final String[] attributNamenPraefixG = { "qB", //$NON-NLS-1$
 			"vKfz", //$NON-NLS-1$
-	"kB" }; //$NON-NLS-1$
+			"kB" }; //$NON-NLS-1$
 
 	/**
 	 * Die verwendeten Attributpfade der ATG

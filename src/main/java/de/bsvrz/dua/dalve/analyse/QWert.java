@@ -179,19 +179,19 @@ public class QWert {
 
 			try {
 				gueteListe
-				.add(GueteVerfahren
-						.gewichte(
-								new GWert(summand.getWert().getGueteIndex(),
-										GueteVerfahren.getZustand(
-												summand.getWert().getVerfahren()),
+						.add(GueteVerfahren
+								.gewichte(
+										new GWert(summand.getWert().getGueteIndex(),
+												GueteVerfahren.getZustand(
+														summand.getWert().getVerfahren()),
 												false),
-												Math.abs(summand.getAnteil())));
+										Math.abs(summand.getAnteil())));
 			} catch (final GueteException e) {
 				e.printStackTrace();
 				LOGGER.error("Guete konnte nicht gewichtet werden:\nGuete: "
 						+ new GWert(summand.getWert().getGueteIndex(),
 								GueteVerfahren.getZustand(summand.getWert().getVerfahren()), false)
-						+ "\nVorgesehenes Gewicht: " + Math.abs(summand.getAnteil()));
+								+ "\nVorgesehenes Gewicht: " + Math.abs(summand.getAnteil()));
 			}
 
 		}
@@ -236,7 +236,7 @@ public class QWert {
 					|| summand2.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(summand1.getWert().getName());
 				ergebnis.getWert()
-				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((summand1.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (summand2.getWert()
 							.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
@@ -300,7 +300,7 @@ public class QWert {
 					|| subtrahend.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(minuend.getWert().getName());
 				ergebnis.getWert()
-				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((minuend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (subtrahend.getWert()
 							.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
@@ -345,9 +345,6 @@ public class QWert {
 		return ergebnis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return (wert == null ? "<<null>>" : wert.toString()) + " (Anteil: + "

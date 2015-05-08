@@ -59,7 +59,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuerschnitt
-implements IObjektWeckerListener {
+		implements IObjektWeckerListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -214,9 +214,9 @@ implements IObjektWeckerListener {
 		mqAnalyse.getDav().subscribeReceiver(this, aktuelleMQAnalysen.keySet(),
 				new DataDescription(
 						mqAnalyse.getDav().getDataModel()
-						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
+								.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
 						mqAnalyse.getDav().getDataModel().getAspect("asp.analyse")), //$NON-NLS-1$
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -402,7 +402,7 @@ implements IObjektWeckerListener {
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-						.kopiereInhaltNachModifiziereIndex(analyseDatum);
+				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -520,9 +520,6 @@ implements IObjektWeckerListener {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {

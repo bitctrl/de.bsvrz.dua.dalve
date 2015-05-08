@@ -35,9 +35,6 @@ package de.bsvrz.dua.dalve.prognose;
  */
 public class PrognoseObjektNormal extends AbstraktPrognoseObjekt {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected PrognoseTyp getPrognoseTyp() {
 		return PrognoseTyp.normal;

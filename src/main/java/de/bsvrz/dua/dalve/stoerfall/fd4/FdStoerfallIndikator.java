@@ -109,9 +109,6 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 	 */
 	private ErfassungsIntervallDauerMQ erf = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -152,9 +149,6 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenFD"; //$NON-NLS-1$
@@ -162,7 +156,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 
 	/**
 	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Analysedaten analog
-	 * SE-02.00.00.00.00-AFo-4.0 (S.160 f) - Fundamentaldiagramm
+	 * SE-02.00.00.00.00-AFo-4.0 (S.160 f) - Fundamentaldiagramm.
 	 *
 	 * @param resultat
 	 *            ein empfangenes Analysedatum mit Nutzdaten
@@ -485,17 +479,11 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(final ResultData parameter) {
 		// wird nicht gebraucht
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void datensatzAktualisiert(final DatensatzUpdateEvent event) {
 		if (event.getObjekt() != null) {

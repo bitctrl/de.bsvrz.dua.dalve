@@ -189,19 +189,19 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 		switch (FS) {
 		case 1: {
 			System.out
-			.println("Vergleich der Daten (FS" + FS + ":Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+					.println("Vergleich der Daten (FS" + FS + ":Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 			pruefungFS1fertig = true;
 			break;
 		}
 		case 2: {
 			System.out
-			.println("Vergleich der Daten (FS" + FS + ":Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+					.println("Vergleich der Daten (FS" + FS + ":Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 			pruefungFS2fertig = true;
 			break;
 		}
 		case 3: {
 			System.out
-			.println("Vergleich der Daten (FS" + FS + ":Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+					.println("Vergleich der Daten (FS" + FS + ":Z" + csvIndex + ") abgeschlossen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 			pruefungFS3fertig = true;
 			break;
 		}
@@ -217,16 +217,13 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] results) {
 		for (final ResultData result : results) {
 			// Pruefe Ergebnisdatensatz auf Zeitstempel
 			if (result.getObject().isOfType("typ.fahrStreifen")) {
 				if (/* result.getDataDescription().equals(DD_KZDFS_EMPF) && */
-						(result.getData() != null) && (result.getDataTime() == pruefZeit)) {
+				(result.getData() != null) && (result.getDataTime() == pruefZeit)) {
 
 					try {
 						// Ermittle FS und pruefe Daten
@@ -298,7 +295,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 			"kLkw", //$NON-NLS-1$
 			"kPkw", //$NON-NLS-1$
 			"qB", //$NON-NLS-1$
-	"kB" }; //$NON-NLS-1$
+			"kB" }; //$NON-NLS-1$
 
 	/**
 	 * Attributpfade der ATG
@@ -316,7 +313,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 			"KLkw", //$NON-NLS-1$
 			"KPkw", //$NON-NLS-1$
 			"QB", //$NON-NLS-1$
-	"KB" }; //$NON-NLS-1$
+			"KB" }; //$NON-NLS-1$
 
 	/**
 	 * Attributnamen
@@ -329,7 +326,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 			".Status.PlLogisch.WertMinLogisch", //$NON-NLS-1$ **/
 			".Status.MessWertErsetzung.Implausibel", //$NON-NLS-1$
 			".Status.MessWertErsetzung.Interpoliert", //$NON-NLS-1$
-	".Güte.Index" }; //$NON-NLS-1$
+			".Güte.Index" }; //$NON-NLS-1$
 
 	/**
 	 * Initialisiert Prüferthread

@@ -44,8 +44,8 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class KKfzStoerfallGErmittler extends AbstraktAttributPrognoseObjekt implements
-ClientReceiverInterface {
+public class KKfzStoerfallGErmittler extends AbstraktAttributPrognoseObjekt
+		implements ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
@@ -56,13 +56,12 @@ ClientReceiverInterface {
 	 *            das Objekt, dessen Daten hier betrachtet werden
 	 */
 	protected KKfzStoerfallGErmittler(final ClientDavInterface dav, final SystemObject obj) {
-		dav.subscribeReceiver(
-				this,
-				obj,
-				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, obj,
+				new DataDescription(
+						dav.getDataModel().getAttributeGroup(
+								"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"), //$NON-NLS-1$
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -84,9 +83,6 @@ ClientReceiverInterface {
 		return getZG();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] parameterSaetze) {
 		if (parameterSaetze != null) {

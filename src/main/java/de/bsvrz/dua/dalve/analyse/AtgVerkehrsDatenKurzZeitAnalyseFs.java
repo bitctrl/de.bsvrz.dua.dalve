@@ -41,7 +41,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer
-		implements ClientReceiverInterface {
+implements ClientReceiverInterface {
 
 	/**
 	 * <code>kKfz.Grenz</code>.
@@ -112,7 +112,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer
 				new DataDescription(
 						dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseFs"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -214,9 +214,6 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer
 		return flk1 != -4;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {

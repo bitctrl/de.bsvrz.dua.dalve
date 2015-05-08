@@ -154,21 +154,14 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {
 		return false;
 	}
-
 }

@@ -72,18 +72,17 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	/** Mapt jeden Fahrstreifen auf seinen letzten Analysedatensatz. */
 	private final Map<SystemObject, ResultData> fsAufDatenPuffer = new HashMap<>();
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(final IVerwaltung dieVerwaltung) throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
 		setPublikation(true);
 
 		if (PUB_BESCHREIBUNG == null) {
-			PUB_BESCHREIBUNG = new DataDescription(dieVerwaltung.getVerbindung().getDataModel()
-					.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dieVerwaltung
-					.getVerbindung().getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+			PUB_BESCHREIBUNG = new DataDescription(
+					dieVerwaltung.getVerbindung().getDataModel()
+					.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+					dieVerwaltung.getVerbindung().getDataModel()
+					.getAspect(DUAKonstanten.ASP_ANALYSE));
 		}
 
 		/**
@@ -103,9 +102,6 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void aktualisiereDaten(final ResultData[] resultate) {
 		if (resultate != null) {
@@ -133,8 +129,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		ResultData ergebnis = null;
 
 		if (kurzZeitDatum.getData() != null) {
-			final Data analyseDatum = verwaltung.getVerbindung().createData(
-					PUB_BESCHREIBUNG.getAttributeGroup());
+			final Data analyseDatum = verwaltung.getVerbindung()
+					.createData(PUB_BESCHREIBUNG.getAttributeGroup());
 
 			analyseDatum.getTimeValue("T").setMillis(//$NON-NLS-1$
 					kurzZeitDatum.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
@@ -184,8 +180,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 			ergebnis = new ResultData(kurzZeitDatum.getObject(), PUB_BESCHREIBUNG,
 					kurzZeitDatum.getDataTime(), analyseDatum);
 		} else {
-			final ResultData letzterPublizierterWert = fsAufDatenPuffer.get(kurzZeitDatum
-					.getObject());
+			final ResultData letzterPublizierterWert = fsAufDatenPuffer
+					.get(kurzZeitDatum.getObject());
 			if ((letzterPublizierterWert == null) || (letzterPublizierterWert.getData() != null)) {
 				ergebnis = new ResultData(kurzZeitDatum.getObject(), PUB_BESCHREIBUNG,
 						kurzZeitDatum.getDataTime(), null);
@@ -239,17 +235,16 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 						aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
 						aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 					} catch (final GueteException e) {
-						LOGGER.error(
-								"Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+						LOGGER.error("Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, //$NON-NLS-1$
+								e);
 						e.printStackTrace();
 					}
 				} else {
 					if (qKfz.getWertUnskaliert() > 0) {
-						final long aLkwWert = Math
-								.round(((100.0 * (qLkw.getWertUnskaliert())) / (qKfz
-										.getWertUnskaliert())));
-						if (DUAUtensilien.isWertInWerteBereich(analyseDatum
-								.getItem("aLkw").getItem("Wert"), aLkwWert)) { //$NON-NLS-1$ //$NON-NLS-2$
+						final long aLkwWert = Math.round(((100.0 * (qLkw.getWertUnskaliert()))
+								/ (qKfz.getWertUnskaliert())));
+						if (DUAUtensilien.isWertInWerteBereich(
+								analyseDatum.getItem("aLkw").getItem("Wert"), aLkwWert)) { //$NON-NLS-1$ //$NON-NLS-2$
 							aLkw.setWertUnskaliert(aLkwWert);
 
 							GWert qLkwGuete;
@@ -262,8 +257,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 								aLkw.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
 								aLkw.setVerfahren(aLkwGuete.getVerfahren().getCode());
 							} catch (final GueteException e) {
-								LOGGER.error(
-										"Guete-Index fuer aLkw nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+								LOGGER.error("Guete-Index fuer aLkw nicht berechenbar in " //$NON-NLS-1$
+										+ kurzZeitDatum, e);
 								e.printStackTrace();
 							}
 
@@ -297,8 +292,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	 */
 	private final void berechneBemessungsVerkehrsStaerke(final Data analyseDatum,
 			final ResultData kurzZeitDatum) {
-		final AtgVerkehrsDatenKurzZeitAnalyseFs parameter = this.parameter.get(kurzZeitDatum
-				.getObject());
+		final AtgVerkehrsDatenKurzZeitAnalyseFs parameter = this.parameter
+				.get(kurzZeitDatum.getObject());
 		final MesswertUnskaliert qB = new MesswertUnskaliert("qB"); //$NON-NLS-1$
 		boolean interpoliert = false;
 
@@ -321,12 +316,12 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 
 				final long qBWert = qPkw.getWertUnskaliert();
 
-				if (DUAUtensilien.isWertInWerteBereich(
-						analyseDatum.getItem("qB").getItem("Wert"), qBWert)) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("qB").getItem("Wert"), //$NON-NLS-1$ //$NON-NLS-2$
+						qBWert)) {
 					qB.setWertUnskaliert(qBWert);
 
-					GWert gueteGesamt = GWert.getNichtErmittelbareGuete(GueteVerfahren
-							.getZustand(qB.getVerfahren()));
+					GWert gueteGesamt = GWert.getNichtErmittelbareGuete(
+							GueteVerfahren.getZustand(qB.getVerfahren()));
 
 					final GWert qPkwGuete = new GWert(analyseDatum, "qPkw"); //$NON-NLS-1$
 					gueteGesamt = qPkwGuete;
@@ -347,8 +342,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 							|| (qPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 						qB.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 					} else {
-						GWert guetefL = GWert.getNichtErmittelbareGuete(GueteVerfahren
-								.getZustand(qB.getVerfahren()));
+						GWert guetefL = GWert.getNichtErmittelbareGuete(
+								GueteVerfahren.getZustand(qB.getVerfahren()));
 
 						double fL = 0;
 						if (vPkw.getWertUnskaliert() > vLkw.getWertUnskaliert()) {
@@ -359,22 +354,22 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 							try {
 								guetefL = GueteVerfahren.differenz(vPkwGuete, vLkwGuete);
 							} catch (final GueteException e) {
-								LOGGER.error(
-										"Guete von fL (qB) konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
+								LOGGER.error("Guete von fL (qB) konnte nicht ermittelt werden in " //$NON-NLS-1$
+										+ kurzZeitDatum, e);
 								e.printStackTrace();
 							}
 						} else {
 							fL = k1;
 						}
-						final long qBWert = Math.round(qPkw.getWertUnskaliert()
-								+ (fL * qLkw.getWertUnskaliert()));
+						final long qBWert = Math
+								.round(qPkw.getWertUnskaliert() + (fL * qLkw.getWertUnskaliert()));
 
 						if (DUAUtensilien.isWertInWerteBereich(
 								analyseDatum.getItem("qB").getItem("Wert"), qBWert)) { //$NON-NLS-1$ //$NON-NLS-2$
 							qB.setWertUnskaliert(qBWert);
 
-							GWert gueteGesamt = GWert.getNichtErmittelbareGuete(GueteVerfahren
-									.getZustand(qB.getVerfahren()));
+							GWert gueteGesamt = GWert.getNichtErmittelbareGuete(
+									GueteVerfahren.getZustand(qB.getVerfahren()));
 							try {
 								final GWert qPkwGuete = new GWert(analyseDatum, "qPkw"); //$NON-NLS-1$
 								final GWert qLkwGuete = new GWert(analyseDatum, "qLkw"); //$NON-NLS-1$
@@ -384,8 +379,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 								gueteGesamt = GueteVerfahren.summe(qPkwGuete,
 										GueteVerfahren.produkt(qLkwGuete, guetefL));
 							} catch (final GueteException e) {
-								LOGGER.error(
-										"Guete von qB konnte nicht ermittelt werden in " + kurzZeitDatum, e); //$NON-NLS-1$
+								LOGGER.error("Guete von qB konnte nicht ermittelt werden in " //$NON-NLS-1$
+										+ kurzZeitDatum, e);
 								e.printStackTrace();
 							}
 
@@ -470,8 +465,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 				if (qT.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
 					zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					zielK.setWertUnskaliert(Math.round((double) qT.getWertUnskaliert()
-							/ (double) vT.getWertUnskaliert()));
+					zielK.setWertUnskaliert(Math.round(
+							(double) qT.getWertUnskaliert() / (double) vT.getWertUnskaliert()));
 
 					/**
 					 * Aenderung analog Mail von Herrn Kappich vom 27.03.08, 1400
@@ -489,9 +484,9 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 						}
 					}
 
-					if (DUAUtensilien
-							.isWertInWerteBereich(
-									analyseDatum.getItem("kKfz").getItem("Wert"), zielK.getWertUnskaliert())) { //$NON-NLS-1$ //$NON-NLS-2$
+					if (DUAUtensilien.isWertInWerteBereich(
+							analyseDatum.getItem("kKfz").getItem("Wert"), //$NON-NLS-1$ //$NON-NLS-2$
+							zielK.getWertUnskaliert())) {
 						try {
 							final GWert qGuete = new GWert(analyseDatum, "qB"); //$NON-NLS-1$
 							final GWert vGuete = new GWert(analyseDatum, "vKfz"); //$NON-NLS-1$
@@ -536,8 +531,10 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	 */
 	private final void berechneDichte(final Data analyseDatum, final ResultData kurzZeitDatum,
 			final String fahrZeugKlasse) {
-		final DaMesswertUnskaliert vT = new DaMesswertUnskaliert("v" + fahrZeugKlasse, analyseDatum); //$NON-NLS-1$
-		final DaMesswertUnskaliert qT = new DaMesswertUnskaliert("q" + fahrZeugKlasse, analyseDatum); //$NON-NLS-1$
+		final DaMesswertUnskaliert vT = new DaMesswertUnskaliert("v" + fahrZeugKlasse, //$NON-NLS-1$
+				analyseDatum);
+		final DaMesswertUnskaliert qT = new DaMesswertUnskaliert("q" + fahrZeugKlasse, //$NON-NLS-1$
+				analyseDatum);
 
 		final MesswertUnskaliert zielK = new MesswertUnskaliert("k" + fahrZeugKlasse); //$NON-NLS-1$
 
@@ -549,8 +546,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 
 				final ResultData analyseTminus1 = fsAufDatenPuffer.get(kurzZeitDatum.getObject());
 				if ((analyseTminus1 != null) && (analyseTminus1.getData() != null)) {
-					final MesswertUnskaliert kTminus1 = new MesswertUnskaliert(
-							"k" + fahrZeugKlasse, //$NON-NLS-1$
+					final MesswertUnskaliert kTminus1 = new MesswertUnskaliert("k" + fahrZeugKlasse, //$NON-NLS-1$
 							analyseTminus1.getData());
 
 					final long kTminus1Wert = kTminus1.getWertUnskaliert();
@@ -606,8 +602,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 					if (qT.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
 						zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 					} else {
-						zielK.setWertUnskaliert(Math.round((double) qT.getWertUnskaliert()
-								/ (double) vT.getWertUnskaliert()));
+						zielK.setWertUnskaliert(Math.round(
+								(double) qT.getWertUnskaliert() / (double) vT.getWertUnskaliert()));
 
 						/**
 						 * Aenderung analog Mail von Herrn Kappich vom 27.03.08, 1400
@@ -639,9 +635,9 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 							}
 						}
 
-						if (DUAUtensilien
-								.isWertInWerteBereich(
-										analyseDatum.getItem("k" + fahrZeugKlasse).getItem("Wert"), zielK.getWertUnskaliert())) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (DUAUtensilien.isWertInWerteBereich(
+								analyseDatum.getItem("k" + fahrZeugKlasse).getItem("Wert"), //$NON-NLS-1$ //$NON-NLS-2$
+								zielK.getWertUnskaliert())) {
 							try {
 								final GWert qGuete = new GWert(analyseDatum, "q" + fahrZeugKlasse); //$NON-NLS-1$
 								final GWert vGuete = new GWert(analyseDatum, "v" + fahrZeugKlasse); //$NON-NLS-1$
@@ -683,7 +679,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		// ResultData analyseTminus1 = this.fsAufDatenPuffer.get(kurzZeitDatum.getObject());
 		// if(analyseTminus1 != null &&
 		// analyseTminus1.getData() != null){
-		//					MesswertUnskaliert kTminus1 = new MesswertUnskaliert("k" + fahrZeugKlasse, //$NON-NLS-1$
+		// MesswertUnskaliert kTminus1 = new MesswertUnskaliert("k" + fahrZeugKlasse, //$NON-NLS-1$
 		// analyseTminus1.getData());
 		//
 		// long kTminus1Wert = kTminus1.getWertUnskaliert();
@@ -695,11 +691,11 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		// long kGrenz = DUAKonstanten.MESSWERT_UNBEKANNT;
 		// long kMax = DUAKonstanten.MESSWERT_UNBEKANNT;
 		//
-		//							if(fahrZeugKlasse.startsWith("K")){	// Kfz //$NON-NLS-1$
+		// if(fahrZeugKlasse.startsWith("K")){ // Kfz //$NON-NLS-1$
 		// kGrenz = fsParameter.getKKfzGrenz();
 		// kMax = fsParameter.getKKfzMax();
 		// }else
-		//							if(fahrZeugKlasse.startsWith("L")){	// Lkw //$NON-NLS-1$
+		// if(fahrZeugKlasse.startsWith("L")){ // Lkw //$NON-NLS-1$
 		// kGrenz = fsParameter.getKLkwGrenz();
 		// kMax = fsParameter.getKLkwMax();
 		// }else{ // Pkw
@@ -732,16 +728,17 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		// zielK.setWertUnskaliert(Math.round((double)qT.getWertUnskaliert() /
 		// (double)vT.getWertUnskaliert()));
 		//
-		//					if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("k" + fahrZeugKlasse).getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
+		// if(DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("k" +
+		// fahrZeugKlasse).getItem("Wert"), zielK.getWertUnskaliert())){ //$NON-NLS-1$ //$NON-NLS-2$
 		// try {
-		//							GWert qGuete = new GWert(analyseDatum, "q" + fahrZeugKlasse); //$NON-NLS-1$
-		//							GWert vGuete = new GWert(analyseDatum, "v" + fahrZeugKlasse); //$NON-NLS-1$
+		// GWert qGuete = new GWert(analyseDatum, "q" + fahrZeugKlasse); //$NON-NLS-1$
+		// GWert vGuete = new GWert(analyseDatum, "v" + fahrZeugKlasse); //$NON-NLS-1$
 		// GWert kGuete = GueteVerfahren.quotient(qGuete, vGuete);
 		// zielK.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
 		// zielK.setVerfahren(kGuete.getVerfahren().getCode());
 		// } catch (GueteException e) {
-		//							LOGGER.error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
-		//									" nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
+		// LOGGER.error("Guete-Index fuer k" + fahrZeugKlasse + //$NON-NLS-1$
+		// " nicht berechenbar in " + kurzZeitDatum, e); //$NON-NLS-1$
 		// e.printStackTrace();
 		// }
 		//
@@ -775,8 +772,10 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	private final void berechneVerkehrsStaerke(final Data analyseDatum,
 			final ResultData kurzZeitDatum, final String attName) {
 		final long TinS = kurzZeitDatum.getData().getTimeValue("T").getMillis() / 1000; //$NON-NLS-1$
-		final DaMesswertUnskaliert qMwe = new DaMesswertUnskaliert(attName, kurzZeitDatum.getData());
-		final MesswertUnskaliert qAnalyse = new MesswertUnskaliert(attName, kurzZeitDatum.getData());
+		final DaMesswertUnskaliert qMwe = new DaMesswertUnskaliert(attName,
+				kurzZeitDatum.getData());
+		final MesswertUnskaliert qAnalyse = new MesswertUnskaliert(attName,
+				kurzZeitDatum.getData());
 
 		if (qMwe.isFehlerhaftBzwImplausibel()) {
 			qAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
@@ -889,19 +888,11 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		analyseWert.kopiereInhaltNachModifiziereIndex(analyseDatum);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ModulTyp getModulTyp() {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}.<br>
-	 *
-	 * Diese Methode macht nichts, da die Publikation in diesem Modul nicht dynamisch erfolgt
-	 */
 	@Override
 	public void aktualisierePublikation(final IDatenFlussSteuerung dfs) {
 		// hier wird nicht dynamisch publiziert

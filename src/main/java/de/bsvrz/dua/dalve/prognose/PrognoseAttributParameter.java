@@ -40,7 +40,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq</code></li>
  * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeMq</code></li>
  * </ul>
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
@@ -151,9 +151,6 @@ public class PrognoseAttributParameter {
 		return start != -4;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		boolean gleich = false;
@@ -168,9 +165,6 @@ public class PrognoseAttributParameter {
 		return gleich;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "Attribut: " + attribut + " --> " + //$NON-NLS-1$ //$NON-NLS-2$

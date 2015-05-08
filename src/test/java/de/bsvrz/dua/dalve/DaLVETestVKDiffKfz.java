@@ -133,13 +133,13 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 				DatenaufbereitungLVETest.TEST_DATEN_VERZ + "Parameter");
 		final Data data = dav.createData(ddParaAbschnitt.getAttributeGroup());
 		data.getItem("VKDiffKfz").getUnscaledValue("Ein")
-				.set(Long.parseLong(parameter.get("VKDiffEin")));
+		.set(Long.parseLong(parameter.get("VKDiffEin")));
 		data.getItem("VKDiffKfz").getUnscaledValue("Aus")
-				.set(Long.parseLong(parameter.get("VKDiffAus")));
+		.set(Long.parseLong(parameter.get("VKDiffAus")));
 		data.getItem("QKfzDiff").getUnscaledValue("Ein")
-				.set(Long.parseLong(parameter.get("QKfzDiffEin")));
+		.set(Long.parseLong(parameter.get("QKfzDiffEin")));
 		data.getItem("QKfzDiff").getUnscaledValue("Aus")
-				.set(Long.parseLong(parameter.get("QKfzDiffAus")));
+		.set(Long.parseLong(parameter.get("QKfzDiffAus")));
 		data.getUnscaledValue("tReise").set(15);
 		dav.sendData(new ResultData(abschnitt, ddParaAbschnitt, System.currentTimeMillis(), data));
 
@@ -194,9 +194,9 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		/**
 		 * Anmeldung zum Empfang der Stoerfallsituation
 		 */
-		final DataDescription ddVkDiffKfz = new DataDescription(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
-				dav.getDataModel().getAspect("asp.störfallVerfahrenVKDiffKfz"));
+				final DataDescription ddVkDiffKfz = new DataDescription(
+						dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
+						dav.getDataModel().getAspect("asp.störfallVerfahrenVKDiffKfz"));
 		dav.subscribeReceiver(this, new SystemObject[] { abschnitt }, ddVkDiffKfz,
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 
@@ -239,8 +239,8 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 			final double sollVkDiff = Double.parseDouble(soll[0].replaceAll(",", "."));
 			final double istVkDiff = VKDiffKfzStoerfallIndikator.getTestVkDiffKfz();
 			final String debug = "(Soll/Ist) --> VKDiffKfz = " + DUAUtensilien.runde(sollVkDiff, 5)
-					+ "/" + DUAUtensilien.runde(istVkDiff, 5) + ", Situation: "
-					+ soll[1].toLowerCase() + "/" + aktuellerStoerfallzustand.toLowerCase();
+			+ "/" + DUAUtensilien.runde(istVkDiff, 5) + ", Situation: "
+			+ soll[1].toLowerCase() + "/" + aktuellerStoerfallzustand.toLowerCase();
 
 			System.out.println(debug);
 			Assert.assertEquals("VKDiffKfz-Fehler: " + debug, DUAUtensilien.runde(sollVkDiff, 5),
@@ -266,9 +266,6 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
@@ -284,17 +281,11 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {

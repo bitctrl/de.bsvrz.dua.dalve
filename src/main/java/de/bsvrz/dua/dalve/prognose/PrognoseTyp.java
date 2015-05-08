@@ -113,9 +113,6 @@ public class PrognoseTyp {
 		return fuerFahrStreifen ? atgFahrStreifen : atgMessQuerschnitt;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return aspekt.getPid().substring("asp.prognose".length());

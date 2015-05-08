@@ -181,9 +181,6 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] results) {
 		if (results != null) {

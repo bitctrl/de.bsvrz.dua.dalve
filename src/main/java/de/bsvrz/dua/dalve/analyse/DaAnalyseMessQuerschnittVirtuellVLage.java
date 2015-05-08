@@ -153,9 +153,9 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		mqAnalyse.getDav().subscribeReceiver(this, aktuelleMQAnalysen.keySet(),
 				new DataDescription(
 						mqAnalyse.getDav().getDataModel()
-								.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"),
+						.getAttributeGroup("atg.verkehrsDatenKurzZeitMq"),
 						mqAnalyse.getDav().getDataModel().getAspect("asp.analyse")),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		return this;
 	}
@@ -258,12 +258,12 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		/**
 		 * Ermittle Werte fuer <code>VKfz, VLkw, VPkw</code> und <code>VgKfz</code> via Ersetzung
 		 */
-				final ResultData ersetzung = aktuelleMQAnalysen.get(geschwMQ);
+		final ResultData ersetzung = aktuelleMQAnalysen.get(geschwMQ);
 
 		for (final String attName : new String[] { "VKfz", "VLkw", "VPkw", "VgKfz" }) {
 			if ((ersetzung != null) && (ersetzung.getData() != null)) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-						.kopiereInhaltNachModifiziereIndex(analyseDatum);
+				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + messQuerschnitt + //$NON-NLS-1$
 						" im Attribut " + attName + " ermittelt werden"); //$NON-NLS-1$
@@ -358,9 +358,6 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {

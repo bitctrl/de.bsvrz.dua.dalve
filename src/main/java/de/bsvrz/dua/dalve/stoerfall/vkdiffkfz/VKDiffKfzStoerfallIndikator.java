@@ -132,12 +132,12 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	/**
 	 * Ringpuffer fuer VKfz(e).
 	 */
-	private final RingPuffer vKfzEPuffer = new RingPuffer();;
+	private final RingPuffer vKfzEPuffer = new RingPuffer();
 
 	/**
 	 * Ringpuffer fuer kKfz(e).
 	 */
-	private final RingPuffer kKfzEPuffer = new RingPuffer();;
+	private final RingPuffer kKfzEPuffer = new RingPuffer();
 
 	/**
 	 * Aktueller Wert fuer VKfz(a).
@@ -184,9 +184,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	private ErfassungsIntervallDauerMQ bisT = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -229,7 +226,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 					new DataDescription(
 							dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 							dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
-					ReceiveOptions.normal(), ReceiverRole.receiver());
+							ReceiveOptions.normal(), ReceiverRole.receiver());
 
 			SystemObject fdObjektVon = von;
 			final SystemObject stsObjektVon = DatenaufbereitungLVE.getStraßenTeilSegment(von);
@@ -317,17 +314,11 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.lokaleStörfallErkennungVKDiffKfz";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(final ResultData parameter) {
 		if (parameter != null) {
@@ -362,9 +353,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenVKDiffKfz"; //$NON-NLS-1$
@@ -435,12 +423,12 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 												GueteVerfahren.summe(
 														GueteVerfahren.exp(vKfzEtMinustReiseGuete,
 																2.0),
-												GueteVerfahren.exp(kKfzEtMinustReiseGuete, 2.0)),
-								0.5),
-								GueteVerfahren.exp(
-										GueteVerfahren.summe(GueteVerfahren.exp(vKfzAtGuete, 2.0),
-												GueteVerfahren.exp(kKfzAtGuete, 2.0)),
-										0.5));
+																GueteVerfahren.exp(kKfzEtMinustReiseGuete, 2.0)),
+																0.5),
+																GueteVerfahren.exp(
+																		GueteVerfahren.summe(GueteVerfahren.exp(vKfzAtGuete, 2.0),
+																				GueteVerfahren.exp(kKfzAtGuete, 2.0)),
+																				0.5));
 					} catch (final GueteException ex) {
 						LOGGER.error("Guete von VKDiffKfz fuer " + objekt
 								+ " konnte nicht bestimmt werden. Grund:\n" + ex.getMessage());
@@ -449,8 +437,8 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 					vKDiffKfz = Math
 							.sqrt(Math.pow(vFreiEMinusVKfzEtMinustReise / vFreiE, 2.0)
 									+ Math.pow(kKfzEtMinustReise / (2 * k0E), 2.0))
-							- Math.sqrt(Math.pow(vFreiAMinusVKfzAt / vFreiA, 2.0)
-									+ Math.pow(kKfzAt / (2 * k0A), 2.0));
+									- Math.sqrt(Math.pow(vFreiAMinusVKfzAt / vFreiA, 2.0)
+											+ Math.pow(kKfzAt / (2 * k0A), 2.0));
 
 					if ((vKDiffEin >= 0) && (qKfzDiffEin >= 0) && (vKDiffAus >= 0)
 							&& (qKfzDiffAus >= 0) && (qKfzE >= 0)) {

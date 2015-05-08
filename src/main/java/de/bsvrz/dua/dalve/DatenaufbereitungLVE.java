@@ -123,7 +123,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 			return analyseAtgMQ;
 		} else {
 			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
-			+ " existiert keine Attributgruppe fuer Analysedaten.");
+					+ " existiert keine Attributgruppe fuer Analysedaten.");
 		}
 	}
 
@@ -150,7 +150,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 			return pubAtgGlattMQ;
 		} else {
 			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
-			+ " existiert keine Attributgruppe fuer geglaettete Werte.");
+					+ " existiert keine Attributgruppe fuer geglaettete Werte.");
 		}
 	}
 
@@ -168,7 +168,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 			return pubAtgPrognoseMQ;
 		} else {
 			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
-			+ " existiert keine Attributgruppe fuer Prognosewerte.");
+					+ " existiert keine Attributgruppe fuer Prognosewerte.");
 		}
 	}
 
@@ -192,41 +192,41 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 							.getSystemObject();
 					final double offset = mqData.getUnscaledValue("Offset").longValue() >= 0
 							? mqData.getScaledValue("Offset").doubleValue() : -1.0;
-							if ((strassenSegment != null) && strassenSegment.isOfType("typ.straßenSegment")
-									&& (offset >= 0)) {
-								final Data ssData = strassenSegment.getConfigurationData(dDav.getDataModel()
-								.getAttributeGroup("atg.bestehtAusLinienObjekten"));
-								if (ssData != null) {
-									double gesamtLaenge = 0;
-									for (int i = 0; i < ssData.getArray("LinienReferenz")
-									.getLength(); i++) {
-										if (ssData.getReferenceArray("LinienReferenz")
-										.getReferenceValue(i) != null) {
-											final SystemObject sts = ssData
-													.getReferenceArray("LinienReferenz")
-													.getReferenceValue(i).getSystemObject();
-											if ((sts != null) && sts.isOfType("typ.straßenTeilSegment")) {
-												final Data stsData = sts.getConfigurationData(
-												dDav.getDataModel().getAttributeGroup("atg.linie"));
-												if (stsData != null) {
-													final double laenge = stsData.getUnscaledValue("Länge")
-															.longValue() >= 0
+					if ((strassenSegment != null) && strassenSegment.isOfType("typ.straßenSegment")
+							&& (offset >= 0)) {
+						final Data ssData = strassenSegment.getConfigurationData(dDav.getDataModel()
+										.getAttributeGroup("atg.bestehtAusLinienObjekten"));
+						if (ssData != null) {
+							double gesamtLaenge = 0;
+							for (int i = 0; i < ssData.getArray("LinienReferenz")
+											.getLength(); i++) {
+								if (ssData.getReferenceArray("LinienReferenz")
+												.getReferenceValue(i) != null) {
+									final SystemObject sts = ssData
+											.getReferenceArray("LinienReferenz")
+											.getReferenceValue(i).getSystemObject();
+									if ((sts != null) && sts.isOfType("typ.straßenTeilSegment")) {
+										final Data stsData = sts.getConfigurationData(
+														dDav.getDataModel().getAttributeGroup("atg.linie"));
+										if (stsData != null) {
+											final double laenge = stsData.getUnscaledValue("Länge")
+													.longValue() >= 0
 															? stsData.getScaledValue("Länge")
 																	.doubleValue()
-															: -1.0;
-																	if (laenge >= 0) {
-																		gesamtLaenge += laenge;
-																	}
-												}
-												if (gesamtLaenge >= offset) {
-													stsGesucht = sts;
-													break;
-												}
+																	: -1.0;
+											if (laenge >= 0) {
+												gesamtLaenge += laenge;
 											}
+										}
+										if (gesamtLaenge >= offset) {
+											stsGesucht = sts;
+											break;
 										}
 									}
 								}
 							}
+						}
+					}
 				}
 			}
 		}
@@ -251,8 +251,6 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	private boolean ignoreDichteMax;
 
 	/**
-	 * {@inheritDoc}.<br>
-	 *
 	 * Standard-Gütefaktor für Ersetzungen (90%)<br>
 	 * Wenn das Modul Datenaufbereitung LVE einen Messwert ersetzt so vermindert sich die Güte des
 	 * Ausgangswertes um diesen Faktor (wenn kein anderer Wert über die Kommandozeile übergeben
@@ -263,17 +261,11 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		return 0.9;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SWETyp getSWETyp() {
 		return SWETyp.SWE_DATENAUFBEREITUNG_LVE;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
@@ -348,12 +340,9 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 				new DataDescription(
 						verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 						verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		fsAnalyseModul.aktualisiereDaten(resultate);

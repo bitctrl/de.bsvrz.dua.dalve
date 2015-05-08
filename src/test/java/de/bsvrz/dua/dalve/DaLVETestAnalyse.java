@@ -107,9 +107,9 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 
 		MQ = this.dav.getDataModel().getObject("mq"); //$NON-NLS-1$
 
-		DD_KZD_SEND = new DataDescription(this.dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KZD), this.dav.getDataModel().getAspect(
-						DUAKonstanten.ASP_MESSWERTERSETZUNG));
+		DD_KZD_SEND = new DataDescription(
+				this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+				this.dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
 		this.dav.subscribeSender(this, new SystemObject[] { FS1, FS2, FS3 }, DD_KZD_SEND,
 				SenderRole.source());
@@ -172,7 +172,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 			dav.sendData(resultat3);
 
 			// Warte auf Prüfungsabschluss aller FS für diesen Datensatz
-			//System.out.println("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
+			// System.out.println("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
 			doWait();
 
 			csvIndex++;
@@ -207,18 +207,12 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
 		// VOID
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {

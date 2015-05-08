@@ -52,7 +52,9 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
  */
 public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 
-	/** Mappt alle Fahrstreifen dieses Messquerschnitts auf deren letztes empfangenes Analysedatum. */
+	/**
+	 * Mappt alle Fahrstreifen dieses Messquerschnitts auf deren letztes empfangenes Analysedatum.
+	 */
 	private final Map<SystemObject, ResultData> fsDaten = new HashMap<>();
 
 	/** Attributgruppe der Analysedaten von Fahrstreifen. */
@@ -66,9 +68,6 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 	 */
 	private ErfassungsIntervallDauerMQ erf = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -90,34 +89,26 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 
 			fsAnalyseAtg = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
 
-			dav.subscribeReceiver(this, fsDaten.keySet(), new DataDescription(fsAnalyseAtg, dav
-					.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions.normal(),
-					ReceiverRole.receiver());
+			dav.subscribeReceiver(this, fsDaten.keySet(),
+					new DataDescription(fsAnalyseAtg,
+							dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+							ReceiveOptions.normal(), ReceiverRole.receiver());
 		} else {
 			throw new DUAInitialisierungsException("Messquerschnitt " + objekt + //$NON-NLS-1$
 					" konnte nicht vollstaendig ausgelesen werden"); //$NON-NLS-1$
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.verkehrsLageVerfahren2"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenNRW"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void berechneStoerfallIndikator(final ResultData resultat) {
 		Data data = null;
@@ -152,12 +143,13 @@ public class NrwStoerfallIndikatorMq extends NrwStoerfallIndikatorFs {
 				if (analyseDatensatz.getDataTime() == geglaettetDatensatz.getDataTime()) {
 					StoerfallSituation stufe = StoerfallSituation.KEINE_AUSSAGE;
 
-					if ((v1 >= 0) && (v2 >= 0) && (k1 >= 0) && (k2 >= 0) && (k3 >= 0) && (kT >= 0)) {
+					if ((v1 >= 0) && (v2 >= 0) && (k1 >= 0) && (k2 >= 0) && (k3 >= 0)
+							&& (kT >= 0)) {
 
-						final long QKfzGNormal = geglaettetDatensatz.getData()
-								.getItem("QKfzG").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						final long VKfz = analyseDatensatz.getData()
-								.getItem("VKfz").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						final long QKfzGNormal = geglaettetDatensatz.getData().getItem("QKfzG") //$NON-NLS-1$
+								.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
+						final long VKfz = analyseDatensatz.getData().getItem("VKfz") //$NON-NLS-1$
+								.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 
 						if ((QKfzGNormal >= 0) && (VKfz > 0)) {
 							final double kvst = (double) QKfzGNormal / (double) VKfz;

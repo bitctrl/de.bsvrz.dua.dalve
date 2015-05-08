@@ -39,8 +39,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt implements
-IAtgPrognoseParameterListener {
+public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
+		implements IAtgPrognoseParameterListener {
 
 	/** der Prognosetyp. */
 	private PrognoseTyp typ = null;
@@ -84,12 +84,12 @@ IAtgPrognoseParameterListener {
 		vAttribut = attribut.equals(PrognoseAttribut.V_KFZ)
 				|| attribut.equals(PrognoseAttribut.V_LKW)
 				|| attribut.equals(PrognoseAttribut.V_PKW);
-		attributNameP = this.attribut.getAttributNamePrognose(this.prognoseObjekt
-				.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
-		attributNameG = this.attribut.getAttributNameGlatt(this.prognoseObjekt
-				.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
-		attributNameQuelle = this.attribut.getAttributName(prognoseObjekt
-				.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
+		attributNameP = this.attribut.getAttributNamePrognose(
+				this.prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
+		attributNameG = this.attribut
+				.getAttributNameGlatt(this.prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
+		attributNameQuelle = this.attribut
+				.getAttributName(prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
 	}
 
 	/**
@@ -108,8 +108,8 @@ IAtgPrognoseParameterListener {
 					.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 			final Data davDatum = resultat.getData().getItem(attributNameQuelle).getItem("Wert");
 			final boolean implausibel = resultat.getData().getItem(attributNameQuelle)
-					.getItem("Status")
-					.getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$ //$NON-NLS-2$
+					.getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel") //$NON-NLS-2$ //$NON-NLS-3$
+					.intValue() == DUAKonstanten.JA;
 
 			/**
 			 * Messintervallen ohne Fahrzeugdetektion?
@@ -125,11 +125,11 @@ IAtgPrognoseParameterListener {
 				 * Vorgängerintervalls übernommen werden.
 				 */
 				if (prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
-					keineVerkehrsStaerke = resultat.getData()
-							.getItem("qKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
+					keineVerkehrsStaerke = resultat.getData().getItem("qKfz") //$NON-NLS-1$
+							.getUnscaledValue("Wert").longValue() == 0;
 				} else {
-					keineVerkehrsStaerke = resultat.getData()
-							.getItem("QKfz").getUnscaledValue("Wert").longValue() == 0; //$NON-NLS-1$
+					keineVerkehrsStaerke = resultat.getData().getItem("QKfz") //$NON-NLS-1$
+							.getUnscaledValue("Wert").longValue() == 0;
 				}
 
 				// keineVerkehrsStaerke =
@@ -192,9 +192,6 @@ IAtgPrognoseParameterListener {
 		exportWert.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void aktualisiereParameter(final PrognoseAttributParameter parameterSatzFuerAttribut) {
 		ZAltInit = parameterSatzFuerAttribut.getStart();
@@ -204,9 +201,6 @@ IAtgPrognoseParameterListener {
 		beta2 = parameterSatzFuerAttribut.getBeta2();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return prognoseObjekt.getPid() + ", " + attribut + ", " + typ;

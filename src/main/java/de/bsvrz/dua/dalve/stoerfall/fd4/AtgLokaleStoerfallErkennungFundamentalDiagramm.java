@@ -61,16 +61,18 @@ public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements ClientRec
 	 */
 	protected AtgLokaleStoerfallErkennungFundamentalDiagramm(final ClientDavInterface dav,
 			final SystemObject objekt) {
-		parameter.put(StoerfallSituation.FREIER_VERKEHR, new ParameterFuerStoerfall(
-				StoerfallSituation.FREIER_VERKEHR));
+		parameter.put(StoerfallSituation.FREIER_VERKEHR,
+				new ParameterFuerStoerfall(StoerfallSituation.FREIER_VERKEHR));
 		parameter.put(StoerfallSituation.STAU, new ParameterFuerStoerfall(StoerfallSituation.STAU));
-		parameter.put(StoerfallSituation.ZAEHER_VERKEHR, new ParameterFuerStoerfall(
-				StoerfallSituation.ZAEHER_VERKEHR));
+		parameter.put(StoerfallSituation.ZAEHER_VERKEHR,
+				new ParameterFuerStoerfall(StoerfallSituation.ZAEHER_VERKEHR));
 
-		dav.subscribeReceiver(this, objekt, new DataDescription(dav.getDataModel()
-				.getAttributeGroup("atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions
-				.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(
+						dav.getDataModel().getAttributeGroup(
+								"atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -102,9 +104,6 @@ public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements ClientRec
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {

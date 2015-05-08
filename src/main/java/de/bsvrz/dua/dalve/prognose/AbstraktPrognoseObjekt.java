@@ -60,8 +60,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public abstract class AbstraktPrognoseObjekt implements ClientReceiverInterface,
-ClientSenderInterface {
+public abstract class AbstraktPrognoseObjekt
+		implements ClientReceiverInterface, ClientSenderInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -95,7 +95,7 @@ ClientSenderInterface {
 	private boolean sendeGeglaetteteDaten = false;
 
 	/** Fuer jedes zu berechnende Attribut (des Zieldatums) ein Prognoseobjekt. */
-	private final Set<DavAttributPrognoseObjekt> attributePuffer = new HashSet<DavAttributPrognoseObjekt>();
+	private final Set<DavAttributPrognoseObjekt> attributePuffer = new HashSet<>();
 
 	/**
 	 * Initialisiert dieses Objekt. Nach Beendigung dieser Methode empfängt und publiziert dieses
@@ -134,8 +134,8 @@ ClientSenderInterface {
 		 * Sendeanmeldungen fuer Prognosewerte und geglaetttete Werte
 		 */
 		pubBeschreibungPrognose = new DataDescription(
-				DatenaufbereitungLVE.getPubAtgPrognose(prognoseObjekt), getPrognoseTyp()
-				.getAspekt());
+				DatenaufbereitungLVE.getPubAtgPrognose(prognoseObjekt),
+				getPrognoseTyp().getAspekt());
 		pubBeschreibungGlatt = new DataDescription(
 				DatenaufbereitungLVE.getPubAtgGlatt(prognoseObjekt), getPrognoseTyp().getAspekt());
 		try {
@@ -149,14 +149,11 @@ ClientSenderInterface {
 		 * Impliziter Start des Objektes: Anmeldung auf Daten
 		 */
 		DAV.subscribeReceiver(this, prognoseObjekt,
-				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(prognoseObjekt), DAV
-						.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)), ReceiveOptions
-						.normal(), ReceiverRole.receiver());
+				new DataDescription(DatenaufbereitungLVE.getAnalyseAtg(prognoseObjekt),
+						DAV.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
@@ -177,8 +174,8 @@ ClientSenderInterface {
 							/**
 							 * Baue geglaetteten Ergebniswert zusammen:
 							 */
-							glaettungNutzdaten = DAV.createData(DatenaufbereitungLVE
-									.getPubAtgGlatt(prognoseObjekt));
+							glaettungNutzdaten = DAV.createData(
+									DatenaufbereitungLVE.getPubAtgGlatt(prognoseObjekt));
 							for (final DavAttributPrognoseObjekt attribut : attributePuffer) {
 								attribut.exportiereDatenGlatt(glaettungNutzdaten);
 							}
@@ -187,8 +184,8 @@ ClientSenderInterface {
 							/**
 							 * Baue Prognosewert zusammen:
 							 */
-							prognoseNutzdaten = DAV.createData(DatenaufbereitungLVE
-									.getPubAtgPrognose(prognoseObjekt));
+							prognoseNutzdaten = DAV.createData(
+									DatenaufbereitungLVE.getPubAtgPrognose(prognoseObjekt));
 							for (final DavAttributPrognoseObjekt attribut : attributePuffer) {
 								attribut.exportiereDatenPrognose(prognoseNutzdaten);
 							}
@@ -229,12 +226,12 @@ ClientSenderInterface {
 										" koennen nicht versendet werden (Kein Abnehmer)"); //$NON-NLS-1$
 							}
 						} catch (final DataNotSubscribedException e) {
-							LOGGER.error(
-									"Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+							LOGGER.error("Geglaettete Daten konnten nicht gesendet werden: " //$NON-NLS-1$
+									+ glaettungsDatum, e);
 							e.printStackTrace();
 						} catch (final SendSubscriptionNotConfirmed e) {
-							LOGGER.error(
-									"Geglaettete Daten konnten nicht gesendet werden: " + glaettungsDatum, e); //$NON-NLS-1$
+							LOGGER.error("Geglaettete Daten konnten nicht gesendet werden: " //$NON-NLS-1$
+									+ glaettungsDatum, e);
 							e.printStackTrace();
 						}
 
@@ -247,11 +244,13 @@ ClientSenderInterface {
 							}
 						} catch (final DataNotSubscribedException e) {
 							LOGGER.error(
-									"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
+									"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, //$NON-NLS-1$
+									e);
 							e.printStackTrace();
 						} catch (final SendSubscriptionNotConfirmed e) {
 							LOGGER.error(
-									"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, e); //$NON-NLS-1$
+									"Prognosedaten konnten nicht gesendet werden: " + prognoseDatum, //$NON-NLS-1$
+									e);
 							e.printStackTrace();
 						}
 					}
@@ -303,33 +302,27 @@ ClientSenderInterface {
 		}
 
 		if (prognose) {
-			qb = new DaMesswertUnskaliert(
-					PrognoseAttribut.QB.getAttributNamePrognose(prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
-			vKfz = new DaMesswertUnskaliert(
-					PrognoseAttribut.V_KFZ.getAttributNamePrognose(prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
-			kb = new MesswertUnskaliert(PrognoseAttribut.KB.getAttributNamePrognose(prognoseObjekt
-					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			guetekb = new GWert(zielDatum,
-					PrognoseAttribut.QB.getAttributNamePrognose(prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			gueteVKfz = new GWert(zielDatum,
-					PrognoseAttribut.V_KFZ.getAttributNamePrognose(prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			qb = new DaMesswertUnskaliert(PrognoseAttribut.QB.getAttributNamePrognose(
+					prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			vKfz = new DaMesswertUnskaliert(PrognoseAttribut.V_KFZ.getAttributNamePrognose(
+					prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			kb = new MesswertUnskaliert(PrognoseAttribut.KB.getAttributNamePrognose(
+					prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			guetekb = new GWert(zielDatum, PrognoseAttribut.QB.getAttributNamePrognose(
+					prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			gueteVKfz = new GWert(zielDatum, PrognoseAttribut.V_KFZ.getAttributNamePrognose(
+					prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
 		} else {
-			qb = new DaMesswertUnskaliert(PrognoseAttribut.QB.getAttributNameGlatt(prognoseObjekt
-					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
-			vKfz = new DaMesswertUnskaliert(
-					PrognoseAttribut.V_KFZ.getAttributNameGlatt(prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
-			kb = new MesswertUnskaliert(PrognoseAttribut.KB.getAttributNameGlatt(prognoseObjekt
-					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			guetekb = new GWert(zielDatum, PrognoseAttribut.QB.getAttributNameGlatt(prognoseObjekt
-					.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
-			gueteVKfz = new GWert(zielDatum,
-					PrognoseAttribut.V_KFZ.getAttributNameGlatt(prognoseObjekt
-							.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			qb = new DaMesswertUnskaliert(PrognoseAttribut.QB.getAttributNameGlatt(
+					prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			vKfz = new DaMesswertUnskaliert(PrognoseAttribut.V_KFZ.getAttributNameGlatt(
+					prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), zielDatum);
+			kb = new MesswertUnskaliert(PrognoseAttribut.KB
+					.getAttributNameGlatt(prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			guetekb = new GWert(zielDatum, PrognoseAttribut.QB
+					.getAttributNameGlatt(prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
+			gueteVKfz = new GWert(zielDatum, PrognoseAttribut.V_KFZ
+					.getAttributNameGlatt(prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)));
 		}
 
 		kb.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
@@ -358,23 +351,17 @@ ClientSenderInterface {
 		kb.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
 		if (dataDescription.getAttributeGroup().equals(pubBeschreibungGlatt.getAttributeGroup())) {
 			sendeGeglaetteteDaten = state == ClientSenderInterface.START_SENDING;
-		} else if (dataDescription.getAttributeGroup().equals(
-				pubBeschreibungPrognose.getAttributeGroup())) {
+		} else if (dataDescription.getAttributeGroup()
+				.equals(pubBeschreibungPrognose.getAttributeGroup())) {
 			sendePrognoseDaten = state == ClientSenderInterface.START_SENDING;
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {

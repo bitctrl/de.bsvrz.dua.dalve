@@ -77,13 +77,11 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		this.objekt = objekt;
 		this.typ = typ;
 		initialisiere();
-		dav.subscribeReceiver(
-				this,
-				objekt,
-				new DataDescription(typ.getParameterAtg(objekt
-						.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)), dav.getDataModel().getAspect(
-								DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions.normal(), ReceiverRole
-								.receiver());
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(
+						typ.getParameterAtg(objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -117,7 +115,8 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 			// System.out.println();
 			for (final PrognoseAttribut attribut : attributListener.keySet()) {
 				final PrognoseAttributParameter einzelWert = einzelWerte.get(attribut);
-				for (final IAtgPrognoseParameterListener listener : attributListener.get(attribut)) {
+				for (final IAtgPrognoseParameterListener listener : attributListener
+						.get(attribut)) {
 					// System.out.println("Informiere: " + listener.toString() +
 					// ", ueber: " + einzelWert) ;
 					listener.aktualisiereParameter(einzelWert);
@@ -141,9 +140,6 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
@@ -151,7 +147,8 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 				if (resultat != null) {
 					synchronized (this) {
 						if (resultat.getData() != null) {
-							for (final PrognoseAttribut attribut : PrognoseAttribut.getInstanzen()) {
+							for (final PrognoseAttribut attribut : PrognoseAttribut
+									.getInstanzen()) {
 								einzelWerte.get(attribut).setDaten(resultat.getData(),
 										objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
 							}
@@ -165,9 +162,6 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return objekt + ", " + typ;

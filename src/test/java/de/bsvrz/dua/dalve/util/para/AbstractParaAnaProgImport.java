@@ -43,8 +43,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public abstract class AbstractParaAnaProgImport extends CSVImporter implements
-ClientSenderInterface {
+public abstract class AbstractParaAnaProgImport extends CSVImporter
+		implements ClientSenderInterface {
 
 	/** Verbindung zum Datenverteiler. */
 	protected static ClientDavInterface DAV = null;
@@ -152,20 +152,21 @@ ClientSenderInterface {
 					final long l = Long.parseLong(wert);
 					// DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(l);
 					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue()
-					.set(l);
+							.set(l);
 				} catch (final NumberFormatException ex) {
 					final double d = Double.parseDouble(wert);
 					// DUAUtensilien.getAttributDatum(attPfad, parameter).asUnscaledValue().set(d);
 					DUAUtensilien.getAttributDatum(attPfadAnalyse, parameter).asScaledValue()
-					.set(d);
+							.set(d);
 				}
 			}
 		}
 
 		setParaAnalyseWichtung(parameter);
 
-		final ResultData resultat = new ResultData(fsObjekt, new DataDescription(ATG_Analyse, DAV
-				.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+		final ResultData resultat = new ResultData(fsObjekt,
+				new DataDescription(ATG_Analyse,
+						DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 				System.currentTimeMillis(), parameter);
 		DAV.sendData(resultat);
 
@@ -234,19 +235,20 @@ ClientSenderInterface {
 			}
 		}
 
-		final ResultData resultatFlink = new ResultData(obj, new DataDescription(ATG_PrognoseFlink,
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+		final ResultData resultatFlink = new ResultData(obj,
+				new DataDescription(ATG_PrognoseFlink,
+						DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 				System.currentTimeMillis(), parameterProgFlink);
 
-		final ResultData resultatNormal = new ResultData(obj, new DataDescription(
-				ATG_PrognoseNormal, DAV.getDataModel().getAspect(
-						DaVKonstanten.ASP_PARAMETER_VORGABE)), System.currentTimeMillis(),
-						parameterProgNorm);
+		final ResultData resultatNormal = new ResultData(obj,
+				new DataDescription(ATG_PrognoseNormal,
+						DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameterProgNorm);
 
-		final ResultData resultatTraege = new ResultData(obj, new DataDescription(
-				ATG_PrognoseTraege, DAV.getDataModel().getAspect(
-						DaVKonstanten.ASP_PARAMETER_VORGABE)), System.currentTimeMillis(),
-						parameterProgTraege);
+		final ResultData resultatTraege = new ResultData(obj,
+				new DataDescription(ATG_PrognoseTraege,
+						DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), parameterProgTraege);
 
 		DAV.sendData(resultatFlink);
 		DAV.sendData(resultatNormal);
@@ -299,16 +301,16 @@ ClientSenderInterface {
 
 					if (!attPfadStoer.endsWith("Hysterese")) {
 						DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV2).asScaledValue()
-						.set(l);
+								.set(l);
 						if (!attPfadStoer.endsWith("3") && !attPfadStoer.endsWith("T")) {
 							DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV1)
-							.asScaledValue().set(l);
+									.asScaledValue().set(l);
 						}
 					}
 
 					if (isMQ) {
 						DUAUtensilien.getAttributDatum(attPfadStoer, parameterVLV3).asScaledValue()
-						.set(l);
+								.set(l);
 					}
 				} catch (final NumberFormatException ex) {
 
@@ -322,7 +324,7 @@ ClientSenderInterface {
 					try {
 						final long l = Long.parseLong(wert);
 						DUAUtensilien.getAttributDatum(attPfadStoerFD, parameterFD).asScaledValue()
-						.set(l);
+								.set(l);
 					} catch (final NumberFormatException ex) {
 
 					}
@@ -331,12 +333,14 @@ ClientSenderInterface {
 			}
 		}
 
-		final ResultData resultatVLV1 = new ResultData(obj, new DataDescription(ATG_VLVERFAHREN1,
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+		final ResultData resultatVLV1 = new ResultData(obj,
+				new DataDescription(ATG_VLVERFAHREN1,
+						DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 				System.currentTimeMillis(), parameterVLV1);
 
-		final ResultData resultatVLV2 = new ResultData(obj, new DataDescription(ATG_VLVERFAHREN2,
-				DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+		final ResultData resultatVLV2 = new ResultData(obj,
+				new DataDescription(ATG_VLVERFAHREN2,
+						DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 				System.currentTimeMillis(), parameterVLV2);
 
 		DAV.sendData(resultatVLV1);
@@ -348,13 +352,15 @@ ClientSenderInterface {
 		ResultData resultatVLV3 = null;
 		ResultData resultatFD = null;
 		if (isMQ) {
-			resultatVLV3 = new ResultData(obj, new DataDescription(ATG_VLVERFAHREN3, DAV
-					.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+			resultatVLV3 = new ResultData(obj,
+					new DataDescription(ATG_VLVERFAHREN3,
+							DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 					System.currentTimeMillis(), parameterVLV3);
 			DAV.sendData(resultatVLV3);
 
-			resultatFD = new ResultData(obj, new DataDescription(ATG_FUNDAMENTALDIAGRAMM, DAV
-					.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+			resultatFD = new ResultData(obj,
+					new DataDescription(ATG_FUNDAMENTALDIAGRAMM,
+							DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 					System.currentTimeMillis(), parameterFD);
 			DAV.sendData(resultatFD);
 
@@ -564,18 +570,12 @@ ClientSenderInterface {
 		DUAUtensilien.getAttributDatum(kBStart, parameter).asUnscaledValue().set(0);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
 		// keine Überprüfung
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {

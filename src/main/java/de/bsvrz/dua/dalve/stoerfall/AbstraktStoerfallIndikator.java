@@ -50,8 +50,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public abstract class AbstraktStoerfallIndikator implements ClientReceiverInterface,
-ClientSenderInterface {
+public abstract class AbstraktStoerfallIndikator
+implements ClientReceiverInterface, ClientSenderInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -93,14 +93,15 @@ ClientSenderInterface {
 
 		if (getParameterAtgPid() != null) {
 			paraAtg = dav.getDataModel().getAttributeGroup(getParameterAtgPid());
-			dav.subscribeReceiver(this, objekt, new DataDescription(paraAtg, dav.getDataModel()
-					.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions.normal(),
-					ReceiverRole.receiver());
+			dav.subscribeReceiver(this, objekt,
+					new DataDescription(paraAtg,
+							dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+							ReceiveOptions.normal(), ReceiverRole.receiver());
 		}
 
-		pubBeschreibung = new DataDescription(dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav.getDataModel().getAspect(
-						getPubAspektPid()));
+		pubBeschreibung = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
+				dav.getDataModel().getAspect(getPubAspektPid()));
 		try {
 			dav.subscribeSender(this, objekt, pubBeschreibung, SenderRole.source());
 		} catch (final OneSubscriptionPerSendData e) {
@@ -116,8 +117,8 @@ ClientSenderInterface {
 	 */
 	protected void abmelden() throws DUAInitialisierungsException {
 		if (paraAtg != null) {
-			DAV.unsubscribeReceiver(this, objekt, new DataDescription(paraAtg, DAV.getDataModel()
-					.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)));
+			DAV.unsubscribeReceiver(this, objekt, new DataDescription(paraAtg,
+					DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)));
 		}
 		DAV.unsubscribeSender(this, objekt, pubBeschreibung);
 		paraAtg = null;
@@ -160,17 +161,13 @@ ClientSenderInterface {
 	 */
 	protected abstract String getPubAspektPid();
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (final ResultData resultat : resultate) {
 				if (resultat != null) {
-					if ((paraAtg != null)
-							&& (resultat.getDataDescription().getAttributeGroup().getId() == paraAtg
-							.getId())) {
+					if ((paraAtg != null) && (resultat.getDataDescription().getAttributeGroup()
+							.getId() == paraAtg.getId())) {
 						/**
 						 * Parameter empfangen
 						 */
@@ -228,22 +225,15 @@ ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
 		sendenOk = state == ClientSenderInterface.START_SENDING;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {
 		return true;
 	}
-
 }

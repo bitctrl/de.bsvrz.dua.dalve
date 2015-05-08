@@ -77,9 +77,6 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 	/** letzte ermittelte Verkehrsstufe. */
 	protected StoerfallSituation letzteStufe = StoerfallSituation.KEINE_AUSSAGE;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -98,25 +95,16 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.verkehrsLageVerfahren2"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenNRW"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void berechneStoerfallIndikator(final ResultData resultat) {
 		Data data = null;
@@ -228,9 +216,6 @@ public class NrwStoerfallIndikatorFs extends AbstraktStoerfallIndikator {
 		return verkehrsStufe;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(final ResultData parameter) {
 		if (parameter.getData() != null) {
