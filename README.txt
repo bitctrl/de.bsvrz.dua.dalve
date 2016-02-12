@@ -2,8 +2,7 @@
 *  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE  *
 ************************************************************************************
 
-Version: 1.5.0
-
+Version: ${version}
 
 Übersicht
 =========

@@ -63,6 +63,7 @@
 			<source>README.txt</source>
 			<outputDirectory>${artifactId}</outputDirectory>
 			<destName>${artifactId}-Build-Report.txt</destName>
+			<filtered>true</filtered>
 		</file>
 		<file>
 			<source>${project.build.directory}/${artifactId}-${version}-tests.jar</source>
