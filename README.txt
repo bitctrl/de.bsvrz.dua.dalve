@@ -32,8 +32,10 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten
 Versionsgeschichte
 ==================
 
-1.5.0
+1.6.0
+- Umstellung auf Funclib-BitCtrl-Dua
 
+1.5.0
 - Umstellung auf Maven-Build
 
 1.4.0

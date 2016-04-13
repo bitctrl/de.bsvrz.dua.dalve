@@ -80,9 +80,9 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		if (PUB_BESCHREIBUNG == null) {
 			PUB_BESCHREIBUNG = new DataDescription(
 					dieVerwaltung.getVerbindung().getDataModel()
-					.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+							.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 					dieVerwaltung.getVerbindung().getDataModel()
-					.getAspect(DUAKonstanten.ASP_ANALYSE));
+							.getAspect(DUAKonstanten.ASP_ANALYSE));
 		}
 
 		/**
@@ -99,7 +99,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 			}
 		}
 
-		publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);
+		getPublikationsAnmeldungen().modifiziereObjektAnmeldung(anmeldungen);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 					final ResultData analyseDatum = getAnalyseDatum(resultat);
 					if (analyseDatum != null) {
 						fsAufDatenPuffer.put(resultat.getObject(), analyseDatum);
-						publikationsAnmeldungen.sende(analyseDatum);
+						getPublikationsAnmeldungen().sende(analyseDatum);
 					}
 				}
 			}
@@ -129,7 +129,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		ResultData ergebnis = null;
 
 		if (kurzZeitDatum.getData() != null) {
-			final Data analyseDatum = verwaltung.getVerbindung()
+			final Data analyseDatum = getVerwaltung().getVerbindung()
 					.createData(PUB_BESCHREIBUNG.getAttributeGroup());
 
 			analyseDatum.getTimeValue("T").setMillis(//$NON-NLS-1$
@@ -471,8 +471,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 					/**
 					 * Aenderung analog Mail von Herrn Kappich vom 27.03.08, 1400
 					 */
-					final AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = parameter
-							.get(kurzZeitDatum.getObject());
+							final AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = parameter
+									.get(kurzZeitDatum.getObject());
 
 					if (fsParameter.isInitialisiert()) {
 						final long kMax = fsParameter.getKBMax();
@@ -608,8 +608,8 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 						/**
 						 * Aenderung analog Mail von Herrn Kappich vom 27.03.08, 1400
 						 */
-						final AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = parameter
-								.get(kurzZeitDatum.getObject());
+								final AtgVerkehrsDatenKurzZeitAnalyseFs fsParameter = parameter
+										.get(kurzZeitDatum.getObject());
 						if (fsParameter.isInitialisiert()) {
 							long kGrenz = DUAKonstanten.MESSWERT_UNBEKANNT;
 							long kMax = DUAKonstanten.MESSWERT_UNBEKANNT;

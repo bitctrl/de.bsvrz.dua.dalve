@@ -195,25 +195,25 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 					if ((strassenSegment != null) && strassenSegment.isOfType("typ.straßenSegment")
 							&& (offset >= 0)) {
 						final Data ssData = strassenSegment.getConfigurationData(dDav.getDataModel()
-										.getAttributeGroup("atg.bestehtAusLinienObjekten"));
+								.getAttributeGroup("atg.bestehtAusLinienObjekten"));
 						if (ssData != null) {
 							double gesamtLaenge = 0;
 							for (int i = 0; i < ssData.getArray("LinienReferenz")
-											.getLength(); i++) {
+									.getLength(); i++) {
 								if (ssData.getReferenceArray("LinienReferenz")
-												.getReferenceValue(i) != null) {
+										.getReferenceValue(i) != null) {
 									final SystemObject sts = ssData
 											.getReferenceArray("LinienReferenz")
 											.getReferenceValue(i).getSystemObject();
 									if ((sts != null) && sts.isOfType("typ.straßenTeilSegment")) {
 										final Data stsData = sts.getConfigurationData(
-														dDav.getDataModel().getAttributeGroup("atg.linie"));
+												dDav.getDataModel().getAttributeGroup("atg.linie"));
 										if (stsData != null) {
 											final double laenge = stsData.getUnscaledValue("Länge")
 													.longValue() >= 0
 															? stsData.getScaledValue("Länge")
 																	.doubleValue()
-																	: -1.0;
+															: -1.0;
 											if (laenge >= 0) {
 												gesamtLaenge += laenge;
 											}
@@ -271,7 +271,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		super.initialisiere();
 
 		final ArgumentList argumentList = new ArgumentList(
-				komArgumente.toArray(new String[komArgumente.size()]));
+				getKomArgumente().toArray(new String[getKomArgumente().size()]));
 		ignoreDichteMax = argumentList.fetchArgument("-ignoreDichteMax=false").booleanValue();
 
 		ObjektFactory.getInstanz().setVerbindung(getVerbindung());
@@ -291,6 +291,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		/**
 		 * Initialisiere das DUA-Verkehrsnetz
 		 */
+		final ClientDavInterface verbindung = getVerbindung();
 		DuaVerkehrsNetz.initialisiere(verbindung);
 
 		/**
@@ -305,15 +306,15 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		final Collection<SystemObject> abschnitte = DUAUtensilien.getBasisInstanzen(
 				verbindung.getDataModel().getType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT), verbindung,
 				getKonfigurationsBereiche());
-		objekte = fahrStreifen.toArray(new SystemObject[0]);
+		addSystemObjekte(fahrStreifen);
 
 		final Collection<SystemObject> lveObjekte = new HashSet<>();
 		lveObjekte.addAll(fahrStreifen);
 		lveObjekte.addAll(messQuerschnitte);
 
 		String infoStr = Constants.EMPTY_STRING;
-		for (final SystemObject obj : objekte) {
-			infoStr += obj + "\n"; //$NON-NLS-1$
+		for (final SystemObject obj : getSystemObjekte()) {
+			infoStr += obj + "\n";
 		}
 		LOGGER.config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -336,11 +337,11 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		stoerfallObjekte.addAll(abschnitte);
 		new StoerfallModul().initialisiere(verbindung, stoerfallObjekte);
 
-		verbindung.subscribeReceiver(this, objekte,
+		verbindung.subscribeReceiver(this, getSystemObjekte(),
 				new DataDescription(
 						verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 						verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	@Override
