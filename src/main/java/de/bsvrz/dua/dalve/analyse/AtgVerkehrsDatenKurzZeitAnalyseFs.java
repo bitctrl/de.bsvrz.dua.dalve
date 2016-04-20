@@ -41,7 +41,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer
-implements ClientReceiverInterface {
+		implements ClientReceiverInterface {
 
 	/**
 	 * <code>kKfz.Grenz</code>.
