@@ -32,6 +32,9 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten
 Versionsgeschichte
 ==================
 
+1.6.1
+- Kompatibilität zu DuA-2.0 hergestellt
+
 1.6.0
 - Umstellung auf Funclib-BitCtrl-Dua
 

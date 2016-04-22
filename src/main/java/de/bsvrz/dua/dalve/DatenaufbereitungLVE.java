@@ -306,7 +306,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		final Collection<SystemObject> abschnitte = DUAUtensilien.getBasisInstanzen(
 				verbindung.getDataModel().getType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT), verbindung,
 				getKonfigurationsBereiche());
-		addSystemObjekte(fahrStreifen);
+		setSystemObjekte(fahrStreifen);
 
 		final Collection<SystemObject> lveObjekte = new HashSet<>();
 		lveObjekte.addAll(fahrStreifen);
