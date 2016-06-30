@@ -23,7 +23,7 @@
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
-		<java.version>7</java.version>
+		<java.version>8</java.version>
 		<project.status>BETA</project.status>
 		<project.standDatum>2015-03-17</project.standDatum>
 	</properties>
