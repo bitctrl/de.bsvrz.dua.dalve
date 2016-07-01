@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -35,16 +35,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
- * Liest die Ausgangsdaten f¸r die Pr¸fung der Datenaufbereitung LVE ein.
+ * Liest die Ausgangsdaten f√ºr die Pr√ºfung der Datenaufbereitung LVE ein.
  *
- * @author BitCtrl Systems GmbH, Gˆrlitz
+ * @author BitCtrl Systems GmbH, G√∂rlitz
  */
 public class TestErgebnisPrognoseImporter extends CSVImporter {
 
 	/** Verbindung zum Datenverteiler. */
 	protected static ClientDavInterface DAV = null;
 
-	/** H‰lt aktuelle Daten des FS 1-3. */
+	/** H√§lt aktuelle Daten des FS 1-3. */
 	protected String[] ZEILE;
 
 	/** T. */
@@ -53,16 +53,16 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 	/** Identifiziert einen Wert vom Typ Prognose. */
 	private static final String TYP_PROGNOSEWERT = "P";
 
-	/** Identifiziert einen Wert vom Typ Gegl‰ttet. */
+	/** Identifiziert einen Wert vom Typ Gegl√§ttet. */
 	private static final String TYP_GLATTWERT = "G";
 
-	/** Repr‰sentiert den Modus Flink. */
+	/** Repr√§sentiert den Modus Flink. */
 	private static final int MODUS_FLINK = 0;
 
-	/** Repr‰sentiert den Modus Normal. */
+	/** Repr√§sentiert den Modus Normal. */
 	private static final int MODUS_NORMAL = 1;
 
-	/** Repr‰sentiert den Modus Tr‰ge. */
+	/** Repr√§sentiert den Modus Tr√§ge. */
 	private static final int MODUS_TRAEGE = 2;
 
 	/**
@@ -73,7 +73,7 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 	 * @param csvQuelle
 	 *            Quelle der Daten (CSV-Datei)
 	 * @throws Exception
-	 *             falls dieses Objekt nicht vollst‰ndig initialisiert werden konnte
+	 *             falls dieses Objekt nicht vollst√§ndig initialisiert werden konnte
 	 */
 	public TestErgebnisPrognoseImporter(final ClientDavInterface dav, final String csvQuelle)
 			throws Exception {
@@ -83,7 +83,7 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 		}
 
 		/**
-		 * Tabellenkopf ¸berspringen
+		 * Tabellenkopf √ºberspringen
 		 */
 		getNaechsteZeile();
 	}
@@ -99,7 +99,7 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 	}
 
 	/**
-	 * Importiert die n‰chste Zeile aus der CSV-Datei.
+	 * Importiert die n√§chste Zeile aus der CSV-Datei.
 	 */
 	public final void importNaechsteZeile() {
 		ZEILE = getNaechsteZeile();
@@ -124,36 +124,36 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 	}
 
 	/**
-	 * Liefert einen Prognosedatensatz unter dem Aspekt Tr‰ge.
+	 * Liefert einen Prognosedatensatz unter dem Aspekt Tr√§ge.
 	 *
-	 * @return Einen Prognosedatensatz unter dem Aspekt Tr‰ge
+	 * @return Einen Prognosedatensatz unter dem Aspekt Tr√§ge
 	 */
 	public final Data getFSPrognoseTraegeDatensatz() {
 		return getFSProgGlattDatensatz(TYP_PROGNOSEWERT, MODUS_TRAEGE);
 	}
 
 	/**
-	 * Liefert einen Datensatz mit gegl‰tteten Werten unter dem Aspekt Flink.
+	 * Liefert einen Datensatz mit gegl√§tteten Werten unter dem Aspekt Flink.
 	 *
-	 * @return Einen Datensatz mit gegl‰tteten Werten unter dem Aspekt Flink
+	 * @return Einen Datensatz mit gegl√§tteten Werten unter dem Aspekt Flink
 	 */
 	public final Data getFSGeglaettetFlinkDatensatz() {
 		return getFSProgGlattDatensatz(TYP_GLATTWERT, MODUS_FLINK);
 	}
 
 	/**
-	 * Liefert einen Datensatz mit gegl‰tteten Werten unter dem Aspekt Normal.
+	 * Liefert einen Datensatz mit gegl√§tteten Werten unter dem Aspekt Normal.
 	 *
-	 * @return Einen Datensatz mit gegl‰tteten Werten unter dem Aspekt Normal
+	 * @return Einen Datensatz mit gegl√§tteten Werten unter dem Aspekt Normal
 	 */
 	public final Data getFSGeglaettetNormalDatensatz() {
 		return getFSProgGlattDatensatz(TYP_GLATTWERT, MODUS_NORMAL);
 	}
 
 	/**
-	 * Liefert einen Datensatz mit gegl‰tteten Werten unter dem Aspekt Tr‰ge.
+	 * Liefert einen Datensatz mit gegl√§tteten Werten unter dem Aspekt Tr√§ge.
 	 *
-	 * @return Einen Datensatz mit gegl‰tteten Werten unter dem Aspekt Tr‰ge
+	 * @return Einen Datensatz mit gegl√§tteten Werten unter dem Aspekt Tr√§ge
 	 */
 	public final Data getFSGeglaettetTraegeDatensatz() {
 		return getFSProgGlattDatensatz(TYP_GLATTWERT, MODUS_TRAEGE);
@@ -164,11 +164,11 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 	 * CSV-Zeile.
 	 *
 	 * @param attPraefix
-	 *            Entweder <code>P</code> f¸r einen Prognosedatensatz oder <code>G</code> f¸r einen
-	 *            Datensatz mit gegl‰tteten Werten
+	 *            Entweder <code>P</code> f√ºr einen Prognosedatensatz oder <code>G</code> f√ºr einen
+	 *            Datensatz mit gegl√§tteten Werten
 	 * @param mode
 	 *            the mode
-	 * @return ein Datensatz der ¸bergebenen Parametern mit den Daten der n‰chsten Zeile oder
+	 * @return ein Datensatz der √ºbergebenen Parametern mit den Daten der n√§chsten Zeile oder
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	private final Data getFSProgGlattDatensatz(final String attPraefix, final int mode) {
@@ -237,7 +237,7 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 	 *            the status
 	 * @param datensatz
 	 *            der Datensatz
-	 * @return der ver‰nderte Datensatz
+	 * @return der ver√§nderte Datensatz
 	 */
 	private final Data setAttribut(final String attributName, long wert, final String status,
 			final Data datensatz) {
@@ -333,9 +333,9 @@ public class TestErgebnisPrognoseImporter extends CSVImporter {
 		DUAUtensilien
 				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data).asUnscaledValue().set(intp); //$NON-NLS-1$
 		DUAUtensilien
-				.getAttributDatum(attributName + ".G¸te.Index", data).asScaledValue().set(guete); //$NON-NLS-1$
+				.getAttributDatum(attributName + ".G√ºte.Index", data).asScaledValue().set(guete); //$NON-NLS-1$
 		DUAUtensilien
-				.getAttributDatum(attributName + ".G¸te.Verfahren", data).asUnscaledValue().set(0); //$NON-NLS-1$
+				.getAttributDatum(attributName + ".G√ºte.Verfahren", data).asUnscaledValue().set(0); //$NON-NLS-1$
 
 		return datensatz;
 	}

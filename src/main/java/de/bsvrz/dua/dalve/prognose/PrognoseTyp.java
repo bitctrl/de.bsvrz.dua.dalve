@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -34,7 +34,7 @@ import de.bsvrz.dav.daf.main.config.AttributeGroup;
  * <ul>
  * <li><code>Flink</code></li>
  * <li><code>Normal</code></li>
- * <li><code>Tr‰ge</code></li>
+ * <li><code>Tr√§ge</code></li>
  * </ul>
  * .
  *
@@ -42,13 +42,13 @@ import de.bsvrz.dav.daf.main.config.AttributeGroup;
  */
 public class PrognoseTyp {
 
-	/** Prognosewerte folgen den Messwerten sehr schnell, geringe Gl‰ttung. */
+	/** Prognosewerte folgen den Messwerten sehr schnell, geringe Gl√§ttung. */
 	public static PrognoseTyp flink = null;
 
-	/** Prognosewerte folgen den Messwerten normal, normale Gl‰ttung. */
+	/** Prognosewerte folgen den Messwerten normal, normale Gl√§ttung. */
 	public static PrognoseTyp normal = null;
 
-	/** Prognosewerte folgen den Messwerten sehr langsam, starke Gl‰ttung. */
+	/** Prognosewerte folgen den Messwerten sehr langsam, starke Gl√§ttung. */
 	public static PrognoseTyp traege = null;
 
 	/** Der Aspekt. */
@@ -66,7 +66,7 @@ public class PrognoseTyp {
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param name
-	 *            <code>Flink</code>, <code>Normal</code> oder <code>Tr‰ge</code>
+	 *            <code>Flink</code>, <code>Normal</code> oder <code>Tr√§ge</code>
 	 */
 	private PrognoseTyp(final ClientDavInterface dav, final String name) {
 		aspekt = dav.getDataModel().getAspect("asp.prognose" + name); //$NON-NLS-1$
@@ -86,7 +86,7 @@ public class PrognoseTyp {
 		if (flink == null) {
 			flink = new PrognoseTyp(dav, "Flink"); //$NON-NLS-1$
 			normal = new PrognoseTyp(dav, "Normal"); //$NON-NLS-1$
-			traege = new PrognoseTyp(dav, "Tr‰ge"); //$NON-NLS-1$
+			traege = new PrognoseTyp(dav, "Tr√§ge"); //$NON-NLS-1$
 		}
 	}
 
@@ -100,13 +100,13 @@ public class PrognoseTyp {
 	}
 
 	/**
-	 * Erfragt die Parameterattributgruppe dieses Prognosetyps f¸r einen Fahrstreifen oder einen
+	 * Erfragt die Parameterattributgruppe dieses Prognosetyps f√ºr einen Fahrstreifen oder einen
 	 * Messquerschnitt.
 	 *
 	 * @param fuerFahrStreifen
-	 *            ob die Parameterattributgruppe f¸r einen Fahrstreifen <code>true</code> oder einen
-	 *            Messquerschnitt <code>false</code> benˆtigt wird
-	 * @return die Parameterattributgruppe dieses Prognosetyps f¸r einen Fahrstreifen oder einen
+	 *            ob die Parameterattributgruppe f√ºr einen Fahrstreifen <code>true</code> oder einen
+	 *            Messquerschnitt <code>false</code> ben√∂tigt wird
+	 * @return die Parameterattributgruppe dieses Prognosetyps f√ºr einen Fahrstreifen oder einen
 	 *         Messquerschnitt
 	 */
 	public final AttributeGroup getParameterAtg(final boolean fuerFahrStreifen) {

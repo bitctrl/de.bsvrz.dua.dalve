@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -214,21 +214,21 @@ implements ClientReceiverInterface {
 	/**
 	 * Erfragt die Gewichtungsfaktoren.<br>
 	 * Der Gewichtungsfaktor w(j) wird bei der Ermittlung der gewichteten Differenzgeschwindigkeit
-	 * VDelta(i) im Messquerschnitt i benötigt ref.Afo . Dabei wichtet der Faktor w(1) die
-	 * Differenzgeschwindigkeit zwischen dem Hauptfahrstreifen und dem 1. Überholfahrstreifen, w(2)
-	 * die Differenzgeschwindigkeit zwischen dem 1. ÜFS und dem 2.ÜFS usw.. Die Summe der
+	 * VDelta(i) im Messquerschnitt i benÃ¶tigt ref.Afo . Dabei wichtet der Faktor w(1) die
+	 * Differenzgeschwindigkeit zwischen dem Hauptfahrstreifen und dem 1. Ãœberholfahrstreifen, w(2)
+	 * die Differenzgeschwindigkeit zwischen dem 1. ÃœFS und dem 2.ÃœFS usw.. Die Summe der
 	 * Gewichtungsfaktoren muss eins sein. <br>
-	 * Über den Parameter wichtung wird der Gewichtungsfaktor ermittelt. Wenn das Array keine
-	 * Elemente enthält wird gleich gewichtet. D.h. die Differenzgeschwindigkeiten zwischen zwei
+	 * Ãœber den Parameter wichtung wird der Gewichtungsfaktor ermittelt. Wenn das Array keine
+	 * Elemente enthÃ¤lt wird gleich gewichtet. D.h. die Differenzgeschwindigkeiten zwischen zwei
 	 * benachbarten Fahrstreifen gehen zu gleichen Teilen in die Ermittlung von VDelta ein.<br>
 	 * Hinweis: Die Wichtung kann erst ab mindestens drei Fahrstreifen gesetzt werden. Wenn das
-	 * Array Elemente enthält werden die Werte für die Wichtung der Differenzgeschwindigkeiten
+	 * Array Elemente enthÃ¤lt werden die Werte fÃ¼r die Wichtung der Differenzgeschwindigkeiten
 	 * zwischen den benachbarten Fahrstreifen umgerechnet: <br>
-	 * Wenn zu wenig Werte vorgegeben sind, werden die weiteren benötigten Werte durch duplizieren
-	 * des letzten Wertes erzeugt. Für einen Messquerschnitt mit 4 Fahrstreifen werden z.B. drei
-	 * Werte benötigt. Ist als wichtung (60,40) parametriert, wird für die Ermittlung der
+	 * Wenn zu wenig Werte vorgegeben sind, werden die weiteren benÃ¶tigten Werte durch duplizieren
+	 * des letzten Wertes erzeugt. FÃ¼r einen Messquerschnitt mit 4 Fahrstreifen werden z.B. drei
+	 * Werte benÃ¶tigt. Ist als wichtung (60,40) parametriert, wird fÃ¼r die Ermittlung der
 	 * Gewichtungsfaktoren das Array (60,40,40) betrachtet. Wenn die Summe der Werte 100 Prozent
-	 * überschreitet oder unterschreitet werden die Gewichtungswerte auf 100 Prozent normiert. Damit
+	 * Ã¼berschreitet oder unterschreitet werden die Gewichtungswerte auf 100 Prozent normiert. Damit
 	 * ergeben sich aus dem obigen Beispiel folgende Wichtungswerte: w(1)=60/140, w(2)=w(3)=40/140.
 	 *
 	 * @return die Gewichtungsfaktoren

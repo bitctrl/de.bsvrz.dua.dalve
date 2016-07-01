@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -29,14 +29,14 @@
  * Prognosewerte auf Basis der LVE-Analysewerte fuer Fahrstreifen
  * und Messquerschnitte<br>
  * Attributgruppen:<br>
- * <code>atg.verkehrsDatenKurzZeitGegl‰ttetFs</code><br>
+ * <code>atg.verkehrsDatenKurzZeitGegl√§ttetFs</code><br>
  * <code>atg.verkehrsDatenKurzZeitTrendExtraPolationFs</code><br>
- * <code>atg.verkehrsDatenKurzZeitGegl‰ttetMq</code><br>
+ * <code>atg.verkehrsDatenKurzZeitGegl√§ttetMq</code><br>
  * <code>atg.verkehrsDatenKurzZeitTrendExtraPolationMq</code><br>
  * Aspekte:<br>
  * <code>asp.prognoseFlink</code><br>
  * <code>asp.prognoseNormal</code><br>
- * <code>asp.prognoseTr‰ge</code><br>
+ * <code>asp.prognoseTr√§ge</code><br>
  */
 
 package de.bsvrz.dua.dalve.prognose;

@@ -1,39 +1,42 @@
 ************************************************************************************
-*  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE  *
+*  Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE  *
 ************************************************************************************
 
 Version: ${version}
 
-Übersicht
+Ãœbersicht
 =========
 
 Die SWE Datenaufbereitung LVE dient der Aufbereitung von messwertersetzten Kurzzeitdaten.
 
-Sie ermittelt folgende Kenngrößen:
-•
+Sie ermittelt folgende KenngrÃ¶ÃŸen:
+Â•
   - Analysewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 115f.
-•  - Prognosewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 134f.
+Â•  - Prognosewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 134f.
 
-Weiterhin wird hier die lokale Störfallerkennung bzw. die Ermittlung der Verkehrslagen wie folgt
-durchgeführt:
-•
-  - Ermittlung spurbezogener Verkehrslagen (Störfallzustände), siehe [Afo] S. 151f.
+Weiterhin wird hier die lokale StÃ¶rfallerkennung bzw. die Ermittlung der Verkehrslagen wie folgt
+durchgefÃ¼hrt:
+Â•
+  - Ermittlung spurbezogener Verkehrslagen (StÃ¶rfallzustÃ¤nde), siehe [Afo] S. 151f.
   - Nach Verfahren I (MARZ)
   - Nach Verfahren II (NRW Verkehrslage)
-  - Ermittlung querschnittsorientierter Verkehrslagen (Störfallzustände), siehe [Afo] S. 154f.
+  - Ermittlung querschnittsorientierter Verkehrslagen (StÃ¶rfallzustÃ¤nde), siehe [Afo] S. 154f.
   - Nach Verfahren I (MARZ)
   - Nach Verfahren II (NRW Verkehrslage)
-  - Nach Verfahren III (NRW Verkehrslage für RDS-Meldungen)
+  - Nach Verfahren III (NRW Verkehrslage fÃ¼r RDS-Meldungen)
   - Nach Verfahren IV (Fundamentaldiagramm)
 
-Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten publiziert.
+SÃ¤mtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekten publiziert.
 
 
 Versionsgeschichte
 ==================
 
+1.7.0
+- Umstellung auf Java 8 und UTF-8
+
 1.6.1
-- Kompatibilität zu DuA-2.0 hergestellt
+- KompatibilitÃ¤t zu DuA-2.0 hergestellt
 
 1.6.0
 - Umstellung auf Funclib-BitCtrl-Dua
@@ -43,16 +46,16 @@ Versionsgeschichte
 
 1.4.0
 
-  - Für die Berechnung von VKfz am Messquerschnitt wird wenn VKFz eines Fahrstreifens nicht
+  - FÃ¼r die Berechnung von VKfz am Messquerschnitt wird wenn VKFz eines Fahrstreifens nicht
     ermittelbar ist, jetzt die Durchschnittsgeschwindigkeit aller anderen Fahrstreifen zur
     Berechnung herangezogen. Bisher wurde wenn VKfz eines Fahrstreifen nicht ermittelbar war, die
-    QKfz dieses Fahrstreifen mit in die Berechnung einbezogen, so das für den Mittelwert der
+    QKfz dieses Fahrstreifen mit in die Berechnung einbezogen, so das fÃ¼r den Mittelwert der
     Durchschnittsgeschwindigkeit mehr Fahrzeuge bekannt waren, als deren Geschwindigkeit. Das hat
-    die Durchschnittsgeschwindigkeit unverhältnismäßig nach unten gedrückt.
+    die Durchschnittsgeschwindigkeit unverhÃ¤ltnismÃ¤ÃŸig nach unten gedrÃ¼ckt.
 
 1.3.1
 
-  - mit dem Kommandozeilenparameter "-ignoreDichteMax=true" kann die Beschränkung der Dichtewerte
+  - mit dem Kommandozeilenparameter "-ignoreDichteMax=true" kann die BeschrÃ¤nkung der Dichtewerte
     auf den parametrierten Maximalwert abgeschaltet werden
 
 1.3.0
@@ -69,7 +72,7 @@ Versionsgeschichte
 
 1.2.1
 
-  - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
+  - FIX: SÃ¤mtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
      DataDescription(atg, asp)
 
 1.2.0
@@ -86,17 +89,17 @@ Versionsgeschichte
 
 1.0.0
 
-  - Erste vollständige Auslieferung
+  - Erste vollstÃ¤ndige Auslieferung
 
 1.0.0b
 
-  - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
+  - Erste Auslieferung (beta, nur teilweise nach PrÃ¼fspezifikation getestet)
 
 
 Bemerkungen
 ===========
 
-Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
+Diese SWE ist eine eigenstÃ¤ndige Datenverteiler-Applikation, welche Ã¼ber die Klasse
 de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werden kann
 (zusaetzlich zu den normalen Parametern jeder Datenverteiler-Applikation):
 	-KonfigurationsBereichsPid=pid(,pid)
@@ -104,11 +107,11 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 
 - Tests:
 
-	Die automatischen Tests, die in Zusammenhang mit der Prüfspezifikation durchgeführt
-	werden, sind noch nicht endgültig implementiert.
-	Für die Tests wird eine Verbindung zum Datenverteiler mit einer Konfiguration mit dem
-	Testkonfigurationsbereich "kb.duaTestObjekteSWE4.5" benötigt.
-	Die Verbindung wird über die statische Variable CON_DATA der Klasse
+	Die automatischen Tests, die in Zusammenhang mit der PrÃ¼fspezifikation durchgefÃ¼hrt
+	werden, sind noch nicht endgÃ¼ltig implementiert.
+	FÃ¼r die Tests wird eine Verbindung zum Datenverteiler mit einer Konfiguration mit dem
+	Testkonfigurationsbereich "kb.duaTestObjekteSWE4.5" benÃ¶tigt.
+	Die Verbindung wird Ã¼ber die statische Variable CON_DATA der Klasse
 	de.bsvrz.dua.dalve.DatenaufbereitungLVETest hergestellt.
 	Die Testdaten befinden sich im Verzeichnis extra.
 
@@ -136,8 +139,8 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 	- Interne unerwartete Fehler
 
 	WARNING:
-	- Fehler, die die Funktionalität grundsätzlich nicht
-	  beeinträchtigen, aber zum Datenverlust führen können
+	- Fehler, die die FunktionalitÃ¤t grundsÃ¤tzlich nicht
+	  beeintrÃ¤chtigen, aber zum Datenverlust fÃ¼hren kÃ¶nnen
 	- Nicht identifizierbare Konfigurationsbereiche
 	- Probleme beim Explorieren von Attributpfaden
 	  (von Plausibilisierungsbeschreibungen)
@@ -145,8 +148,8 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 	  nur eine Instanz erwartet wird
 	- Wenn Parameter nicht korrekt ausgelesen werden konnten
 	  bzw. nicht interpretierbar sind
-	- Wenn inkompatible Parameter übergeben wurden
-	- Wenn Parameter unvollständig sind
+	- Wenn inkompatible Parameter Ã¼bergeben wurden
+	- Wenn Parameter unvollstÃ¤ndig sind
 	- Wenn ein Wert bzw. Status nicht gesetzt werden konnte
 
 	INFO:
@@ -156,20 +159,20 @@ de.bsvrz.dua.dalve.DatenaufbereitungLVE mit folgenden Parametern gestartet werde
 	- Allgemeine Ausgaben, welche die Konfiguration betreffen
 	- Benutzte Konfigurationsbereiche der Applikation bzw.
 	  einzelner Funktionen innerhalb der Applikation
-	- Benutzte Objekte für Parametersteuerung von Applikationen
+	- Benutzte Objekte fÃ¼r Parametersteuerung von Applikationen
 	  (z.B. die Instanz der Datenflusssteuerung, die verwendet wird)
 	- An- und Abmeldungen von Daten beim Datenverteiler
 
 	FINE:
 	- Wenn Daten empfangen wurden, die nicht weiterverarbeitet
-	  (plausibilisiert) werden können (weil keine Parameter vorliegen)
+	  (plausibilisiert) werden kÃ¶nnen (weil keine Parameter vorliegen)
 	- Informationen, die nur zum Debugging interessant sind
 
 
 Disclaimer
 ==========
 
-Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
 Copyright (C) 2007 BitCtrl Systems GmbH
 
 This program is free software; you can redistribute it and/or modify it under
@@ -191,7 +194,7 @@ Kontakt
 =======
 
 BitCtrl Systems GmbH
-Weißenfelser Straße 67
+WeiÃŸenfelser StraÃŸe 67
 04229 Leipzig
 Phone: +49 341-490670
 mailto: info@bitctrl.de

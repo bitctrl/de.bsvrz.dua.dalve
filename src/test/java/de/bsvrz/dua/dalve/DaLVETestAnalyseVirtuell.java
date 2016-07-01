@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -66,7 +66,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 	public static SystemObject FS3 = null;
 
 	/**
-	 * Testfahrstreifenimporter für FS 1-3.
+	 * Testfahrstreifenimporter fÃ¼r FS 1-3.
 	 */
 	private TestFahrstreifenImporter importFS;
 
@@ -91,7 +91,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 	public void testMQVirtuell() throws Exception {
 
 		/*
-		 * Meldet Sender für KZD unter dem Aspekt Messwertersetzung an
+		 * Meldet Sender fÃ¼r KZD unter dem Aspekt Messwertersetzung an
 		 */
 		FS1 = dav.getDataModel().getObject("fs.1"); //$NON-NLS-1$
 		FS2 = dav.getDataModel().getObject("fs.2"); //$NON-NLS-1$
@@ -140,7 +140,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 			dav.sendData(resultat2);
 			dav.sendData(resultat3);
 
-			// Lese bei Importer und Prüfer den nächsten Datensatz ein
+			// Lese bei Importer und PrÃ¼fer den nÃ¤chsten Datensatz ein
 			importFS.importNaechsteZeile();
 
 			try {
@@ -149,7 +149,7 @@ public class DaLVETestAnalyseVirtuell implements ClientSenderInterface {
 				ex.printStackTrace();
 			}
 
-			// setze neue Prüfzeit
+			// setze neue PrÃ¼fzeit
 			aktZeit = System.currentTimeMillis();
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -36,7 +36,7 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
 /**
- * Abstrakte Klasse zum Einlesen von Parametern aus der CSV-Datei innerhalb der Pr¸fspezifikation.
+ * Abstrakte Klasse zum Einlesen von Parametern aus der CSV-Datei innerhalb der Pr√ºfspezifikation.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -48,11 +48,11 @@ public class ParaAnaProgImportMQAlsFS extends AbstractParaAnaProgImport {
 	 * @param dav
 	 *            Datenverteier-Verbindung
 	 * @param objekt
-	 *            das Systemobjekt, f¸r das die Parameter gesetzt werden sollen
+	 *            das Systemobjekt, f√ºr das die Parameter gesetzt werden sollen
 	 * @param csvQuelle
 	 *            Quelle der Daten (CSV-Datei)
 	 * @throws Exception
-	 *             falls dieses Objekt nicht vollst‰ndig initialisiert werden konnte
+	 *             falls dieses Objekt nicht vollst√§ndig initialisiert werden konnte
 	 */
 	public ParaAnaProgImportMQAlsFS(final ClientDavInterface dav, final SystemObject[] objekt,
 			final String csvQuelle) throws Exception {
@@ -67,7 +67,7 @@ public class ParaAnaProgImportMQAlsFS extends AbstractParaAnaProgImport {
 		ATG_PrognoseNormal = DAV.getDataModel().getAttributeGroup(
 				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq"); //$NON-NLS-1$
 		ATG_PrognoseTraege = DAV.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTr‰geMq"); //$NON-NLS-1$
+				"atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTr√§geMq"); //$NON-NLS-1$
 		ATG_VLVERFAHREN1 = DAV.getDataModel().getAttributeGroup("atg.verkehrsLageVerfahren1");
 		ATG_VLVERFAHREN2 = DAV.getDataModel().getAttributeGroup("atg.verkehrsLageVerfahren2");
 
@@ -105,12 +105,12 @@ public class ParaAnaProgImportMQAlsFS extends AbstractParaAnaProgImport {
 	}
 
 	/**
-	 * F¸hrt den Parameterimport aus.
+	 * F√ºhrt den Parameterimport aus.
 	 *
 	 * @param index
 	 *            der index
 	 * @throws Exception
-	 *             wenn die Parameter nicht vollst‰ndig importiert werden konnten
+	 *             wenn die Parameter nicht vollst√§ndig importiert werden konnten
 	 */
 	@Override
 	public void importiereParameterAnalyse(final int index) throws Exception {

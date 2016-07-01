@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -41,9 +41,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Prüft (Vergleicht) Analyse-Datensätze der Fahrstreifen.
+ * PrÃ¼ft (Vergleicht) Analyse-DatensÃ¤tze der Fahrstreifen.
  *
- * @author Görlitz
+ * @author GÃ¶rlitz
  */
 public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 
@@ -56,16 +56,16 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 	/** Datenverteilerverbindung. */
 	private ClientDavInterface dav = null;
 
-	/** Empfangsdatenbeschreibung für Störfallindikator vstMARZ. */
+	/** Empfangsdatenbeschreibung fÃ¼r StÃ¶rfallindikator vstMARZ. */
 	private DataDescription DD_vst_MARZ = null;
 
-	/** Empfangsdatenbeschreibung für Störfallindikator vstNRW. */
+	/** Empfangsdatenbeschreibung fÃ¼r StÃ¶rfallindikator vstNRW. */
 	private DataDescription DD_vst_NRW = null;
 
-	/** Empfangsdatenbeschreibung für Störfallindikator vstRDS. */
+	/** Empfangsdatenbeschreibung fÃ¼r StÃ¶rfallindikator vstRDS. */
 	private DataDescription DD_vst_RDS = null;
 
-	/** Ergbnisimporter für Störfallindikatoren des FS. */
+	/** Ergbnisimporter fÃ¼r StÃ¶rfallindikatoren des FS. */
 	private final TestErgebnisStoerfallImporter importSF;
 
 	/** Halten das aktuelle SOLL-Ergebnis der CSV-Datei. */
@@ -80,7 +80,7 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 	/** Zeitstempel, auf den gewartet wird. */
 	private long pruefZeit;
 
-	/** Gibt den Prüfungsabschluss des jeweiligen Störfalles an. */
+	/** Gibt den PrÃ¼fungsabschluss des jeweiligen StÃ¶rfalles an. */
 	private boolean pruefungVstMARZfertig = false;
 
 	/** The pruefung vst nr wfertig. */
@@ -89,7 +89,7 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 	/** The pruefung vst rd sfertig. */
 	private boolean pruefungVstRDSfertig = false;
 
-	/** ID der StörfallIndikator. */
+	/** ID der StÃ¶rfallIndikator. */
 	protected static final int ID_MARZ = 0;
 
 	/** The Constant ID_NRW. */
@@ -101,7 +101,7 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 	/** Aufrufende Klasse. */
 	private final DaLVETestPrognose caller;
 
-	/** Prüferthreads für Störfallindikatoren. */
+	/** PrÃ¼ferthreads fÃ¼r StÃ¶rfallindikatoren. */
 	private final VergleicheDaLVEStoerfall verglVstMARZ = new VergleicheDaLVEStoerfall(this,
 			ID_MARZ);
 
@@ -121,7 +121,7 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 	private final SystemObject MQ;
 
 	/**
-	 * Initialisiert Prüferobjekt.
+	 * Initialisiert PrÃ¼ferobjekt.
 	 *
 	 * @param caller
 	 *            the caller
@@ -149,19 +149,19 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 		this.MQ = MQ;
 
 		/*
-		 * Empfängeranmeldung aller Störfallindikatoren
+		 * EmpfÃ¤ngeranmeldung aller StÃ¶rfallindikatoren
 		 */
 		DD_vst_MARZ = new DataDescription(
-				this.dav.getDataModel().getAttributeGroup("atg.störfallZustand"), //$NON-NLS-1$
-				this.dav.getDataModel().getAspect("asp.störfallVerfahrenMARZ")); //$NON-NLS-1$
+				this.dav.getDataModel().getAttributeGroup("atg.stÃ¶rfallZustand"), //$NON-NLS-1$
+				this.dav.getDataModel().getAspect("asp.stÃ¶rfallVerfahrenMARZ")); //$NON-NLS-1$
 
 		DD_vst_NRW = new DataDescription(
-				this.dav.getDataModel().getAttributeGroup("atg.störfallZustand"), //$NON-NLS-1$
-				this.dav.getDataModel().getAspect("asp.störfallVerfahrenNRW")); //$NON-NLS-1$
+				this.dav.getDataModel().getAttributeGroup("atg.stÃ¶rfallZustand"), //$NON-NLS-1$
+				this.dav.getDataModel().getAspect("asp.stÃ¶rfallVerfahrenNRW")); //$NON-NLS-1$
 
 		DD_vst_RDS = new DataDescription(
-				this.dav.getDataModel().getAttributeGroup("atg.störfallZustand"), //$NON-NLS-1$
-				this.dav.getDataModel().getAspect("asp.störfallVerfahrenRDS")); //$NON-NLS-1$
+				this.dav.getDataModel().getAttributeGroup("atg.stÃ¶rfallZustand"), //$NON-NLS-1$
+				this.dav.getDataModel().getAspect("asp.stÃ¶rfallVerfahrenRDS")); //$NON-NLS-1$
 
 		dav.subscribeReceiver(this, FS, DD_vst_MARZ, ReceiveOptions.normal(),
 				ReceiverRole.receiver());
@@ -175,14 +175,14 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 		 */
 		importSF = new TestErgebnisStoerfallImporter(dav, csvQuelle);
 
-		System.out.println("Prüferklasse für Störfallindikatoren initialisiert"); //$NON-NLS-1$
+		System.out.println("PrÃ¼ferklasse fÃ¼r StÃ¶rfallindikatoren initialisiert"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Liefert die Bezeichnung des StörfallIndikators der übergebenen Verfahrens-ID.
+	 * Liefert die Bezeichnung des StÃ¶rfallIndikators der Ã¼bergebenen Verfahrens-ID.
 	 *
 	 * @param idSF
-	 *            Die ID des StörfallIndikators dessen Bezeichnung angefordert wird
+	 *            Die ID des StÃ¶rfallIndikators dessen Bezeichnung angefordert wird
 	 * @return Die Bezeichnung des Verfahrens
 	 */
 	protected String getStoerfallIndikatorBezeichnung(final int idSF) {
@@ -201,10 +201,10 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 	}
 
 	/**
-	 * Importiert nächsten Ergebnisdatensatz und setzt Prüfzeitstempel.
+	 * Importiert nÃ¤chsten Ergebnisdatensatz und setzt PrÃ¼fzeitstempel.
 	 *
 	 * @param pruefZeit
-	 *            Prüfzeitstempel
+	 *            PrÃ¼fzeitstempel
 	 */
 	public void naechsterDatensatz(final long pruefZeit) {
 		this.pruefZeit = pruefZeit;
@@ -220,11 +220,11 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 	}
 
 	/**
-	 * Wird von den Prüferthreads getriggert und benachrichtigt, wenn die Prüfung aller
-	 * Störfallindikatoren abgeschlossen ist, die Aufrufende Klasse.
+	 * Wird von den PrÃ¼ferthreads getriggert und benachrichtigt, wenn die PrÃ¼fung aller
+	 * StÃ¶rfallindikatoren abgeschlossen ist, die Aufrufende Klasse.
 	 *
 	 * @param idSF
-	 *            ID des StörfallIndikators des Prüferthreads (1-3)
+	 *            ID des StÃ¶rfallIndikators des PrÃ¼ferthreads (1-3)
 	 */
 	public void doNotify(final int idSF) {
 		switch (idSF) {
@@ -245,7 +245,7 @@ public class PruefeDaLVEStoerfall implements ClientReceiverInterface {
 		if ((pruefungVstMARZfertig && pruefungVstNRWfertig && pruefungVstRDSfertig)
 				|| !DaLVETestPrognose.PR_STOERFALL) {
 			// if((pruefungVstMARZfertig && pruefungVstNRWfertig) || !caller.prStoerfall) {
-			LOGGER.info("Alle Störfallindikatoren geprüft. Benachrichtige Hauptthread..."); //$NON-NLS-1$
+			LOGGER.info("Alle StÃ¶rfallindikatoren geprÃ¼ft. Benachrichtige Hauptthread..."); //$NON-NLS-1$
 			caller.doNotify(DaLVETestPrognose.ID_PRUEFER_STOERFALL);
 		}
 	}
@@ -288,12 +288,12 @@ class VergleicheDaLVEStoerfall extends Thread {
 	private final PruefeDaLVEStoerfall caller;
 
 	/**
-	 * Zu prüfende ID des StoerfallVerfahrens
+	 * Zu prÃ¼fende ID des StoerfallVerfahrens
 	 */
 	private final int id_SF;
 
 	/**
-	 * Zu prüfender StoerfallIndikator
+	 * Zu prÃ¼fender StoerfallIndikator
 	 */
 	private final String stoerfallInidikator;
 
@@ -309,18 +309,18 @@ class VergleicheDaLVEStoerfall extends Thread {
 	private int csvIndex;
 
 	/**
-	 * Initialisiert Prüferthread
+	 * Initialisiert PrÃ¼ferthread
 	 *
 	 * @param caller
 	 *            Aufrufende Klasse
 	 * @param id_SF
-	 *            Zu prüfender Störfallindikator
+	 *            Zu prÃ¼fender StÃ¶rfallindikator
 	 */
 	public VergleicheDaLVEStoerfall(final PruefeDaLVEStoerfall caller, final int id_SF) {
 		this.caller = caller;
 		this.id_SF = id_SF;
 		stoerfallInidikator = caller.getStoerfallIndikatorBezeichnung(id_SF);
-		System.out.println("Prüfthread [PT] (" + stoerfallInidikator + ") initialisiert"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("PrÃ¼fthread [PT] (" + stoerfallInidikator + ") initialisiert"); //$NON-NLS-1$ //$NON-NLS-2$
 		// starte Thread
 		start();
 	}
@@ -345,13 +345,13 @@ class VergleicheDaLVEStoerfall extends Thread {
 	}
 
 	/**
-	 * Prüfthread
+	 * PrÃ¼fthread
 	 */
 	@Override
 	public void run() {
-		// Thread läuft bis Programmende
+		// Thread lÃ¤uft bis Programmende
 		while (true) {
-			// warte nit prüfung bis geweckt
+			// warte nit prÃ¼fung bis geweckt
 			doWait();
 
 			// vergleiche
@@ -360,7 +360,7 @@ class VergleicheDaLVEStoerfall extends Thread {
 	}
 
 	/**
-	 * Führt vergleich durch
+	 * FÃ¼hrt vergleich durch
 	 *
 	 */
 	private void doVergleich() {
@@ -406,12 +406,12 @@ class VergleicheDaLVEStoerfall extends Thread {
 
 		LOGGER.info(loggerOut);
 
-		// Benachrichtige aufrufende Klasse und übermittle SF-ID
+		// Benachrichtige aufrufende Klasse und Ã¼bermittle SF-ID
 		caller.doNotify(id_SF);
 	}
 
 	/**
-	 * Laesst Prüfthread warten
+	 * Laesst PrÃ¼fthread warten
 	 *
 	 */
 	private void doWait() {

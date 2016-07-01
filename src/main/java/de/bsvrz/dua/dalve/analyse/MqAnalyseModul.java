@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -48,9 +48,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Modul in dem die Analyse der einzelnen Messquerschnitte (auch virtuell) angeschoben wird. Für
+ * Modul in dem die Analyse der einzelnen Messquerschnitte (auch virtuell) angeschoben wird. FÃ¼r
  * jeden betrachteten MQ und VMQ wird ein Objekt angelegt, dass auf die Daten der assoziierten
- * Objekte (Fahrstreifen oder MQs) lauscht und ggf. über diese Klasse ein Analysedatum publiziert
+ * Objekte (Fahrstreifen oder MQs) lauscht und ggf. Ã¼ber diese Klasse ein Analysedatum publiziert
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -81,7 +81,7 @@ public class MqAnalyseModul {
 	 * @param verwaltung
 	 *            eine Verbindung zum Verwaltungsmodul
 	 * @throws DUAInitialisierungsException
-	 *             wenn die Initialisierung wenigstens eines Messquerschnittes fehlschlägt
+	 *             wenn die Initialisierung wenigstens eines Messquerschnittes fehlschlÃ¤gt
 	 */
 	public final void initialisiere(final IVerwaltung verwaltung)
 			throws DUAInitialisierungsException {
@@ -129,7 +129,7 @@ public class MqAnalyseModul {
 		LOGGER.config(configLog + "\n---"); //$NON-NLS-1$
 
 		/**
-		 * Publikationsbeschreibung für Analysewerte von allgemeinen MQs
+		 * Publikationsbeschreibung fÃ¼r Analysewerte von allgemeinen MQs
 		 */
 		sender = new DAVSendeAnmeldungsVerwaltung(verwaltung.getVerbindung(), SenderRole.source());
 		pubBeschreibung = new DataDescription(

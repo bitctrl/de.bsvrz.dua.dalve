@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -39,8 +39,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Instanzen dieser Klasse repräsentieren Q-Werte die entsprechend SE-02.00.00.00.00-AFo-4.0 (S.121)
- * additiv und subtraktiv miteinander verknüpft werden können.
+ * Instanzen dieser Klasse reprÃ¤sentieren Q-Werte die entsprechend SE-02.00.00.00.00-AFo-4.0 (S.121)
+ * additiv und subtraktiv miteinander verknÃ¼pft werden kÃ¶nnen.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -101,7 +101,7 @@ public class QWert {
 
 	/**
 	 * Erfragt, ob dieses Datum verrechenbar ist. Dies ist dann der Fall, wenn das Datum Nutzdaten
-	 * enthält, die <code> &gt;= 0</code> sind
+	 * enthÃ¤lt, die <code> &gt;= 0</code> sind
 	 *
 	 * @return ob dieses Datum verrechenbar ist
 	 */
@@ -110,11 +110,11 @@ public class QWert {
 	}
 
 	/**
-	 * Erfragt, ob der in diesem Objekt stehende Wert in das übergebene Datum exportierbar ist.
+	 * Erfragt, ob der in diesem Objekt stehende Wert in das Ã¼bergebene Datum exportierbar ist.
 	 *
 	 * @param datum
 	 *            ein KZD-Nutzdatum
-	 * @return ob der in diesem Objekt stehende Wert in das übergebene Datum exportierbar ist
+	 * @return ob der in diesem Objekt stehende Wert in das Ã¼bergebene Datum exportierbar ist
 	 */
 	public final boolean isExportierbarNach(final Data datum) {
 		boolean exportierbar = false;
@@ -129,9 +129,9 @@ public class QWert {
 	}
 
 	/**
-	 * Erfragt den aktuellen Zustand des Messwertes, der von diesem Objekt repräsentiert wird.
+	 * Erfragt den aktuellen Zustand des Messwertes, der von diesem Objekt reprÃ¤sentiert wird.
 	 *
-	 * @return der aktuelle Zustand des Messwertes, der von diesem Objekt repräsentiert wird
+	 * @return der aktuelle Zustand des Messwertes, der von diesem Objekt reprÃ¤sentiert wird
 	 */
 	public final MesswertUnskaliert getWert() {
 		return wert;
@@ -147,7 +147,7 @@ public class QWert {
 	}
 
 	/**
-	 * Berechnet die Summe der beiden übergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
+	 * Berechnet die Summe der beiden Ã¼bergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
 	 * (S.121).
 	 *
 	 * @param summanden
@@ -217,7 +217,7 @@ public class QWert {
 	}
 
 	/**
-	 * Berechnet die Summe der beiden übergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
+	 * Berechnet die Summe der beiden Ã¼bergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
 	 * (S.121).
 	 *
 	 * @param summand1
@@ -281,14 +281,14 @@ public class QWert {
 	}
 
 	/**
-	 * Berechnet die Differenz der beiden übergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
+	 * Berechnet die Differenz der beiden Ã¼bergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
 	 * (S.121).
 	 *
 	 * @param minuend
 	 *            der Minuend
 	 * @param subtrahend
 	 *            der Subtrahend
-	 * @return die Differenz der beiden übergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
+	 * @return die Differenz der beiden Ã¼bergebenen Werte entsprechend SE-02.00.00.00.00-AFo-4.0
 	 *         (S.121) oder <code>null</code>, wenn diese nicht ermittelt werden konnte
 	 */
 	public static final QWert differenz(final QWert minuend, final QWert subtrahend) {

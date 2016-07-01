@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -46,7 +46,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Repr‰sentiert einen Stoerfallindikator.
+ * Repr√§sentiert einen Stoerfallindikator.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -61,7 +61,7 @@ implements ClientReceiverInterface, ClientSenderInterface {
 	/** Das Objekt, fuer dass der Stoerfallzustand berechnet werden soll. */
 	protected SystemObject objekt = null;
 
-	/** Indiziert, ob ein Abnehmer f¸r die Daten dieses Objektes da ist. */
+	/** Indiziert, ob ein Abnehmer f√ºr die Daten dieses Objektes da ist. */
 	protected boolean sendenOk = false;
 
 	/** Parameter Attributgruppe. */
@@ -82,7 +82,7 @@ implements ClientReceiverInterface, ClientSenderInterface {
 	 * @param objekt
 	 *            das Objekt, fuer dass der Stoerfallzustand berechnet werden soll
 	 * @throws DUAInitialisierungsException
-	 *             wenn dieses Objekt nicht vollst‰ndig initialisiert werden konnte
+	 *             wenn dieses Objekt nicht vollst√§ndig initialisiert werden konnte
 	 */
 	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
 			throws DUAInitialisierungsException {

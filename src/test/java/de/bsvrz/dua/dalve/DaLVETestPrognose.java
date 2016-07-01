@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -45,9 +45,9 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Überprüfung der Prognosewerte und Störfallindikatoren.
+ * ÃœberprÃ¼fung der Prognosewerte und StÃ¶rfallindikatoren.
  *
- * @author Görlitz
+ * @author GÃ¶rlitz
  */
 public class DaLVETestPrognose implements ClientSenderInterface {
 
@@ -63,16 +63,16 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	/** Testdatenverzeichnis. */
 	private final String TEST_DATEN_VERZ;
 
-	/** Zu prüfender FS. */
+	/** Zu prÃ¼fender FS. */
 	private final SystemObject FS1;
 
-	/** Zu prüfender MQ. */
+	/** Zu prÃ¼fender MQ. */
 	private final SystemObject MQ1;
 
-	/** Sende-Datenbeschreibung für KZD (FS). */
+	/** Sende-Datenbeschreibung fÃ¼r KZD (FS). */
 	public static DataDescription DD_KZD_SEND_FS = null;
 
-	/** Sende-Datenbeschreibung für KZD (QM). */
+	/** Sende-Datenbeschreibung fÃ¼r KZD (QM). */
 	public static DataDescription DD_KZD_SEND_MQ = null;
 
 	/** Datenimporter (FS). */
@@ -84,26 +84,26 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	/** Sollen Asserts genutzt werden. */
 	private boolean useAssert;
 
-	/** ID der Prüferklasse für Prognosedaten. */
+	/** ID der PrÃ¼ferklasse fÃ¼r Prognosedaten. */
 	public static final int ID_PRUEFER_PROGNOSE = 0;
 
-	/** ID der Prüferklasse für StörfallIndikatoren. */
+	/** ID der PrÃ¼ferklasse fÃ¼r StÃ¶rfallIndikatoren. */
 	public static final int ID_PRUEFER_STOERFALL = 1;
 
-	/** Gibt an ob die Prüferklasse für Prognosedaten die Prüfung abgeschlossen hat. */
+	/** Gibt an ob die PrÃ¼ferklasse fÃ¼r Prognosedaten die PrÃ¼fung abgeschlossen hat. */
 	private boolean prPrognoseFertig = false;
 
-	/** Gibt an, ob die StörfallIndikatoren-Prüfung abgeschlossen ist. */
+	/** Gibt an, ob die StÃ¶rfallIndikatoren-PrÃ¼fung abgeschlossen ist. */
 	private boolean prStoerfallFertig = false;
 
 	/** Die erlaubte Abweichung zwischen erwartetem und geliefertem Wert. */
 	private int ergebnisWertToleranz = 0;
 
-	/** Gibt an, ob eine Überprüfung der Störfallindikatoren durchgeführt werden soll. */
+	/** Gibt an, ob eine ÃœberprÃ¼fung der StÃ¶rfallindikatoren durchgefÃ¼hrt werden soll. */
 	private boolean testStoerfall = true;
 
 	/**
-	 * Initialsiert die Überprüfung der Prognosewerte und Störfallindikatoren.
+	 * Initialsiert die ÃœberprÃ¼fung der Prognosewerte und StÃ¶rfallindikatoren.
 	 *
 	 * @param dav
 	 *            Datenverteilerverbindung
@@ -125,7 +125,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 		Debug.init("DatenaufbereitungLVEPrognose", alLogger); //$NON-NLS-1$
 
 		/*
-		 * Meldet Sender für KZD unter dem Aspekt Analyse an
+		 * Meldet Sender fÃ¼r KZD unter dem Aspekt Analyse an
 		 */
 		FS1 = this.dav.getDataModel().getObject("AAA.Test.fs.kzd.1"); //$NON-NLS-1$
 		MQ1 = this.dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
@@ -171,29 +171,29 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	 *             the exception
 	 */
 	public void testPrognose() throws Exception {
-		System.out.println("Prüfe Datenaufbereitung LVE - Prognosewerte..."); //$NON-NLS-1$
+		System.out.println("PrÃ¼fe Datenaufbereitung LVE - Prognosewerte..."); //$NON-NLS-1$
 
 		Data zeileFS1;
 		Data zeileMQ1;
 
-		// aktueller Prüfzeitstempel
+		// aktueller PrÃ¼fzeitstempel
 		long aktZeit = System.currentTimeMillis();
 
 		int csvIndex = 2;
 
 		/*
-		 * Prüferklasse Prognosewerte Empfängt Daten und vergleicht mit SOLL-Wert
+		 * PrÃ¼ferklasse Prognosewerte EmpfÃ¤ngt Daten und vergleicht mit SOLL-Wert
 		 */
 		final PruefeDaLVEPrognose prDaLVEPrognose = new PruefeDaLVEPrognose(this, dav,
 				new SystemObject[] { FS1 }, TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
 
 		/*
-		 * Prüferklasse Prognosewerte Empfängt Daten und vergleicht mit SOLL-Wert
+		 * PrÃ¼ferklasse Prognosewerte EmpfÃ¤ngt Daten und vergleicht mit SOLL-Wert
 		 */
 		final PruefeDaLVEStoerfall prDaLVEStoerfall = new PruefeDaLVEStoerfall(this, dav, FS1, MQ1,
 				TEST_DATEN_VERZ + "Prognose", useAssert); //$NON-NLS-1$
 
-		// Lese bei Importer und Prüfer den nächsten Datensatz ein
+		// Lese bei Importer und PrÃ¼fer den nÃ¤chsten Datensatz ein
 		importFS.importNaechsteZeile();
 		importMQ.importNaechsteZeile();
 		prDaLVEPrognose.naechsterDatensatz(aktZeit);
@@ -201,7 +201,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 			prDaLVEStoerfall.naechsterDatensatz(aktZeit);
 		}
 
-		// Prüfe solange Daten vorhanden
+		// PrÃ¼fe solange Daten vorhanden
 		while ((zeileFS1 = importFS.getDatensatz(1)) != null) {
 			zeileMQ1 = importMQ.getDatensatz();
 
@@ -216,16 +216,16 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 				dav.sendData(resultatFS);
 				dav.sendData(resultatMQ);
 
-				// Warte auf Prüfungsabschluss aller FS für diesen Datensatz
+				// Warte auf PrÃ¼fungsabschluss aller FS fÃ¼r diesen Datensatz
 				doWait();
 			}
 
 			csvIndex++;
 
-			// setze neue Prüfzeit
+			// setze neue PrÃ¼fzeit
 			aktZeit = aktZeit + Constants.MILLIS_PER_MINUTE;
 
-			// Lese bei Importer und Prüfer den nächsten Datensatz ein
+			// Lese bei Importer und PrÃ¼fer den nÃ¤chsten Datensatz ein
 			importFS.importNaechsteZeile();
 			importMQ.importNaechsteZeile();
 			prDaLVEPrognose.naechsterDatensatz(aktZeit);
@@ -239,7 +239,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	}
 
 	/**
-	 * Lässt Thread warten.
+	 * LÃ¤sst Thread warten.
 	 *
 	 * @throws Exception
 	 *             the exception
@@ -251,7 +251,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	}
 
 	/**
-	 * Weckt Thread wenn Prognose- und Störfalldaten verglichen wurden.
+	 * Weckt Thread wenn Prognose- und StÃ¶rfalldaten verglichen wurden.
 	 *
 	 * @param id_Pruefer
 	 *            the id_ pruefer
@@ -337,7 +337,7 @@ public class DaLVETestPrognose implements ClientSenderInterface {
 	}
 
 	/**
-	 * Soll eine Überprüfung der Störfallindikatoren durchgeführt werden.
+	 * Soll eine ÃœberprÃ¼fung der StÃ¶rfallindikatoren durchgefÃ¼hrt werden.
 	 *
 	 * @param testStoerfall
 	 *            the new test stoerfall

@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -55,7 +55,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte eines
  * Messquerschnitts notwendig sind gespeichert. Jedes mit dem MQ assoziierte Fahrstreifendatum muss
  * durch dieses Objekt (Methode <code>trigger(..)</code>) geleitet werden um ggf. auch eine neue
- * Berechnung von Analysewerten auszulösen.
+ * Berechnung von Analysewerten auszulÃ¶sen.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -74,7 +74,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	protected SystemObject messQuerschnitt = null;
 
 	/**
-	 * letztes für diesen Messquerschnitt errechnetes (veröffentlichtes) Ergebnis.
+	 * letztes fÃ¼r diesen Messquerschnitt errechnetes (verÃ¶ffentlichtes) Ergebnis.
 	 */
 	protected ResultData letztesErgebnis = null;
 
@@ -99,7 +99,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	private ErfassungsIntervallDauerMQ mqT = null;
 
 	/**
-	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurück. Nach dieser
+	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurÃ¼ck. Nach dieser
 	 * Initialisierung ist das Objekt auf alle Daten (seiner assoziierten Fahrstreifen) angemeldet
 	 * und analysiert ggf. Daten
 	 *
@@ -109,7 +109,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 *            der Messquerschnitt
 	 * @return die initialisierte Instanz dieses Objekts
 	 * @throws DUAInitialisierungsException
-	 *             wenn die Konfigurationsdaten des MQs nicht vollständig ausgelesen werden konnte
+	 *             wenn die Konfigurationsdaten des MQs nicht vollstÃ¤ndig ausgelesen werden konnte
 	 */
 	public DaAnalyseMessQuerschnitt initialisiere(final MqAnalyseModul analyseModul,
 			final SystemObject messQuerschnitt1) throws DUAInitialisierungsException {
@@ -156,7 +156,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	}
 
 	/**
-	 * Dieser Methode sollten alle aktuellen Daten für alle mit diesem Messquerschnitt assoziierten
+	 * Dieser Methode sollten alle aktuellen Daten fÃ¼r alle mit diesem Messquerschnitt assoziierten
 	 * Fahrstreifen uebergeben werden. Ggf. wird dadurch dann eine Berechnung der Analysewerte
 	 * dieses Messquerschnittes ausgeluest.
 	 *
@@ -170,7 +170,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		aktuelleFSAnalysen.put(triggerDatum.getObject(), triggerDatum);
 
 		/**
-		 * Ein Analysedatum fuer den Fahrstreifen soll dann berechnet werden, wenn für alle
+		 * Ein Analysedatum fuer den Fahrstreifen soll dann berechnet werden, wenn fÃ¼r alle
 		 * Fahrstreifen, welche Nutzdaten haben (aber mindestenes einer) ein Datum mit dem gleichen
 		 * Zeitstempel gekommen ist.
 		 */
@@ -230,7 +230,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 			if (mqT.getT() != ErfassungsIntervallDauerMQ.NICHT_EINHEITLICH) {
 
 				/**
-				 * Berechne Verkehrsstärken
+				 * Berechne VerkehrsstÃ¤rken
 				 */
 				berechneVerkehrsStaerke(analyseDatum, "Kfz"); //$NON-NLS-1$
 				berechneVerkehrsStaerke(analyseDatum, "Lkw"); //$NON-NLS-1$
@@ -267,7 +267,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 				berechneDichte(analyseDatum, "Pkw"); //$NON-NLS-1$
 
 				/**
-				 * Bemessungsverkehrsstärke
+				 * BemessungsverkehrsstÃ¤rke
 				 */
 				berechneBemessungsVerkehrsstaerke(analyseDatum);
 
@@ -286,7 +286,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 					analyseDatum);
 
 			/**
-			 * Puffer wieder zurücksetzen
+			 * Puffer wieder zurÃ¼cksetzen
 			 */
 			for (final SystemObject obj : aktuelleFSAnalysenNutz.keySet()) {
 				aktuelleFSAnalysen.put(obj, null);
@@ -337,7 +337,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	 */
 
 	/**
-	 * Berechnet die Verkehrsstärken analog SE-02.00.00.00.00-AFo-4.0 S.118f.
+	 * Berechnet die VerkehrsstÃ¤rken analog SE-02.00.00.00.00-AFo-4.0 S.118f.
 	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
@@ -353,9 +353,9 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 		long summe = 0;
 		final ArrayList<GWert> gueteWerte = new ArrayList<>();
 		/**
-		 * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar gekennzeichnet,
+		 * Ist eine der bei der Berechnung beteiligten GrÃ¶ÃŸen als nicht ermittelbar gekennzeichnet,
 		 * so geht sie nicht in die jeweilige Berechnung des Zielwerts ein. Sind alle der bei der
-		 * Berechnung beteiligten Größen als nicht ermittelbar gekennzeichnet, so wird der Zielwert
+		 * Berechnung beteiligten GrÃ¶ÃŸen als nicht ermittelbar gekennzeichnet, so wird der Zielwert
 		 * mit den Statusflags nicht ermittelbar gekennzeichnet.
 		 */
 		int istNichtVorhanden = 0;
@@ -414,16 +414,16 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	}
 
 	/**
-	 * Berechnet die Verkehrsstï¿½rken analog SE-02.00.00.00.00-AFo-4.0 S.118f.
+	 * Berechnet die VerkehrsstÃ¯Â¿Â½rken analog SE-02.00.00.00.00-AFo-4.0 S.118f.
 	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 * @param attName
 	 *            der Attributname des Verkehrswertes, der berechnet werden soll
 	 * @param praefixGross
-	 *            Präfix des Attributwertes groß
+	 *            PrÃ¤fix des Attributwertes groÃŸ
 	 * @param praefixKlein
-	 *            Präfix des Attributwertes klein
+	 *            PrÃ¤fix des Attributwertes klein
 	 */
 	private void berechneMittlereGeschwindigkeiten(final Data analyseDatum, final String attName,
 			final String praefixGross, final String praefixKlein) {
@@ -821,7 +821,7 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 	}
 
 	/**
-	 * Berechnet die Verkehrsstärken (<code>Kxxx</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f
+	 * Berechnet die VerkehrsstÃ¤rken (<code>Kxxx</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f
 	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen

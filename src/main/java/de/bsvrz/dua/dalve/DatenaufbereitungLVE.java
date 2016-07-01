@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -55,8 +55,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Verwaltungsmodul der SWE Datenaufbereitung LVE. Hier werden nur die zu betrachtenden
- * Systemobjekte (alle Fahrstreifen in den übergebenen Konfigurationsbereichen) ermittelt, die
- * Datenanmeldung durchgeführt und die emfangenen Daten dann an das Analysemodul für Fahrstreifen
+ * Systemobjekte (alle Fahrstreifen in den Ã¼bergebenen Konfigurationsbereichen) ermittelt, die
+ * Datenanmeldung durchgefÃ¼hrt und die emfangenen Daten dann an das Analysemodul fÃ¼r Fahrstreifen
  * weitergereicht
  *
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -105,7 +105,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 
 	/** Konstruktor. */
 	private DatenaufbereitungLVE() {
-		// privater Konstruktor verhindert das Anlegen zusätzlicher Objekte der
+		// privater Konstruktor verhindert das Anlegen zusÃ¤tzlicher Objekte der
 		// Applikation.
 	}
 
@@ -173,14 +173,14 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	}
 
 	/**
-	 * Erfragt das Straßenteilsegment des Messquerschnitts.
+	 * Erfragt das StraÃŸenteilsegment des Messquerschnitts.
 	 *
 	 * @param mq
 	 *            the mq
-	 * @return das Straßenteilsegment des Messquerschnitts oder <code>null</code>, wenn dieses nicht
+	 * @return das StraÃŸenteilsegment des Messquerschnitts oder <code>null</code>, wenn dieses nicht
 	 *         ermittelbar ist.
 	 */
-	public static SystemObject getStraßenTeilSegment(final SystemObject mq) {
+	public static SystemObject getStraÃŸenTeilSegment(final SystemObject mq) {
 		SystemObject stsGesucht = null;
 
 		if (mq.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
@@ -192,7 +192,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 							.getSystemObject();
 					final double offset = mqData.getUnscaledValue("Offset").longValue() >= 0
 							? mqData.getScaledValue("Offset").doubleValue() : -1.0;
-					if ((strassenSegment != null) && strassenSegment.isOfType("typ.straßenSegment")
+					if ((strassenSegment != null) && strassenSegment.isOfType("typ.straÃŸenSegment")
 							&& (offset >= 0)) {
 						final Data ssData = strassenSegment.getConfigurationData(dDav.getDataModel()
 								.getAttributeGroup("atg.bestehtAusLinienObjekten"));
@@ -205,13 +205,13 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 									final SystemObject sts = ssData
 											.getReferenceArray("LinienReferenz")
 											.getReferenceValue(i).getSystemObject();
-									if ((sts != null) && sts.isOfType("typ.straßenTeilSegment")) {
+									if ((sts != null) && sts.isOfType("typ.straÃŸenTeilSegment")) {
 										final Data stsData = sts.getConfigurationData(
 												dDav.getDataModel().getAttributeGroup("atg.linie"));
 										if (stsData != null) {
-											final double laenge = stsData.getUnscaledValue("Länge")
+											final double laenge = stsData.getUnscaledValue("LÃ¤nge")
 													.longValue() >= 0
-															? stsData.getScaledValue("Länge")
+															? stsData.getScaledValue("LÃ¤nge")
 																	.doubleValue()
 															: -1.0;
 											if (laenge >= 0) {
@@ -251,9 +251,9 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	private boolean ignoreDichteMax;
 
 	/**
-	 * Standard-Gütefaktor für Ersetzungen (90%)<br>
-	 * Wenn das Modul Datenaufbereitung LVE einen Messwert ersetzt so vermindert sich die Güte des
-	 * Ausgangswertes um diesen Faktor (wenn kein anderer Wert über die Kommandozeile übergeben
+	 * Standard-GÃ¼tefaktor fÃ¼r Ersetzungen (90%)<br>
+	 * Wenn das Modul Datenaufbereitung LVE einen Messwert ersetzt so vermindert sich die GÃ¼te des
+	 * Ausgangswertes um diesen Faktor (wenn kein anderer Wert Ã¼ber die Kommandozeile Ã¼bergeben
 	 * wurde)
 	 */
 	@Override
@@ -295,7 +295,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		DuaVerkehrsNetz.initialisiere(verbindung);
 
 		/**
-		 * Ermittle nur die Fahrstreifen, Messquerschnitte und Straßenabschnitte
+		 * Ermittle nur die Fahrstreifen, Messquerschnitte und StraÃŸenabschnitte
 		 */
 		final Collection<SystemObject> fahrStreifen = DUAUtensilien.getBasisInstanzen(
 				verbindung.getDataModel().getType(DUAKonstanten.TYP_FAHRSTREIFEN), verbindung,
@@ -350,7 +350,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	}
 
 	/**
-	 * ermittelt, ob die Maximalwerte für die Dichteberechnung ignoriert werden sollen.
+	 * ermittelt, ob die Maximalwerte fÃ¼r die Dichteberechnung ignoriert werden sollen.
 	 *
 	 * @return den Zustand
 	 */

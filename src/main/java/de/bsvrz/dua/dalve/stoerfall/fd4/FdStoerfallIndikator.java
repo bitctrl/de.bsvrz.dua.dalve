@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -48,7 +48,7 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Repräsentiert einen Stoerfallindikator nach Verfahren Fundamentaldiagramm.
+ * ReprÃ¤sentiert einen Stoerfallindikator nach Verfahren Fundamentaldiagramm.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -83,21 +83,21 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 	private PdFundamentalDiagramm.Daten fdMQ = null;
 
 	/**
-	 * Fundamentaldiagramm am Straßenteilsegment.
+	 * Fundamentaldiagramm am StraÃŸenteilsegment.
 	 */
 	private PdFundamentalDiagramm.Daten fdSts = null;
 
-	/** Faktor für die Ermittlung der Analysedichte. */
+	/** Faktor fÃ¼r die Ermittlung der Analysedichte. */
 	private final double fa = -1;
 
-	/** Faktor für die Ermittlung der Prognosedichte. */
+	/** Faktor fÃ¼r die Ermittlung der Prognosedichte. */
 	private final double fp = -1;
 
 	/** Objekt, das die Prognosedichte ermittelt. */
 	private KKfzStoerfallGErmittler prognoseDichteObj = null;
 
 	/**
-	 * Parameter der Attributgruppe <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
+	 * Parameter der Attributgruppe <code>atg.lokaleStÃ¶rfallErkennungFundamentalDiagramm</code>
 	 */
 	private AtgLokaleStoerfallErkennungFundamentalDiagramm parameterLokal = null;
 
@@ -118,7 +118,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 			erf = ErfassungsIntervallDauerMQ.getInstanz(dav, objekt);
 		}
 
-		final SystemObject stsObjekt = DatenaufbereitungLVE.getStraßenTeilSegment(objekt);
+		final SystemObject stsObjekt = DatenaufbereitungLVE.getStraÃŸenTeilSegment(objekt);
 		if (stsObjekt != null) {
 			final PdFundamentalDiagramm fdAmSts = new PdFundamentalDiagramm(
 					new StoerfallIndikator(stsObjekt));
@@ -151,7 +151,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 
 	@Override
 	protected String getPubAspektPid() {
-		return "asp.störfallVerfahrenFD"; //$NON-NLS-1$
+		return "asp.stÃ¶rfallVerfahrenFD"; //$NON-NLS-1$
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 	}
 
 	// /**
-	// * Erfragt die Analysedichte zur Störfallerkennung
+	// * Erfragt die Analysedichte zur StÃ¶rfallerkennung
 	// <code>KKfzStoerfall</code>.
 	// * Die Berechnung erfolgt analog SE-02.00.00.00.00-AFo-4.0 (siehe
 	// 6.6.4.3.2.1.2)
@@ -335,7 +335,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 	// * @param resultat ein Analysedatum des MQs (muss <code> != null</code>
 	// sein und
 	// * Nutzdaten enthalten)
-	// * @return die Analysedichte zur Störfallerkennung
+	// * @return die Analysedichte zur StÃ¶rfallerkennung
 	// <code>KKfzStoerfall</code>
 	// */
 	// private final double getAnalyseDichte(ResultData resultat){
@@ -372,12 +372,12 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 	// }
 
 	/**
-	 * Erfragt die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>. Die Berechnung
+	 * Erfragt die Analysedichte zur StÃ¶rfallerkennung <code>KKfzStoerfall</code>. Die Berechnung
 	 * erfolgt analog SE-02.00.00.00.00-AFo-4.0 (siehe 6.6.4.3.2.1.2)
 	 *
 	 * @param resultat
 	 *            ein Analysedatum des MQs (muss <code> != null</code> sein und Nutzdaten enthalten)
-	 * @return die Analysedichte zur Störfallerkennung <code>KKfzStoerfall</code>
+	 * @return die Analysedichte zur StÃ¶rfallerkennung <code>KKfzStoerfall</code>
 	 */
 	private final AnalyseDichte getAnalyseDichte(final ResultData resultat) {
 		double kKfzStoerfall;
@@ -458,10 +458,10 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 	}
 
 	/**
-	 * Erfragt, ob bereits alle Parameter initialisiert wurden und sie auf gültigen (verarbeitbaren)
+	 * Erfragt, ob bereits alle Parameter initialisiert wurden und sie auf gÃ¼ltigen (verarbeitbaren)
 	 * Werten stehen.
 	 *
-	 * @return ob bereits alle Parameter initialisiert wurden und sie auf gültigen (verarbeitbaren)
+	 * @return ob bereits alle Parameter initialisiert wurden und sie auf gÃ¼ltigen (verarbeitbaren)
 	 *         Werten stehen
 	 */
 	private final boolean alleParameterValide() {
@@ -499,7 +499,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator
 				}
 			} else {
 				/**
-				 * Fundamentaldiagramm am Straßenteilsegment
+				 * Fundamentaldiagramm am StraÃŸenteilsegment
 				 */
 				if (event.getDatum().isValid() && (event.getDatensatz() != null)
 						&& (event.getDatum().getDatenStatus() == Datum.Status.DATEN)) {

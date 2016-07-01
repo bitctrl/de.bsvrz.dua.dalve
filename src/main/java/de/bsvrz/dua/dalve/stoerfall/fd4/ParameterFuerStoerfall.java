@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -42,22 +42,22 @@ public class ParameterFuerStoerfall extends AllgemeinerDatenContainer {
 	/** die Stoerfallsituation, deren Vergleichswerte hier gespeichert werden (sollen). */
 	private StoerfallSituation situation = null;
 
-	/** Absoluter Wert für den Vergleich mit VKfzStörfall. */
+	/** Absoluter Wert fÃ¼r den Vergleich mit VKfzStÃ¶rfall. */
 	private double Vgrenz = -4;
 
-	/** Hysteresewert für Vgrenz (VGrenz +/- VgrenzHysterese). */
+	/** Hysteresewert fÃ¼r Vgrenz (VGrenz +/- VgrenzHysterese). */
 	private double VgrenzHysterese = -4;
 
-	/** Faktor für den Vergleich von KKfzStörfallG mid K0. */
+	/** Faktor fÃ¼r den Vergleich von KKfzStÃ¶rfallG mid K0. */
 	private double fk = -1;
 
-	/** Hysteresewert für fk(fk +/- fkHysterese). */
+	/** Hysteresewert fÃ¼r fk(fk +/- fkHysterese). */
 	private double fkHysterese = -1;
 
-	/** Faktor für den Vergleich von VKfzStörfallG mid V0. */
+	/** Faktor fÃ¼r den Vergleich von VKfzStÃ¶rfallG mid V0. */
 	private double fv = -1;
 
-	/** Hysteresewert für fv(fv +/- fkHysterese). */
+	/** Hysteresewert fÃ¼r fv(fv +/- fkHysterese). */
 	private double fvHysterese = -1;
 
 	/**
@@ -85,7 +85,7 @@ public class ParameterFuerStoerfall extends AllgemeinerDatenContainer {
 	 *
 	 * @param datum
 	 *            ein DAV-Datum der Attributgruppe
-	 *            <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code>
+	 *            <code>atg.lokaleStÃ¶rfallErkennungFundamentalDiagramm</code>
 	 */
 	protected final void importiere(final Data datum) {
 		if (datum != null) {
@@ -129,18 +129,18 @@ public class ParameterFuerStoerfall extends AllgemeinerDatenContainer {
 	}
 
 	/**
-	 * Erfragt absoluter Wert für den Vergleich mit VKfzStörfall.
+	 * Erfragt absoluter Wert fÃ¼r den Vergleich mit VKfzStÃ¶rfall.
 	 *
-	 * @return absoluter Wert für den Vergleich mit VKfzStörfall
+	 * @return absoluter Wert fÃ¼r den Vergleich mit VKfzStÃ¶rfall
 	 */
 	protected final double getVgrenz() {
 		return Vgrenz;
 	}
 
 	/**
-	 * Erfragt Hysteresewert für Vgrenz (VGrenz +/- VgrenzHysterese).
+	 * Erfragt Hysteresewert fÃ¼r Vgrenz (VGrenz +/- VgrenzHysterese).
 	 *
-	 * @return Hysteresewert für Vgrenz (VGrenz +/- VgrenzHysterese)
+	 * @return Hysteresewert fÃ¼r Vgrenz (VGrenz +/- VgrenzHysterese)
 	 */
 	protected final double getVgrenzHysterese() {
 		return VgrenzHysterese;
@@ -165,36 +165,36 @@ public class ParameterFuerStoerfall extends AllgemeinerDatenContainer {
 	}
 
 	/**
-	 * Erfragt Faktor für den Vergleich von KKfzStörfallG mid K0.
+	 * Erfragt Faktor fÃ¼r den Vergleich von KKfzStÃ¶rfallG mid K0.
 	 *
-	 * @return Faktor für den Vergleich von KKfzStörfallG mid K0
+	 * @return Faktor fÃ¼r den Vergleich von KKfzStÃ¶rfallG mid K0
 	 */
 	protected final double getFk() {
 		return fk;
 	}
 
 	/**
-	 * Erfragt Hysteresewert für fk(fk +/- fkHysterese).
+	 * Erfragt Hysteresewert fÃ¼r fk(fk +/- fkHysterese).
 	 *
-	 * @return Hysteresewert für fk(fk +/- fkHysterese)
+	 * @return Hysteresewert fÃ¼r fk(fk +/- fkHysterese)
 	 */
 	protected final double getFkHysterese() {
 		return fkHysterese;
 	}
 
 	/**
-	 * Erfragt Faktor für den Vergleich von VKfzStörfallG mid V0.
+	 * Erfragt Faktor fÃ¼r den Vergleich von VKfzStÃ¶rfallG mid V0.
 	 *
-	 * @return Faktor für den Vergleich von VKfzStörfallG mid V0
+	 * @return Faktor fÃ¼r den Vergleich von VKfzStÃ¶rfallG mid V0
 	 */
 	protected final double getFv() {
 		return fv;
 	}
 
 	/**
-	 * Erfragt Hysteresewert für fv(fv +/- fkHysterese).
+	 * Erfragt Hysteresewert fÃ¼r fv(fv +/- fkHysterese).
 	 *
-	 * @return Hysteresewert für fv(fv +/- fkHysterese)
+	 * @return Hysteresewert fÃ¼r fv(fv +/- fkHysterese)
 	 */
 	protected final double getFvHysterese() {
 		return fvHysterese;

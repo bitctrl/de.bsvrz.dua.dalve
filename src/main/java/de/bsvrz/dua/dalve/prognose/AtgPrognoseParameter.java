@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -41,9 +41,9 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Haelt für ein bestimmtes Objekt (Fahrstreifen oder Messquerschnitt) alle Parameter bereit die
+ * Haelt fÃ¼r ein bestimmtes Objekt (Fahrstreifen oder Messquerschnitt) alle Parameter bereit die
  * sich auf die Messwertprognose beziehen. Dabei kann zwischen den Parametertypen <code>Flink</code>
- * , <code>Normal</code> und <code>Träge</code> unterschieden werden
+ * , <code>Normal</code> und <code>TrÃ¤ge</code> unterschieden werden
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -70,7 +70,7 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	 * @param objekt
 	 *            das Objekt, auf dessen Prognose-Parameter sich angemeldet werden soll
 	 * @param typ
-	 *            der Typ der Parameter auf die sich angemeldet werden soll (Flink, Normal, Träge)
+	 *            der Typ der Parameter auf die sich angemeldet werden soll (Flink, Normal, TrÃ¤ge)
 	 */
 	public AtgPrognoseParameter(final ClientDavInterface dav, final SystemObject objekt,
 			final PrognoseTyp typ) {
@@ -85,13 +85,13 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	}
 
 	/**
-	 * Fügt der Menge aller Listener auf einen bestimmten Attributparameter einen neuen Listener
+	 * FÃ¼gt der Menge aller Listener auf einen bestimmten Attributparameter einen neuen Listener
 	 * hinzu (und informiert diesen initial).
 	 *
 	 * @param listener
 	 *            der neue Listener
 	 * @param attribut
-	 *            das Attribut, auf dessen Parameter gehört werden soll
+	 *            das Attribut, auf dessen Parameter gehÃ¶rt werden soll
 	 */
 	public final void addListener(final IAtgPrognoseParameterListener listener,
 			final PrognoseAttribut attribut) {
@@ -108,7 +108,7 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 	}
 
 	/**
-	 * Informiert alle Beobachter über Veraenderungen.
+	 * Informiert alle Beobachter Ã¼ber Veraenderungen.
 	 */
 	private final void informiereAlleBeobachter() {
 		synchronized (this) {

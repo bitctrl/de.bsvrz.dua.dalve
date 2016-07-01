@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -116,7 +116,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		 * Parametrieren
 		 */
 		final DataDescription ddParaAbschnitt = new DataDescription(
-				dav.getDataModel().getAttributeGroup("atg.lokaleStörfallErkennungVKDiffKfz"),
+				dav.getDataModel().getAttributeGroup("atg.lokaleStÃ¶rfallErkennungVKDiffKfz"),
 				dav.getDataModel().getAspect("asp.parameterVorgabe"));
 		final DataDescription ddParaMQ = new DataDescription(
 				dav.getDataModel().getAttributeGroup("atg.fundamentalDiagramm"),
@@ -196,7 +196,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 		 */
 				final DataDescription ddVkDiffKfz = new DataDescription(
 						dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
-						dav.getDataModel().getAspect("asp.störfallVerfahrenVKDiffKfz"));
+						dav.getDataModel().getAspect("asp.stÃ¶rfallVerfahrenVKDiffKfz"));
 		dav.subscribeReceiver(this, new SystemObject[] { abschnitt }, ddVkDiffKfz,
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 
@@ -249,7 +249,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 					aktuellerStoerfallzustand.toLowerCase());
 
 			/**
-			 * Lese bei Importer und Prüfer den nächsten Datensatz ein
+			 * Lese bei Importer und PrÃ¼fer den nÃ¤chsten Datensatz ein
 			 */
 			importFS.importNaechsteZeile();
 
@@ -260,7 +260,7 @@ public class DaLVETestVKDiffKfz implements ClientSenderInterface, ClientReceiver
 			// }
 
 			/**
-			 * Setze neue Prüfzeit
+			 * Setze neue PrÃ¼fzeit
 			 */
 			aktZeit = aktZeit + Constants.MILLIS_PER_MINUTE;
 		}

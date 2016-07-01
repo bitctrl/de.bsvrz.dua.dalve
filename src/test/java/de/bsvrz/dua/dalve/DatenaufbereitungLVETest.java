@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -34,11 +34,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 
 /**
- * Automatisierter Test nach Prüfspezifikation für SWE Datenaufbereitung LVE.
+ * Automatisierter Test nach PrÃ¼fspezifikation fÃ¼r SWE Datenaufbereitung LVE.
  *
- * @author Görlitz
+ * @author GÃ¶rlitz
  */
-@Ignore("Verbindung zum Testsystem prüfen")
+@Ignore("Verbindung zum Testsystem prÃ¼fen")
 public class DatenaufbereitungLVETest {
 
 	/** Verbindungsdaten. */

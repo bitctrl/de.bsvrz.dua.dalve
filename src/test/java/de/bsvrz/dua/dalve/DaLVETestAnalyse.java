@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -61,10 +61,10 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 	/** The mq. */
 	public static SystemObject MQ = null;
 
-	/** Testfahrstreifenimporter für FS 1-3. */
+	/** Testfahrstreifenimporter fÃ¼r FS 1-3. */
 	private final TestFahrstreifenImporter importFS;
 
-	/** Sende-Datenbeschreibung für KZD. */
+	/** Sende-Datenbeschreibung fÃ¼r KZD. */
 	public static DataDescription DD_KZD_SEND = null;
 
 	/** Tesdatenverzeichnis. */
@@ -99,7 +99,7 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 		Debug.init("DatenaufbereitungLVEAnalyse", alLogger); //$NON-NLS-1$
 
 		/*
-		 * Meldet Sender für KZD unter dem Aspekt Messwertersetzung an
+		 * Meldet Sender fÃ¼r KZD unter dem Aspekt Messwertersetzung an
 		 */
 		FS1 = this.dav.getDataModel().getObject("AAA.Test.fs.kzd.1"); //$NON-NLS-1$
 		FS2 = this.dav.getDataModel().getObject("AAA.Test.fs.kzd.2"); //$NON-NLS-1$
@@ -136,28 +136,28 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 	 *             the exception
 	 */
 	public void testAnalyse() throws Exception {
-		System.out.println("Prüfe Datenaufbereitung LVE - Analysewerte..."); //$NON-NLS-1$
+		System.out.println("PrÃ¼fe Datenaufbereitung LVE - Analysewerte..."); //$NON-NLS-1$
 
 		Data zeileFS1;
 		Data zeileFS2;
 		Data zeileFS3;
 
-		// aktueller Prüfzeitstempel
+		// aktueller PrÃ¼fzeitstempel
 		long aktZeit = System.currentTimeMillis();
 
 		int csvIndex = 2;
 
 		/*
-		 * Prüferklasse Empfängt Daten und vergleicht mit SOLL-Wert
+		 * PrÃ¼ferklasse EmpfÃ¤ngt Daten und vergleicht mit SOLL-Wert
 		 */
 		final PruefeDaLVEAnalyse prDaLVEAnalyse = new PruefeDaLVEAnalyse(this, dav,
 				new SystemObject[] { FS1, FS2, FS3 }, MQ, TEST_DATEN_VERZ + "Analysewerte"); //$NON-NLS-1$
 
-		// Lese bei Importer und Prüfer den nächsten Datensatz ein
+		// Lese bei Importer und PrÃ¼fer den nÃ¤chsten Datensatz ein
 		importFS.importNaechsteZeile();
 		prDaLVEAnalyse.naechsterDatensatz(aktZeit);
 
-		// Prüfe solange Daten vorhanden
+		// PrÃ¼fe solange Daten vorhanden
 		while ((zeileFS1 = importFS.getDatensatz(1)) != null) {
 			zeileFS2 = importFS.getDatensatz(2);
 			zeileFS3 = importFS.getDatensatz(3);
@@ -171,23 +171,23 @@ public class DaLVETestAnalyse implements ClientSenderInterface {
 			dav.sendData(resultat2);
 			dav.sendData(resultat3);
 
-			// Warte auf Prüfungsabschluss aller FS für diesen Datensatz
-			// System.out.println("Warte auf Prüfung der FS 1-3..."); //$NON-NLS-1$
+			// Warte auf PrÃ¼fungsabschluss aller FS fÃ¼r diesen Datensatz
+			// System.out.println("Warte auf PrÃ¼fung der FS 1-3..."); //$NON-NLS-1$
 			doWait();
 
 			csvIndex++;
 
-			// setze neue Prüfzeit
+			// setze neue PrÃ¼fzeit
 			aktZeit = aktZeit + Constants.MILLIS_PER_MINUTE;
 
-			// Lese bei Importer und Prüfer den nächsten Datensatz ein
+			// Lese bei Importer und PrÃ¼fer den nÃ¤chsten Datensatz ein
 			importFS.importNaechsteZeile();
 			prDaLVEAnalyse.naechsterDatensatz(aktZeit);
 		}
 	}
 
 	/**
-	 * Lässt Thread warten.
+	 * LÃ¤sst Thread warten.
 	 *
 	 * @throws Exception
 	 *             the exception

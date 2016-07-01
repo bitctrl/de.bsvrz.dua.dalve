@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -98,13 +98,13 @@ public abstract class AbstraktPrognoseObjekt
 	private final Set<DavAttributPrognoseObjekt> attributePuffer = new HashSet<>();
 
 	/**
-	 * Initialisiert dieses Objekt. Nach Beendigung dieser Methode empf‰ngt und publiziert dieses
+	 * Initialisiert dieses Objekt. Nach Beendigung dieser Methode empf√§ngt und publiziert dieses
 	 * Objekt Daten
 	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param prognoseObjekt
-	 *            das Prognoseobjekt, f¸r das prognostiziert werden soll
+	 *            das Prognoseobjekt, f√ºr das prognostiziert werden soll
 	 * @throws DUAInitialisierungsException
 	 *             wenn die Sendeanmeldung fehlschlaegt
 	 */
@@ -375,7 +375,7 @@ public abstract class AbstraktPrognoseObjekt
 	 */
 
 	/**
-	 * Erfragt den Typ dieses Prognoseobjektes (¸ber diesen ist definiert, welche
+	 * Erfragt den Typ dieses Prognoseobjektes (√ºber diesen ist definiert, welche
 	 * Parameter-Attributgruppen zur Anwendung kommen)
 	 *
 	 * @return der Typ dieses Prognoseobjektes

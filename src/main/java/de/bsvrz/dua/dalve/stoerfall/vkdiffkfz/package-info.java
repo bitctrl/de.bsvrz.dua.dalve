@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -28,8 +28,8 @@
  * Klassen fuer die Ermittlung des
  * Stoerfallindikators nach Verfahren VKDiffKfz
  * fuer Messquerschnitte<br>
- * Attributgruppe: <code>atg.stˆrfallZustand</code><br>
- * Aspekt: <code>asp.stˆrfallVerfahrenVKDiffKfz</code>
+ * Attributgruppe: <code>atg.st√∂rfallZustand</code><br>
+ * Aspekt: <code>asp.st√∂rfallVerfahrenVKDiffKfz</code>
  */
 
 package de.bsvrz.dua.dalve.stoerfall.vkdiffkfz;

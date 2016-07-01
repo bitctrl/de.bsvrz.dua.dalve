@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -129,20 +129,20 @@ public class PrognoseAttribut {
 	/** der Name des Attributs (MQ). */
 	private String nameMQ = null;
 
-	/** Startwert f¸r die Gl‰ttung (FS). */
+	/** Startwert f√ºr die Gl√§ttung (FS). */
 	private String fsStart = null;
 
-	/** Startwert f¸r die Gl‰ttung (MQ). */
+	/** Startwert f√ºr die Gl√§ttung (MQ). */
 	private String mqStart = null;
 
 	/**
-	 * Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsst‰rke-Attribut
+	 * Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsst√§rke-Attribut
 	 * (FS).
 	 */
 	private String qAnalogon = null;
 
 	/**
-	 * Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsst‰rke-Attribut
+	 * Der Name des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsst√§rke-Attribut
 	 * (MQ).
 	 */
 	private String QAnalogon = null;
@@ -181,7 +181,7 @@ public class PrognoseAttribut {
 
 	/**
 	 * Erfragt, so es sich bei diesem Attribut um ein Geschwindigkeitsattribut handelt, den Namen
-	 * des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsst‰rke-Attributs.
+	 * des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsst√§rke-Attributs.
 	 *
 	 * @param fuerFahrStreifen
 	 *            das Objekt, fuer den der Name dieses Attributs erfragt wird

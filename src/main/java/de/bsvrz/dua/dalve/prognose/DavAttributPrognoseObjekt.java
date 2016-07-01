@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -121,8 +121,8 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 				 * Aenderung nach Email vom 14.4.2008:
 				 *
 				 * hier ist wirklich der Fall gemeint, dass im aktuellen Intervall kein Fahrzeug
-				 * gefahren ist (qKfz = 0) dann sollen die gegl‰tteten Geschwindigkeitswerte des
-				 * Vorg‰ngerintervalls ¸bernommen werden.
+				 * gefahren ist (qKfz = 0) dann sollen die gegl√§tteten Geschwindigkeitswerte des
+				 * Vorg√§ngerintervalls √ºbernommen werden.
 				 */
 				if (prognoseObjekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
 					keineVerkehrsStaerke = resultat.getData().getItem("qKfz") //$NON-NLS-1$
@@ -159,7 +159,7 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 	 *
 	 * @param zielDatum
 	 *            ein veraenderbares Zieldatum der Attributgruppe
-	 *            <code>atg.verkehrsDatenKurzZeitGegl‰ttetFs</code>
+	 *            <code>atg.verkehrsDatenKurzZeitGegl√§ttetFs</code>
 	 */
 	public final void exportiereDatenGlatt(final Data zielDatum) {
 		final MesswertUnskaliert exportWert = new MesswertUnskaliert(attributNameG);

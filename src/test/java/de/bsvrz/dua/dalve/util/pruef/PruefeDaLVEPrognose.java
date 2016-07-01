@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -42,9 +42,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Prüft (Vergleicht) Analyse-Datensätze der Fahrstreifen.
+ * PrÃ¼ft (Vergleicht) Analyse-DatensÃ¤tze der Fahrstreifen.
  *
- * @author Görlitz
+ * @author GÃ¶rlitz
  */
 public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 
@@ -72,7 +72,7 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 	/** The dd kzdfs gt empf. */
 	private DataDescription DD_KZDFS_GT_EMPF = null;
 
-	/** Ergbnisimporter für Prognosewerte der FS. */
+	/** Ergbnisimporter fÃ¼r Prognosewerte der FS. */
 	private final TestErgebnisPrognoseImporter importProgFS;
 
 	/** Halten das aktuelle SOLL-Ergebnis der CSV-Datei. */
@@ -96,7 +96,7 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 	/** Zeitstempel, auf den gewartet wird. */
 	private long pruefZeit;
 
-	/** Gibt den Prüfungsabschluss des jeweiligen FS an. */
+	/** Gibt den PrÃ¼fungsabschluss des jeweiligen FS an. */
 	private boolean pruefungFS1PFlinkFertig = false;
 
 	/** The pruefung f s1 p normal fertig. */
@@ -138,7 +138,7 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 	/** The Constant MODE_GTRAEGE. */
 	protected static final int MODE_GTRAEGE = 6;
 
-	/** Prüferthreads für alle Modi. */
+	/** PrÃ¼ferthreads fÃ¼r alle Modi. */
 	private final VergleicheDaLVEPrognose verglPFlink = new VergleicheDaLVEPrognose(this,
 			MODE_PFLINK);
 
@@ -169,7 +169,7 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 	protected int ergebnisWertToleranz;
 
 	/**
-	 * Initialisiert Prüferobjekt.
+	 * Initialisiert PrÃ¼ferobjekt.
 	 *
 	 * @param caller
 	 *            the caller
@@ -193,26 +193,26 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		ergebnisWertToleranz = caller.getErgebnisWertToleranz();
 
 		/*
-		 * Empfängeranmeldung für Prognose und geglättete Werte
+		 * EmpfÃ¤ngeranmeldung fÃ¼r Prognose und geglÃ¤ttete Werte
 		 */
 		final AttributeGroup atgFSPrognose = this.dav.getDataModel()
 				.getAttributeGroup("atg.verkehrsDatenKurzZeitTrendExtraPolationFs");
 		final AttributeGroup atgFSGeglaettet = this.dav.getDataModel()
-				.getAttributeGroup("atg.verkehrsDatenKurzZeitGeglättetFs");
+				.getAttributeGroup("atg.verkehrsDatenKurzZeitGeglÃ¤ttetFs");
 
 		DD_KZDFS_PF_EMPF = new DataDescription(atgFSPrognose,
 				this.dav.getDataModel().getAspect("asp.prognoseFlink"));
 		DD_KZDFS_PN_EMPF = new DataDescription(atgFSPrognose,
 				this.dav.getDataModel().getAspect("asp.prognoseNormal"));
 		DD_KZDFS_PT_EMPF = new DataDescription(atgFSPrognose,
-				this.dav.getDataModel().getAspect("asp.prognoseTräge"));
+				this.dav.getDataModel().getAspect("asp.prognoseTrÃ¤ge"));
 
 		DD_KZDFS_GF_EMPF = new DataDescription(atgFSGeglaettet,
 				this.dav.getDataModel().getAspect("asp.prognoseFlink"));
 		DD_KZDFS_GN_EMPF = new DataDescription(atgFSGeglaettet,
 				this.dav.getDataModel().getAspect("asp.prognoseNormal"));
 		DD_KZDFS_GT_EMPF = new DataDescription(atgFSGeglaettet,
-				this.dav.getDataModel().getAspect("asp.prognoseTräge"));
+				this.dav.getDataModel().getAspect("asp.prognoseTrÃ¤ge"));
 
 		dav.subscribeReceiver(this, FS, DD_KZDFS_PF_EMPF, ReceiveOptions.normal(),
 				ReceiverRole.receiver());
@@ -232,14 +232,14 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		 */
 		importProgFS = new TestErgebnisPrognoseImporter(dav, csvQuelle);
 
-		System.out.println("Prüferklasse für Prognosewerte initialisiert");
+		System.out.println("PrÃ¼ferklasse fÃ¼r Prognosewerte initialisiert");
 	}
 
 	/**
-	 * Importiert nächsten Ergebnisdatensatz und setzt Prüfzeitstempel.
+	 * Importiert nÃ¤chsten Ergebnisdatensatz und setzt PrÃ¼fzeitstempel.
 	 *
 	 * @param pruefZeit
-	 *            Prüfzeitstempel
+	 *            PrÃ¼fzeitstempel
 	 */
 	public void naechsterDatensatz(final long pruefZeit) {
 		this.pruefZeit = pruefZeit;
@@ -259,11 +259,11 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		pruefungFS1GNormalFertig = false;
 		pruefungFS1GTraegeFertig = false;
 
-		LOGGER.info("Prüferklasse für Prognosewerte parametriert -> Zeit: " + pruefZeit);
+		LOGGER.info("PrÃ¼ferklasse fÃ¼r Prognosewerte parametriert -> Zeit: " + pruefZeit);
 	}
 
 	/**
-	 * Wird von den Prüferthreads getriggert und benachrichtigt, wenn die Prüfung aller Daten
+	 * Wird von den PrÃ¼ferthreads getriggert und benachrichtigt, wenn die PrÃ¼fung aller Daten
 	 * abgeschlossen ist, die Aufrufende Klasse.
 	 *
 	 * @param mode
@@ -299,17 +299,17 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		if (pruefungFS1PFlinkFertig && pruefungFS1PNormalFertig && pruefungFS1PTraegeFertig
 				&& pruefungFS1GFlinkFertig && pruefungFS1GNormalFertig
 				&& pruefungFS1GTraegeFertig) {
-			LOGGER.info("Alle Prognosedaten geprüft. Benachrichtige Hauptthread...");
+			LOGGER.info("Alle Prognosedaten geprÃ¼ft. Benachrichtige Hauptthread...");
 			caller.doNotify(DaLVETestPrognose.ID_PRUEFER_PROGNOSE);
 		}
 	}
 
 	/**
-	 * Gibt einen repräsentativen Text zum übergebenen Modus zurück.
+	 * Gibt einen reprÃ¤sentativen Text zum Ã¼bergebenen Modus zurÃ¼ck.
 	 *
 	 * @param mode
 	 *            Der Modus
-	 * @return Der repräsentativen Text
+	 * @return Der reprÃ¤sentativen Text
 	 */
 	public String getModusText(final int mode) {
 		switch (mode) {
@@ -318,13 +318,13 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 		case MODE_PNORMAL:
 			return ("Prognose Normal");
 		case MODE_PTRAEGE:
-			return ("Prognose Träge");
+			return ("Prognose TrÃ¤ge");
 		case MODE_GFLINK:
-			return ("Geglättet Flink");
+			return ("GeglÃ¤ttet Flink");
 		case MODE_GNORMAL:
-			return ("Geglättet Normal");
+			return ("GeglÃ¤ttet Normal");
 		case MODE_GTRAEGE:
-			return ("Geglättet Träge");
+			return ("GeglÃ¤ttet TrÃ¤ge");
 		default:
 			return null;
 		}
@@ -361,7 +361,7 @@ public class PruefeDaLVEPrognose implements ClientReceiverInterface {
 class VergleicheDaLVEPrognose extends Thread {
 
 	/**
-	 * Die Ident dieses Prüferthreads
+	 * Die Ident dieses PrÃ¼ferthreads
 	 */
 	private final String ident;
 
@@ -396,8 +396,8 @@ class VergleicheDaLVEPrognose extends Thread {
 	 *
 	 * Kappich Mail vom 09.04.08:
 	 *
-	 * "der Algorithmus in der Prüfspezifikation verwendet nicht qKfz sondern die
-	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die Berechnung
+	 * "der Algorithmus in der PrÃ¼fspezifikation verwendet nicht qKfz sondern die
+	 * BemessungsverkehrsstÃ¤rke qB der Analysetabelle. Unter dieser Voraussetzung ist die Berechnung
 	 * richtig."
 	 */
 	private final String[] attributNamenPraefixP = { "qB", //$NON-NLS-1$
@@ -407,8 +407,8 @@ class VergleicheDaLVEPrognose extends Thread {
 	 *
 	 * Kappich Mail vom 09.04.08:
 	 *
-	 * "der Algorithmus in der Prüfspezifikation verwendet nicht qKfz sondern die
-	 * Bemessungsverkehrsstärke qB der Analysetabelle. Unter dieser Voraussetzung ist die Berechnung
+	 * "der Algorithmus in der PrÃ¼fspezifikation verwendet nicht qKfz sondern die
+	 * BemessungsverkehrsstÃ¤rke qB der Analysetabelle. Unter dieser Voraussetzung ist die Berechnung
 	 * richtig."
 	 */
 	private final String[] attributNamenPraefixG = { "qB", //$NON-NLS-1$
@@ -428,12 +428,12 @@ class VergleicheDaLVEPrognose extends Thread {
 	private String attPraefix;
 
 	/**
-	 * Initialisiert Prüferthread.
+	 * Initialisiert PrÃ¼ferthread.
 	 *
 	 * @param caller
 	 *            Aufrufende Klasse
 	 * @param mode
-	 *            der Prüfmodus
+	 *            der PrÃ¼fmodus
 	 */
 	public VergleicheDaLVEPrognose(final PruefeDaLVEPrognose caller, final int mode) {
 		this.caller = caller;
@@ -447,7 +447,7 @@ class VergleicheDaLVEPrognose extends Thread {
 			attributNamenPraefix = attributNamenPraefixG;
 		}
 
-		System.out.println("Prüfthread [PT] (" + caller.getModusText(mode) + ") initialisiert"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("PrÃ¼fthread [PT] (" + caller.getModusText(mode) + ") initialisiert"); //$NON-NLS-1$ //$NON-NLS-2$
 		ident = "[PT " + caller.getModusText(mode) + "]";
 
 		// starte Thread
@@ -474,13 +474,13 @@ class VergleicheDaLVEPrognose extends Thread {
 	}
 
 	/**
-	 * Prüfthread
+	 * PrÃ¼fthread
 	 */
 	@Override
 	public void run() {
-		// Thread läuft bis Programmende
+		// Thread lÃ¤uft bis Programmende
 		while (true) {
-			// warte mit Prüfung bis geweckt
+			// warte mit PrÃ¼fung bis geweckt
 			doWait();
 
 			// vergleiche
@@ -489,7 +489,7 @@ class VergleicheDaLVEPrognose extends Thread {
 	}
 
 	/**
-	 * Führt vergleich durch
+	 * FÃ¼hrt vergleich durch
 	 *
 	 */
 	private void doVergleich() {
@@ -533,12 +533,12 @@ class VergleicheDaLVEPrognose extends Thread {
 
 		LOGGER.info(loggerOut);
 
-		// Benachrichtige aufrufende Klasse und übermittle FS-Index(1-3)
+		// Benachrichtige aufrufende Klasse und Ã¼bermittle FS-Index(1-3)
 		caller.doNotify(mode);
 	}
 
 	/**
-	 * Lässt Prüfthread warten
+	 * LÃ¤sst PrÃ¼fthread warten
 	 *
 	 */
 	private void doWait() {

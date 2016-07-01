@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -50,8 +50,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte eines virtuellen
- * Messquerschnitts notwendig sind gespeichert. Wenn die Werte für ein bestimmtes Intervall bereit
- * stehen (oder eine Timeout abgelaufen ist), wird eine Berechnung durchgeführt und der Wert
+ * Messquerschnitts notwendig sind gespeichert. Wenn die Werte fÃ¼r ein bestimmtes Intervall bereit
+ * stehen (oder eine Timeout abgelaufen ist), wird eine Berechnung durchgefÃ¼hrt und der Wert
  * publiziert. <br>
  * <b>Achtung: Verfahren auf Basis der Konfigurationsdaten aus Attributgruppe
  * <code>atg.messQuerschnittVirtuellStandard</code>.</b><br>
@@ -64,7 +64,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
-	 * Informiert dieses Objekt darüber, dass das Timeout für die Berechnung der Analysedaten
+	 * Informiert dieses Objekt darÃ¼ber, dass das Timeout fÃ¼r die Berechnung der Analysedaten
 	 * abgelaufen ist.
 	 */
 	private static final ObjektWecker WECKER = new ObjektWecker();
@@ -81,37 +81,37 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	private final Collection<SystemObject> mqAufHauptfahrbahn = new HashSet<>();
 
 	/**
-	 * der aufgelößte virtuelle Messquerschnitt.
+	 * der aufgelÃ¶ÃŸte virtuelle Messquerschnitt.
 	 */
 	private MessQuerschnittVirtuell mqv = null;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>vor</b> der Anschlussstelle, die durch diesen virtuellen
-	 * MQ repräsentiert wird, direkt erfasst ist.
+	 * MQ reprÃ¤sentiert wird, direkt erfasst ist.
 	 */
 	private boolean mqVorErfasst = true;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>nach</b> der Anschlussstelle, die durch diesen virtuellen
-	 * MQ repräsentiert wird, direkt erfasst ist.
+	 * MQ reprÃ¤sentiert wird, direkt erfasst ist.
 	 */
 	private boolean mqNachErfasst = true;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>mittig</b> der Anschlussstelle, die durch diesen
-	 * virtuellen MQ repräsentiert wird, direkt erfasst ist.
+	 * virtuellen MQ reprÃ¤sentiert wird, direkt erfasst ist.
 	 */
 	private boolean mqMitteErfasst = true;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>Einfahrt</b> der Anschlussstelle, die durch diesen
-	 * virtuellen MQ repräsentiert wird, direkt erfasst ist.
+	 * virtuellen MQ reprÃ¤sentiert wird, direkt erfasst ist.
 	 */
 	private boolean mqEinfahrtErfasst = true;
 
 	/**
 	 * Zeigt an, ob der Messquerschnitt <b>Ausfahrt</b> der Anschlussstelle, die durch diesen
-	 * virtuellen MQ repräsentiert wird, direkt erfasst ist.
+	 * virtuellen MQ reprÃ¤sentiert wird, direkt erfasst ist.
 	 */
 	private boolean mqAusfahrtErfasst = true;
 
@@ -126,7 +126,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	private MessQuerschnittVirtuellLage lage = null;
 
 	/**
-	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurück. Nach dieser
+	 * Initialisiert dieses Objekt und gibt die initialisierte Instanz zurÃ¼ck. Nach dieser
 	 * Initialisierung ist das Objekt auf alle Daten (seiner assoziierten Messquerschnitte)
 	 * angemeldet und analysiert ggf. Daten
 	 *
@@ -136,7 +136,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	 *            der virtuelle Messquerschnitt
 	 * @return die initialisierte Instanz dieses Objekts
 	 * @throws DUAInitialisierungsException
-	 *             wenn die Konfigurationsdaten des virtuellen MQs nicht vollständig ausgelesen
+	 *             wenn die Konfigurationsdaten des virtuellen MQs nicht vollstÃ¤ndig ausgelesen
 	 *             werden konnte
 	 */
 	@Override
@@ -222,14 +222,14 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	}
 
 	/**
-	 * Dieser Methode sollten alle aktuellen Daten für alle mit diesem Messquerschnitt assoziierten
-	 * Fahrstreifen übergeben werden. Ggf. wird dadurch dann eine Berechnung der Analysewerte dieses
-	 * Messquerschnittes ausgelöst.
+	 * Dieser Methode sollten alle aktuellen Daten fÃ¼r alle mit diesem Messquerschnitt assoziierten
+	 * Fahrstreifen Ã¼bergeben werden. Ggf. wird dadurch dann eine Berechnung der Analysewerte dieses
+	 * Messquerschnittes ausgelÃ¶st.
 	 *
 	 * @param triggerDatum
 	 *            ein Analyse-Datum eines assoziierten Messquerschnitts
-	 * @return ein Analysedatum für diesen virtuellen Messquerschnitt, wenn das
-	 *         <code>triggerDatum</code> eine Berechnung ausgelöst hat, oder <code>null</code> sonst
+	 * @return ein Analysedatum fÃ¼r diesen virtuellen Messquerschnitt, wenn das
+	 *         <code>triggerDatum</code> eine Berechnung ausgelÃ¶st hat, oder <code>null</code> sonst
 	 */
 	@Override
 	public ResultData trigger(final ResultData triggerDatum) {
@@ -311,7 +311,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 
 	/**
 	 * Erfragt, ob von den MQ, die an diesem virtuellen MQ erfasst sind, alle ein Datum mit
-	 * Nutzdaten geliefert haben, dessen Zeitstempel später als der des letzten hier errechneten
+	 * Nutzdaten geliefert haben, dessen Zeitstempel spÃ¤ter als der des letzten hier errechneten
 	 * Analysedatums ist.
 	 *
 	 * @return ob alle Daten zur Berechnung eines neuen Intervalls da sind
@@ -392,7 +392,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 				.createData(MqAnalyseModul.pubBeschreibung.getAttributeGroup());
 
 		/**
-		 * Ermittle Werte für <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
+		 * Ermittle Werte fÃ¼r <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
 		 * <code>VDelta</code> via Ersetzung
 		 */
 		final String[] attErsetzung = new String[] { "VKfz", "VLkw", "VPkw", "VgKfz", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -413,7 +413,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 		}
 
 		/**
-		 * Ermittle Werte für <code>QKfz, QLkw</code> und <code>QPkw</code>
+		 * Ermittle Werte fÃ¼r <code>QKfz, QLkw</code> und <code>QPkw</code>
 		 */
 		final String[] attBilanz = new String[] { "QKfz", "QLkw", "QPkw" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		for (final String attName : attBilanz) {
@@ -421,7 +421,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 		}
 
 		/**
-		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
+		 * Berechne Werte fÃ¼r <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
 		 */
 		berechneLkwAnteil(analyseDatum);
 		berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
@@ -446,7 +446,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	}
 
 	/**
-	 * Wird aufgerufen, wenn das Timeout für die Publikation eines Analysedatums überschritten
+	 * Wird aufgerufen, wenn das Timeout fÃ¼r die Publikation eines Analysedatums Ã¼berschritten
 	 * wurde.
 	 */
 	@Override
@@ -463,7 +463,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	}
 
 	/**
-	 * Publiziert eine Analysedatum (so nicht <code>null</code> übergeben wurde).
+	 * Publiziert eine Analysedatum (so nicht <code>null</code> Ã¼bergeben wurde).
 	 *
 	 * @param ergebnis
 	 *            ein neu berechntes Analysedatum (oder <code>null</code>)
@@ -486,9 +486,9 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 					/**
 					 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf "keine Daten" steht.
 					 * Dies ist der Fall,<br>
-					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder
+					 * 1. wenn noch nie ein Datum fÃ¼r diesen MQ berechnet (versendet) wurde, oder
 					 * <br>
-					 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten
+					 * 2. wenn das letzte fÃ¼r diesen MQ berechnete (versendete) Datum keine Daten
 					 * hatte.
 					 */
 					final boolean aktuellKeineDaten = (letztesErgebnis == null)
@@ -500,7 +500,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 				} else {
 					publikationsDatum = ergebnis;
 					/**
-					 * Ein Datum wurde berechnet. Lösche alle gepufferten MQ-Daten
+					 * Ein Datum wurde berechnet. LÃ¶sche alle gepufferten MQ-Daten
 					 */
 					for (final SystemObject mq : aktuelleMQAnalysen.keySet()) {
 						aktuelleMQAnalysen.put(mq, null);
@@ -542,15 +542,15 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	 */
 
 	/**
-	 * Erfragt das Ersatzdatum für diesen virtuellen Messquerschnitt in den Attributen
+	 * Erfragt das Ersatzdatum fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und <code>VDelta</code>.
 	 *
 	 * @param attName
-	 *            der Name des Attributs, für das ein Ersatzdatum gefunden werden soll
-	 * @return das Ersatzdatum für diesen virtuellen Messquerschnitt in den Attributen
+	 *            der Name des Attributs, fÃ¼r das ein Ersatzdatum gefunden werden soll
+	 * @return das Ersatzdatum fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 *         <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und <code>VDelta</code> oder
 	 *         <code>null</code>, wenn dieses nicht ermittelt werden konnte, weil z.B. alle MQs
-	 *         erfasst sind (wäre ein Konfigurationsfehler)
+	 *         erfasst sind (wÃ¤re ein Konfigurationsfehler)
 	 */
 	private ResultData getErsatzDatum(final String attName) {
 		ResultData ersatzDatum = null;
@@ -646,13 +646,13 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	}
 
 	/**
-	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den Attributen
+	 * Setzt die VerkehrsstÃ¤rke fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>QKfz, QLkw</code> und <code>QPkw</code>.
 	 *
 	 * @param analyseDatum
 	 *            the analyse datum
 	 * @param attName
-	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
+	 *            der Name des Attributs, fÃ¼r das die VerkehrsstÃ¤rke gesetzt werden soll
 	 */
 	private void setBilanzDatum(final Data analyseDatum, final String attName) {
 		QWert q = null;
@@ -762,13 +762,13 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im Sinne der Wertersetzung brauchbar ist. Dies ist dann der
-	 * Fall, wenn das Datum Nutzdaten enthält und dessen Datenzeit echt älter als die des letzten
+	 * Erfragt, ob das Ã¼bergebene Datum im Sinne der Wertersetzung brauchbar ist. Dies ist dann der
+	 * Fall, wenn das Datum Nutzdaten enthÃ¤lt und dessen Datenzeit echt Ã¤lter als die des letzten
 	 * publizierten Analysedatums ist.
 	 *
 	 * @param datum
 	 *            ein Analysedatum eines MQ
-	 * @return ob das übergebene Datum im Sinne der Wertersetzung brauchbar ist
+	 * @return ob das Ã¼bergebene Datum im Sinne der Wertersetzung brauchbar ist
 	 */
 	private boolean isDatumOk(final ResultData datum) {
 		boolean ergebnis = false;
@@ -783,14 +783,14 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends DaAnalyseMessQuers
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte &gt;= 0
+	 * Erfragt, ob das Ã¼bergebene Datum im Ã¼bergebenen Attribut sinnvolle Nutzdaten (Werte &gt;= 0
 	 * hat).
 	 *
 	 * @param datum
 	 *            ein Analysedatum
 	 * @param attName
 	 *            der Name des Attributs
-	 * @return ob das übergebene Datum im übergebenen Attribut sinnvolle Daten
+	 * @return ob das Ã¼bergebene Datum im Ã¼bergebenen Attribut sinnvolle Daten
 	 */
 	private boolean isDatumNutzbar(final ResultData datum, final String attName) {
 		boolean ergebnis = false;

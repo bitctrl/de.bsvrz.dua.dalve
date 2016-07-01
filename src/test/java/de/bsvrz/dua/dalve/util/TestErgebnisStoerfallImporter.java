@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -34,16 +34,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
- * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein.
+ * Liest die Ausgangsdaten fÃ¼r die PrÃ¼fung der Datenaufbereitung LVE ein.
  *
- * @author BitCtrl Systems GmbH, Görlitz
+ * @author BitCtrl Systems GmbH, GÃ¶rlitz
  */
 public class TestErgebnisStoerfallImporter extends CSVImporter {
 
 	/** Verbindung zum Datenverteiler. */
 	protected static ClientDavInterface DAV = null;
 
-	/** Hält aktuelle Daten des FS 1-3. */
+	/** HÃ¤lt aktuelle Daten des FS 1-3. */
 	protected String[] ZEILE;
 
 	/** T. */
@@ -57,7 +57,7 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 	 * @param csvQuelle
 	 *            Quelle der Daten (CSV-Datei)
 	 * @throws Exception
-	 *             falls dieses Objekt nicht vollständig initialisiert werden konnte
+	 *             falls dieses Objekt nicht vollstÃ¤ndig initialisiert werden konnte
 	 */
 	public TestErgebnisStoerfallImporter(final ClientDavInterface dav, final String csvQuelle)
 			throws Exception {
@@ -67,7 +67,7 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 		}
 
 		/**
-		 * Tabellenkopf überspringen
+		 * Tabellenkopf Ã¼berspringen
 		 */
 		getNaechsteZeile();
 	}
@@ -83,7 +83,7 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 	}
 
 	/**
-	 * Importiert die nächste Zeile aus der CSV-Datei.
+	 * Importiert die nÃ¤chste Zeile aus der CSV-Datei.
 	 */
 	public final void importNaechsteZeile() {
 		ZEILE = getNaechsteZeile();
@@ -93,7 +93,7 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 	 * Bildet einen Ausgabe-Datensatz des Stoerfallindikator MARZ aus den Daten der aktuellen
 	 * CSV-Zeile.
 	 *
-	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile oder
+	 * @return ein Datensatz der Ã¼bergebenen Attributgruppe mit den Daten der nÃ¤chsten Zeile oder
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getSFvstMARZ() {
@@ -104,7 +104,7 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 	 * Bildet einen Ausgabe-Datensatz des Stoerfallindikator NRW aus den Daten der aktuellen
 	 * CSV-Zeile.
 	 *
-	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile oder
+	 * @return ein Datensatz der Ã¼bergebenen Attributgruppe mit den Daten der nÃ¤chsten Zeile oder
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getSFvstNRW() {
@@ -115,7 +115,7 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 	 * Bildet einen Ausgabe-Datensatz des Stoerfallindikator RDS aus den Daten der aktuellen
 	 * CSV-Zeile.
 	 *
-	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile oder
+	 * @return ein Datensatz der Ã¼bergebenen Attributgruppe mit den Daten der nÃ¤chsten Zeile oder
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getSFvstRDS() {
@@ -128,12 +128,12 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 	 *
 	 * @param offset
 	 *            Der Offset des zu nutzenden Stoerfallverfahrens
-	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile oder
+	 * @return ein Datensatz der Ã¼bergebenen Attributgruppe mit den Daten der nÃ¤chsten Zeile oder
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	private final Data getSF(final int offset) {
 		Data datensatz = DAV
-				.createData(DAV.getDataModel().getAttributeGroup("atg.störfallZustand")); //$NON-NLS-1$
+				.createData(DAV.getDataModel().getAttributeGroup("atg.stÃ¶rfallZustand")); //$NON-NLS-1$
 
 		if (datensatz != null) {
 
@@ -148,9 +148,9 @@ public class TestErgebnisStoerfallImporter extends CSVImporter {
 					DUAUtensilien
 							.getAttributDatum("Horizont", datensatz).asTimeValue().setMillis(0); //$NON-NLS-1$
 					DUAUtensilien
-							.getAttributDatum("Güte.Index", datensatz).asUnscaledValue().set(1); //$NON-NLS-1$
+							.getAttributDatum("GÃ¼te.Index", datensatz).asUnscaledValue().set(1); //$NON-NLS-1$
 					DUAUtensilien
-							.getAttributDatum("Güte.Verfahren", datensatz).asUnscaledValue().set(0); //$NON-NLS-1$
+							.getAttributDatum("GÃ¼te.Verfahren", datensatz).asUnscaledValue().set(0); //$NON-NLS-1$
 
 				} catch (final ArrayIndexOutOfBoundsException ex) {
 					datensatz = null;

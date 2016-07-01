@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -48,7 +48,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * In diesem Objekt werden alle aktuellen Werte die zur Berechnung der Analysewerte eines virtuellen
- * Messquerschnitts notwendig sind gespeichert. Wenn die Werte für ein bestimmtes Intervall bereit
+ * Messquerschnitts notwendig sind gespeichert. Wenn die Werte fÃ¼r ein bestimmtes Intervall bereit
  * stehen (oder eine Timeout abgelaufen ist), wird eine Berechnung durchgefuehrt und der Wert
  * publiziert. <br>
  * <b>Achtung: Verfahren auf Basis der Konfigurationsdaten aus Attributgruppe
@@ -284,14 +284,14 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 		}
 
 		/**
-		 * Ermittle Werte für <code>QKfz, QLkw</code> und <code>QPkw</code>
+		 * Ermittle Werte fÃ¼r <code>QKfz, QLkw</code> und <code>QPkw</code>
 		 */
 		for (final String attName : new String[] { "QKfz", "QLkw", "QPkw" }) {
 			setBilanzDatum(analyseDatum, attName);
 		}
 
 		/**
-		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
+		 * Berechne Werte fÃ¼r <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
 		 */
 		berechneLkwAnteil(analyseDatum);
 		berechneDichte(analyseDatum, "Kfz"); //$NON-NLS-1$
@@ -335,9 +335,9 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 					/**
 					 * Das folgende Flag zeigt an, ob dieser MQ zur Zeit auf "keine Daten" steht.
 					 * Dies ist der Fall,<br>
-					 * 1. wenn noch nie ein Datum für diesen MQ berechnet (versendet) wurde, oder
+					 * 1. wenn noch nie ein Datum fÃ¼r diesen MQ berechnet (versendet) wurde, oder
 					 * <br>
-					 * 2. wenn das letzte für diesen MQ berechnete (versendete) Datum keine Daten
+					 * 2. wenn das letzte fÃ¼r diesen MQ berechnete (versendete) Datum keine Daten
 					 * hatte.
 					 */
 					final boolean aktuellKeineDaten = (letztesErgebnis == null)
@@ -400,13 +400,13 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends DaAnalyseMessQuerschn
 	}
 
 	/**
-	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den Attributen
+	 * Setzt die VerkehrsstÃ¤rke fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>QKfz, QLkw</code> und <code>QPkw</code>.
 	 *
 	 * @param analyseDatum
 	 *            das zu modifizierende Datum.
 	 * @param attName
-	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
+	 *            der Name des Attributs, fÃ¼r das die VerkehrsstÃ¤rke gesetzt werden soll
 	 */
 	private void setBilanzDatum(final Data analyseDatum, final String attName) {
 		final List<QWert> qWerte = new ArrayList<>();

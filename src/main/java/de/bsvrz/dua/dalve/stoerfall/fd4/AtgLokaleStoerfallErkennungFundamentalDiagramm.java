@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -40,7 +40,7 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
  * Stellt die aktuellen Informationen der Attributgruppe
- * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer einen bestimmten Messquerschnitt
+ * <code>atg.lokaleStÃ¶rfallErkennungFundamentalDiagramm</code> fuer einen bestimmten Messquerschnitt
  * zur Verfuegung
  *
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -70,19 +70,19 @@ public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements ClientRec
 		dav.subscribeReceiver(this, objekt,
 				new DataDescription(
 						dav.getDataModel().getAttributeGroup(
-								"atg.lokaleStörfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
+								"atg.lokaleStÃ¶rfallErkennungFundamentalDiagramm"), //$NON-NLS-1$
 				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Erfragt die aktuellen Parameter der Attributgruppe
-	 * <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer einen bestimmten Stoerfall
+	 * <code>atg.lokaleStÃ¶rfallErkennungFundamentalDiagramm</code> fuer einen bestimmten Stoerfall
 	 *
 	 * @param situation
 	 *            ein bestimmter Stoerfall
 	 * @return die aktuellen Parameter der Attributgruppe
-	 *         <code>atg.lokaleStörfallErkennungFundamentalDiagramm</code> fuer den Stoerfall
+	 *         <code>atg.lokaleStÃ¶rfallErkennungFundamentalDiagramm</code> fuer den Stoerfall
 	 */
 	protected final ParameterFuerStoerfall getParameterFuerStoerfall(
 			final StoerfallSituation situation) {

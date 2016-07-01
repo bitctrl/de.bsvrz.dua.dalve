@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -35,10 +35,10 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * <ul>
  * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkFs</code></li>
  * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalFs</code></li>
- * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeFs</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrÃ¤geFs</code></li>
  * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkMq</code></li>
  * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq</code></li>
- * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeMq</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrÃ¤geMq</code></li>
  * </ul>
  *
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -46,19 +46,19 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  */
 public class PrognoseAttributParameter {
 
-	/** Startwert für die Glaettung. */
+	/** Startwert fÃ¼r die Glaettung. */
 	private long start = -4;
 
-	/** Glaettungsparameter für abnehmende Messwerte. */
+	/** Glaettungsparameter fÃ¼r abnehmende Messwerte. */
 	private double alpha1 = Double.NaN;
 
-	/** Glaettungsparameter für steigende Messwerte. */
+	/** Glaettungsparameter fÃ¼r steigende Messwerte. */
 	private double alpha2 = Double.NaN;
 
-	/** Prognoseparameter für abnehmende Messwerte. */
+	/** Prognoseparameter fÃ¼r abnehmende Messwerte. */
 	private double beta1 = Double.NaN;
 
-	/** Prognoseparameter für steigende Messwerte. */
+	/** Prognoseparameter fÃ¼r steigende Messwerte. */
 	private double beta2 = Double.NaN;
 
 	/** Das Prognoseattribut, dessen Daten hier gespeichert werden. */
@@ -98,45 +98,45 @@ public class PrognoseAttributParameter {
 	}
 
 	/**
-	 * Erfragt den Startwert für die Glaettung.
+	 * Erfragt den Startwert fÃ¼r die Glaettung.
 	 *
-	 * @return Startwert für die Glaettung
+	 * @return Startwert fÃ¼r die Glaettung
 	 */
 	public final long getStart() {
 		return start;
 	}
 
 	/**
-	 * Erfragt den Glaettungsparameter für abnehmende Messwerte.
+	 * Erfragt den Glaettungsparameter fÃ¼r abnehmende Messwerte.
 	 *
-	 * @return Glaettungsparameter für abnehmende Messwerte
+	 * @return Glaettungsparameter fÃ¼r abnehmende Messwerte
 	 */
 	public final double getAlpha1() {
 		return alpha1;
 	}
 
 	/**
-	 * Erfragt den Glaettungsparameter für steigende Messwerte.
+	 * Erfragt den Glaettungsparameter fÃ¼r steigende Messwerte.
 	 *
-	 * @return Glaettungsparameter für steigende Messwerte
+	 * @return Glaettungsparameter fÃ¼r steigende Messwerte
 	 */
 	public final double getAlpha2() {
 		return alpha2;
 	}
 
 	/**
-	 * Erfragt den Prognoseparameter für abnehmende Messwerte.
+	 * Erfragt den Prognoseparameter fÃ¼r abnehmende Messwerte.
 	 *
-	 * @return Prognoseparameter für abnehmende Messwerte
+	 * @return Prognoseparameter fÃ¼r abnehmende Messwerte
 	 */
 	public final double getBeta1() {
 		return beta1;
 	}
 
 	/**
-	 * Erfragt den Prognoseparameter für steigende Messwerte.
+	 * Erfragt den Prognoseparameter fÃ¼r steigende Messwerte.
 	 *
-	 * @return Prognoseparameter für steigende Messwerte
+	 * @return Prognoseparameter fÃ¼r steigende Messwerte
 	 */
 	public final double getBeta2() {
 		return beta2;

@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -38,7 +38,7 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Fuehrt die Berechnung der Prognosewerte bzw. der geglaetteten Werte fuer die Ermittlung des
- * Stˆrfallindikators <code>Fundamentaldiagramm</code> fuer <code>KKfzStoerfall</code> durch und
+ * St√∂rfallindikators <code>Fundamentaldiagramm</code> fuer <code>KKfzStoerfall</code> durch und
  * ermittlt so <code>KKfzStoerfallG</code> (Prognosedichte)
  *
  * @author BitCtrl Systems GmbH, Thierfelder

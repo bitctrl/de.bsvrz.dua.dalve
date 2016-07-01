@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -52,7 +52,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Bekommt die messwertersetzten KZD der Fahrstreifen übergeben und produziert aus Diesen
+ * Bekommt die messwertersetzten KZD der Fahrstreifen Ã¼bergeben und produziert aus Diesen
  * Analysedaten nach den Vorgaben der AFo.<br>
  * (siehe SE-02.00.00.00.00-AFo-4.0 S.115f)
  *
@@ -118,7 +118,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	}
 
 	/**
-	 * Berechnet ein Analysedatum eines Fahrstreifens in Bezug auf den übergebenen KZ-Datensatz.
+	 * Berechnet ein Analysedatum eines Fahrstreifens in Bezug auf den Ã¼bergebenen KZ-Datensatz.
 	 *
 	 * @param kurzZeitDatum
 	 *            ein aktueller KZ-Datensatz
@@ -136,14 +136,14 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 					kurzZeitDatum.getData().getTimeValue("T").getMillis()); //$NON-NLS-1$
 
 			/**
-			 * Berechne Verkehrsstärken
+			 * Berechne VerkehrsstÃ¤rken
 			 */
 			berechneVerkehrsStaerke(analyseDatum, kurzZeitDatum, "qKfz"); //$NON-NLS-1$
 			berechneVerkehrsStaerke(analyseDatum, kurzZeitDatum, "qLkw"); //$NON-NLS-1$
 			berechneVerkehrsStaerke(analyseDatum, kurzZeitDatum, "qPkw"); //$NON-NLS-1$
 
 			/**
-			 * Mittlere Geschwindigkeiten, Belegung und Standardabweichung werden einfach übernommen
+			 * Mittlere Geschwindigkeiten, Belegung und Standardabweichung werden einfach Ã¼bernommen
 			 */
 			uebernehmeWert(analyseDatum, kurzZeitDatum, "vKfz"); //$NON-NLS-1$
 			uebernehmeWert(analyseDatum, kurzZeitDatum, "vLkw"); //$NON-NLS-1$
@@ -165,7 +165,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 			berechneDichte(analyseDatum, kurzZeitDatum, "Pkw"); //$NON-NLS-1$
 
 			/**
-			 * Berechne Bemessungsverkehrsstärke
+			 * Berechne BemessungsverkehrsstÃ¤rke
 			 */
 			berechneBemessungsVerkehrsStaerke(analyseDatum, kurzZeitDatum);
 
@@ -195,7 +195,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	 * Berechnet den Lkw-Anteil <code>aLkw</code> (nach SE-02.00.00.00.00-AFo-4.0 S.117f)
 	 *
 	 * @param analyseDatum
-	 *            ein Analysedatum, für das die Fahrzeugdichte ermittelt werden soll (in dieses
+	 *            ein Analysedatum, fÃ¼r das die Fahrzeugdichte ermittelt werden soll (in dieses
 	 *            Datum wird das Ergebnis geschrieben)
 	 * @param kurzZeitDatum
 	 *            ein KZ-Datum, auf dem der zu ermittelnde Analysewert basieren soll
@@ -212,7 +212,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 			if ((qLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (qKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 				/**
-				 * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar
+				 * Ist eine der bei der Berechnung beteiligten GrÃ¶ÃŸen als nicht ermittelbar
 				 * gekennzeichnet, wird der Zielwert mit den Statusflags nicht ermittelbar
 				 * gekennzeichnet.
 				 */
@@ -281,11 +281,11 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	}
 
 	/**
-	 * Berechnet die Bemessungsverkehrsstärke <code>qB</code> (nach SE-02.00.00.00.00-AFo-4.0
+	 * Berechnet die BemessungsverkehrsstÃ¤rke <code>qB</code> (nach SE-02.00.00.00.00-AFo-4.0
 	 * S.117f)
 	 *
 	 * @param analyseDatum
-	 *            ein Analysedatum, für das die Fahrzeugdichte ermittelt werden soll (in dieses
+	 *            ein Analysedatum, fÃ¼r das die Fahrzeugdichte ermittelt werden soll (in dieses
 	 *            Datum wird das Ergebnis geschrieben)
 	 * @param kurzZeitDatum
 	 *            ein KZ-Datum, auf dem der zu ermittelnde Analysewert basieren soll
@@ -407,7 +407,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	 * Berechnet die Bemessungsdichte <code>kB</code> (nach SE-02.00.00.00.00-AFo-4.0 S.116f)
 	 *
 	 * @param analyseDatum
-	 *            ein Analysedatum, für das die Fahrzeugdichte ermittelt werden soll (in dieses
+	 *            ein Analysedatum, fÃ¼r das die Fahrzeugdichte ermittelt werden soll (in dieses
 	 *            Datum wird das Ergebnis geschrieben)
 	 * @param kurzZeitDatum
 	 *            ein KZ-Datum, auf dem der zu ermittelnde Analysewert basieren soll
@@ -522,12 +522,12 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	 * Berechnet die Fahrzeugdichte (nach SE-02.00.00.00.00-AFo-4.0 S.116f)
 	 *
 	 * @param analyseDatum
-	 *            ein Analysedatum, für das die Fahrzeugdichte ermittelt werden soll (in dieses
+	 *            ein Analysedatum, fÃ¼r das die Fahrzeugdichte ermittelt werden soll (in dieses
 	 *            Datum wird das Ergebnis geschrieben)
 	 * @param kurzZeitDatum
 	 *            ein KZ-Datum, auf dem der zu ermittelnde Analysewert basieren soll
 	 * @param fahrZeugKlasse
-	 *            eine Fahrzeugklasse, für die der Analysewert ermittelt werden soll
+	 *            eine Fahrzeugklasse, fÃ¼r die der Analysewert ermittelt werden soll
 	 */
 	private final void berechneDichte(final Data analyseDatum, final ResultData kurzZeitDatum,
 			final String fahrZeugKlasse) {
@@ -586,7 +586,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 						}
 					} else {
 						/**
-						 * offensichtlich laut Prüfdaten:
+						 * offensichtlich laut PrÃ¼fdaten:
 						 */
 						// zielK.setWertUnskaliert(0);
 						zielK.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
@@ -760,7 +760,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	}
 
 	/**
-	 * Berechnet die Verkehrsstärken analog SE-02.00.00.00.00-AFo-4.0 S.116f
+	 * Berechnet die VerkehrsstÃ¤rken analog SE-02.00.00.00.00-AFo-4.0 S.116f
 	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
@@ -782,7 +782,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 			qAnalyse.getGueteIndex().setWert(0);
 		} else {
 			/**
-			 * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar
+			 * Ist eine der bei der Berechnung beteiligten GrÃ¶ÃŸen als nicht ermittelbar
 			 * gekennzeichnet, wird der Zielwert mit den Statusflags nicht ermittelbar
 			 * gekennzeichnet.
 			 */
@@ -820,14 +820,14 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 	}
 
 	/**
-	 * Übernimmt einen Wert aus dem Kurzzeitdatum in das Analysedatum.
+	 * Ãœbernimmt einen Wert aus dem Kurzzeitdatum in das Analysedatum.
 	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 * @param kurzZeitDatum
 	 *            das Roh-KZ-Datum
 	 * @param attName
-	 *            der Attributname des Verkehrswertes, der übernommen werden soll
+	 *            der Attributname des Verkehrswertes, der Ã¼bernommen werden soll
 	 */
 	private final void uebernehmeWert(final Data analyseDatum, final ResultData kurzZeitDatum,
 			final String attName) {
@@ -841,7 +841,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 			analyseWert.getGueteIndex().setWert(0);
 		} else {
 			/**
-			 * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar
+			 * Ist eine der bei der Berechnung beteiligten GrÃ¶ÃŸen als nicht ermittelbar
 			 * gekennzeichnet, wird der Zielwert mit den Statusflags nicht ermittelbar
 			 * gekennzeichnet.
 			 */
@@ -862,7 +862,7 @@ public class FsAnalyseModul extends AbstraktBearbeitungsKnotenAdapter {
 		}
 
 		// /**
-		// * Ist eine der bei der Berechnung beteiligten Größen als nicht ermittelbar
+		// * Ist eine der bei der Berechnung beteiligten GrÃ¶ÃŸen als nicht ermittelbar
 		// gekennzeichnet, wird
 		// * der Zielwert mit den Statusflags nicht ermittelbar gekennzeichnet.
 		// */

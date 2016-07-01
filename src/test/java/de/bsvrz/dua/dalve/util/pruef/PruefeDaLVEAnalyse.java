@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -40,9 +40,9 @@ import de.bsvrz.dua.dalve.util.TestErgebnisAnalyseImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
 /**
- * Prüft (Vergleicht) Analyse-Datensätze der Fahrstreifen.
+ * PrÃ¼ft (Vergleicht) Analyse-DatensÃ¤tze der Fahrstreifen.
  *
- * @author Görlitz
+ * @author GÃ¶rlitz
  */
 public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 
@@ -55,7 +55,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 	/** Empfangsdatenbeschreibung. */
 	private DataDescription DD_KZDMQ_EMPF = null;
 
-	/** Ergbnisimporter für Analysewerte der FS. */
+	/** Ergbnisimporter fÃ¼r Analysewerte der FS. */
 	private final TestErgebnisAnalyseImporter importAnaFS;
 
 	/** Halten das aktuelle SOLL-Ergebnis der CSV-Datei. */
@@ -73,7 +73,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 	/** Zeitstempel, auf den gewartet wird. */
 	private long pruefZeit;
 
-	/** Gibt den Prüfungsabschluss des jeweiligen FS an. */
+	/** Gibt den PrÃ¼fungsabschluss des jeweiligen FS an. */
 	private boolean pruefungFS1fertig = false;
 
 	/** The pruefung f s2fertig. */
@@ -88,7 +88,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 	/** Aufrufende Klasse. */
 	private final DaLVETestAnalyse caller;
 
-	/** Prüferthreads für FS 1-3. */
+	/** PrÃ¼ferthreads fÃ¼r FS 1-3. */
 	private final VergleicheDaLVEAnalyse verglFS1 = new VergleicheDaLVEAnalyse(this, 1);
 
 	/** The vergl f s2. */
@@ -107,7 +107,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 	protected boolean useAssert;
 
 	/**
-	 * Initialisiert Prüferobjekt.
+	 * Initialisiert PrÃ¼ferobjekt.
 	 *
 	 * @param caller
 	 *            the caller
@@ -131,7 +131,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 		useAssert = caller.getUseAssert();
 
 		/*
-		 * Empfängeranmeldung aller 3 Fahrstreifen
+		 * EmpfÃ¤ngeranmeldung aller 3 Fahrstreifen
 		 */
 		DD_KZDFS_EMPF = new DataDescription(
 				this.dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"), //$NON-NLS-1$
@@ -151,14 +151,14 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 		 */
 		importAnaFS = new TestErgebnisAnalyseImporter(dav, csvQuelle);
 
-		System.out.println("Prüferklasse initialisiert"); //$NON-NLS-1$
+		System.out.println("PrÃ¼ferklasse initialisiert"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Importiert nächsten Ergebnisdatensatz und setzt Prüfzeitstempel.
+	 * Importiert nÃ¤chsten Ergebnisdatensatz und setzt PrÃ¼fzeitstempel.
 	 *
 	 * @param pruefZeit
-	 *            Prüfzeitstempel
+	 *            PrÃ¼fzeitstempel
 	 */
 	public void naechsterDatensatz(final long pruefZeit) {
 		this.pruefZeit = pruefZeit;
@@ -174,15 +174,15 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 		pruefungFS3fertig = false;
 		pruefungMQfertig = false;
 
-		// System.out.println("Prüferklasse parametriert -> Zeit: "+pruefZeit); //$NON-NLS-1$
+		// System.out.println("PrÃ¼ferklasse parametriert -> Zeit: "+pruefZeit); //$NON-NLS-1$
 	}
 
 	/**
-	 * Wird von den Prüferthreads getriggert und benachrichtigt, wenn die Prüfung aller 3 FS
+	 * Wird von den PrÃ¼ferthreads getriggert und benachrichtigt, wenn die PrÃ¼fung aller 3 FS
 	 * abgeschlossen ist, die Aufrufende Klasse.
 	 *
 	 * @param FS
-	 *            Fahstreifenindex des Prüferthreads (1-3)
+	 *            Fahstreifenindex des PrÃ¼ferthreads (1-3)
 	 */
 	public void doNotify(final int FS) {
 
@@ -212,7 +212,7 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 		}
 		}
 		if (pruefungFS1fertig && pruefungFS2fertig && pruefungFS3fertig && pruefungMQfertig) {
-			// System.out.println("Alle FS geprüft. Benachrichtige Hauptthread..."); //$NON-NLS-1$
+			// System.out.println("Alle FS geprÃ¼ft. Benachrichtige Hauptthread..."); //$NON-NLS-1$
 			caller.doNotify();
 		}
 	}
@@ -229,15 +229,15 @@ public class PruefeDaLVEAnalyse implements ClientReceiverInterface {
 						// Ermittle FS und pruefe Daten
 
 						if (result.getObject().getName().endsWith(".1")) { //$NON-NLS-1$
-							// System.out.println("Zu prüfendes Datum (FS1)
+							// System.out.println("Zu prÃ¼fendes Datum (FS1)
 							// empfangen. Vergleiche..."); //$NON-NLS-1$
 							verglFS1.vergleiche(result.getData(), ergebnisFS1, csvIndex);
 						} else if (result.getObject().getName().endsWith(".2")) { //$NON-NLS-1$
-							// System.out.println("Zu prüfendes Datum (FS2)
+							// System.out.println("Zu prÃ¼fendes Datum (FS2)
 							// empfangen. Vergleiche..."); //$NON-NLS-1$
 							verglFS2.vergleiche(result.getData(), ergebnisFS2, csvIndex);
 						} else if (result.getObject().getName().endsWith(".3")) { //$NON-NLS-1$
-							// System.out.println("Zu prüfendes Datum (FS3)
+							// System.out.println("Zu prÃ¼fendes Datum (FS3)
 							// empfangen. Vergleiche..."); //$NON-NLS-1$
 							verglFS3.vergleiche(result.getData(), ergebnisFS3, csvIndex);
 						}
@@ -263,7 +263,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 	private final PruefeDaLVEAnalyse caller;
 
 	/**
-	 * Zu prüfender FS
+	 * Zu prÃ¼fender FS
 	 */
 	private final int fsIndex;
 
@@ -326,26 +326,26 @@ class VergleicheDaLVEAnalyse extends Thread {
 			".Status.PlLogisch.WertMinLogisch", //$NON-NLS-1$ **/
 			".Status.MessWertErsetzung.Implausibel", //$NON-NLS-1$
 			".Status.MessWertErsetzung.Interpoliert", //$NON-NLS-1$
-			".Güte.Index" }; //$NON-NLS-1$
+			".GÃ¼te.Index" }; //$NON-NLS-1$
 
 	/**
-	 * Initialisiert Prüferthread
+	 * Initialisiert PrÃ¼ferthread
 	 *
 	 * @param caller
 	 *            Aufrufende Klasse
 	 * @param fsIndex
-	 *            Zu prüfender Fahrstreifen
+	 *            Zu prÃ¼fender Fahrstreifen
 	 */
 	public VergleicheDaLVEAnalyse(final PruefeDaLVEAnalyse caller, final int fsIndex) {
 		this.caller = caller;
 		this.fsIndex = fsIndex;
-		System.out.println("Prüfthread [PT] initialisiert (FS " + fsIndex + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("PrÃ¼fthread [PT] initialisiert (FS " + fsIndex + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		// starte Thread
 		start();
 	}
 
 	/**
-	 * Initialisiert Prüferthread.
+	 * Initialisiert PrÃ¼ferthread.
 	 *
 	 * @param caller
 	 *            Aufrufende Klasse
@@ -353,7 +353,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 	public VergleicheDaLVEAnalyse(final PruefeDaLVEAnalyse caller) {
 		this.caller = caller;
 		fsIndex = 4;
-		System.out.println("Prüfthread [PT] initialisiert (MQ)"); //$NON-NLS-1$
+		System.out.println("PrÃ¼fthread [PT] initialisiert (MQ)"); //$NON-NLS-1$
 		// starte Thread
 		start();
 	}
@@ -379,13 +379,13 @@ class VergleicheDaLVEAnalyse extends Thread {
 	}
 
 	/**
-	 * Prüfthread
+	 * PrÃ¼fthread
 	 */
 	@Override
 	public void run() {
-		// Thread läuft bis Programmende
+		// Thread lÃ¤uft bis Programmende
 		while (true) {
-			// warte nit prüfung bis geweckt
+			// warte nit prÃ¼fung bis geweckt
 			// System.out.println("[PT"+fsIndex+"] Warte auf Trigger"); //$NON-NLS-1$ //$NON-NLS-2$
 			doWait();
 			// vergleiche
@@ -396,7 +396,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 	}
 
 	/**
-	 * Führt vergleich durch
+	 * FÃ¼hrt vergleich durch
 	 *
 	 */
 	private void doVergleich() {
@@ -549,7 +549,7 @@ class VergleicheDaLVEAnalyse extends Thread {
 	}
 
 	/**
-	 * Laesst Prüfthread warten
+	 * Laesst PrÃ¼fthread warten
 	 *
 	 */
 	private void doWait() {

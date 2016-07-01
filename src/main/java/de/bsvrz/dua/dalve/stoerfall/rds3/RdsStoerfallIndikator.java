@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -39,7 +39,7 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Repr‰sentiert einen Stoerfallindikator nach Verfahren RDS (nur fuer Messquerschnitte).
+ * Repr√§sentiert einen Stoerfallindikator nach Verfahren RDS (nur fuer Messquerschnitte).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -47,10 +47,10 @@ public class RdsStoerfallIndikator extends NrwStoerfallIndikatorMq {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
-	/** Hysteregeschwindigkeit f¸r die Ermittlung von z‰hflieﬂendem Verkehr. */
+	/** Hysteregeschwindigkeit f√ºr die Ermittlung von z√§hflie√üendem Verkehr. */
 	protected long VST5Hysterese = -4;
 
-	/** Hysteregeschwindigkeit f¸r die Ermittlung von Stau. */
+	/** Hysteregeschwindigkeit f√ºr die Ermittlung von Stau. */
 	protected long VST6Hysterese = -4;
 
 	/** letzter empfangener Analysedatensatz. */
@@ -80,7 +80,7 @@ public class RdsStoerfallIndikator extends NrwStoerfallIndikatorMq {
 
 	@Override
 	protected String getPubAspektPid() {
-		return "asp.stˆrfallVerfahrenRDS"; //$NON-NLS-1$
+		return "asp.st√∂rfallVerfahrenRDS"; //$NON-NLS-1$
 	}
 
 	/**

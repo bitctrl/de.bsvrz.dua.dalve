@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -32,7 +32,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
- * Korrespondiert mit einem Datensatz der Attributgruppe <code>atg.störfallZustand</code>
+ * Korrespondiert mit einem Datensatz der Attributgruppe <code>atg.stÃ¶rfallZustand</code>
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -48,10 +48,10 @@ public class StoerfallZustand {
 	/** Prognosehorizont (0 entspricht Analysewert). */
 	private long horizont = 0;
 
-	/** Güte des betrachteten Wertes. */
+	/** GÃ¼te des betrachteten Wertes. */
 	private GanzZahl guete = GanzZahl.getGueteIndex();
 
-	/** Berechnungsverfahren, mit dem die Güte ermittelt wurde. */
+	/** Berechnungsverfahren, mit dem die GÃ¼te ermittelt wurde. */
 	private GueteVerfahren verfahren = GueteVerfahren.STANDARD;
 
 	/** Intervalldauer, mit dem die Werte erfasst wurden. */
@@ -71,20 +71,20 @@ public class StoerfallZustand {
 
 	/**
 	 * Erfragt den Inhalt dieses Objektes als einen DAV-Datensatz der Attributgruppe
-	 * <code>atg.störfallZustand</code>
+	 * <code>atg.stÃ¶rfallZustand</code>
 	 *
 	 * @return der Inhalt dieses Objektes als einen DAV-Datensatz der Attributgruppe
-	 *         <code>atg.störfallZustand</code>
+	 *         <code>atg.stÃ¶rfallZustand</code>
 	 */
 	public final Data getData() {
 		final Data datenSatz = DAV
-				.createData(DAV.getDataModel().getAttributeGroup("atg.störfallZustand")); //$NON-NLS-1$
+				.createData(DAV.getDataModel().getAttributeGroup("atg.stÃ¶rfallZustand")); //$NON-NLS-1$
 
 		datenSatz.getTimeValue("T").setMillis(T); //$NON-NLS-1$
 		datenSatz.getUnscaledValue("Situation").set(situation.getCode()); //$NON-NLS-1$
 		datenSatz.getTimeValue("Horizont").setMillis(horizont); //$NON-NLS-1$
-		datenSatz.getItem("Güte").getUnscaledValue("Index").set(guete.getWert()); //$NON-NLS-1$ //$NON-NLS-2$
-		datenSatz.getItem("Güte").getUnscaledValue("Verfahren").set(verfahren.getCode()); //$NON-NLS-1$ //$NON-NLS-2$
+		datenSatz.getItem("GÃ¼te").getUnscaledValue("Index").set(guete.getWert()); //$NON-NLS-1$ //$NON-NLS-2$
+		datenSatz.getItem("GÃ¼te").getUnscaledValue("Verfahren").set(verfahren.getCode()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return datenSatz;
 	}
@@ -110,20 +110,20 @@ public class StoerfallZustand {
 	}
 
 	/**
-	 * Setzt die Güte des betrachteten Wertes.
+	 * Setzt die GÃ¼te des betrachteten Wertes.
 	 *
 	 * @param guete
-	 *            Güte des betrachteten Wertes
+	 *            GÃ¼te des betrachteten Wertes
 	 */
 	public final void setGuete(final GanzZahl guete) {
 		this.guete = guete;
 	}
 
 	/**
-	 * Setzt das Berechnungsverfahren, mit dem die Güte ermittelt wurde.
+	 * Setzt das Berechnungsverfahren, mit dem die GÃ¼te ermittelt wurde.
 	 *
 	 * @param verfahren
-	 *            Berechnungsverfahren, mit dem die Güte ermittelt wurde
+	 *            Berechnungsverfahren, mit dem die GÃ¼te ermittelt wurde
 	 */
 	public final void setVerfahren(final GueteVerfahren verfahren) {
 		this.verfahren = verfahren;

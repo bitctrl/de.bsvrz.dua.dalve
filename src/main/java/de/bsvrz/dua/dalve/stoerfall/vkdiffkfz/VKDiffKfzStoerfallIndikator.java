@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -190,7 +190,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		super.initialisiere(dav, objekt);
 
 		final Data konfigData = objekt
-				.getConfigurationData(dav.getDataModel().getAttributeGroup("atg.straﬂenAbschnitt"));
+				.getConfigurationData(dav.getDataModel().getAttributeGroup("atg.stra√üenAbschnitt"));
 
 		if (konfigData != null) {
 			if ((konfigData.getReferenceValue("vonMessQuerschnitt") != null) && (konfigData
@@ -200,7 +200,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				abmelden();
 				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer " + objekt
 						+ " nicht ermittelt werden, "
-						+ "da kein Einfahrtsmessquerschnitt konfiguriert wurde (atg.straﬂenAbschnitt)");
+						+ "da kein Einfahrtsmessquerschnitt konfiguriert wurde (atg.stra√üenAbschnitt)");
 			}
 			if ((konfigData.getReferenceValue("bisMessQuerschnitt") != null) && (konfigData
 					.getReferenceValue("bisMessQuerschnitt").getSystemObject() != null)) {
@@ -209,13 +209,13 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				abmelden();
 				LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer " + objekt
 						+ " nicht ermittelt werden, "
-						+ "da kein Ausfahrtsmessquerschnitt konfiguriert wurde (atg.straﬂenAbschnitt)");
+						+ "da kein Ausfahrtsmessquerschnitt konfiguriert wurde (atg.stra√üenAbschnitt)");
 			}
 		} else {
 			abmelden();
 			LOGGER.warning("Stoerfallindikator VKDiffKfz kann fuer " + objekt
 					+ " nicht ermittelt werden, "
-					+ "da keine Ein- und Ausfahrtsmessquerschnitte konfiguriert wurden (atg.straﬂenAbschnitt)");
+					+ "da keine Ein- und Ausfahrtsmessquerschnitte konfiguriert wurden (atg.stra√üenAbschnitt)");
 		}
 
 		if ((von != null) && (bis != null)) {
@@ -229,7 +229,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 							ReceiveOptions.normal(), ReceiverRole.receiver());
 
 			SystemObject fdObjektVon = von;
-			final SystemObject stsObjektVon = DatenaufbereitungLVE.getStraﬂenTeilSegment(von);
+			final SystemObject stsObjektVon = DatenaufbereitungLVE.getStra√üenTeilSegment(von);
 			if (stsObjektVon != null) {
 				fdObjektVon = stsObjektVon;
 				LOGGER.info("Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
@@ -271,7 +271,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 			});
 
 			SystemObject fdObjektBis = bis;
-			final SystemObject stsObjektBis = DatenaufbereitungLVE.getStraﬂenTeilSegment(bis);
+			final SystemObject stsObjektBis = DatenaufbereitungLVE.getStra√üenTeilSegment(bis);
 			if (stsObjektBis != null) {
 				fdObjektBis = stsObjektBis;
 				LOGGER.info("Fuer " + objekt + " wird das Fundamentaldiagramm am Teilsegment "
@@ -316,7 +316,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 	@Override
 	protected String getParameterAtgPid() {
-		return "atg.lokaleStˆrfallErkennungVKDiffKfz";
+		return "atg.lokaleSt√∂rfallErkennungVKDiffKfz";
 	}
 
 	@Override
@@ -355,7 +355,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 	@Override
 	protected String getPubAspektPid() {
-		return "asp.stˆrfallVerfahrenVKDiffKfz"; //$NON-NLS-1$
+		return "asp.st√∂rfallVerfahrenVKDiffKfz"; //$NON-NLS-1$
 	}
 
 	/**

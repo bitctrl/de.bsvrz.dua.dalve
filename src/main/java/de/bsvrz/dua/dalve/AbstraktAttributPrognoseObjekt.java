@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -36,7 +36,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * <b>Achtung:</b> Diese Implementierung geht davon aus, dass nur Attribute verarbeitet werden, die
  * die Zustaende <code>fehlerhaft</code>, <code>nicht ermittelbar</code> und
  * <code>fehlerhaft/nicht ermittelbar</code> in den Werten -1, -2 und -3 besitzen. Werte mit einem
- * dieser Zust‰nde werden igniriert.
+ * dieser Zust√§nde werden igniriert.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -125,9 +125,9 @@ public class AbstraktAttributPrognoseObjekt {
 				start = false;
 				/**
 				 * 5. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135 Ist der Trend DZNeu = 0, dann
-				 * gelten die Gl‰ttungsfaktoren des letzten Gl‰ttungsintervalls mit Trend DZNeu = 0.
+				 * gelten die Gl√§ttungsfaktoren des letzten Gl√§ttungsintervalls mit Trend DZNeu = 0.
 				 * Email H.C.Kniss (11.09.07): War der Trend im letzten Intervall 0, so werden die
-				 * Gl‰ttungsparamter f¸r den aktuellen Zyklus nicht ge‰ndert (man tut so, als ob
+				 * Gl√§ttungsparamter f√ºr den aktuellen Zyklus nicht ge√§ndert (man tut so, als ob
 				 * sich der Trend der davor liegenden Zyklen fortsetzt).
 				 */
 				if (ZAktuell > ZAlt) {
@@ -144,8 +144,8 @@ public class AbstraktAttributPrognoseObjekt {
 			if (ZPAlt == 0) {
 				/**
 				 * 2. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135 Tritt bei der Kurzzeitprognose
-				 * ein Wert ZP = 0 auf, so muss der n‰chste Messwert direkt als Ergebnis der
-				 * Prognoserechnung ¸bernommen und der alte Trend auf 0 gesetzt werden Email
+				 * ein Wert ZP = 0 auf, so muss der n√§chste Messwert direkt als Ergebnis der
+				 * Prognoserechnung √ºbernommen und der alte Trend auf 0 gesetzt werden Email
 				 * H.C.Kniss (11.09.07): War ZP = 0 so ist im aktuellen Zyklus der Messwert als
 				 * Prognosewert zu verwenden. Der Trend wird dabei zu 0 gesetzt, weil in diesem Fall
 				 * kein Trend ermittelbar ist.
@@ -174,8 +174,8 @@ public class AbstraktAttributPrognoseObjekt {
 			if (!(istVAttributUndKeineVerkehrsStaerke)) {
 				/**
 				 * 4. Randbedingung SE-02.00.00.00.00-AFo-4.0, S.135 Nach Messintervallen ohne
-				 * Fahrzeugdetektion m¸ssen alle gegl‰tteten Geschwindigkeitswerte vom
-				 * Vorg‰ngerintervall ¸bernommen werden.<br>
+				 * Fahrzeugdetektion m√ºssen alle gegl√§tteten Geschwindigkeitswerte vom
+				 * Vorg√§ngerintervall √ºbernommen werden.<br>
 				 * D.h. hier, dass ZG nur dann neu bestimmt wird, wenn dies kein
 				 * Geschwindigkeitsattribut ist oder wenn es eines ist und Fahrzeuge detektiert
 				 * wurden

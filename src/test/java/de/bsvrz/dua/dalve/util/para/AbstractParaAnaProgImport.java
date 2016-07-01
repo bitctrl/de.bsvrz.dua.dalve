@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -39,7 +39,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
- * Abstrakte Klasse zum Einlesen von Parametern aus der CSV-Datei innerhalb der Prüfspezifikation.
+ * Abstrakte Klasse zum Einlesen von Parametern aus der CSV-Datei innerhalb der PrÃ¼fspezifikation.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -49,7 +49,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	/** Verbindung zum Datenverteiler. */
 	protected static ClientDavInterface DAV = null;
 
-	/** Systemobjekt, für das die Parameter gesetzt werden sollen. */
+	/** Systemobjekt, fÃ¼r das die Parameter gesetzt werden sollen. */
 	protected SystemObject[] objekt = null;
 
 	/** Attributgruppe der Analyse-Parameter. */
@@ -61,7 +61,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	/** Attributgruppe der Prognose-Parameter (Normal). */
 	protected AttributeGroup ATG_PrognoseNormal;
 
-	/** Attributgruppe der Prognose-Parameter (Träge). */
+	/** Attributgruppe der Prognose-Parameter (TrÃ¤ge). */
 	protected AttributeGroup ATG_PrognoseTraege;
 
 	/** Attributgruppe des Verkehrslageverfahren 1. */
@@ -85,7 +85,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	/** Datenbeschreibung Prognose (Normal). */
 	protected DataDescription DD_PrognoseNormal;
 
-	/** Datenbeschreibung Prognose (Träge). */
+	/** Datenbeschreibung Prognose (TrÃ¤ge). */
 	protected DataDescription DD_PrognoseTraege;
 
 	/** Datenbeschreibung Verkehrslageverfahren 1. */
@@ -109,19 +109,19 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	 * @param csvQuelle
 	 *            Quelle der Daten (CSV-Datei)
 	 * @throws Exception
-	 *             falls dieses Objekt nicht vollständig initialisiert werden konnte
+	 *             falls dieses Objekt nicht vollstÃ¤ndig initialisiert werden konnte
 	 */
 	public AbstractParaAnaProgImport(final String csvQuelle) throws Exception {
 		super(csvQuelle);
 	}
 
 	/**
-	 * Führt den Parameterimport aus.
+	 * FÃ¼hrt den Parameterimport aus.
 	 *
 	 * @param index
 	 *            der index
 	 * @throws Exception
-	 *             wenn die Parameter nicht vollständig importiert werden konnten
+	 *             wenn die Parameter nicht vollstÃ¤ndig importiert werden konnten
 	 */
 	public void importiereParameterAnalyse(final int index) throws Exception {
 
@@ -174,10 +174,10 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	}
 
 	/**
-	 * Führt den Parameterimport aus.
+	 * FÃ¼hrt den Parameterimport aus.
 	 *
 	 * @throws Exception
-	 *             wenn die Parameter nicht vollständig importiert werden konnten
+	 *             wenn die Parameter nicht vollstÃ¤ndig importiert werden konnten
 	 */
 	public final void importiereParameterPrognose() throws Exception {
 		final SystemObject obj = objekt[0];
@@ -214,8 +214,8 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 				setParameterResult(parameterProgNorm, attPfadPNormal, wert);
 			}
 
-			// Prognose Träge
-			final String attPfadPTraege = getPrognoseAttributPfadVon(attributInCSVDatei, "träge");
+			// Prognose TrÃ¤ge
+			final String attPfadPTraege = getPrognoseAttributPfadVon(attributInCSVDatei, "trÃ¤ge");
 			if (attPfadPTraege != null) {
 				setParameterResult(parameterProgTraege, attPfadPTraege, wert);
 			}
@@ -260,12 +260,12 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	}
 
 	/**
-	 * Führt den Parameterimport aus.
+	 * FÃ¼hrt den Parameterimport aus.
 	 *
 	 * @param index
 	 *            der index
 	 * @throws Exception
-	 *             wenn die Parameter nicht vollständig importiert werden konnten
+	 *             wenn die Parameter nicht vollstÃ¤ndig importiert werden konnten
 	 */
 	public final void importiereParameterStoerfall(final int index) throws Exception {
 		final SystemObject obj = objekt[0];
@@ -371,7 +371,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	}
 
 	/**
-	 * Erfragt den Attributpfad zu einem Analyse-Attribut, das in der CSV-Datei den übergebenen
+	 * Erfragt den Attributpfad zu einem Analyse-Attribut, das in der CSV-Datei den Ã¼bergebenen
 	 * Namen hat
 	 *
 	 * @param attributInCSVDatei
@@ -384,7 +384,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 			final int index);
 
 	/**
-	 * Erfragt den Attributpfad zu einem Prognose-Attribut, das in der CSV-Datei den übergebenen
+	 * Erfragt den Attributpfad zu einem Prognose-Attribut, das in der CSV-Datei den Ã¼bergebenen
 	 * Namen hat
 	 *
 	 *
@@ -414,7 +414,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	}
 
 	/**
-	 * Erfragt den Attributpfad zu einem Stoerfall-Attribut, das in der CSV-Datei den übergebenen
+	 * Erfragt den Attributpfad zu einem Stoerfall-Attribut, das in der CSV-Datei den Ã¼bergebenen
 	 * Namen hat
 	 *
 	 *
@@ -454,7 +454,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 
 	/**
 	 * Erfragt den Attributpfad zu einem Fundamentaldiagramm-Attribut, das in der CSV-Datei den
-	 * übergebenen Namen hat
+	 * Ã¼bergebenen Namen hat
 	 *
 	 * @param attributInCSVDatei
 	 *            Attributname innerhalb der CSV-Datei
@@ -573,7 +573,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
-		// keine Überprüfung
+		// keine ÃœberprÃ¼fung
 	}
 
 	@Override
@@ -583,7 +583,7 @@ public abstract class AbstractParaAnaProgImport extends CSVImporter
 	}
 
 	/**
-	 * Setzt das Attribut Wichtung im übergebenen Parameterdatensatz.
+	 * Setzt das Attribut Wichtung im Ã¼bergebenen Parameterdatensatz.
 	 *
 	 * @param parameter
 	 *            Der Datensatz, in dem das Attribut Wichtung gesetzt werden soll
