@@ -1,47 +1,48 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Datenaufbereitung LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * Copyright 2015 by Kappich Systemberatung Aachen
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.dalve.
+ * 
+ * de.bsvrz.dua.dalve is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.dalve is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.dalve.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 package de.bsvrz.dua.dalve.analyse;
 
-import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.ClientReceiverInterface;
-import de.bsvrz.dav.daf.main.DataDescription;
-import de.bsvrz.dav.daf.main.ReceiveOptions;
-import de.bsvrz.dav.daf.main.ReceiverRole;
-import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.*;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 
 /**
- * Korrespondiert mit der Attributgruppe <code>atg.verkehrsDatenKurzZeitAnalyseFs</code>.
- *
+ * Korrespondiert mit der Attributgruppe
+ * <code>atg.verkehrsDatenKurzZeitAnalyseFs</code>.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
-public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer
-		implements ClientReceiverInterface {
+public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
+		AllgemeinerDatenContainer implements ClientReceiverInterface, AtgVerkehrsDatenKurzZeitAnalyse {
 
 	/**
 	 * <code>kKfz.Grenz</code>.
@@ -95,153 +96,181 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends AllgemeinerDatenContainer
 
 	/**
 	 * Standardkonstruktor.
-	 *
+	 * 
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param fs
 	 *            ein Systemobjekt eines Fahrstreifens
 	 */
-	public AtgVerkehrsDatenKurzZeitAnalyseFs(final ClientDavInterface dav, final SystemObject fs) {
+	public AtgVerkehrsDatenKurzZeitAnalyseFs(final ClientDavInterface dav,
+			final SystemObject fs) {
 		if (dav == null) {
-			throw new NullPointerException("Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException(
+					"Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
 		}
 		if (fs == null) {
-			throw new NullPointerException("Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException(
+					"Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
 		}
-		dav.subscribeReceiver(this, fs,
-				new DataDescription(
-						dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseFs"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+		dav.subscribeReceiver(this, fs, new DataDescription(
+				dav.getDataModel().getAttributeGroup(
+						"atg.verkehrsDatenKurzZeitAnalyseFs"), //$NON-NLS-1$
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Erfragt <code>kKfz.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>kKfz.Grenz</code>
 	 */
+	@Override
 	public final long getKKfzGrenz() {
 		return kKfzGrenz;
 	}
 
 	/**
 	 * Erfragt <code>kKfz.Max</code>.
-	 *
+	 * 
 	 * @return <code>kKfz.Max</code>
 	 */
+	@Override
 	public final long getKKfzMax() {
 		return kKfzMax;
 	}
 
 	/**
 	 * Erfragt <code>kLkw.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>kLkw.Grenz</code>
 	 */
+	@Override
 	public final long getKLkwGrenz() {
 		return kLkwGrenz;
 	}
 
 	/**
 	 * Erfragt <code>kLkw.Max</code>.
-	 *
+	 * 
 	 * @return <code>kLkw.Max</code>
 	 */
+	@Override
 	public final long getKLkwMax() {
 		return kLkwMax;
 	}
 
 	/**
 	 * Erfragt <code>kPkw.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>kPkw.Grenz</code>
 	 */
+	@Override
 	public final long getKPkwGrenz() {
 		return kPkwGrenz;
 	}
 
 	/**
 	 * Erfragt <code>kPkw.Max</code>.
-	 *
+	 * 
 	 * @return <code>kPkw.Max</code>
 	 */
+	@Override
 	public final long getKPkwMax() {
 		return kPkwMax;
 	}
 
 	/**
 	 * Erfragt <code>kB.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>kB.Grenz</code>
 	 */
+	@Override
 	public final long getKBGrenz() {
 		return kBGrenz;
 	}
 
 	/**
 	 * Erfragt <code>kB.Max</code>.
-	 *
+	 * 
 	 * @return <code>kB.Max</code>
 	 */
+	@Override
 	public final long getKBMax() {
 		return kBMax;
 	}
 
 	/**
 	 * Erfragt <code>fl.k1</code>.
-	 *
+	 * 
 	 * @return <code>fl.k1</code>
 	 */
+	@Override
 	public final double getFlk1() {
 		return flk1;
 	}
 
 	/**
 	 * Erfragt <code>fl.k2</code>.
-	 *
+	 * 
 	 * @return <code>fl.k2</code>
 	 */
+	@Override
 	public final double getFlk2() {
 		return flk2;
 	}
 
 	/**
 	 * Erfragt, ob dieses Objekt bereits Parameter emfangen hat.
-	 *
+	 * 
 	 * @return ob dieses Objekt bereits Parameter emfangen hat
 	 */
+	@Override
 	public final boolean isInitialisiert() {
-		return flk1 != -4;
+		return this.flk1 != -4;
 	}
 
-	@Override
-	public void update(final ResultData[] resultate) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void update(ResultData[] resultate) {
 		if (resultate != null) {
-			for (final ResultData resultat : resultate) {
-				if ((resultat != null) && (resultat.getData() != null)) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						flk1 = resultat.getData().getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						flk2 = resultat.getData().getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.flk1 = resultat
+								.getData()
+								.getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.flk2 = resultat
+								.getData()
+								.getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kBGrenz = resultat.getData().getItem("kB").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kBMax = resultat.getData().getItem("kB").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kBGrenz = resultat
+								.getData()
+								.getItem("kB").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kBMax = resultat
+								.getData()
+								.getItem("kB").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kKfzGrenz = resultat.getData().getItem("kKfz").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kKfzMax = resultat.getData().getItem("kKfz").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kKfzGrenz = resultat
+								.getData()
+								.getItem("kKfz").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kKfzMax = resultat
+								.getData()
+								.getItem("kKfz").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kLkwGrenz = resultat.getData().getItem("kLkw").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kLkwMax = resultat.getData().getItem("kLkw").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kLkwGrenz = resultat
+								.getData()
+								.getItem("kLkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kLkwMax = resultat
+								.getData()
+								.getItem("kLkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kPkwGrenz = resultat.getData().getItem("kPkw").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kPkwMax = resultat.getData().getItem("kPkw").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kPkwGrenz = resultat
+								.getData()
+								.getItem("kPkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kPkwMax = resultat
+								.getData()
+								.getItem("kPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$					
 					}
 				}
 			}

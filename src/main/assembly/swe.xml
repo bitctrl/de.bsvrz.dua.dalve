@@ -65,6 +65,8 @@
 			<destName>${artifactId}-Build-Report.txt</destName>
 			<filtered>true</filtered>
 		</file>
+		
+<!-- 		
 		<file>
 			<source>${project.build.directory}/${artifactId}-${version}-tests.jar</source>
 			<outputDirectory>${artifactId}</outputDirectory>
@@ -90,6 +92,7 @@
 			<outputDirectory>${artifactId}</outputDirectory>
 			<destName>${artifactId}-test-Lizenz.txt</destName>
 		</file>
+ -->		
 	</files>
 
 </assembly>

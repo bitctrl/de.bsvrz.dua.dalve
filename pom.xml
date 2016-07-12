@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.bsvrz.dua</groupId>
 	<artifactId>de.bsvrz.dua.dalve</artifactId>
-	<version>1.7.0-SNAPSHOT</version>
+	<version>2.0.0</version>
 
 	<name>Datenaufbereitung LVE (SWE 4.7)</name>
 	<url>http://www.bitctrl.de</url>
@@ -15,7 +15,7 @@
 
 	<licenses>
 		<license>
-			<name>GNU General Public License, Version 2</name>
+			<name>GNU General Public License, Version 3</name>
 			<url>LICENSE.txt</url>
 		</license>
 	</licenses>
@@ -45,7 +45,12 @@
 		<dependency>
 			<groupId>de.bsvrz.dav</groupId>
 			<artifactId>de.bsvrz.dav.daf</artifactId>
-			<version>3.6.2</version>
+			<version>3.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.bsvrz.sys</groupId>
+			<artifactId>de.bsvrz.sys.funclib.bitctrl</artifactId>
+			<version>[1.0,2)</version>
 		</dependency>
 		<dependency>
 			<groupId>de.bsvrz.sys</groupId>
@@ -55,7 +60,7 @@
 		<dependency>
 			<groupId>de.bsvrz.dua</groupId>
 			<artifactId>de.bsvrz.dua.guete</artifactId>
-			<version>1.2.0</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -165,6 +170,7 @@
 						<configuration>
 							<show>protected</show>
 							<finalName>${project.artifactId}-${project.version}-doc-api</finalName>
+		   				    <additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
 					</execution>
 					<execution>
@@ -177,6 +183,7 @@
 							<show>private</show>
 							<finalName>${project.artifactId}-${project.version}-doc-design</finalName>
 							<classifier>design</classifier>
+		   				    <additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
 					</execution>
 				</executions>

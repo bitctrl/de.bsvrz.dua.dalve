@@ -1,48 +1,49 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Datenaufbereitung LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * Copyright 2015 by Kappich Systemberatung Aachen
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.dalve.
+ * 
+ * de.bsvrz.dua.dalve is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.dalve is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.dalve.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 package de.bsvrz.dua.dalve.analyse;
 
-import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.ClientReceiverInterface;
+import de.bsvrz.dav.daf.main.*;
 import de.bsvrz.dav.daf.main.Data.Array;
-import de.bsvrz.dav.daf.main.DataDescription;
-import de.bsvrz.dav.daf.main.ReceiveOptions;
-import de.bsvrz.dav.daf.main.ReceiverRole;
-import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 
 /**
- * Korrespondiert mit der Attributgruppe <code>atg.verkehrsDatenKurzZeitAnalyseMq</code>.
- *
+ * Korrespondiert mit der Attributgruppe
+ * <code>atg.verkehrsDatenKurzZeitAnalyseMq</code>.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
-public class AtgVerkehrsDatenKurzZeitAnalyseMq extends AllgemeinerDatenContainer
-implements ClientReceiverInterface {
+public class AtgVerkehrsDatenKurzZeitAnalyseMq extends
+		AllgemeinerDatenContainer implements ClientReceiverInterface, AtgVerkehrsDatenKurzZeitAnalyse{
 
 	/**
 	 * <code>KKfz.Grenz</code>.
@@ -101,29 +102,32 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
-	 *
+	 * 
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param mq
 	 *            ein Systemobjekt eines Messquerschnittes
 	 */
-	public AtgVerkehrsDatenKurzZeitAnalyseMq(final ClientDavInterface dav, final SystemObject mq) {
+	public AtgVerkehrsDatenKurzZeitAnalyseMq(ClientDavInterface dav,
+			SystemObject mq) {
 		if (dav == null) {
-			throw new NullPointerException("Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException(
+					"Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
 		}
 		if (mq == null) {
-			throw new NullPointerException("Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException(
+					"Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
 		}
-		dav.subscribeReceiver(this, mq,
-				new DataDescription(
-						dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+		dav.subscribeReceiver(this, mq, new DataDescription(
+				dav.getDataModel().getAttributeGroup(
+						"atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Erfragt <code>KKfz.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>KKfz.Grenz</code>
 	 */
 	public final long getKKfzGrenz() {
@@ -132,7 +136,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>KKfz.Max</code>.
-	 *
+	 * 
 	 * @return <code>KKfz.Max</code>
 	 */
 	public final long getKKfzMax() {
@@ -141,7 +145,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>KLkw.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>KLkw.Grenz</code>
 	 */
 	public final long getKLkwGrenz() {
@@ -150,7 +154,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>KLkw.Max</code>.
-	 *
+	 * 
 	 * @return <code>KLkw.Max</code>
 	 */
 	public final long getKLkwMax() {
@@ -159,7 +163,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>KPkw.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>KPkw.Grenz</code>
 	 */
 	public final long getKPkwGrenz() {
@@ -168,7 +172,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>KPkw.Max</code>.
-	 *
+	 * 
 	 * @return <code>KPkw.Max</code>
 	 */
 	public final long getKPkwMax() {
@@ -177,7 +181,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>KB.Grenz</code>.
-	 *
+	 * 
 	 * @return <code>KB.Grenz</code>
 	 */
 	public final long getKBGrenz() {
@@ -186,7 +190,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>KB.Max</code>.
-	 *
+	 * 
 	 * @return <code>KB.Max</code>
 	 */
 	public final long getKBMax() {
@@ -195,7 +199,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>fl.k1</code>.
-	 *
+	 * 
 	 * @return <code>fl.k1</code>
 	 */
 	public final double getFlk1() {
@@ -204,7 +208,7 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt <code>fl.k2</code>.
-	 *
+	 * 
 	 * @return <code>fl.k2</code>
 	 */
 	public final double getFlk2() {
@@ -213,24 +217,29 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt die Gewichtungsfaktoren.<br>
-	 * Der Gewichtungsfaktor w(j) wird bei der Ermittlung der gewichteten Differenzgeschwindigkeit
-	 * VDelta(i) im Messquerschnitt i benötigt ref.Afo . Dabei wichtet der Faktor w(1) die
-	 * Differenzgeschwindigkeit zwischen dem Hauptfahrstreifen und dem 1. Überholfahrstreifen, w(2)
-	 * die Differenzgeschwindigkeit zwischen dem 1. ÜFS und dem 2.ÜFS usw.. Die Summe der
-	 * Gewichtungsfaktoren muss eins sein. <br>
-	 * Über den Parameter wichtung wird der Gewichtungsfaktor ermittelt. Wenn das Array keine
-	 * Elemente enthält wird gleich gewichtet. D.h. die Differenzgeschwindigkeiten zwischen zwei
-	 * benachbarten Fahrstreifen gehen zu gleichen Teilen in die Ermittlung von VDelta ein.<br>
-	 * Hinweis: Die Wichtung kann erst ab mindestens drei Fahrstreifen gesetzt werden. Wenn das
-	 * Array Elemente enthält werden die Werte für die Wichtung der Differenzgeschwindigkeiten
-	 * zwischen den benachbarten Fahrstreifen umgerechnet: <br>
-	 * Wenn zu wenig Werte vorgegeben sind, werden die weiteren benötigten Werte durch duplizieren
-	 * des letzten Wertes erzeugt. Für einen Messquerschnitt mit 4 Fahrstreifen werden z.B. drei
-	 * Werte benötigt. Ist als wichtung (60,40) parametriert, wird für die Ermittlung der
-	 * Gewichtungsfaktoren das Array (60,40,40) betrachtet. Wenn die Summe der Werte 100 Prozent
-	 * überschreitet oder unterschreitet werden die Gewichtungswerte auf 100 Prozent normiert. Damit
-	 * ergeben sich aus dem obigen Beispiel folgende Wichtungswerte: w(1)=60/140, w(2)=w(3)=40/140.
-	 *
+	 * Der Gewichtungsfaktor w(j) wird bei der Ermittlung der gewichteten
+	 * Differenzgeschwindigkeit VDelta(i) im Messquerschnitt i benötigt ref.Afo .
+	 * Dabei wichtet der Faktor w(1) die Differenzgeschwindigkeit zwischen dem
+	 * Hauptfahrstreifen und dem 1. Überholfahrstreifen, w(2) die
+	 * Differenzgeschwindigkeit zwischen dem 1. ÜFS und dem 2.ÜFS usw.. Die
+	 * Summe der Gewichtungsfaktoren muss eins sein. <br>
+	 * Über den Parameter wichtung wird der Gewichtungsfaktor ermittelt. Wenn
+	 * das Array keine Elemente enthält wird gleich gewichtet. D.h. die
+	 * Differenzgeschwindigkeiten zwischen zwei benachbarten Fahrstreifen gehen
+	 * zu gleichen Teilen in die Ermittlung von VDelta ein.<br>
+	 * Hinweis: Die Wichtung kann erst ab mindestens drei Fahrstreifen gesetzt
+	 * werden. Wenn das Array Elemente enthält werden die Werte für die Wichtung
+	 * der Differenzgeschwindigkeiten zwischen den benachbarten Fahrstreifen
+	 * umgerechnet: <br>
+	 * Wenn zu wenig Werte vorgegeben sind, werden die weiteren benötigten Werte
+	 * durch duplizieren des letzten Wertes erzeugt. Für einen Messquerschnitt
+	 * mit 4 Fahrstreifen werden z.B. drei Werte benötigt. Ist als wichtung
+	 * (60,40) parametriert, wird für die Ermittlung der Gewichtungsfaktoren das
+	 * Array (60,40,40) betrachtet. Wenn die Summe der Werte 100 Prozent
+	 * überschreitet oder unterschreitet werden die Gewichtungswerte auf 100
+	 * Prozent normiert. Damit ergeben sich aus dem obigen Beispiel folgende
+	 * Wichtungswerte: w(1)=60/140, w(2)=w(3)=40/140.
+	 * 
 	 * @return die Gewichtungsfaktoren
 	 */
 	public final int[] getWichtung() {
@@ -239,49 +248,64 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt, ob dieses Objekt bereits Parameter emfangen hat.
-	 *
+	 * 
 	 * @return ob dieses Objekt bereits Parameter emfangen hat
 	 */
 	public final boolean isInitialisiert() {
-		return flk1 != -4;
+		return this.flk1 != -4;
 	}
 
-	@Override
-	public void update(final ResultData[] resultate) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void update(ResultData[] resultate) {
 		if (resultate != null) {
-			for (final ResultData resultat : resultate) {
-				if ((resultat != null) && (resultat.getData() != null)) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						flk1 = resultat.getData().getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						flk2 = resultat.getData().getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.flk1 = resultat
+								.getData()
+								.getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.flk2 = resultat
+								.getData()
+								.getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kBGrenz = resultat.getData().getItem("KB").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kBMax = resultat.getData().getItem("KB").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kBGrenz = resultat
+								.getData()
+								.getItem("KB").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kBMax = resultat
+								.getData()
+								.getItem("KB").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kKfzGrenz = resultat.getData().getItem("KKfz").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kKfzMax = resultat.getData().getItem("KKfz").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kKfzGrenz = resultat
+								.getData()
+								.getItem("KKfz").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kKfzMax = resultat
+								.getData()
+								.getItem("KKfz").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kLkwGrenz = resultat.getData().getItem("KLkw").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kLkwMax = resultat.getData().getItem("KLkw").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kLkwGrenz = resultat
+								.getData()
+								.getItem("KLkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kLkwMax = resultat
+								.getData()
+								.getItem("KLkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						kPkwGrenz = resultat.getData().getItem("KPkw").getUnscaledValue("Grenz") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
-						kPkwMax = resultat.getData().getItem("KPkw").getUnscaledValue("Max") //$NON-NLS-1$ //$NON-NLS-2$
-								.longValue();
+						this.kPkwGrenz = resultat
+								.getData()
+								.getItem("KPkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kPkwMax = resultat
+								.getData()
+								.getItem("KPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						final Array array = resultat.getData().getArray("wichtung"); //$NON-NLS-1$
+						Array array = resultat.getData().getArray("wichtung"); //$NON-NLS-1$
 						if (array.getLength() > 0) {
-							wichtung = new int[array.getLength()];
+							this.wichtung = new int[array.getLength()];
 						}
 
 						for (int i = 0; i < array.getLength(); i++) {
-							wichtung[i] = array.getItem(i).asUnscaledValue().intValue();
+							this.wichtung[i] = array.getItem(i)
+									.asUnscaledValue().intValue();
 						}
 					}
 				}
