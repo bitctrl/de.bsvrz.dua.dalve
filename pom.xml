@@ -48,19 +48,44 @@
 			<version>3.8.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.bsvrz.sys</groupId>
-			<artifactId>de.bsvrz.sys.funclib.bitctrl</artifactId>
-			<version>[1.0,2)</version>
+			<groupId>de.bsvrz.dav</groupId>
+			<artifactId>de.bsvrz.dav.dav</artifactId>
+			<version>3.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.bsvrz.sys</groupId>
-			<artifactId>de.bsvrz.sys.funclib.bitctrl.dua</artifactId>
-			<version>[1.0,)</version>
+			<artifactId>de.bsvrz.sys.funclib.commandLineArgs</artifactId>
+			<version>3.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.bsvrz.sys</groupId>
+			<artifactId>de.bsvrz.sys.funclib.debug</artifactId>
+			<version>3.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.bsvrz.sys</groupId>
+			<artifactId>de.bsvrz.sys.funclib.application</artifactId>
+			<version>3.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.bsvrz.sys</groupId>
+			<artifactId>de.bsvrz.sys.funclib.operatingMessage</artifactId>
+			<version>3.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.bsvrz.dua</groupId>
 			<artifactId>de.bsvrz.dua.guete</artifactId>
 			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.bsvrz.sys</groupId>
+			<artifactId>de.bsvrz.sys.funclib.bitctrl</artifactId>
+			<version>[1.4.0,2)</version>
+		</dependency>
+		<dependency>
+			<groupId>de.bsvrz.sys</groupId>
+			<artifactId>de.bsvrz.sys.funclib.bitctrl.dua</artifactId>
+			<version>[1.4.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
