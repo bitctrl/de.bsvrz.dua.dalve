@@ -87,6 +87,15 @@
 			<artifactId>de.bsvrz.sys.funclib.bitctrl.dua</artifactId>
 			<version>[1.4.0,)</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>de.bsvrz.dua</groupId>
+			<artifactId>de.bsvrz.dua.tests</artifactId>
+			<version>2.0.0</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -245,6 +254,20 @@
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptors>
 								<descriptor>src/main/assembly/swe.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-swe</id>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<phase>verify</phase>
+						<configuration>
+							<finalName>SWE_${project.artifactId}.tests_${project.status}_V${project.version}_D${project.standDatum}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>src/test/assembly/swe.xml</descriptor>
 							</descriptors>
 						</configuration>
 					</execution>
