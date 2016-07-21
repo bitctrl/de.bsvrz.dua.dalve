@@ -40,7 +40,7 @@
 			<url>http://bitctrlbuildserver:8081/nexus/content/repositories/snapshots/</url>
 		</repository>
 		<repository>
-			<id>bintray-bitctrl</id>
+			<id>bintray-bitctrl-maven</id>
 			<name>Externes BitCtrl Maven Repository</name>
 			<url>https://dl.bintray.com/bitctrl/maven/</url>
 		</repository>
