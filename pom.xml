@@ -98,7 +98,6 @@
 			<groupId>de.bsvrz.dua</groupId>
 			<artifactId>de.bsvrz.dua.tests</artifactId>
 			<version>2.0.0</version>
-			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
 		
