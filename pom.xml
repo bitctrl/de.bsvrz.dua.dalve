@@ -5,7 +5,7 @@
 
 	<groupId>de.bsvrz.dua</groupId>
 	<artifactId>de.bsvrz.dua.dalve</artifactId>
-	<version>2.0.0</version>
+	<version>2.0.1</version>
 
 	<name>Datenaufbereitung LVE (SWE 4.7)</name>
 	<organization>
@@ -23,7 +23,7 @@
 		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
 		<kernsoftware.version>3.8.0</kernsoftware.version>
 		<distributionspaket.status>FREI</distributionspaket.status>
-		<distributionspaket.standDatum>2016-05-31</distributionspaket.standDatum>
+		<distributionspaket.standDatum>2016-07-22</distributionspaket.standDatum>
 		<distributionspaket.lizenz>GPLv3.0</distributionspaket.lizenz>
 		<additionalparam>-Xdoclint:none</additionalparam>
 	</properties>
@@ -173,7 +173,7 @@
 		<dependency>
 			<groupId>de.bsvrz.dua</groupId>
 			<artifactId>de.bsvrz.dua.guete</artifactId>
-			<version>2.0.0</version>
+			<version>2.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.bsvrz.sys</groupId>

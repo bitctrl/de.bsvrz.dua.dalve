@@ -10,13 +10,13 @@ Version: ${version}
 Die SWE Datenaufbereitung LVE dient der Aufbereitung von messwertersetzten Kurzzeitdaten.
 
 Sie ermittelt folgende Kenngrößen:
-
+
   - Analysewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 115f.
-  - Prognosewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 134f.
+  - Prognosewerte (je Fahrstreifen und je Messquerschnitt), siehe [AFo] S. 134f.
 
 Weiterhin wird hier die lokale Störfallerkennung bzw. die Ermittlung der Verkehrslagen wie folgt
 durchgeführt:
-
+
   - Ermittlung spurbezogener Verkehrslagen (Störfallzustände), siehe [Afo] S. 151f.
   - Nach Verfahren I (MARZ)
   - Nach Verfahren II (NRW Verkehrslage)
@@ -30,7 +30,15 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekte
 
 ## Versionsgeschichte
 
+### 2.0.1
+
+Release-Datum: 22.07.2016
+
+- Umpacketierung gemäß NERZ-Konvention
+
 ### 2.0.0
+
+Release-Datum: 31.05.2016
 
 #### Neue Abhängigkeiten
 
