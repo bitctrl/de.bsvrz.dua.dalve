@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.dalve.svg?branch=develop)](https://travis-ci.org/bitctrl/de.bsvrz.dua.dalve)
+[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.dalve.svg?branch=master)](https://travis-ci.org/bitctrl/de.bsvrz.dua.dalve)
 [![Build Status](https://api.bintray.com/packages/bitctrl/maven/de.bsvrz.dua.dalve/images/download.svg)](https://bintray.com/bitctrl/maven/de.bsvrz.dua.dalve)
 
 # Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
