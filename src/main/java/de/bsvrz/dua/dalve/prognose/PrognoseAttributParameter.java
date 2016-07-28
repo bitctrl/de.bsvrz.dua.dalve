@@ -184,6 +184,11 @@ public class PrognoseAttributParameter {
 
 		return gleich;
 	}
+	
+	@Override
+	public int hashCode() {
+		throw new UnsupportedOperationException();
+	}
 
 	@Override
 	public String toString() {

@@ -28,11 +28,15 @@
  */
 package de.bsvrz.dua.dalve.analyse;
 
-import de.bsvrz.dav.daf.main.*;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.Data.Array;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
+import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 
 /**
  * Korrespondiert mit der Attributgruppe

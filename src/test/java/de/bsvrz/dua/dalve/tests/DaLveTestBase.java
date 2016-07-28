@@ -40,7 +40,7 @@ import org.junit.Before;
  * @author Kappich Systemberatung
  */
 public class DaLveTestBase extends DuATestBase {
-	protected static DatenaufbereitungLVE _datenaufbereitungLVE;
+	protected DatenaufbereitungLVE _datenaufbereitungLVE;
 
 	protected static String[] getLveArgs() {
 		return new String[]{"-KonfigurationsBereichsPid=kb.duaTestFs"};

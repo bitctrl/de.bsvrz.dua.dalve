@@ -1199,13 +1199,13 @@ public class DaAnalyseMessQuerschnitt implements ClientReceiverInterface {
 			if (this.aktuelleFSAnalysen.keySet().size() == this.aktuelleFSAnalysenNutz.keySet().size()
 					&& this.parameter.isInitialisiert()) {
 				MessQuerschnitt mq = MessQuerschnitt.getInstanz(this.messQuerschnitt);
-
-				List<FahrStreifen> fahrStreifen = new ArrayList<>(mq.getFahrStreifen());
-
-				Collections.sort(fahrStreifen,
-						(o1, o2) -> Integer.compare(o1.getLage().getCode(), o2.getLage().getCode()));
-
+				
 				if (mq != null) {
+					
+					List<FahrStreifen> fahrStreifen = new ArrayList<>(mq.getFahrStreifen());
+
+					Collections.sort(fahrStreifen,
+						(o1, o2) -> Integer.compare(o1.getLage().getCode(), o2.getLage().getCode()));
 
 					int istNichtVorhanden = 0;
 					int w = 0;
