@@ -115,9 +115,6 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 	 */
 	private ErfassungsIntervallDauerMQ erf = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -165,9 +162,6 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenFD"; //$NON-NLS-1$
@@ -313,7 +307,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 	/**
 	 * Berechnet die boolesche Formel:<br>
 	 * <code>
-	 * ergebnis := fkVergleichsErgebnis & fvVergleichsErgebnis | vGrenzVergleichsErgebnis
+	 * ergebnis := fkVergleichsErgebnis &amp; fvVergleichsErgebnis | vGrenzVergleichsErgebnis
 	 * </code><br>
 	 * wobei jeweils nur die Teile in der Formel verbleiben, die als "zu machen"
 	 * uebergeben wurden
@@ -535,17 +529,11 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(ResultData parameter) {
 		// wird nicht gebraucht
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void datensatzAktualisiert(DatensatzUpdateEvent event) {
 		if(event.getObjekt() != null) {
 			if(event.getObjekt().equals(this.objekt)) {

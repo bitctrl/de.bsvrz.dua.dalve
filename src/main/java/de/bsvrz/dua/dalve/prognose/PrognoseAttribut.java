@@ -207,8 +207,9 @@ public class PrognoseAttribut {
 	 * Erfragt, so es sich bei diesem Attribut um ein Geschwindigkeitsattribut handelt,
 	 * den Namen des mit diesem Geschwindigkeitsattribut korrespondierenden Verkehrsstärke-Attributs
 	 * 
-	 * @param fuerFahrStreifen das Objekt, fuer den der Name dieses
-	 * Attributs erfragt wird
+	 * @param fuerFahrStreifen Abfrage erfolgt für einen Fahrstreifen?
+	 * 
+	 * @return der ermittelte Name
 	 */
 	public final String getQAttributAnalogon(final boolean fuerFahrStreifen){
 		return fuerFahrStreifen?this.qAnalogon:this.QAnalogon;
@@ -273,9 +274,6 @@ public class PrognoseAttribut {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.nameFS + ", " + this.nameMQ;

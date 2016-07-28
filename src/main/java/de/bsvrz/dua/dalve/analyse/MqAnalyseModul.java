@@ -55,8 +55,6 @@ import java.util.TreeSet;
  * ein Analysedatum publiziert
  *  
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class MqAnalyseModul {
 		

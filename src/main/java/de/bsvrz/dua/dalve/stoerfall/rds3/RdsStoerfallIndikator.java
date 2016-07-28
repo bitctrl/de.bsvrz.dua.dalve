@@ -50,17 +50,11 @@ public class RdsStoerfallIndikator extends NrwStoerfallIndikator {
 	 */
 	protected long VST6Hysterese = -4;
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.verkehrsLageVerfahren3"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenRDS"; //$NON-NLS-1$
@@ -130,9 +124,6 @@ public class RdsStoerfallIndikator extends NrwStoerfallIndikator {
 		return verkehrsStufe;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected void readParameter(ResultData parameter) {
 		if (parameter.getData() != null) {
 			this.v1 = parameter.getData().getUnscaledValue("v1").longValue(); //$NON-NLS-1$

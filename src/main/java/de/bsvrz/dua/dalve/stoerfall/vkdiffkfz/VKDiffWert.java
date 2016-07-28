@@ -38,8 +38,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
  * Wert wie er von Stoerfallindikator VKDiffKfz benoetigt wird. 
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 class VKDiffWert {
 
@@ -96,7 +94,7 @@ class VKDiffWert {
 	 * Erfragt den Messwert.
 	 *  
 	 * @return der Messwert oder <code>Double.NaN</code>, wenn kein Nutzdatum vorliegt,
-	 * oder dieses < 0 ist.
+	 * oder dieses &lt; 0 ist.
 	 */
 	double getWert() {
 		if (this.wert == null || this.wert.getWertUnskaliert() < 0) {

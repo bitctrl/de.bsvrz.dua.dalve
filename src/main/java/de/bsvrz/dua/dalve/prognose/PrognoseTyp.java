@@ -33,10 +33,13 @@ import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 
 /**
- * Prognosetyp:<br>
- * - <code>Flink<code><br>
- * - <code>Normal<code><br>
- * - <code>Träge<code>
+ * Prognosetyp:
+ * 
+ * <ul>
+ * <li>Flink</li>
+ * <li>Normal</li>
+ * <li>Träge</li>
+ * </ul>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -126,9 +129,6 @@ public class PrognoseTyp {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.aspekt.getPid().substring("asp.prognose".length());

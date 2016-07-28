@@ -45,8 +45,6 @@ import java.util.Collection;
  * gestartet.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class StoerfallModul {
 

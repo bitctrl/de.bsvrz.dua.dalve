@@ -80,9 +80,6 @@ implements ClientReceiverInterface{
 	}
 
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] parameterSaetze) {
 		if(parameterSaetze != null){
 			for(ResultData parameter:parameterSaetze){

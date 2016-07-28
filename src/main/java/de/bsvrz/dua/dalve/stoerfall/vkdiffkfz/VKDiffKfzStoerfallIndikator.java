@@ -54,8 +54,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Repraesentiert einen Stoerfallindikator nach Verfahren VKDiffKfz.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
@@ -179,9 +177,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	private ErfassungsIntervallDauerMQ bisT = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -350,17 +345,11 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.lokaleStörfallErkennungVKDiffKfz";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(ResultData parameter) {
 		if (parameter != null) {
@@ -394,9 +383,6 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenVKDiffKfz"; //$NON-NLS-1$

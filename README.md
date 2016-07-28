@@ -30,6 +30,37 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekte
 
 ## Versionsgeschichte
 
+### 2.0.2
+
+Release-Datum: 28.07.2016
+
+de.bsvrz.dua.dalve.analyse.AtgVerkehrsDatenKurzZeitAnalyseFs	
+de.bsvrz.dua.dalve.analyse.AtgVerkehrsDatenKurzZeitAnalyseMq
+
+- die Klassen erweitern nicht mehr de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer
+- equals und hashCode können nicht adäquat überschrieben werden, weil die Klasse änderbare Daten 
+  repräsentiert und gleichzeitig als ClientDavReceiver in einer Map als Key eingesetzt wird
+
+de.bsvrz.dua.dalve.stoerfall.fd4.ParameterFuerStoerfall
+- die Klasse erweitern nicht mehr de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer
+- equals und hashCode können nicht adäquat überschrieben werden, weil die Klasse änderbare Daten 
+  repräsentiert. Die einzige von der ursprünglichen Basisklasse bereitgestellte Funktion "equals"
+  wird entsprechend Code-Analyse nicht genutzt
+
+de.bsvrz.dua.dalve.analyse.DaAnalyseMessQuerschnitt#berechneVDifferenz(Data)
+- null-Prüfung zu spät potentieller NPE
+
+de.bsvrz.dua.dalve.prognose.PrognoseAttributParameter
+- die Klasse sollte nicht in Sets oder Maps verwendet werden, weil equals überschrieben wurde, aber die Daten 
+  änderbar sind, die Funktion hashCode wirft daher hier eine UnsupportedOperationException
+
+de.bsvrz.dua.dalve.tests.DaLveTestBase
+- der Member "_datenaufbereitungLVE" sollte nicht statisch sein, der er bei jedem Test neu initialisiert wird
+
+- Javadoc für Java8-Kompatibilität korrigiert
+- Obsolete SVN-Tags aus Kommentaren entfernt
+- Obsolete inheritDoc-Kommentare entfernt
+
 ### 2.0.1
 
 Release-Datum: 22.07.2016

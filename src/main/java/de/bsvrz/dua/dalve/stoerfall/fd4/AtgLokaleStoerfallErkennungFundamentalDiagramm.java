@@ -103,9 +103,6 @@ public class AtgLokaleStoerfallErkennungFundamentalDiagramm implements
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
