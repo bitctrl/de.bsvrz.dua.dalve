@@ -77,9 +77,6 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	private Map<SystemObject, ResultData> fsAufDatenPuffer = new HashMap<SystemObject, ResultData>();
 
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(IVerwaltung dieVerwaltung)
 	throws DUAInitialisierungsException {
@@ -110,9 +107,6 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereDaten(ResultData[] resultate) {
 		if(resultate != null){
 			for(ResultData resultat:resultate){
@@ -270,20 +264,11 @@ extends AbstraktBearbeitungsKnotenAdapter{
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public ModulTyp getModulTyp() {
 		return null;
 	}
 	
 	
-	/**
-	 * {@inheritDoc}.<br>
-	 * 
-	 * Diese Methode macht nichts, da die Publikation in
-	 * diesem Modul nicht dynamisch erfolgt
-	 */
 	public void aktualisierePublikation(IDatenFlussSteuerung dfs) {
 		// hier wird nicht dynamisch publiziert
 	}

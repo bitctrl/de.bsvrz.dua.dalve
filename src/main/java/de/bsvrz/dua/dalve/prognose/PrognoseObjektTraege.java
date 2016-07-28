@@ -41,9 +41,6 @@ package de.bsvrz.dua.dalve.prognose;
 public class PrognoseObjektTraege
 extends AbstraktPrognoseObjekt{	
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected PrognoseTyp getPrognoseTyp() {
 		return PrognoseTyp.TRAEGE;

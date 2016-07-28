@@ -153,9 +153,6 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
@@ -181,9 +178,6 @@ public class AtgPrognoseParameter implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.objekt + ", " + this.typ;

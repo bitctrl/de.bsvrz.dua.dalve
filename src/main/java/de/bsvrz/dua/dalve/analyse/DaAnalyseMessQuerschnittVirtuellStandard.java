@@ -52,8 +52,6 @@ import java.util.*;
  * Attributgruppe <code>atg.messQuerschnittVirtuellStandard</code>.</b><br>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DaAnalyseMessQuerschnittVirtuellStandard extends
 		DaAnalyseMessQuerschnitt implements IObjektWeckerListener {
@@ -473,9 +471,6 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
@@ -778,7 +773,7 @@ public class DaAnalyseMessQuerschnittVirtuellStandard extends
 
 	/**
 	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle
-	 * Nutzdaten (Werte >= 0 hat).
+	 * Nutzdaten (Werte &gt;= 0 hat).
 	 * 
 	 * @param datum
 	 *            ein Analysedatum

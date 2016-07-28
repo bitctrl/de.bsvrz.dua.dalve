@@ -41,8 +41,6 @@ import java.util.Set;
  * <code>vPkw</code> bzw. <code>VPkw</code>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class AnalyseAttribut {
 
@@ -54,73 +52,61 @@ public final class AnalyseAttribut {
 	/**
 	 * Attribut <code>qKfz</code> bzw. <code>QKfz</code>
 	 */
-	public static final AnalyseAttribut Q_KFZ = new AnalyseAttribut(
-			"qKfz", "QKfz", null);
+	public static final AnalyseAttribut Q_KFZ = new AnalyseAttribut("qKfz", "QKfz", null);
 
 	/**
 	 * Attribut <code>qLkw</code> bzw. <code>QLkw</code>
 	 */
-	public static final AnalyseAttribut Q_LKW = new AnalyseAttribut(
-			"qLkw", "QLkw", null);
+	public static final AnalyseAttribut Q_LKW = new AnalyseAttribut("qLkw", "QLkw", null);
 
 	/**
 	 * Attribut <code>qPkw</code> bzw. <code>QPkw</code>
 	 */
-	public static final AnalyseAttribut Q_PKW = new AnalyseAttribut(
-			"qPkw", "QPkw", null);
+	public static final AnalyseAttribut Q_PKW = new AnalyseAttribut("qPkw", "QPkw", null);
 
 	/**
 	 * Attribut <code>vKfz</code> bzw. <code>VKfz</code>
 	 */
-	public static final AnalyseAttribut V_KFZ = new AnalyseAttribut(
-			"vKfz", "VKfz", Q_KFZ);
+	public static final AnalyseAttribut V_KFZ = new AnalyseAttribut("vKfz", "VKfz", Q_KFZ);
 
 	/**
 	 * Attribut <code>vLkw</code> bzw. <code>VLkw</code>
 	 */
-	public static final AnalyseAttribut V_LKW = new AnalyseAttribut(
-			"vLkw", "VLkw", Q_LKW);
+	public static final AnalyseAttribut V_LKW = new AnalyseAttribut("vLkw", "VLkw", Q_LKW);
 
 	/**
 	 * Attribut <code>vPkw</code> bzw. <code>VPkw</code>
 	 */
-	public static final AnalyseAttribut V_PKW = new AnalyseAttribut(
-			"vPkw", "VPkw", Q_PKW);
+	public static final AnalyseAttribut V_PKW = new AnalyseAttribut("vPkw", "VPkw", Q_PKW);
 
 	/**
 	 * Attribut <code>kKfz</code> bzw. <code>KKfz</code>
 	 */
-	public static final AnalyseAttribut K_KFZ = new AnalyseAttribut(
-			"kKfz", "KKfz", null);
+	public static final AnalyseAttribut K_KFZ = new AnalyseAttribut("kKfz", "KKfz", null);
 
 	/**
 	 * Attribut <code>kLkw</code> bzw. <code>KLkw</code>
 	 */
-	public static final AnalyseAttribut K_LKW = new AnalyseAttribut(
-			"kLkw", "KLkw", null);
+	public static final AnalyseAttribut K_LKW = new AnalyseAttribut("kLkw", "KLkw", null);
 
 	/**
 	 * Attribut <code>kPkw</code> bzw. <code>KPkw</code>
 	 */
-	public static final AnalyseAttribut K_PKW = new AnalyseAttribut(
-			"kPkw", "KPkw", null);
+	public static final AnalyseAttribut K_PKW = new AnalyseAttribut("kPkw", "KPkw", null);
 
 	/**
 	 * Attribut <code>kB</code> bzw. <code>KB</code>
 	 */
-	public static final AnalyseAttribut K_B = new AnalyseAttribut(
-			"kB", "KB", null);	
+	public static final AnalyseAttribut K_B = new AnalyseAttribut("kB", "KB", null);
 	/**
 	 * Attribut <code>qB</code> bzw. <code>QB</code>
 	 */
-	public static final AnalyseAttribut Q_B = new AnalyseAttribut(
-			"qB", "QB", null);
-	
+	public static final AnalyseAttribut Q_B = new AnalyseAttribut("qB", "QB", null);
+
 	/**
 	 * Attribut <code>aLkw</code> bzw. <code>ALkw</code>
 	 */
-	public static final AnalyseAttribut A_LKW = new AnalyseAttribut(
-			"aLkw", "ALkw", null);
+	public static final AnalyseAttribut A_LKW = new AnalyseAttribut("aLkw", "ALkw", null);
 
 	/**
 	 * der Name des Attributs (FS).
@@ -136,12 +122,14 @@ public final class AnalyseAttribut {
 
 	/**
 	 * Standardkonstruktor.
-	 *  @param nameFS
+	 * 
+	 * @param nameFS
 	 *            der Attributname bei Fahrstreifendaten z.B. <code>qKfz</code>
 	 *            oder <code>vKfz</code>
 	 * @param nameMQ
 	 *            der Attributname bei Messquerschnittdaten z.B.
 	 * @param q
+	 *            das Attribut
 	 */
 	private AnalyseAttribut(final String nameFS, final String nameMQ, final AnalyseAttribut q) {
 		this.nameFS = nameFS;
@@ -170,9 +158,6 @@ public final class AnalyseAttribut {
 		return AnalyseAttribut.WERTE_BEREICH;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.nameFS + " (" + this.nameMQ + ")";

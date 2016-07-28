@@ -156,9 +156,6 @@ public class StoerfallZustand{
 	}
 	
 	
-	/**
-	 * {@inheritDoc} 
-	 */
 	@Override
 	public String toString() {
 		return "T: " + this.T + //$NON-NLS-1$

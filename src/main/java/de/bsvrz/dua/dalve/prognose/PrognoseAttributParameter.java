@@ -34,13 +34,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 /**
  * Korrespondiert mit einem Parameter fuer ein bestimmtes Verkehrsattribut (also
  * z.B. <code>qKfz</code> (<code>QKfz</code>) oder <code>vLkw</code> (<code>VLkw</code>))
- * innerhalb der Attributgruppen:<br> -
- * <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkFs<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalFs<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeFs<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkMq<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq<code><br>
- * - <code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeMq<code>
+ * innerhalb der Attributgruppen:
+ * 	
+ * <ul>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkFs</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalFs</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeFs</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseFlinkMq</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseNormalMq</code></li>
+ * <li><code>atg.verkehrsDatenKurzZeitTrendExtraPolationPrognoseTrägeMq</code></li>
+ * </ul>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -167,9 +170,6 @@ public class PrognoseAttributParameter {
 		return this.start != -4;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean gleich = false;
@@ -185,9 +185,6 @@ public class PrognoseAttributParameter {
 		return gleich;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "Attribut: " + this.attribut + " --> " + //$NON-NLS-1$ //$NON-NLS-2$

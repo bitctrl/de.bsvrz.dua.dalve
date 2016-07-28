@@ -229,9 +229,6 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 		exportWert.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereParameter(
 			PrognoseAttributParameter parameterSatzFuerAttribut) {
 		this.ZAltInit = parameterSatzFuerAttribut.getStart();
@@ -241,9 +238,6 @@ public class DavAttributPrognoseObjekt extends AbstraktAttributPrognoseObjekt
 		this.beta2 = parameterSatzFuerAttribut.getBeta2();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.prognoseObjekt.getPid() + ", " + this.attribut + ", "

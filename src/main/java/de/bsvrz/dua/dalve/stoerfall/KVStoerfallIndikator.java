@@ -51,27 +51,27 @@ import java.util.Objects;
  */
 public abstract class KVStoerfallIndikator extends AbstraktStoerfallIndikator {
 	/**
-	 * Grenzgeschwindigkeit 1 (0<v1<v2)
+	 * Grenzgeschwindigkeit 1 (0 &lt; v1 &lt; v2)
 	 */
 	protected long v1 = -4;
 	/**
-	 * Grenzgeschwindigkeit 2 (0<v1<v2)
+	 * Grenzgeschwindigkeit 2 (0 &lt; v1 &lt; v2)
 	 */
 	protected long v2 = -4;
 	/**
-	 * Grenzfahrzeugdichte 1 (0<k1<k2<k3)
+	 * Grenzfahrzeugdichte 1 (0 &lt; k1 &lt; k2 &lt; k3)
 	 */
 	protected long k1 = -4;
 	/**
-	 * Grenzfahrzeugdichte 2 (0<k1<k2<k3)
+	 * Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2 &lt; k3)
 	 */
 	protected long k2 = -4;
 	/**
-	 * Grenzfahrzeugdichte 3 (0<k1<k2<k3)
+	 * Grenzfahrzeugdichte 3 (0 &lt; k1 &lt; k2 &lt; k3)
 	 */
 	protected long k3 = -4;
 	/**
-	 * Grenzfahrzeugdichte 5T (0<k5T<k3)
+	 * Grenzfahrzeugdichte 5T (0 &lt; k5T &lt; k3)
 	 */
 	protected long kT = -4;
 
@@ -90,9 +90,6 @@ public abstract class KVStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	protected ResultData _analyseData = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -154,14 +151,14 @@ public abstract class KVStoerfallIndikator extends AbstraktStoerfallIndikator {
 	/**
 	 * Berechnet den aktuellen Störfall (abstakte Methode) aus v und q.
 	 * @param timeStamp Zeitstempel der übergebenen Daten. Die Methode wird nur mit zusammenpassenden Daten aufgerufen.
-	 * @param v Aktueller V-Wert in km/h (falls < 0 handelt es sich um einen (Fehler-)Zustand entsprechend {@link DUAKonstanten}).
-	 * @param q  Aktueller Q-Wert in Fz-E/h (falls < 0 handelt es sich um einen (Fehler-)Zustand entsprechend {@link DUAKonstanten}).
+	 * @param v Aktueller V-Wert in km/h (falls &lt; 0 handelt es sich um einen (Fehler-)Zustand entsprechend {@link DUAKonstanten}).
+	 * @param q  Aktueller Q-Wert in Fz-E/h (falls &lt; 0 handelt es sich um einen (Fehler-)Zustand entsprechend {@link DUAKonstanten}).
 	 */
 	protected abstract void berechneIndikator(long timeStamp, long v, long q);
 
 	/** 
 	 * Gibt den aktuellen V-Wert zurück
-	 * @return den aktuellen V-Wert oder null falls nicht verfügbar oder einen Wert < 0 falls der Wert nicht ermittelbar/fehlerhaft ist.
+	 * @return den aktuellen V-Wert oder null falls nicht verfügbar oder einen Wert &lt; 0 falls der Wert nicht ermittelbar/fehlerhaft ist.
 	 */
 	private ValueAndTimestamp getV() {
 		if(this.objekt.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN)) {
@@ -230,7 +227,7 @@ public abstract class KVStoerfallIndikator extends AbstraktStoerfallIndikator {
 	
 	/**
 	 * Gibt den aktuellen Q-Wert zurück
-	 * @return den aktuellen Q-Wert oder null falls nicht verfügbar oder einen Wert < 0 falls der Wert nicht ermittelbar/fehlerhaft ist.
+	 * @return den aktuellen Q-Wert oder null falls nicht verfügbar oder einen Wert &lt; 0 falls der Wert nicht ermittelbar/fehlerhaft ist.
 	 */
 	private ValueAndTimestamp getQ() {
 		if(_prognoseData == null) return null;
@@ -239,9 +236,6 @@ public abstract class KVStoerfallIndikator extends AbstraktStoerfallIndikator {
 		return new ValueAndTimestamp(_prognoseData.getData().getItem(attrK).getUnscaledValue("Wert").longValue(), _prognoseData.getDataTime());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(ResultData parameter) {
 		if (parameter.getData() != null) {

@@ -38,11 +38,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
  * <code>atg.verkehrsDatenKurzZeitAnalyseFs</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
-public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
-		AllgemeinerDatenContainer implements ClientReceiverInterface, AtgVerkehrsDatenKurzZeitAnalyse {
+public class AtgVerkehrsDatenKurzZeitAnalyseFs implements ClientReceiverInterface, AtgVerkehrsDatenKurzZeitAnalyse {
 
 	/**
 	 * <code>kKfz.Grenz</code>.
@@ -229,9 +226,6 @@ public class AtgVerkehrsDatenKurzZeitAnalyseFs extends
 		return this.flk1 != -4;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {

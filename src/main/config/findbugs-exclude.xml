@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
-    <Match>
+ <!--    <Match>
         <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
     </Match>
     <Match>
@@ -8,5 +8,5 @@
     </Match>
     <Match>
         <Bug pattern="HE_EQUALS_USE_HASHCODE"/>
-    </Match>
+    </Match> -->
 </FindBugsFilter>

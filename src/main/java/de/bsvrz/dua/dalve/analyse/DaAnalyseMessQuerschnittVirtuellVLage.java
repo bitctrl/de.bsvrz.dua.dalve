@@ -55,8 +55,6 @@ import java.util.*;
  * Geschwindigkeit weggelassen wird. (Optionales Attribut)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DaAnalyseMessQuerschnittVirtuellVLage extends
 		DaAnalyseMessQuerschnitt {
@@ -378,9 +376,6 @@ public class DaAnalyseMessQuerschnittVirtuellVLage extends
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {

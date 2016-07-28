@@ -41,8 +41,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public abstract class AbstraktStoerfallIndikator implements
-		ClientReceiverInterface, ClientSenderInterface {
+public abstract class AbstraktStoerfallIndikator implements ClientReceiverInterface, ClientSenderInterface {
 
 	/**
 	 * Verbindung zum Datenverteiler
@@ -75,49 +74,52 @@ public abstract class AbstraktStoerfallIndikator implements
 	private ResultData _letztesErgebnis;
 
 	/**
-	 * Initialisiert diese Instanz indem sich auf Parameter angemeldet wird und eine Sendeanmeldung durchgefuehrt wird.
+	 * Initialisiert diese Instanz indem sich auf Parameter angemeldet wird und
+	 * eine Sendeanmeldung durchgefuehrt wird.
 	 *
-	 * @param dav    Datenverteiler-Verbindung
-	 * @param objekt das Objekt, fuer dass der Stoerfallzustand berechnet werden soll
-	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht vollständig initialisiert werden konnte
+	 * @param dav
+	 *            Datenverteiler-Verbindung
+	 * @param objekt
+	 *            das Objekt, fuer dass der Stoerfallzustand berechnet werden
+	 *            soll
+	 * @throws DUAInitialisierungsException
+	 *             wenn dieses Objekt nicht vollständig initialisiert werden
+	 *             konnte
 	 */
-	public void initialisiere(final ClientDavInterface dav,
-			final SystemObject objekt) throws DUAInitialisierungsException {
-		if(DAV == null) {
+	public void initialisiere(final ClientDavInterface dav, final SystemObject objekt)
+			throws DUAInitialisierungsException {
+		if (DAV == null) {
 			DAV = dav;
 		}
 		this.objekt = objekt;
 
-		if(this.getParameterAtgPid() != null) {
-			this.paraAtg = dav.getDataModel().getAttributeGroup(
-					this.getParameterAtgPid());
-			dav.subscribeReceiver(this, objekt, new DataDescription(
-					                      this.paraAtg, dav.getDataModel().getAspect(
-					DaVKonstanten.ASP_PARAMETER_SOLL)),
-			                      ReceiveOptions.normal(), ReceiverRole.receiver()
-			);
+		if (this.getParameterAtgPid() != null) {
+			this.paraAtg = dav.getDataModel().getAttributeGroup(this.getParameterAtgPid());
+			dav.subscribeReceiver(this, objekt,
+					new DataDescription(this.paraAtg, dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+					ReceiveOptions.normal(), ReceiverRole.receiver());
 		}
 
-		this.pubBeschreibung = new DataDescription(dav.getDataModel()
-				                                           .getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND), dav
-				                                           .getDataModel().getAspect(this.getPubAspektPid()));
+		this.pubBeschreibung = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_STOERFALL_ZUSTAND),
+				dav.getDataModel().getAspect(this.getPubAspektPid()));
 		try {
-			dav.subscribeSender(this, objekt, this.pubBeschreibung, SenderRole
-					.source());
-		}
-		catch(OneSubscriptionPerSendData e) {
+			dav.subscribeSender(this, objekt, this.pubBeschreibung, SenderRole.source());
+		} catch (OneSubscriptionPerSendData e) {
 			throw new DUAInitialisierungsException("", e);
 		}
 	}
 
 	/**
 	 * Macht alle Anmeldungen aus dem Konstruktor wieder rueckgaengig.
+	 * 
+	 * @throws DUAInitialisierungsException
+	 *             die Initialisierung konnte nicht ausgeführt werden
 	 */
 	protected void abmelden() throws DUAInitialisierungsException {
-		if(this.paraAtg != null) {
-			DAV.unsubscribeReceiver(this, objekt, new DataDescription(
-					this.paraAtg, DAV.getDataModel().getAspect(
-					DaVKonstanten.ASP_PARAMETER_SOLL)));
+		if (this.paraAtg != null) {
+			DAV.unsubscribeReceiver(this, objekt,
+					new DataDescription(this.paraAtg, DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)));
 		}
 		DAV.unsubscribeSender(this, objekt, this.pubBeschreibung);
 		this.paraAtg = null;
@@ -137,16 +139,19 @@ public abstract class AbstraktStoerfallIndikator implements
 	/**
 	 * Liest einen Parametersatz
 	 *
-	 * @param parameter einen Parametersatz
+	 * @param parameter
+	 *            einen Parametersatz
 	 */
 	protected void readParameter(ResultData parameter) {
 		// zum ueberschreiben bzw. weglassen gedacht
 	}
 
 	/**
-	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten und publiziert diesen ggf.
+	 * Berechnet den aktuellen Stoerfallindikator anhand der empfangenen Daten
+	 * und publiziert diesen ggf.
 	 *
-	 * @param resultat ein empfangenes Datum zur Berechnung des Stoerfallindikators
+	 * @param resultat
+	 *            ein empfangenes Datum zur Berechnung des Stoerfallindikators
 	 */
 	protected abstract void berechneStoerfallIndikator(ResultData resultat);
 
@@ -157,23 +162,17 @@ public abstract class AbstraktStoerfallIndikator implements
 	 */
 	protected abstract String getPubAspektPid();
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
-		if(resultate != null) {
-			for(ResultData resultat : resultate) {
-				if(resultat != null) {
-					if(this.paraAtg != null
-							&& resultat.getDataDescription()
-							.getAttributeGroup().getId() == this.paraAtg
-							.getId()) {
+		if (resultate != null) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null) {
+					if (this.paraAtg != null
+							&& resultat.getDataDescription().getAttributeGroup().getId() == this.paraAtg.getId()) {
 						/**
 						 * Parameter empfangen
 						 */
 						this.readParameter(resultat);
-					}
-					else {
+					} else {
 						/**
 						 * Daten empfangen
 						 */
@@ -187,26 +186,24 @@ public abstract class AbstraktStoerfallIndikator implements
 	/**
 	 * Sendet einen Ergebnisdatensatz
 	 *
-	 * @param ergebnis ein Ergebnisdatensatz
+	 * @param ergebnis
+	 *            ein Ergebnisdatensatz
 	 */
 	protected final void sendeErgebnis(final ResultData ergebnis) {
-		if(ergebnis.getData() != null) {
+		if (ergebnis.getData() != null) {
 			try {
 				DAV.sendData(ergebnis);
 				this.aktuellKeineDaten = false;
-			}
-			catch(DataNotSubscribedException | SendSubscriptionNotConfirmed e) {
+			} catch (DataNotSubscribedException | SendSubscriptionNotConfirmed e) {
 				Debug.getLogger().error("", e);
 				e.printStackTrace();
 			}
-		}
-		else {
-			if(!this.aktuellKeineDaten) {
+		} else {
+			if (!this.aktuellKeineDaten) {
 				try {
 					DAV.sendData(ergebnis);
 					this.aktuellKeineDaten = true;
-				}
-				catch(DataNotSubscribedException | SendSubscriptionNotConfirmed e) {
+				} catch (DataNotSubscribedException | SendSubscriptionNotConfirmed e) {
 					Debug.getLogger().error("", e);
 					e.printStackTrace();
 				}
@@ -215,18 +212,10 @@ public abstract class AbstraktStoerfallIndikator implements
 		_letztesErgebnis = ergebnis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		return false;
 	}
 

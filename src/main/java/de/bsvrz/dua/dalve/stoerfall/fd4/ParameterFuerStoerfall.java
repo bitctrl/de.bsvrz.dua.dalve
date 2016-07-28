@@ -40,8 +40,7 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class ParameterFuerStoerfall
-extends AllgemeinerDatenContainer{
+public class ParameterFuerStoerfall {
 	
 	/**
 	 * die Stoerfallsituation, deren Vergleichswerte hier 

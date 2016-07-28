@@ -43,8 +43,6 @@ import java.util.*;
  * Basis seiner Fahrstreifen zur Verfuegung.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface {
 
@@ -183,9 +181,6 @@ public final class ErfassungsIntervallDauerMQ implements ClientReceiverInterface
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] results) {
 		if (results != null) {
 			for (ResultData result : results) {

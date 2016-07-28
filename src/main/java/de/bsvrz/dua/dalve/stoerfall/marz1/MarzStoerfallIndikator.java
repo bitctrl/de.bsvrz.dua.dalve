@@ -69,22 +69,22 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	private static final StoerfallSituation Z4 = StoerfallSituation.STAU;
 
 	/**
-	 * Grenzgeschwindigkeit 1 (0<v1<v2)
+	 * Grenzgeschwindigkeit 1 (0 &lt; v1 &lt; v2)
 	 */
 	private long v1 = -4;
 
 	/**
-	 * Grenzgeschwindigkeit 2 (0<v1<v2)
+	 * Grenzgeschwindigkeit 2 (0 &lt; v1 &lt; v2)
 	 */
 	private long v2 = -4;
 
 	/**
-	 * Grenzfahrzeugdichte 2 (0<k1<k2)
+	 * Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2)
 	 */
 	private long k1 = -4;
 
 	/**
-	 * Grenzfahrzeugdichte 2 (0<k1<k2)
+	 * Grenzfahrzeugdichte 2 (0 &lt; k1 &lt; k2)
 	 */
 	private long k2 = -4;
 
@@ -98,9 +98,6 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 	 */
 	private ErfassungsIntervallDauerMQ erf = null;
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(ClientDavInterface dav, SystemObject objekt)
 			throws DUAInitialisierungsException {
@@ -119,17 +116,11 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 				.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.verkehrsLageVerfahren1"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenMARZ"; //$NON-NLS-1$
@@ -203,9 +194,6 @@ public class MarzStoerfallIndikator extends AbstraktStoerfallIndikator {
 		this.sendeErgebnis(ergebnis);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void readParameter(ResultData parameter) {
 		if (parameter.getData() != null) {

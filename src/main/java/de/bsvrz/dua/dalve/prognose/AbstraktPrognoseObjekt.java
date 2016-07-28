@@ -152,9 +152,6 @@ public abstract class AbstraktPrognoseObjekt implements
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
@@ -377,16 +374,10 @@ public abstract class AbstraktPrognoseObjekt implements
 		kb.kopiereInhaltNachModifiziereIndex(zielDatum);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;
