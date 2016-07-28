@@ -47,17 +47,11 @@ public class NrwStoerfallIndikator extends KVStoerfallIndikator {
 	 */
 	protected StoerfallSituation letzteStufe = StoerfallSituation.KEINE_AUSSAGE;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getParameterAtgPid() {
 		return "atg.verkehrsLageVerfahren2"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getPubAspektPid() {
 		return "asp.störfallVerfahrenNRW"; //$NON-NLS-1$

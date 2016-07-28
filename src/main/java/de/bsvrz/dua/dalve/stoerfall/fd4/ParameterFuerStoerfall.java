@@ -29,7 +29,6 @@
 package de.bsvrz.dua.dalve.stoerfall.fd4;
 
 import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
 
 /**
@@ -40,8 +39,7 @@ import de.bsvrz.sys.funclib.bitctrl.modell.verkehr.zustaende.StoerfallSituation;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class ParameterFuerStoerfall
-extends AllgemeinerDatenContainer{
+public class ParameterFuerStoerfall {
 	
 	/**
 	 * die Stoerfallsituation, deren Vergleichswerte hier 

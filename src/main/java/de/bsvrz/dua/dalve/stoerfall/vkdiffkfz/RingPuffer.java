@@ -35,8 +35,6 @@ import java.util.LinkedList;
  * <b>Achtung:</b> nicht synchronisierter Puffer!
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 class RingPuffer {
 

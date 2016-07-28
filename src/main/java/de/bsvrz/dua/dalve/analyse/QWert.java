@@ -47,8 +47,6 @@ import java.util.List;
  * verknüpft werden können.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class QWert {
 
@@ -107,7 +105,7 @@ public class QWert {
 
 	/**
 	 * Erfragt, ob dieses Datum verrechenbar ist. Dies ist dann der Fall, wenn
-	 * das Datum Nutzdaten enthält, die <code> >= 0</code> sind
+	 * das Datum Nutzdaten enthält, die <code> &gt;= 0</code> sind
 	 * 
 	 * @return ob dieses Datum verrechenbar ist
 	 */
@@ -392,9 +390,6 @@ public class QWert {
 		return ergebnis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return (this.wert == null ? "<<null>>" : this.wert.toString())

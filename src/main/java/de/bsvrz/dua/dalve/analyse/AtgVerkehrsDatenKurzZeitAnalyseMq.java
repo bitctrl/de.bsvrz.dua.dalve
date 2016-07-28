@@ -28,22 +28,23 @@
  */
 package de.bsvrz.dua.dalve.analyse;
 
-import de.bsvrz.dav.daf.main.*;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.Data.Array;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
+import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.dua.AllgemeinerDatenContainer;
 
 /**
  * Korrespondiert mit der Attributgruppe
  * <code>atg.verkehrsDatenKurzZeitAnalyseMq</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
-public class AtgVerkehrsDatenKurzZeitAnalyseMq extends
-		AllgemeinerDatenContainer implements ClientReceiverInterface, AtgVerkehrsDatenKurzZeitAnalyse{
+public class AtgVerkehrsDatenKurzZeitAnalyseMq implements ClientReceiverInterface, AtgVerkehrsDatenKurzZeitAnalyse {
 
 	/**
 	 * <code>KKfz.Grenz</code>.
@@ -108,20 +109,16 @@ public class AtgVerkehrsDatenKurzZeitAnalyseMq extends
 	 * @param mq
 	 *            ein Systemobjekt eines Messquerschnittes
 	 */
-	public AtgVerkehrsDatenKurzZeitAnalyseMq(ClientDavInterface dav,
-			SystemObject mq) {
+	public AtgVerkehrsDatenKurzZeitAnalyseMq(ClientDavInterface dav, SystemObject mq) {
 		if (dav == null) {
-			throw new NullPointerException(
-					"Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException("Datenverteiler-Verbindung ist <<null>>"); //$NON-NLS-1$
 		}
 		if (mq == null) {
-			throw new NullPointerException(
-					"Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException("Uebergebenes Systemobjekt ist <<null>>"); //$NON-NLS-1$
 		}
-		dav.subscribeReceiver(this, mq, new DataDescription(
-				dav.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+		dav.subscribeReceiver(this, mq,
+				new DataDescription(dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
@@ -218,8 +215,8 @@ public class AtgVerkehrsDatenKurzZeitAnalyseMq extends
 	/**
 	 * Erfragt die Gewichtungsfaktoren.<br>
 	 * Der Gewichtungsfaktor w(j) wird bei der Ermittlung der gewichteten
-	 * Differenzgeschwindigkeit VDelta(i) im Messquerschnitt i benötigt ref.Afo .
-	 * Dabei wichtet der Faktor w(1) die Differenzgeschwindigkeit zwischen dem
+	 * Differenzgeschwindigkeit VDelta(i) im Messquerschnitt i benötigt ref.Afo
+	 * . Dabei wichtet der Faktor w(1) die Differenzgeschwindigkeit zwischen dem
 	 * Hauptfahrstreifen und dem 1. Überholfahrstreifen, w(2) die
 	 * Differenzgeschwindigkeit zwischen dem 1. ÜFS und dem 2.ÜFS usw.. Die
 	 * Summe der Gewichtungsfaktoren muss eins sein. <br>
@@ -255,48 +252,25 @@ public class AtgVerkehrsDatenKurzZeitAnalyseMq extends
 		return this.flk1 != -4;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
 				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						this.flk1 = resultat
-								.getData()
-								.getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.flk2 = resultat
-								.getData()
-								.getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.flk1 = resultat.getData().getItem("fl").getScaledValue("k1").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.flk2 = resultat.getData().getItem("fl").getScaledValue("k2").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kBGrenz = resultat
-								.getData()
-								.getItem("KB").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kBMax = resultat
-								.getData()
-								.getItem("KB").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kBGrenz = resultat.getData().getItem("KB").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kBMax = resultat.getData().getItem("KB").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kKfzGrenz = resultat
-								.getData()
-								.getItem("KKfz").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kKfzMax = resultat
-								.getData()
-								.getItem("KKfz").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kKfzGrenz = resultat.getData().getItem("KKfz").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kKfzMax = resultat.getData().getItem("KKfz").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kLkwGrenz = resultat
-								.getData()
-								.getItem("KLkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kLkwMax = resultat
-								.getData()
-								.getItem("KLkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kLkwGrenz = resultat.getData().getItem("KLkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kLkwMax = resultat.getData().getItem("KLkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
-						this.kPkwGrenz = resultat
-								.getData()
-								.getItem("KPkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						this.kPkwMax = resultat
-								.getData()
-								.getItem("KPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kPkwGrenz = resultat.getData().getItem("KPkw").getUnscaledValue("Grenz").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						this.kPkwMax = resultat.getData().getItem("KPkw").getUnscaledValue("Max").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
 						Array array = resultat.getData().getArray("wichtung"); //$NON-NLS-1$
 						if (array.getLength() > 0) {
@@ -304,8 +278,7 @@ public class AtgVerkehrsDatenKurzZeitAnalyseMq extends
 						}
 
 						for (int i = 0; i < array.getLength(); i++) {
-							this.wichtung[i] = array.getItem(i)
-									.asUnscaledValue().intValue();
+							this.wichtung[i] = array.getItem(i).asUnscaledValue().intValue();
 						}
 					}
 				}

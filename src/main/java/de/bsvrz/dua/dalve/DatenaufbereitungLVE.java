@@ -55,8 +55,6 @@ import java.util.HashSet;
  * emfangenen Daten dann an das Analysemodul für Fahrstreifen weitergereicht
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 
@@ -102,38 +100,23 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	 */
 	private FsAnalyseModul fsAnalyseModul = null;
 
-
-
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public SWETyp getSWETyp() {
 		return SWETyp.SWE_DATENAUFBEREITUNG_LVE;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
-		
+
 		ObjektFactory.getInstanz().setVerbindung(this.getVerbindung());
-		
+
 		dDav = this.getVerbindung();
-		pubAtgPrognoseFS = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_TRENT_FS);
-		pubAtgGlattFS = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_FS);
-		analyseAtgFS = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_FS);
-		pubAtgPrognoseMQ = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_TRENT_MQ);
-		pubAtgGlattMQ = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_MQ);
-		analyseAtgMQ = dDav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_MQ);
+		pubAtgPrognoseFS = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_TRENT_FS);
+		pubAtgGlattFS = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_FS);
+		analyseAtgFS = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
+		pubAtgPrognoseMQ = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_TRENT_MQ);
+		pubAtgGlattMQ = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_GEGLAETTET_MQ);
+		analyseAtgMQ = dDav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
 
 		/**
 		 * Initialisiere das DUA-Verkehrsnetz
@@ -143,17 +126,14 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		/**
 		 * Ermittle nur die Fahrstreifen, Messquerschnitte und Straßenabschnitte
 		 */
-		Collection<SystemObject> fahrStreifen = DUAUtensilien
-				.getBasisInstanzen(this.verbindung.getDataModel().getType(
-						DUAKonstanten.TYP_FAHRSTREIFEN), this.verbindung, this
-						.getKonfigurationsBereiche());
-		Collection<SystemObject> messQuerschnitte = DUAUtensilien
-				.getBasisInstanzen(this.verbindung.getDataModel().getType(
-						DUAKonstanten.TYP_MQ_ALLGEMEIN), this.verbindung, this
-						.getKonfigurationsBereiche());
+		Collection<SystemObject> fahrStreifen = DUAUtensilien.getBasisInstanzen(
+				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_FAHRSTREIFEN), this.verbindung,
+				this.getKonfigurationsBereiche());
+		Collection<SystemObject> messQuerschnitte = DUAUtensilien.getBasisInstanzen(
+				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ_ALLGEMEIN), this.verbindung,
+				this.getKonfigurationsBereiche());
 		Collection<SystemObject> abschnitte = DUAUtensilien.getBasisInstanzen(
-				this.verbindung.getDataModel().getType(
-						DUAKonstanten.TYP_STRASSEN_ABSCHNITT), this.verbindung,
+				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_STRASSEN_ABSCHNITT), this.verbindung,
 				this.getKonfigurationsBereiche());
 		this.objekte = fahrStreifen.toArray(new SystemObject[0]);
 
@@ -165,15 +145,13 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		for (SystemObject obj : objekte) {
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
-		Debug.getLogger().config(
-				"---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		Debug.getLogger().config("---\nBetrachtete Fahrstreifen:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		infoStr = "";
 		for (SystemObject obj : messQuerschnitte) {
 			infoStr += obj + "\n"; //$NON-NLS-1$
 		}
-		Debug.getLogger().config(
-				"---\nBetrachtete Messquerschnitte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		Debug.getLogger().config("---\nBetrachtete Messquerschnitte:\n" + infoStr + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.fsAnalyseModul = new FsAnalyseModul();
 		this.fsAnalyseModul.setPublikation(true);
@@ -188,19 +166,12 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		stoerfallObjekte.addAll(abschnitte);
 		new StoerfallModul().initialisiere(this.verbindung, stoerfallObjekte);
 
-		this.verbindung
-				.subscribeReceiver(this, this.objekte, new DataDescription(
-						this.verbindung.getDataModel().getAttributeGroup(
-								DUAKonstanten.ATG_KZD), this.verbindung
-								.getDataModel().getAspect(
-										DUAKonstanten.ASP_MESSWERTERSETZUNG)),
-						ReceiveOptions.normal(), ReceiverRole
-						.receiver());
+		this.verbindung.subscribeReceiver(this, this.objekte,
+				new DataDescription(this.verbindung.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+						this.verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		this.fsAnalyseModul.aktualisiereDaten(resultate);
 	}
@@ -216,12 +187,11 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	}
 
 	/**
-	 * {@inheritDoc}.<br>
-	 * 
-	 * Standard-Gütefaktor für Ersetzungen (90%)<br>
 	 * Wenn das Modul Datenaufbereitung LVE einen Messwert ersetzt so vermindert
 	 * sich die Güte des Ausgangswertes um diesen Faktor (wenn kein anderer Wert
 	 * über die Kommandozeile übergeben wurde)
+	 * 
+	 * @return liefert den Standard-Gütefaktor für Ersetzungen (90%)
 	 */
 	@Override
 	public double getStandardGueteFaktor() {
@@ -242,8 +212,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		} else if (objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 			return analyseAtgMQ;
 		} else {
-			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ "
-					+ objekt.getType()
+			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
 					+ " existiert keine Attributgruppe fuer Analysedaten.");
 		}
 	}
@@ -263,8 +232,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		} else if (objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 			return pubAtgGlattMQ;
 		} else {
-			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ "
-					+ objekt.getType()
+			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
 					+ " existiert keine Attributgruppe fuer geglaettete Werte.");
 		}
 	}
@@ -282,8 +250,7 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		} else if (objekt.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
 			return pubAtgPrognoseMQ;
 		} else {
-			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ "
-					+ objekt.getType()
+			throw new RuntimeException("Fuer Objekt " + objekt + " vom Typ " + objekt.getType()
 					+ " existiert keine Attributgruppe fuer Prognosewerte.");
 		}
 	}
@@ -291,6 +258,9 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	/**
 	 * Erfragt das Straßenteilsegment des Messquerschnitts.
 	 * 
+	 * @param mq
+	 *            der MQ für den ein Straßenteilsegment ermittelt werden soll
+	 *            
 	 * @return das Straßenteilsegment des Messquerschnitts oder
 	 *         <code>null</code>, wenn dieses nicht ermittelbar ist.
 	 */
@@ -298,45 +268,28 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		SystemObject stsGesucht = null;
 
 		if (mq.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
-			Data mqData = mq.getConfigurationData(dDav.getDataModel()
-					.getAttributeGroup("atg.punktLiegtAufLinienObjekt"));
+			Data mqData = mq
+					.getConfigurationData(dDav.getDataModel().getAttributeGroup("atg.punktLiegtAufLinienObjekt"));
 			if (mqData != null) {
 				if (mqData.getReferenceValue("LinienReferenz") != null) {
-					SystemObject strassenSegment = mqData.getReferenceValue(
-							"LinienReferenz").getSystemObject();
-					double offset = mqData.getUnscaledValue("Offset")
-							.longValue() >= 0 ? mqData.getScaledValue("Offset")
-							.doubleValue() : -1.0;
-					if (strassenSegment != null
-							&& strassenSegment.isOfType("typ.straßenSegment")
-							&& offset >= 0) {
-						Data ssData = strassenSegment.getConfigurationData(dDav
-								.getDataModel().getAttributeGroup(
-										"atg.bestehtAusLinienObjekten"));
+					SystemObject strassenSegment = mqData.getReferenceValue("LinienReferenz").getSystemObject();
+					double offset = mqData.getUnscaledValue("Offset").longValue() >= 0
+							? mqData.getScaledValue("Offset").doubleValue() : -1.0;
+					if (strassenSegment != null && strassenSegment.isOfType("typ.straßenSegment") && offset >= 0) {
+						Data ssData = strassenSegment.getConfigurationData(
+								dDav.getDataModel().getAttributeGroup("atg.bestehtAusLinienObjekten"));
 						if (ssData != null) {
 							double gesamtLaenge = 0;
-							for (int i = 0; i < ssData.getArray(
-									"LinienReferenz").getLength(); i++) {
-								if (ssData.getReferenceArray("LinienReferenz")
-										.getReferenceValue(i) != null) {
-									SystemObject sts = ssData
-											.getReferenceArray("LinienReferenz")
-											.getReferenceValue(i)
+							for (int i = 0; i < ssData.getArray("LinienReferenz").getLength(); i++) {
+								if (ssData.getReferenceArray("LinienReferenz").getReferenceValue(i) != null) {
+									SystemObject sts = ssData.getReferenceArray("LinienReferenz").getReferenceValue(i)
 											.getSystemObject();
-									if (sts != null
-											&& sts
-													.isOfType("typ.straßenTeilSegment")) {
-										Data stsData = sts
-												.getConfigurationData(dDav
-														.getDataModel()
-														.getAttributeGroup(
-																"atg.linie"));
+									if (sts != null && sts.isOfType("typ.straßenTeilSegment")) {
+										Data stsData = sts.getConfigurationData(
+												dDav.getDataModel().getAttributeGroup("atg.linie"));
 										if (stsData != null) {
-											double laenge = stsData
-													.getUnscaledValue("Länge")
-													.longValue() >= 0 ? stsData
-													.getScaledValue("Länge")
-													.doubleValue() : -1.0;
+											double laenge = stsData.getUnscaledValue("Länge").longValue() >= 0
+													? stsData.getScaledValue("Länge").doubleValue() : -1.0;
 											if (laenge >= 0) {
 												gesamtLaenge += laenge;
 											}
