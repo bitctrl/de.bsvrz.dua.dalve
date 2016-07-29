@@ -171,26 +171,6 @@ public class PrognoseAttributParameter {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		boolean gleich = false;
-
-		if (obj != null && obj instanceof PrognoseAttributParameter) {
-			PrognoseAttributParameter that = (PrognoseAttributParameter) obj;
-			gleich = this.attribut.equals(that.attribut)
-					&& this.start == that.start && this.alpha1 == that.alpha1
-					&& this.alpha2 == that.alpha2 && this.beta1 == that.beta1
-					&& this.beta2 == that.beta2;
-		}
-
-		return gleich;
-	}
-	
-	@Override
-	public int hashCode() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public String toString() {
 		return "Attribut: " + this.attribut + " --> " + //$NON-NLS-1$ //$NON-NLS-2$
 				", Start=" + DUAUtensilien.getTextZuMesswert(this.start) + //$NON-NLS-1$
