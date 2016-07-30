@@ -5,7 +5,7 @@
 
 	<groupId>de.bsvrz.dua</groupId>
 	<artifactId>de.bsvrz.dua.dalve</artifactId>
-	<version>2.0.2</version>
+	<version>2.0.3-SNAPSHOT</version>
 
 	<name>Datenaufbereitung LVE (SWE 4.7)</name>
 	<organization>
