@@ -245,6 +245,7 @@
 							</excludes>
 							<archive>
 								<manifest>
+									<mainClass>de.bsvrz.dua.dalve.DatenaufbereitungLVE</mainClass>
 									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 									<addClasspath>true</addClasspath>
 									<classpathLayoutType>custom</classpathLayoutType>
