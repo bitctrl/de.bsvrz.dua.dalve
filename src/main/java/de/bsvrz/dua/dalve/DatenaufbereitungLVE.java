@@ -44,6 +44,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.bitctrl.modell.ObjektFactory;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -104,6 +105,12 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		return SWETyp.SWE_DATENAUFBEREITUNG_LVE;
 	}
 
+	@Override
+	public void initialize(ClientDavInterface dieVerbindung) throws Exception {
+		MessageSender.getInstance().setApplicationLabel("Datenaufbereitung LVE");
+		super.initialize(dieVerbindung);
+	}
+	
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
