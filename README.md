@@ -33,6 +33,11 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekte
 ### Version 2.0.3
 
 - Applikationsname für MessageSender entsprechend NERZ-Vorgabe gesetzt
+- Zur Ermittlung des Straßenteilsgements auf dem ein MQ liegt (erforderlich für die Ermittlung des
+  Fundamentaldiagramms)), wird die Länge eines Straßenteilsegments alternativ aus der Attributgruppe 
+  "atg.straßenTeilSegment" ermittelt, wenn diese in der Attributgruppe "atg.linie" nicht versorgt ist.
+- referenziert ein MQ kein Straßensegment sondern ein Straßenteilsegment wird dieses für die Ermittlung
+  des Fundamentaldiagramms verwendet.  
 
 ### Version 2.0.2
 
