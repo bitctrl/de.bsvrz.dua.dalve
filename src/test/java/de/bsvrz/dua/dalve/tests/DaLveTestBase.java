@@ -47,6 +47,11 @@ public class DaLveTestBase extends DuATestBase {
 	}
 
 
+	@Override
+	protected long getDefaultTimeOut() {
+		return 200;
+	}
+	
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
