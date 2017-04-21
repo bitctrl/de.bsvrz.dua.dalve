@@ -125,7 +125,7 @@ public class FdStoerfallIndikator extends AbstraktStoerfallIndikator implements
 		}
 		
 		SystemObject stsObjekt = DatenaufbereitungLVE
-				.getStraßenTeilSegment(objekt);
+				.getStrassenTeilSegment(objekt);
 		if (stsObjekt != null) {
 			PdFundamentalDiagramm fdAmSts = new PdFundamentalDiagramm(
 					new StoerfallIndikator(stsObjekt));

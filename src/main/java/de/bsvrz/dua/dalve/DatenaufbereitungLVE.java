@@ -44,6 +44,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.bitctrl.modell.ObjektFactory;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -102,6 +103,12 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 
 	public SWETyp getSWETyp() {
 		return SWETyp.SWE_DATENAUFBEREITUNG_LVE;
+	}
+
+	@Override
+	public void initialize(ClientDavInterface dieVerbindung) throws Exception {
+		MessageSender.getInstance().setApplicationLabel("Datenaufbereitung LVE");
+		super.initialize(dieVerbindung);
 	}
 
 	@Override
@@ -260,11 +267,11 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 	 * 
 	 * @param mq
 	 *            der MQ für den ein Straßenteilsegment ermittelt werden soll
-	 *            
+	 * 
 	 * @return das Straßenteilsegment des Messquerschnitts oder
 	 *         <code>null</code>, wenn dieses nicht ermittelbar ist.
 	 */
-	public static SystemObject getStraßenTeilSegment(SystemObject mq) {
+	public static SystemObject getStrassenTeilSegment(SystemObject mq) {
 		SystemObject stsGesucht = null;
 
 		if (mq.isOfType(DUAKonstanten.TYP_MQ_ALLGEMEIN)) {
@@ -272,35 +279,15 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 					.getConfigurationData(dDav.getDataModel().getAttributeGroup("atg.punktLiegtAufLinienObjekt"));
 			if (mqData != null) {
 				if (mqData.getReferenceValue("LinienReferenz") != null) {
-					SystemObject strassenSegment = mqData.getReferenceValue("LinienReferenz").getSystemObject();
-					double offset = mqData.getUnscaledValue("Offset").longValue() >= 0
-							? mqData.getScaledValue("Offset").doubleValue() : -1.0;
-					if (strassenSegment != null && strassenSegment.isOfType("typ.straßenSegment") && offset >= 0) {
-						Data ssData = strassenSegment.getConfigurationData(
-								dDav.getDataModel().getAttributeGroup("atg.bestehtAusLinienObjekten"));
-						if (ssData != null) {
-							double gesamtLaenge = 0;
-							for (int i = 0; i < ssData.getArray("LinienReferenz").getLength(); i++) {
-								if (ssData.getReferenceArray("LinienReferenz").getReferenceValue(i) != null) {
-									SystemObject sts = ssData.getReferenceArray("LinienReferenz").getReferenceValue(i)
-											.getSystemObject();
-									if (sts != null && sts.isOfType("typ.straßenTeilSegment")) {
-										Data stsData = sts.getConfigurationData(
-												dDav.getDataModel().getAttributeGroup("atg.linie"));
-										if (stsData != null) {
-											double laenge = stsData.getUnscaledValue("Länge").longValue() >= 0
-													? stsData.getScaledValue("Länge").doubleValue() : -1.0;
-											if (laenge >= 0) {
-												gesamtLaenge += laenge;
-											}
-										}
-										if (gesamtLaenge >= offset) {
-											stsGesucht = sts;
-											break;
-										}
-									}
-								}
-							}
+					SystemObject linienReferenz = mqData.getReferenceValue("LinienReferenz").getSystemObject();
+					if (linienReferenz != null) {
+						if (linienReferenz.isOfType("typ.straßenTeilSegment")) {
+							stsGesucht = linienReferenz;
+						}
+						if (linienReferenz.isOfType("typ.straßenSegment")) {
+							double offset = mqData.getUnscaledValue("Offset").longValue() >= 0
+									? mqData.getScaledValue("Offset").doubleValue() : -1.0;
+							stsGesucht = getTeilSegmentWithOffset(linienReferenz, offset);
 						}
 					}
 				}
@@ -308,6 +295,51 @@ public class DatenaufbereitungLVE extends AbstraktVerwaltungsAdapterMitGuete {
 		}
 
 		return stsGesucht;
+	}
+
+	private static SystemObject getTeilSegmentWithOffset(SystemObject segment, double offset) {
+
+		SystemObject stsGesucht = null;
+
+		Data ssData = segment
+				.getConfigurationData(dDav.getDataModel().getAttributeGroup("atg.bestehtAusLinienObjekten"));
+		if (ssData != null) {
+			double gesamtLaenge = 0;
+			for (int i = 0; i < ssData.getArray("LinienReferenz").getLength(); i++) {
+				if (ssData.getReferenceArray("LinienReferenz").getReferenceValue(i) != null) {
+					SystemObject sts = ssData.getReferenceArray("LinienReferenz").getReferenceValue(i)
+							.getSystemObject();
+					if (sts != null && sts.isOfType("typ.straßenTeilSegment")) {
+						double laenge = getStsLaenge(sts);
+						if (laenge >= 0) {
+							gesamtLaenge += laenge;
+						}
+						if (gesamtLaenge >= offset) {
+							stsGesucht = sts;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return stsGesucht;
+	}
+
+	private static double getStsLaenge(SystemObject sts) {
+		Data linieData = sts.getConfigurationData(dDav.getDataModel().getAttributeGroup("atg.linie"));
+		if (linieData != null) {
+			if (linieData.getUnscaledValue("Länge").longValue() >= 0)
+				return linieData.getScaledValue("Länge").doubleValue();
+		}
+
+		Data stsData = sts.getConfigurationData(dDav.getDataModel().getAttributeGroup("atg.straßenTeilSegment"));
+		if (stsData != null) {
+			if (stsData.getUnscaledValue("Länge").longValue() >= 0)
+				return stsData.getScaledValue("Länge").doubleValue();
+		}
+
+		return -1.0;
 	}
 
 }

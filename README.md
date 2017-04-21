@@ -30,7 +30,16 @@ Sämtliche hier produzierten Daten werden unter den vorgesehenen Standardaspekte
 
 ## Versionsgeschichte
 
-### 2.0.2
+### Version 2.0.3
+
+- Applikationsname für MessageSender entsprechend NERZ-Vorgabe gesetzt
+- Zur Ermittlung des Straßenteilsgements auf dem ein MQ liegt (erforderlich für die Ermittlung des
+  Fundamentaldiagramms)), wird die Länge eines Straßenteilsegments alternativ aus der Attributgruppe 
+  "atg.straßenTeilSegment" ermittelt, wenn diese in der Attributgruppe "atg.linie" nicht versorgt ist.
+- referenziert ein MQ kein Straßensegment sondern ein Straßenteilsegment wird dieses für die Ermittlung
+  des Fundamentaldiagramms verwendet.  
+
+### Version 2.0.2
 
 Release-Datum: 28.07.2016
 
@@ -60,13 +69,13 @@ de.bsvrz.dua.dalve.tests.DaLveTestBase
 - Obsolete SVN-Tags aus Kommentaren entfernt
 - Obsolete inheritDoc-Kommentare entfernt
 
-### 2.0.1
+### Version 2.0.1
 
 Release-Datum: 22.07.2016
 
 - Umpacketierung gemäß NERZ-Konvention
 
-### 2.0.0
+### Version 2.0.0
 
 Release-Datum: 31.05.2016
 
@@ -109,23 +118,23 @@ Folgende Fehler gegenüber vorhergehenden Versionen wurden korrigiert:
 - Die Erfassungsintervalle der Fahrstreifen eines Messquerschnitts wurden nicht immer
   korrekt zugeordnet bzw. verglichen.
 
-### 1.7.0
+### Version 1.7.0
 
 - Umstellung auf Java 8 und UTF-8
 
-### 1.6.1
+### Version 1.6.1
 
 - Kompatibilität zu DuA-2.0 hergestellt
 
-### 1.6.0
+### Version 1.6.0
 
 - Umstellung auf Funclib-BitCtrl-Dua
 
-### 1.5.0
+### Version 1.5.0
 
 - Umstellung auf Maven-Build
 
-### 1.4.0
+### Version 1.4.0
 
   - Für die Berechnung von VKfz am Messquerschnitt wird wenn VKFz eines Fahrstreifens nicht
     ermittelbar ist, jetzt die Durchschnittsgeschwindigkeit aller anderen Fahrstreifen zur
@@ -134,33 +143,33 @@ Folgende Fehler gegenüber vorhergehenden Versionen wurden korrigiert:
     Durchschnittsgeschwindigkeit mehr Fahrzeuge bekannt waren, als deren Geschwindigkeit. Das hat
     die Durchschnittsgeschwindigkeit unverhältnismäßig nach unten gedrückt.
 
-### 1.3.1
+### Version 1.3.1
 
   - mit dem Kommandozeilenparameter "-ignoreDichteMax=true" kann die Beschränkung der Dichtewerte
     auf den parametrierten Maximalwert abgeschaltet werden
 
-### 1.3.0
+### Version 1.3.0
 
   - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle
     Messquerschnitte auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen,
     teilweise falsch gerechnet wird.
 
-### 1.2.2
+### Version 1.2.2
 
   - FIX: Beim Einsatz der DatenaufbereitungLVE ist uns aufgefallen, dass wenn virtuelle
     Messquerschnitte auf Basis der atg.messQuerschnittVirtuellStandard berechnet werden sollen, die
     Applikation sich mit einem Fehler beendet.
 
-### 1.2.1
+### Version 1.2.1
 
   - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
      DataDescription(atg, asp)
 
-### 1.2.0
+### Version 1.2.0
 
   - Berechnung von Stoerfallzustand nach Verfahren MARZ korrigiert (Verwendung von kKfzG statt kBG)
 
-### 1.1.0
+### Version 1.1.0
 
   - Berechnungsverfahren zur Berechnung der virtuellen MQs ergaenzt (jetzt zusaetzlich auf Basis von
     atg.messQuerschnittVirtuellVLage)
@@ -168,11 +177,11 @@ Folgende Fehler gegenüber vorhergehenden Versionen wurden korrigiert:
   - Uebernahme des Fundamentaldiagramms bei entsprechendem Stoerfallindikator auf
     Strassenteilsegment geaendert
 
-### 1.0.0
+### Version 1.0.0
 
   - Erste vollständige Auslieferung
 
-### 1.0.0b
+### Version 1.0.0b
 
   - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
 

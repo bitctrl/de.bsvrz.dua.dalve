@@ -239,7 +239,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 			SystemObject fdObjektVon = von;
 			SystemObject stsObjektVon = DatenaufbereitungLVE
-					.getStraßenTeilSegment(von);
+					.getStrassenTeilSegment(von);
 			if (stsObjektVon != null) {
 				fdObjektVon = stsObjektVon;
 				Debug
@@ -292,7 +292,7 @@ public class VKDiffKfzStoerfallIndikator extends AbstraktStoerfallIndikator {
 
 			SystemObject fdObjektBis = bis;
 			SystemObject stsObjektBis = DatenaufbereitungLVE
-					.getStraßenTeilSegment(bis);
+					.getStrassenTeilSegment(bis);
 			if (stsObjektBis != null) {
 				fdObjektBis = stsObjektBis;
 				Debug
